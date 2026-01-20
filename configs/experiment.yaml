@@ -1,0 +1,28 @@
+# Global experiment settings
+
+seed: 42
+test_size: 0.2          # Hold-out test fraction (split before CV)
+outer_folds: 5          # Outer CV folds
+inner_folds: 3          # Inner CV folds (for tuning)
+n_optuna_trials: 100    # 100 TPE trials ≈ 200-300 random search iterations (Bergstra et al.)
+optuna_sampler: tpe      # TPE sampler
+optuna_pruner: median    # MedianPruner
+
+# TabPFN-specific (v2.5 natively handles up to 50K samples)
+tabpfn_max_samples: 50000       # Threshold for subsampling (v2.5 native limit)
+tabpfn_n_ensemble_configs: 4    # Number of subsampling ensembles
+
+# Training
+early_stopping_patience: 20     # For deep learning models
+max_epochs: 200                 # Max epochs for deep learning
+batch_size: 256                 # Default batch size for DL models
+
+# Metrics
+primary_metric_binary: roc_auc
+primary_metric_multiclass: log_loss
+primary_metric_regression: rmse
+
+# Paths
+data_dir: data/raw
+processed_dir: data/processed
+results_dir: results

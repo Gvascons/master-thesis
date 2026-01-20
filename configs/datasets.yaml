@@ -1,0 +1,135 @@
+# Dataset registry — OpenML IDs and metadata
+# Each entry: name, openml_id, task_type, n_classes (if classification), feature_types
+# NOTE: download.py should pass version=ds_cfg.version to openml.datasets.get_dataset()
+
+classification:
+  adult:
+    openml_id: 1590
+    version: 1
+    task_type: binary
+    n_classes: 2
+    approx_samples: 49000
+    approx_features: 14
+    feature_types: mixed  # numerical + categorical
+
+  covertype:
+    openml_id: 1596
+    version: 1
+    task_type: multiclass
+    n_classes: 7
+    approx_samples: 581000
+    approx_features: 54
+    feature_types: numerical
+
+  higgs:
+    openml_id: 23512
+    version: 1
+    task_type: binary
+    n_classes: 2
+    approx_samples: 98000
+    approx_features: 28
+    feature_types: numerical
+
+  jannis:
+    openml_id: 41168
+    version: 1
+    task_type: multiclass
+    n_classes: 4
+    approx_samples: 84000
+    approx_features: 54
+    feature_types: numerical
+
+  magictelescope:
+    openml_id: 44125
+    version: 1
+    task_type: binary
+    n_classes: 2
+    approx_samples: 19000
+    approx_features: 10
+    feature_types: numerical
+
+  helena:
+    openml_id: 41169
+    version: 1
+    task_type: multiclass
+    n_classes: 100
+    approx_samples: 65000
+    approx_features: 27
+    feature_types: numerical
+
+  bank_marketing:
+    openml_id: 1461
+    version: 1
+    task_type: binary
+    n_classes: 2
+    approx_samples: 45000
+    approx_features: 16
+    feature_types: mixed  # numerical + categorical
+
+  amazon_employee:
+    openml_id: 4135
+    version: 1
+    task_type: binary
+    n_classes: 2
+    approx_samples: 33000
+    approx_features: 9
+    feature_types: categorical  # all features are categorical
+
+  credit_g:
+    openml_id: 31
+    version: 1
+    task_type: binary
+    n_classes: 2
+    approx_samples: 1000
+    approx_features: 20
+    feature_types: mixed  # numerical + categorical
+
+  phoneme:
+    openml_id: 1489
+    version: 1
+    task_type: binary
+    n_classes: 2
+    approx_samples: 5400
+    approx_features: 5
+    feature_types: numerical
+
+regression:
+  california_housing:
+    openml_id: 44090
+    version: 1
+    task_type: regression
+    approx_samples: 21000
+    approx_features: 8
+    feature_types: numerical
+
+  year_prediction:
+    openml_id: 44027
+    version: 1
+    task_type: regression
+    approx_samples: 515000
+    approx_features: 90
+    feature_types: numerical
+
+  diamonds:
+    openml_id: 44980
+    version: 1
+    task_type: regression
+    approx_samples: 54000
+    approx_features: 9
+    feature_types: mixed
+
+  wine_quality:
+    openml_id: 287
+    version: 1
+    task_type: regression
+    approx_samples: 6500
+    approx_features: 11
+    feature_types: numerical
+
+  superconduct:
+    openml_id: 44064
+    version: 1
+    task_type: regression
+    approx_samples: 21000
+    approx_features: 81
+    feature_types: numerical

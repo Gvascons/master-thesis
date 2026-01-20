@@ -1,0 +1,293 @@
+# Hyperparameter search spaces for Optuna tuning
+# Each parameter: type (int, float, categorical), low, high, log (optional)
+
+xgboost:
+  n_estimators:
+    type: int
+    low: 100
+    high: 2000
+  max_depth:
+    type: int
+    low: 3
+    high: 12
+  learning_rate:
+    type: float
+    low: 0.005
+    high: 0.3
+    log: true
+  subsample:
+    type: float
+    low: 0.5
+    high: 1.0
+  colsample_bytree:
+    type: float
+    low: 0.5
+    high: 1.0
+  min_child_weight:
+    type: float
+    low: 1.0
+    high: 10.0
+  reg_alpha:
+    type: float
+    low: 1.0e-8
+    high: 10.0
+    log: true
+  reg_lambda:
+    type: float
+    low: 1.0e-8
+    high: 10.0
+    log: true
+
+lightgbm:
+  n_estimators:
+    type: int
+    low: 100
+    high: 2000
+  max_depth:
+    type: int
+    low: 3
+    high: 12
+  learning_rate:
+    type: float
+    low: 0.005
+    high: 0.3
+    log: true
+  num_leaves:
+    type: int
+    low: 16
+    high: 256
+  subsample:
+    type: float
+    low: 0.5
+    high: 1.0
+  colsample_bytree:
+    type: float
+    low: 0.5
+    high: 1.0
+  min_child_samples:
+    type: int
+    low: 5
+    high: 100
+  reg_alpha:
+    type: float
+    low: 1.0e-8
+    high: 10.0
+    log: true
+  reg_lambda:
+    type: float
+    low: 1.0e-8
+    high: 10.0
+    log: true
+
+catboost:
+  iterations:
+    type: int
+    low: 100
+    high: 2000
+  depth:
+    type: int
+    low: 3
+    high: 10
+  learning_rate:
+    type: float
+    low: 0.005
+    high: 0.3
+    log: true
+  l2_leaf_reg:
+    type: float
+    low: 1.0
+    high: 10.0
+  bagging_temperature:
+    type: float
+    low: 0.0
+    high: 1.0
+  random_strength:
+    type: float
+    low: 0.0
+    high: 10.0
+
+ft_transformer:
+  n_blocks:
+    type: int
+    low: 1
+    high: 6
+  d_block:
+    type: categorical
+    choices: [64, 128, 192, 256]
+  attention_n_heads:
+    type: categorical
+    choices: [4, 8]
+  attention_dropout:
+    type: float
+    low: 0.0
+    high: 0.5
+  ffn_d_hidden_multiplier:
+    type: float
+    low: 1.333
+    high: 2.666
+  ffn_dropout:
+    type: float
+    low: 0.0
+    high: 0.5
+  residual_dropout:
+    type: float
+    low: 0.0
+    high: 0.2
+  learning_rate:
+    type: float
+    low: 1.0e-5
+    high: 1.0e-3
+    log: true
+  weight_decay:
+    type: float
+    low: 1.0e-6
+    high: 1.0e-3
+    log: true
+
+tabnet:
+  n_d:
+    type: categorical
+    choices: [8, 16, 32, 64]
+  n_a:
+    type: categorical
+    choices: [8, 16, 32, 64]
+  n_steps:
+    type: int
+    low: 3
+    high: 10
+  gamma:
+    type: float
+    low: 1.0
+    high: 2.0
+  lambda_sparse:
+    type: float
+    low: 1.0e-6
+    high: 1.0e-3
+    log: true
+  learning_rate:
+    type: float
+    low: 0.005
+    high: 0.05
+    log: true
+  mask_type:
+    type: categorical
+    choices: ["sparsemax", "entmax"]
+
+saint:
+  depth:
+    type: int
+    low: 1
+    high: 6
+  heads:
+    type: categorical
+    choices: [4, 8]
+  dim:
+    type: categorical
+    choices: [32, 64, 128, 256]
+  attn_dropout:
+    type: float
+    low: 0.0
+    high: 0.4
+  ff_dropout:
+    type: float
+    low: 0.0
+    high: 0.4
+  learning_rate:
+    type: float
+    low: 1.0e-5
+    high: 1.0e-3
+    log: true
+  weight_decay:
+    type: float
+    low: 1.0e-6
+    high: 1.0e-3
+    log: true
+
+tabpfn:
+  # TabPFN is zero-shot — no tuning parameters
+  # Subsampling ensemble configs are in experiment.yaml
+
+mlp:
+  n_blocks:
+    type: int
+    low: 1
+    high: 4
+  d_hidden:
+    type: categorical
+    choices: [64, 128, 256, 512]
+  dropout:
+    type: float
+    low: 0.0
+    high: 0.5
+  learning_rate:
+    type: float
+    low: 1.0e-5
+    high: 1.0e-3
+    log: true
+  weight_decay:
+    type: float
+    low: 1.0e-6
+    high: 1.0e-3
+    log: true
+
+realmlp:
+  learning_rate:
+    type: float
+    low: 0.02
+    high: 0.3
+    log: true
+  hidden_width:
+    type: categorical
+    choices: [64, 256, 512]
+  n_hidden_layers:
+    type: int
+    low: 1
+    high: 5
+  dropout:
+    type: categorical
+    choices: [0.0, 0.15, 0.3]
+  weight_decay:
+    type: categorical
+    choices: [0.0, 0.02]
+  activation:
+    type: categorical
+    choices: ["selu", "mish", "relu"]
+  num_emb_type:
+    type: categorical
+    choices: ["none", "pbld", "pl", "plr"]
+  add_front_scale:
+    type: categorical
+    choices: [true, false]
+  ls_eps:
+    type: categorical
+    choices: [0.0, 0.1]
+
+tabm:
+  arch_type:
+    type: categorical
+    choices: ["tabm", "tabm-mini"]
+  k:
+    type: int
+    low: 8
+    high: 64
+  d_block:
+    type: categorical
+    choices: [128, 256, 512]
+  n_blocks:
+    type: int
+    low: 1
+    high: 4
+  dropout:
+    type: float
+    low: 0.0
+    high: 0.5
+  learning_rate:
+    type: float
+    low: 1.0e-5
+    high: 1.0e-3
+    log: true
+  weight_decay:
+    type: float
+    low: 1.0e-6
+    high: 1.0e-3
+    log: true
