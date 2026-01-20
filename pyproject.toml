@@ -1,0 +1,68 @@
+[project]
+name = "tabular-fm-vs-gbdt"
+version = "0.1.0"
+description = "Foundation Models vs GBDTs on Tabular Data — Master's Research"
+requires-python = ">=3.10"
+dependencies = [
+    # Data & ML basics
+    "numpy>=1.26",
+    "pandas>=2.1",
+    "scikit-learn>=1.4",
+    "openml>=0.14",
+    "scipy>=1.12",
+    "statsmodels>=0.14",
+    "scikit-posthocs>=0.9",
+
+    # GBDTs
+    "xgboost>=2.0",
+    "lightgbm>=4.2",
+    "catboost>=1.2",
+
+    # Deep learning
+    "torch>=2.2",
+    "rtdl_revisiting_models>=0.0.2",
+    "pytorch-tabnet>=4.1",
+    "tabm>=0.0.3",
+    "pytabkit>=1.7",
+
+    # Foundation model
+    "tabpfn>=6.0",
+
+    # Hyperparameter tuning
+    "optuna>=3.5",
+
+    # Config
+    "omegaconf>=2.3",
+    "pyyaml>=6.0",
+
+    # Visualization & analysis
+    "matplotlib>=3.8",
+    "seaborn>=0.13",
+    "plotly>=5.18",
+
+    # Notebooks
+    "jupyter>=1.0",
+    "ipywidgets>=8.1",
+
+    # Utilities
+    "tqdm>=4.66",
+    "rich>=13.7",
+    "click>=8.1",
+]
+
+[project.scripts]
+download-data = "scripts.download_data:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
