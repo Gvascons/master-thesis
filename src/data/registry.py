@@ -63,6 +63,28 @@ def load_dataset(name: str, data_dir: Path | None = None) -> tuple[pd.DataFrame,
     y = df["target"].values
     X = df.drop(columns=["target"])
 
+    # Force nominal features (which OpenML may have stored as int64) to category dtype
+    # by cross-referencing OpenML feature metadata
+    if hasattr(ds_cfg, "openml_id") and ds_cfg.openml_id:
+        try:
+            import openml
+            oml_dataset = openml.datasets.get_dataset(
+                ds_cfg.openml_id,
+                download_data=False,
+                download_qualities=False,
+                download_features_meta_data=True,
+            )
+            nominal_features = [
+                f.name
+                for f in oml_dataset.features.values()
+                if f.data_type == "nominal" and f.name != oml_dataset.default_target_attribute
+            ]
+            for col in nominal_features:
+                if col in X.columns:
+                    X[col] = X[col].astype("category")
+        except Exception as e:
+            logger.warning(f"Could not fetch OpenML feature metadata for '{name}': {e}")
+
     # Identify categorical vs numerical columns
     cat_columns = X.select_dtypes(include=["object", "category", "bool"]).columns.tolist()
     num_columns = X.select_dtypes(include=["number"]).columns.tolist()

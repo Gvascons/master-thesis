@@ -45,6 +45,11 @@ def capture_environment() -> dict:
         "scipy",
         "statsmodels",
         "scikit-posthocs",
+        "tabpfn",
+        "tabm",
+        "pytorch_tabnet",
+        "rtdl_revisiting_models",
+        "pytabkit",
     ]
     pkg_versions: dict[str, str | None] = {}
     for pkg in packages:

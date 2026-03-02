@@ -160,6 +160,15 @@ def run_statistical_tests(results_dir: Path):
         pivot = subset.pivot(index="dataset", columns="model", values=metric)
         pivot = pivot.dropna(axis=1, how="all")
 
+        # Drop rows with any missing values before statistical tests
+        original_len = len(pivot)
+        pivot = pivot.dropna()
+        if len(pivot) < original_len:
+            logger.warning(
+                f"Dropped {original_len - len(pivot)} rows with missing values "
+                f"from {task_group} pivot before statistical tests"
+            )
+
         if pivot.shape[1] < 3 or pivot.shape[0] < 3:
             logger.warning(f"Not enough data for {task_group} statistical tests")
             continue

@@ -110,7 +110,7 @@ def tune_model(
         return np.mean(fold_scores)
 
     sampler = optuna.samplers.TPESampler(seed=seed)
-    pruner = optuna.pruners.MedianPruner()
+    pruner = optuna.pruners.MedianPruner(n_startup_trials=10)
     study = optuna.create_study(direction=direction, sampler=sampler, pruner=pruner)
 
     timer = Timer()

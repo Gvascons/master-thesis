@@ -7,6 +7,7 @@ Usage:
     python scripts/train.py --model all --dataset all
 """
 
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -50,6 +51,16 @@ def train_single(
     # Load data
     X, y, info = load_dataset(dataset_name)
 
+    # Compute SHA256 hash of the dataset file for reproducibility tracking
+    parquet_path = Path(exp_cfg.data_dir) / f"{dataset_name}.parquet"
+    dataset_sha256 = None
+    if parquet_path.exists():
+        sha256 = hashlib.sha256()
+        with open(parquet_path, "rb") as fh:
+            for chunk in iter(lambda: fh.read(65536), b""):
+                sha256.update(chunk)
+        dataset_sha256 = sha256.hexdigest()
+
     # Hold-out test split
     X_pool, y_pool, X_test, y_test = get_holdout_split(
         X, y, info, seed=seed, test_size=exp_cfg.test_size,
@@ -89,6 +100,8 @@ def train_single(
         metrics = compute_all_metrics(model, prep.X_val, y_va, info.task_type)
         metrics["fold"] = fold_idx
         metrics["train_time_s"] = timer.result.elapsed
+        metrics["train_indices"] = train_idx.tolist()
+        metrics["val_indices"] = val_idx.tolist()
         fold_results.append(metrics)
 
         logger.info(f"  Fold {fold_idx}: {metrics}")
@@ -123,6 +136,7 @@ def train_single(
         "fold_results": fold_results,
         "test_metrics": test_metrics,
         "seed": seed,
+        "dataset_sha256": dataset_sha256,
     }
 
     out_dir = results_dir / "raw"
