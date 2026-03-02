@@ -232,10 +232,6 @@ All experiments are deterministic given the same seed, software versions, and ha
 | seaborn | >= 0.13 | Statistical visualization |
 | openml | >= 0.14 | Dataset downloads |
 
-## License
-
-*(To be added)*
-
 ## Citation
 
 If you use this code or reference this work, please cite:
@@ -245,7 +241,7 @@ If you use this code or reference this work, please cite:
   title  = {Foundation Models vs Gradient-Boosted Decision Trees on Tabular Data},
   author = {Vasconcelos, Gabriel},
   year   = {2026},
-  school = {(University Name)},
+  school = {(Universidade Federal de Pernambuco)},
   type   = {Master's Thesis}
 }
 ```
