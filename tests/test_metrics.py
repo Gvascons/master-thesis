@@ -110,6 +110,58 @@ class TestRegressionMetrics:
         assert metrics["mae"] == pytest.approx(0.375)
 
 
+class TestDegenerateClassifier:
+    """compute_classification_metrics must not crash when a model predicts only one class."""
+
+    def test_binary_all_same_pred_no_crash(self):
+        """All predictions are the same class — roc_auc may be NaN but must not raise."""
+        y_true = np.array([0, 1, 1, 0, 1])
+        y_pred = np.array([1, 1, 1, 1, 1])  # always predicts class 1
+        # Provide degenerate proba (all mass on class 1)
+        y_proba = np.column_stack([np.zeros(5), np.ones(5)])
+
+        # Should not raise; roc_auc may be undefined (0.5 or NaN)
+        metrics = compute_classification_metrics(
+            y_true, y_pred, y_proba=y_proba, task_type="binary"
+        )
+
+        assert "accuracy" in metrics
+        assert "f1" in metrics
+        # roc_auc may be nan (sklearn raises ValueError for degenerate proba)
+        # but compute_classification_metrics must return without exception
+        if "roc_auc" in metrics:
+            assert metrics["roc_auc"] == pytest.approx(metrics["roc_auc"])  # not nan check bypass
+
+    def test_binary_all_same_pred_no_proba_no_crash(self):
+        """All predictions are the same class, no proba provided — should not crash."""
+        y_true = np.array([0, 1, 1, 0, 1])
+        y_pred = np.array([0, 0, 0, 0, 0])  # always predicts class 0
+
+        metrics = compute_classification_metrics(y_true, y_pred, task_type="binary")
+
+        assert "accuracy" in metrics
+        # Accuracy should be the fraction of true 0s
+        assert metrics["accuracy"] == pytest.approx(2.0 / 5.0)
+
+    def test_multiclass_all_same_pred_no_crash(self):
+        """All multiclass predictions are the same class — roc_auc_ovr must be handled."""
+        y_true = np.array([0, 1, 2, 0, 1, 2])
+        y_pred = np.array([0, 0, 0, 0, 0, 0])  # always predicts class 0
+        # Degenerate proba: all mass on class 0
+        y_proba = np.zeros((6, 3))
+        y_proba[:, 0] = 1.0
+
+        # Should not raise — roc_auc_ovr failure is caught and stored as NaN
+        metrics = compute_classification_metrics(
+            y_true, y_pred, y_proba=y_proba, task_type="multiclass"
+        )
+
+        assert "accuracy" in metrics
+        assert "f1_macro" in metrics
+        # roc_auc_ovr must be present (either a float or np.nan — not a crash)
+        assert "roc_auc_ovr" in metrics
+
+
 class TestPrimaryMetric:
     """Test compute_primary_metric returns the right metric for each task type.
 

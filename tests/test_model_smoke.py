@@ -8,6 +8,7 @@ Tests all 10 models x {binary, multiclass, regression} task types, verifying:
 - GBDT reproducibility with same seed
 """
 
+import platform
 import numpy as np
 import pytest
 
@@ -56,6 +57,11 @@ DL_MODELS = ["ft_transformer", "tabnet", "saint", "tabm", "mlp"]
 # It works on Linux (the actual experiment server) and is tested via test_factory.py.
 FM_MODELS = ["tabpfn"]
 ALL_MODELS = GBDT_MODELS + DL_MODELS + FM_MODELS
+
+_SKIP_REALMLP_ON_MACOS = pytest.mark.skipif(
+    platform.system() == "Darwin",
+    reason="RealMLP (pytabkit) has an OpenMP conflict with XGBoost/LightGBM on macOS",
+)
 
 
 def _get_kwargs(model_name):
@@ -252,3 +258,57 @@ class TestReproducibility:
             preds1, preds2,
             err_msg=f"{model_name} is not deterministic with the same seed",
         )
+
+
+# ── RealMLP smoke test ──────────────────────────────────────────────────────
+
+class TestRealMLPSmoke:
+    """RealMLP smoke tests — skipped on macOS due to OpenMP conflict."""
+
+    @_SKIP_REALMLP_ON_MACOS
+    @pytest.mark.slow
+    def test_realmlp_binary(self):
+        X_tr, y_tr, X_va, y_va, X_te = _make_data("binary")
+        model = create_model("realmlp", "binary", n_classes=2, seed=42,
+                             **_get_kwargs("realmlp"))
+        model.fit(X_tr, y_tr, X_va, y_va)
+
+        assert model.is_fitted
+        preds = model.predict(X_te)
+        assert preds.shape == (20,)
+
+        proba = model.predict_proba(X_te)
+        assert proba.shape == (20, 2)
+        np.testing.assert_allclose(proba.sum(axis=1), 1.0, atol=1e-5)
+
+    @_SKIP_REALMLP_ON_MACOS
+    @pytest.mark.slow
+    def test_realmlp_multiclass(self):
+        X_tr, y_tr, X_va, y_va, X_te = _make_data("multiclass", n_classes=3)
+        model = create_model("realmlp", "multiclass", n_classes=3, seed=42,
+                             **_get_kwargs("realmlp"))
+        model.fit(X_tr, y_tr, X_va, y_va)
+
+        assert model.is_fitted
+        preds = model.predict(X_te)
+        assert preds.shape == (20,)
+
+        proba = model.predict_proba(X_te)
+        assert proba.shape == (20, 3)
+        np.testing.assert_allclose(proba.sum(axis=1), 1.0, atol=1e-5)
+
+    @_SKIP_REALMLP_ON_MACOS
+    @pytest.mark.slow
+    def test_realmlp_regression(self):
+        X_tr, y_tr, X_va, y_va, X_te = _make_data("regression")
+        model = create_model("realmlp", "regression", seed=42,
+                             **_get_kwargs("realmlp"))
+        model.fit(X_tr, y_tr, X_va, y_va)
+
+        assert model.is_fitted
+        preds = model.predict(X_te)
+        assert preds.shape == (20,)
+        assert preds.dtype in (np.float32, np.float64)
+
+        with pytest.raises(NotImplementedError):
+            model.predict_proba(X_te)

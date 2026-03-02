@@ -1,9 +1,10 @@
 """Tests for src.tuning.search_spaces — YAML search space validation."""
 
+import numpy as np
 import pytest
 import optuna
 
-from src.models.factory import list_models
+from src.models.factory import create_model, list_models
 from src.tuning.search_spaces import get_search_space_names, suggest_params
 from src.utils.config import load_models_config
 
@@ -78,3 +79,57 @@ class TestParamRangesValid:
                         assert low > 0, (
                             f"{model_name}.{param_name}: log scale requires low > 0, got {low}"
                         )
+
+
+# ── TUNABLE_MODELS: all models with search spaces except zero-shot TabPFN ───
+
+_TUNABLE_MODELS = [
+    "xgboost", "lightgbm", "catboost",
+    "ft_transformer", "tabnet", "saint", "tabm", "mlp",
+    # realmlp excluded from end-to-end fit test (macOS OpenMP conflict)
+]
+
+# Fast kwargs so the e2e test doesn't spin for long
+_DL_FAST_KWARGS = {
+    "ft_transformer": {"max_epochs": 2, "patience": 2, "d_block": 16, "n_blocks": 1, "attention_n_heads": 2},
+    "tabnet": {"max_epochs": 2, "patience": 2, "n_d": 4, "n_a": 4, "n_steps": 2},
+    "saint": {"max_epochs": 2, "patience": 2, "dim": 16, "depth": 1, "heads": 2},
+    "tabm": {"max_epochs": 2, "patience": 2, "k": 4, "d_block": 16, "n_blocks": 1},
+    "mlp": {"max_epochs": 2, "patience": 2, "d_hidden": 16, "n_blocks": 1},
+}
+
+
+class TestSuggestParamsEndToEnd:
+    """Verify suggest_params -> create_model -> fit works for every tunable model.
+
+    This catches type mismatches (e.g. categorical param returning a numpy int64
+    that a model __init__ cannot handle).
+    """
+
+    @pytest.mark.slow
+    @pytest.mark.parametrize("model_name", _TUNABLE_MODELS)
+    def test_suggest_create_fit(self, model_name):
+        """End-to-end: suggest params, create model, fit on tiny binary data."""
+        rng = np.random.RandomState(0)
+        X_tr = rng.randn(40, 4).astype(np.float32)
+        y_tr = rng.randint(0, 2, size=40).astype(np.int64)
+        X_va = rng.randn(10, 4).astype(np.float32)
+        y_va = rng.randint(0, 2, size=10).astype(np.int64)
+
+        study = optuna.create_study(direction="maximize")
+        trial = study.ask()
+
+        params = suggest_params(trial, model_name)
+
+        # Override with fast kwargs so DL models finish in seconds
+        fast_overrides = _DL_FAST_KWARGS.get(model_name, {})
+        params.update(fast_overrides)
+
+        model = create_model(model_name, task_type="binary", n_classes=2,
+                             seed=0, **params)
+        # Should not raise — type errors in params surface here
+        model.fit(X_tr, y_tr, X_va, y_va)
+
+        assert model.is_fitted
+        preds = model.predict(X_va)
+        assert preds.shape == (10,)
