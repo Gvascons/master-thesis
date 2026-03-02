@@ -1,5 +1,6 @@
 """LightGBM model wrapper."""
 
+import numpy as np
 import lightgbm as lgb
 
 from src.models.base import BaseModel
@@ -39,8 +40,10 @@ class LightGBMModel(BaseModel):
             self.model = lgb.LGBMRegressor(**kwargs)
 
     def fit(self, X_train, y_train, X_val=None, y_val=None):
+        X_train = np.asarray(X_train)
         fit_kwargs = {}
         if X_val is not None and y_val is not None:
+            X_val = np.asarray(X_val)
             fit_kwargs["eval_set"] = [(X_val, y_val)]
             fit_kwargs["callbacks"] = [
                 lgb.log_evaluation(period=0),

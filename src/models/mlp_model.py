@@ -64,6 +64,7 @@ class MLPModel(BaseModel):
         self.dropout = kwargs.pop("dropout", 0.1)
 
     def _build_model(self, n_features: int):
+        torch.manual_seed(self.seed)
         d_out = 1 if self.task_type in ("binary", "regression") else self.n_classes
 
         self.model = _MLP(

@@ -162,6 +162,7 @@ class SAINTModel(BaseModel):
         self.ff_dropout = kwargs.pop("ff_dropout", 0.1)
 
     def _build_model(self, n_features):
+        torch.manual_seed(self.seed)
         d_out = 1 if self.task_type in ("binary", "regression") else self.n_classes
         self.model = SAINTNet(
             n_features=n_features,

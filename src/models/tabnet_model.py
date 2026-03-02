@@ -65,7 +65,7 @@ class TabNetModel(BaseModel):
             if self.task_type == "binary":
                 fit_kwargs["eval_metric"] = ["auc"]
             elif self.task_type == "multiclass":
-                fit_kwargs["eval_metric"] = ["accuracy"]
+                fit_kwargs["eval_metric"] = ["logloss"]
             else:
                 fit_kwargs["eval_metric"] = ["rmse"]
 

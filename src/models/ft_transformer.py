@@ -53,6 +53,7 @@ class FTTransformerModel(BaseModel):
         This is a significant performance opportunity on mixed-feature datasets
         like adult, bank_marketing, diamonds, and credit_g.
         """
+        torch.manual_seed(self.seed)
         import rtdl_revisiting_models
 
         d_out = 1 if self.task_type in ("binary", "regression") else self.n_classes

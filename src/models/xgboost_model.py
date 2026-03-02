@@ -32,16 +32,22 @@ class XGBoostModel(BaseModel):
         kwargs.setdefault("random_state", self.seed)
         kwargs.setdefault("n_jobs", -1)
         kwargs.setdefault("verbosity", 0)
-        kwargs.setdefault("early_stopping_rounds", 50)
+        self.early_stopping_rounds = kwargs.pop("early_stopping_rounds", 50)
 
         self.params = kwargs
-        self.model = xgb.XGBClassifier(**kwargs) if task_type != "regression" else xgb.XGBRegressor(**kwargs)
+        # Note: early_stopping_rounds is set as a constructor param (XGBoost >=2.0)
+        # but only takes effect when eval_set is provided in fit().
+        cls = xgb.XGBClassifier if task_type != "regression" else xgb.XGBRegressor
+        self.model = cls(early_stopping_rounds=self.early_stopping_rounds, **kwargs)
 
     def fit(self, X_train, y_train, X_val=None, y_val=None):
         fit_kwargs = {}
         if X_val is not None and y_val is not None:
             fit_kwargs["eval_set"] = [(X_val, y_val)]
             fit_kwargs["verbose"] = False
+        else:
+            # Disable early stopping when no validation set is available
+            self.model.set_params(early_stopping_rounds=None)
         self.model.fit(X_train, y_train, **fit_kwargs)
         self.is_fitted = True
         return self

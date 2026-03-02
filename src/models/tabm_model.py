@@ -51,6 +51,7 @@ class TabMModel(BaseModel):
 
     def _build_model(self, n_features: int):
         """Build a TabM model using the official ``tabm`` package."""
+        torch.manual_seed(self.seed)
         import tabm as tabm_pkg
 
         d_out = 1 if self.task_type in ("binary", "regression") else self.n_classes
