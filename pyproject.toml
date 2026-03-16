@@ -5,7 +5,7 @@ description = "Foundation Models vs GBDTs on Tabular Data — Master's Research"
 requires-python = ">=3.10"
 dependencies = [
     # Data & ML basics
-    "numpy>=1.26",
+    "numpy>=2.0",
     "pandas>=2.1",
     "scikit-learn>=1.4",
     "openml>=0.14",
