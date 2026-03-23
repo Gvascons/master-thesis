@@ -16,6 +16,32 @@ from sklearn.metrics import (
 logger = logging.getLogger("tabular_benchmark")
 
 
+def ks_score(y_true: np.ndarray, y_score: np.ndarray) -> float:
+    """Compute the Kolmogorov-Smirnov statistic for binary classification.
+
+    KS measures the maximum separation between the cumulative distribution
+    functions of predicted scores for the positive and negative classes.
+    Widely used in credit scoring, fraud detection, and financial risk modelling
+    to assess discriminative power independently of a threshold.
+
+    Args:
+        y_true: Binary ground truth labels (0 or 1).
+        y_score: Predicted probability of the positive class.
+
+    Returns:
+        KS statistic in [0, 1]. Higher is better (perfect separation = 1.0).
+    """
+    pos_scores = np.sort(y_score[y_true == 1])
+    neg_scores = np.sort(y_score[y_true == 0])
+
+    # Build empirical CDFs on a common set of thresholds
+    all_scores = np.sort(np.concatenate([pos_scores, neg_scores]))
+    cdf_pos = np.searchsorted(pos_scores, all_scores, side="right") / max(len(pos_scores), 1)
+    cdf_neg = np.searchsorted(neg_scores, all_scores, side="right") / max(len(neg_scores), 1)
+
+    return float(np.max(np.abs(cdf_pos - cdf_neg)))
+
+
 def compute_classification_metrics(y_true, y_pred, y_proba=None, task_type="binary"):
     """Compute classification metrics.
 
@@ -30,6 +56,7 @@ def compute_classification_metrics(y_true, y_pred, y_proba=None, task_type="bina
         if y_proba is not None:
             metrics["roc_auc"] = roc_auc_score(y_true, y_proba[:, 1])
             metrics["log_loss"] = log_loss(y_true, y_proba)
+            metrics["ks"] = ks_score(y_true, y_proba[:, 1])
     else:
         metrics["f1_macro"] = f1_score(y_true, y_pred, average="macro")
         metrics["f1_weighted"] = f1_score(y_true, y_pred, average="weighted")

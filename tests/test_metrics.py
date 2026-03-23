@@ -8,6 +8,7 @@ from sklearn.metrics import roc_auc_score as sk_roc_auc
 from src.evaluation.metrics import (
     compute_classification_metrics,
     compute_regression_metrics,
+    ks_score,
 )
 
 
@@ -34,9 +35,35 @@ class TestClassificationMetricsPerfect:
         assert metrics["f1_weighted"] == pytest.approx(1.0)
 
 
+class TestKSScore:
+    """Tests for the Kolmogorov-Smirnov statistic."""
+
+    def test_perfect_separation(self):
+        """Perfectly separated scores should give KS = 1.0."""
+        y_true = np.array([0, 0, 0, 1, 1, 1])
+        y_score = np.array([0.1, 0.2, 0.3, 0.7, 0.8, 0.9])
+        assert ks_score(y_true, y_score) == pytest.approx(1.0)
+
+    def test_random_scores(self):
+        """Identical scores for both classes should give KS ≈ 0."""
+        rng = np.random.RandomState(42)
+        y_true = np.array([0] * 500 + [1] * 500)
+        y_score = rng.rand(1000)
+        ks = ks_score(y_true, y_score)
+        # KS should be near 0 for random scores (allow some sampling noise)
+        assert ks < 0.15
+
+    def test_ks_bounded_zero_one(self):
+        """KS score should always be in [0, 1]."""
+        y_true = np.array([0, 1, 0, 1, 0, 1, 0, 1])
+        y_score = np.array([0.4, 0.6, 0.3, 0.7, 0.5, 0.5, 0.2, 0.8])
+        ks = ks_score(y_true, y_score)
+        assert 0.0 <= ks <= 1.0
+
+
 class TestBinaryMetricsWithProba:
     def test_roc_auc_and_log_loss(self):
-        """Verify ROC-AUC and log loss against sklearn for known inputs."""
+        """Verify ROC-AUC, log loss, and KS against known inputs."""
         y_true = np.array([0, 0, 1, 1])
         y_proba = np.array([
             [0.9, 0.1],
@@ -55,6 +82,9 @@ class TestBinaryMetricsWithProba:
 
         assert metrics["roc_auc"] == pytest.approx(expected_auc)
         assert metrics["log_loss"] == pytest.approx(expected_ll)
+        assert "ks" in metrics
+        # Perfectly separated predictions → KS = 1.0
+        assert metrics["ks"] == pytest.approx(1.0)
         # AUC should be 1.0 for these well-separated predictions
         assert metrics["roc_auc"] == pytest.approx(1.0)
 

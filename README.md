@@ -1,6 +1,6 @@
 # Foundation Models vs Gradient-Boosted Decision Trees on Tabular Data
 
-A rigorous empirical comparison of gradient-boosted decision trees, deep learning architectures, and foundation models on tabular prediction tasks. This repository contains the full experimental pipeline for a master's thesis that benchmarks 11 models across 15 OpenML datasets, using nested cross-validation with Bayesian hyperparameter optimization, followed by statistical significance testing and multi-dimensional analysis (scaling behavior, computational cost, and model interpretability).
+A rigorous empirical comparison of gradient-boosted decision trees, deep learning architectures, and foundation models on tabular prediction tasks. This repository contains the full experimental pipeline for a master's thesis that benchmarks 11 models across 18 OpenML datasets, using nested cross-validation with Bayesian hyperparameter optimization, followed by statistical significance testing and multi-dimensional analysis (scaling behavior, computational cost, and model interpretability).
 
 ## Research Questions
 
@@ -34,7 +34,7 @@ Eleven models organized into three families, each receiving family-appropriate p
 
 ## Datasets
 
-Fifteen datasets sourced from OpenML, spanning binary classification, multiclass classification, and regression:
+Eighteen datasets sourced from OpenML, spanning binary classification, multiclass classification, and regression:
 
 | Dataset | Task | Samples | Features | Feature Types |
 |---|---|---|---|---|
@@ -44,6 +44,9 @@ Fifteen datasets sourced from OpenML, spanning binary classification, multiclass
 | higgs | Binary | ~98,000 | 28 | Numerical |
 | magictelescope | Binary | ~19,000 | 10 | Numerical |
 | phoneme | Binary | ~5,400 | 5 | Numerical |
+| give_me_some_credit | Binary | ~150,000 | 10 | Numerical |
+| cardiovascular_disease | Binary | ~70,000 | 11 | Mixed |
+| bank_customer_churn | Binary | ~10,000 | 13 | Mixed |
 | credit_g | Binary | ~1,000 | 20 | Mixed |
 | covertype | Multiclass (7) | ~581,000 | 54 | Numerical |
 | jannis | Multiclass (4) | ~84,000 | 54 | Numerical |
@@ -70,7 +73,7 @@ For each (model, dataset) pair:
 ```
 
 **Metrics:**
-- Binary classification: ROC-AUC (primary), accuracy, F1, log-loss
+- Binary classification: ROC-AUC (primary), accuracy, F1, log-loss, KS (Kolmogorov-Smirnov)
 - Multiclass classification: log-loss (primary), accuracy, F1-macro, F1-weighted
 - Regression: RMSE (primary), MAE, R^2
 
@@ -154,7 +157,7 @@ cd Masters
 # Install dependencies
 uv sync
 
-# Download all 15 datasets from OpenML
+# Download all 18 datasets from OpenML
 python scripts/download_data.py
 
 # (Optional) Download a single dataset
@@ -173,7 +176,7 @@ python scripts/train.py --model ft_transformer --dataset adult --gpu 0
 ### Full experimental pipeline
 
 ```bash
-# Run all 11 models x 15 datasets (resumes from where it left off)
+# Run all 11 models x 18 datasets (resumes from where it left off)
 python scripts/run_all.py --gpu 0
 
 # Run a subset

@@ -93,6 +93,33 @@ classification:
     approx_features: 5
     feature_types: numerical
 
+  give_me_some_credit:
+    openml_id: 46929
+    version: 1
+    task_type: binary
+    n_classes: 2
+    approx_samples: 150000
+    approx_features: 10
+    feature_types: numerical
+
+  cardiovascular_disease:
+    openml_id: 45547
+    version: 1
+    task_type: binary
+    n_classes: 2
+    approx_samples: 70000
+    approx_features: 11
+    feature_types: mixed
+
+  bank_customer_churn:
+    openml_id: 43390
+    version: 1
+    task_type: binary
+    n_classes: 2
+    approx_samples: 10000
+    approx_features: 13
+    feature_types: mixed
+
 regression:
   california_housing:
     openml_id: 44090
