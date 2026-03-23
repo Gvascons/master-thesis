@@ -92,7 +92,7 @@ The contribution could be:
 |---------|------|---------|----------|-------|-----------|--------|
 | credit_g | Binary | ~1,000 | 20 | Mixed | Moderate | Finance |
 | phoneme | Binary | ~5,400 | 5 | Numerical | Moderate | Signal |
-| bank_customer_churn | Binary | ~10,000 | 13 | Mixed | 4:1 | Banking |
+| telco_customer_churn | Binary | ~7,000 | 19 | Mixed | 3:1 | Telecom |
 | magictelescope | Binary | ~19,000 | 10 | Numerical | Balanced | Physics |
 | amazon_employee | Binary | ~33,000 | 9 | Categorical | High | HR |
 | bank_marketing | Binary | ~45,000 | 16 | Mixed | High | Banking |

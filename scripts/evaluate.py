@@ -78,7 +78,11 @@ def aggregate_results(results_dir: Path) -> dict[str, pd.DataFrame]:
     test_df = pd.DataFrame(test_rows)
 
     # Build cross-validation summary (mean +/- std across folds)
-    cv_summary = fold_df.groupby(["model", "dataset"]).agg(
+    # Only aggregate numeric columns — drop string/list columns like task_type, train_indices, val_indices
+    numeric_cols = fold_df.select_dtypes(include="number").columns.tolist()
+    group_cols = ["model", "dataset"]
+    agg_cols = [c for c in numeric_cols if c not in group_cols]
+    cv_summary = fold_df.groupby(group_cols)[agg_cols].agg(
         ["mean", "std"]
     ).reset_index()
 

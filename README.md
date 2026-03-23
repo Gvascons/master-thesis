@@ -46,7 +46,7 @@ Eighteen datasets sourced from OpenML, spanning binary classification, multiclas
 | phoneme | Binary | ~5,400 | 5 | Numerical |
 | give_me_some_credit | Binary | ~150,000 | 10 | Numerical |
 | cardiovascular_disease | Binary | ~70,000 | 11 | Mixed |
-| bank_customer_churn | Binary | ~10,000 | 13 | Mixed |
+| telco_customer_churn | Binary | ~7,000 | 19 | Mixed |
 | credit_g | Binary | ~1,000 | 20 | Mixed |
 | covertype | Multiclass (7) | ~581,000 | 54 | Numerical |
 | jannis | Multiclass (4) | ~84,000 | 54 | Numerical |

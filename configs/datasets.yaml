@@ -111,13 +111,13 @@ classification:
     approx_features: 11
     feature_types: mixed
 
-  bank_customer_churn:
-    openml_id: 43390
+  telco_customer_churn:
+    openml_id: 42178
     version: 1
     task_type: binary
     n_classes: 2
-    approx_samples: 10000
-    approx_features: 13
+    approx_samples: 7000
+    approx_features: 19
     feature_types: mixed
 
 regression:
