@@ -1,6 +1,6 @@
 # Foundation Models vs Gradient-Boosted Decision Trees on Tabular Data
 
-A rigorous empirical comparison of gradient-boosted decision trees, deep learning architectures, and foundation models on tabular prediction tasks. This repository contains the full experimental pipeline for a master's thesis that benchmarks 10 models across 15 OpenML datasets, using nested cross-validation with Bayesian hyperparameter optimization, followed by statistical significance testing and multi-dimensional analysis (scaling behavior, computational cost, and model interpretability).
+A rigorous empirical comparison of gradient-boosted decision trees, deep learning architectures, and foundation models on tabular prediction tasks. This repository contains the full experimental pipeline for a master's thesis that benchmarks 11 models across 15 OpenML datasets, using nested cross-validation with Bayesian hyperparameter optimization, followed by statistical significance testing and multi-dimensional analysis (scaling behavior, computational cost, and model interpretability).
 
 ## Research Questions
 
@@ -11,7 +11,7 @@ A rigorous empirical comparison of gradient-boosted decision trees, deep learnin
 
 ## Models
 
-Ten models organized into three families, each receiving family-appropriate preprocessing:
+Eleven models organized into three families, each receiving family-appropriate preprocessing:
 
 | Family | Model | Key Reference |
 |---|---|---|
@@ -24,6 +24,7 @@ Ten models organized into three families, each receiving family-appropriate prep
 | | TabM | Gorishniy et al., 2024 (ICLR 2025) |
 | | RealMLP | Holzmuller et al., 2024 (NeurIPS 2024) |
 | | MLP (baseline) | -- |
+| | STab | Voskou, Christoforou & Chatzis, 2024 |
 | **Foundation Model** | TabPFN v2 | Hollmann et al., 2025 |
 
 **Preprocessing by family:**
@@ -119,6 +120,7 @@ For each (model, dataset) pair:
 │   │   ├── ft_transformer.py
 │   │   ├── tabnet_model.py
 │   │   ├── saint_model.py      # Vendored PyTorch implementation
+│   │   ├── stab_model.py      # Vendored PyTorch (LWTA + Embedding Mixture + Hybrid Transformer)
 │   │   ├── tabm_model.py       # Official tabm package (BatchEnsemble)
 │   │   ├── realmlp_model.py   # pytabkit RealMLP-TD wrapper
 │   │   ├── tabpfn_model.py
@@ -171,7 +173,7 @@ python scripts/train.py --model ft_transformer --dataset adult --gpu 0
 ### Full experimental pipeline
 
 ```bash
-# Run all 10 models x 15 datasets (resumes from where it left off)
+# Run all 11 models x 15 datasets (resumes from where it left off)
 python scripts/run_all.py --gpu 0
 
 # Run a subset
@@ -223,6 +225,7 @@ All experiments are deterministic given the same seed, software versions, and ha
 | pytorch-tabnet | >= 4.1 | TabNet implementation |
 | tabm | >= 0.0.3 | TabM (BatchEnsemble) implementation |
 | pytabkit | >= 1.7 | RealMLP-TD implementation |
+| einops | >= 0.7 | Tensor rearrangement (STab) |
 | tabpfn | >= 6.0 | TabPFN v2 foundation model |
 | optuna | >= 3.5 | Bayesian hyperparameter optimization |
 | scipy | >= 1.12 | Statistical tests |

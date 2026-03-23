@@ -33,7 +33,7 @@ class TestAllModelsHaveSearchSpace:
 class TestSuggestParamsReturnsValidTypes:
     @pytest.mark.parametrize("model_name", [
         "xgboost", "lightgbm", "catboost",
-        "ft_transformer", "tabnet", "saint", "tabm", "mlp", "realmlp",
+        "ft_transformer", "tabnet", "saint", "stab", "tabm", "mlp", "realmlp",
     ])
     def test_suggest_params_valid(self, model_name):
         """suggest_params should return a dict of valid Python types."""
@@ -85,7 +85,7 @@ class TestParamRangesValid:
 
 _TUNABLE_MODELS = [
     "xgboost", "lightgbm", "catboost",
-    "ft_transformer", "tabnet", "saint", "tabm", "mlp",
+    "ft_transformer", "tabnet", "saint", "stab", "tabm", "mlp",
     # realmlp excluded from end-to-end fit test (macOS OpenMP conflict)
 ]
 
@@ -94,6 +94,7 @@ _DL_FAST_KWARGS = {
     "ft_transformer": {"max_epochs": 2, "patience": 2, "d_block": 16, "n_blocks": 1, "attention_n_heads": 2},
     "tabnet": {"max_epochs": 2, "patience": 2, "n_d": 4, "n_a": 4, "n_steps": 2},
     "saint": {"max_epochs": 2, "patience": 2, "dim": 16, "depth": 1, "heads": 2},
+    "stab": {"max_epochs": 2, "patience": 2, "dim": 16, "depth": 1, "heads": 4, "cases": 4, "n_inference_samples": 2},
     "tabm": {"max_epochs": 2, "patience": 2, "k": 4, "d_block": 16, "n_blocks": 1},
     "mlp": {"max_epochs": 2, "patience": 2, "d_hidden": 16, "n_blocks": 1},
 }

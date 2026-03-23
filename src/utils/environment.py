@@ -50,6 +50,7 @@ def capture_environment() -> dict:
         "pytorch_tabnet",
         "rtdl_revisiting_models",
         "pytabkit",
+        "einops",
     ]
     pkg_versions: dict[str, str | None] = {}
     for pkg in packages:

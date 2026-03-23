@@ -1,6 +1,6 @@
 """Smoke tests: every model can fit/predict on tiny synthetic data.
 
-Tests all 10 models x {binary, multiclass, regression} task types, verifying:
+Tests all 11 models x {binary, multiclass, regression} task types, verifying:
 - fit() completes without error
 - predict() returns the correct shape
 - predict_proba() returns the correct shape (classification) or raises (regression)
@@ -45,13 +45,14 @@ _DL_FAST_KWARGS = {
     "ft_transformer": {"max_epochs": 2, "patience": 2, "d_block": 16, "n_blocks": 1, "attention_n_heads": 2},
     "tabnet": {"max_epochs": 2, "patience": 2, "n_d": 4, "n_a": 4, "n_steps": 2},
     "saint": {"max_epochs": 2, "patience": 2, "dim": 16, "depth": 1, "heads": 2},
+    "stab": {"max_epochs": 2, "patience": 2, "dim": 16, "depth": 1, "heads": 4, "cases": 4, "n_inference_samples": 2},
     "tabm": {"max_epochs": 2, "patience": 2, "k": 4, "d_block": 16, "n_blocks": 1},
     "mlp": {"max_epochs": 2, "patience": 2, "d_hidden": 16, "n_blocks": 1},
     "realmlp": {"n_epochs": 2, "patience": 2, "hidden_width": 16, "n_hidden_layers": 1},
 }
 
 GBDT_MODELS = ["xgboost", "lightgbm", "catboost"]
-DL_MODELS = ["ft_transformer", "tabnet", "saint", "tabm", "mlp"]
+DL_MODELS = ["ft_transformer", "tabnet", "saint", "stab", "tabm", "mlp"]
 # RealMLP excluded from smoke tests: pytabkit (pytorch_lightning) segfaults on macOS
 # when loaded alongside XGBoost/LightGBM due to duplicate OpenMP runtimes.
 # It works on Linux (the actual experiment server) and is tested via test_factory.py.

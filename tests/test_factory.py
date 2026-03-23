@@ -10,6 +10,7 @@ EXPECTED_MODELS = [
     "xgboost", "lightgbm", "catboost",
     "ft_transformer", "tabnet", "saint",
     "tabpfn", "tabm", "realmlp", "mlp",
+    "stab",
 ]
 
 EXPECTED_FAMILIES = {
@@ -23,6 +24,7 @@ EXPECTED_FAMILIES = {
     "tabm": "deep_learning",
     "realmlp": "deep_learning",
     "mlp": "deep_learning",
+    "stab": "deep_learning",
 }
 
 
@@ -54,9 +56,9 @@ class TestUnknownModel:
 
 class TestListModels:
     def test_list_models_returns_all(self):
-        """list_models should return all 10 expected model names."""
+        """list_models should return all 11 expected model names."""
         names = list_models()
-        assert len(names) == 10
+        assert len(names) == 11
         for expected in EXPECTED_MODELS:
             assert expected in names
 

@@ -25,6 +25,9 @@ dependencies = [
     "tabm>=0.0.3",
     "pytabkit>=1.7",
 
+    # STab dependency
+    "einops>=0.7",
+
     # Foundation model
     "tabpfn>=6.0",
 
