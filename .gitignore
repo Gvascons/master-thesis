@@ -16,11 +16,13 @@ env/
 data/raw/
 data/processed/
 
-# Results (regenerated)
-results/raw/
+# Results
+# results/raw/ is tracked to preserve experiment progress across machines
+# (198 experiments take weeks — we don't want to lose work to hardware failure)
 results/aggregated/
 results/figures/
 results/logs/
+results/environment.json
 
 # IDE
 .vscode/
