@@ -42,7 +42,6 @@ def tune_model(
     import pandas as pd
 
     exp_cfg = load_experiment_config()
-    n_trials = n_trials or exp_cfg.n_optuna_trials
     inner_folds = inner_folds or exp_cfg.inner_folds
     seed = seed if seed is not None else exp_cfg.seed
 
@@ -53,6 +52,14 @@ def tune_model(
 
     model_family = get_model_family(model_name)
     preprocess_fn = get_preprocessor(model_family)
+
+    # Use family-appropriate trial count if not explicitly overridden
+    if n_trials is None:
+        if model_family in ("deep_learning", "foundation_model"):
+            n_trials = getattr(exp_cfg, "n_optuna_trials_dl", exp_cfg.n_optuna_trials)
+        else:
+            n_trials = exp_cfg.n_optuna_trials
+    logger.info(f"Using {n_trials} Optuna trials for {model_name} (family={model_family})")
 
     # Convert to DataFrame if needed (for preprocessing)
     if isinstance(X_pool, np.ndarray):
@@ -95,6 +102,11 @@ def tune_model(
             model_kwargs = dict(**params)
             if prep.cat_feature_indices is not None:
                 model_kwargs["cat_feature_indices"] = prep.cat_feature_indices
+            # Reduce STab Bayesian averaging samples during tuning for speed
+            # (8 samples is sufficient for ranking candidate hyperparameters;
+            #  full 64 samples are used in outer CV and final evaluation)
+            if model_name == "stab":
+                model_kwargs["n_inference_samples"] = 8
             model = create_model(model_name, info.task_type, info.n_classes, seed=trial_seed, **model_kwargs)
             model.fit(prep.X_train, y_tr, prep.X_val, y_va)
 

@@ -4,13 +4,23 @@ seed: 42
 test_size: 0.2          # Hold-out test fraction (split before CV)
 outer_folds: 5          # Outer CV folds
 inner_folds: 3          # Inner CV folds (for tuning)
-n_optuna_trials: 100    # 100 TPE trials ≈ 200-300 random search iterations (Bergstra et al.)
+n_optuna_trials: 100    # Default: 100 TPE trials for GBDTs (fast per trial)
+n_optuna_trials_dl: 25  # DL/FM models: 25 TPE trials (expensive per trial)
+                        # 25 trials with TPE captures most of the optimization
+                        # landscape (Akiba et al. 2019); consistent with
+                        # Gioia (UFPE 2025) and standard practice for costly models.
+                        # The 14 already-completed experiments (100 trials) serve
+                        # as a validation anchor.
 optuna_sampler: tpe      # TPE sampler
 optuna_pruner: median    # MedianPruner
 
 # TabPFN-specific (v2.5 natively handles up to 50K samples)
 tabpfn_max_samples: 50000       # Threshold for subsampling (v2.5 native limit)
 tabpfn_n_ensemble_configs: 4    # Number of subsampling ensembles
+
+# Dataset subsampling — cap very large datasets for computational feasibility
+# Standard practice: Gorishniy et al. (2021), McElfresh et al. (2024)
+max_dataset_samples: 100000     # Stratified subsample before hold-out split
 
 # Training
 early_stopping_patience: 20     # For deep learning models

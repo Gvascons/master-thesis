@@ -51,6 +51,19 @@ def train_single(
     # Load data
     X, y, info = load_dataset(dataset_name)
 
+    # Subsample very large datasets for computational feasibility
+    max_samples = getattr(exp_cfg, "max_dataset_samples", None)
+    if max_samples and len(X) > max_samples:
+        logger.info(
+            f"Subsampling {dataset_name} from {len(X):,} to {max_samples:,} samples "
+            f"(max_dataset_samples={max_samples})"
+        )
+        stratify = y if info.task_type in ("binary", "multiclass") else None
+        X, _, y, _ = train_test_split(
+            X, y, train_size=max_samples, random_state=seed, stratify=stratify,
+        )
+        logger.info(f"After subsampling: {len(X):,} samples")
+
     # Compute SHA256 hash of the dataset file for reproducibility tracking
     parquet_path = Path(exp_cfg.data_dir) / f"{dataset_name}.parquet"
     dataset_sha256 = None
