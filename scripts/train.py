@@ -25,6 +25,7 @@ from src.evaluation.metrics import compute_all_metrics
 from src.models.factory import create_model, get_model_family, list_models
 from src.tuning.tuner import tune_model
 from src.utils.config import load_experiment_config
+from src.utils.gpu import free_gpu_memory
 from src.utils.logging import setup_logging, get_logger
 from src.utils.reproducibility import set_seed
 from src.utils.timer import Timer
@@ -119,6 +120,10 @@ def train_single(
 
         logger.info(f"  Fold {fold_idx}: {metrics}")
 
+        # Release this fold's model GPU memory before the next fold
+        del model
+        free_gpu_memory()
+
     # Phase 3: Final evaluation on hold-out test set
     logger.info("=== Final test set evaluation ===")
     stratify = y_pool if info.task_type != "regression" else None
@@ -138,6 +143,10 @@ def train_single(
     test_metrics = compute_all_metrics(final_model, prep_final.X_test, y_test, info.task_type)
     test_metrics["train_time_s"] = timer.result.elapsed
     logger.info(f"Test metrics: {test_metrics}")
+
+    # Release the final model's GPU memory so the next experiment starts clean
+    del final_model
+    free_gpu_memory()
 
     # Save results
     result = {

@@ -13,6 +13,7 @@ from src.evaluation.metrics import compute_primary_metric
 from src.models.factory import create_model, get_model_family
 from src.tuning.search_spaces import suggest_params
 from src.utils.config import load_experiment_config
+from src.utils.gpu import free_gpu_memory
 from src.utils.reproducibility import set_seed
 from src.utils.timer import Timer
 
@@ -113,6 +114,12 @@ def tune_model(
             # Evaluate
             score = compute_primary_metric(model, prep.X_val, y_va, info.task_type)
             fold_scores.append(score)
+
+            # Release the fitted model's GPU memory before the next fold/trial.
+            # Without this, every model's memory accumulates across the ~75 fits
+            # of a tuning run and eventually exhausts the GPU.
+            del model
+            free_gpu_memory()
 
             # Optuna pruning: report intermediate value
             trial.report(np.mean(fold_scores), fold_idx)
