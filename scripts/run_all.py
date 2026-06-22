@@ -11,6 +11,8 @@ Usage:
 """
 
 import json
+import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -34,8 +36,9 @@ from src.utils.timer import Timer
 @click.option("--results-dir", default="results", type=click.Path())
 @click.option("--seed", default=42, type=int)
 @click.option("--force", is_flag=True, help="Re-run experiments even if results already exist")
+@click.option("--in-process", is_flag=True, help="Run experiments in-process (default: isolated subprocess each)")
 @click.option("--verbose", "-v", is_flag=True)
-def main(models, datasets, gpu, results_dir, seed, force, verbose):
+def main(models, datasets, gpu, results_dir, seed, force, in_process, verbose):
     """Run the full experimental pipeline."""
     setup_logging(level="DEBUG" if verbose else "INFO",
                   log_file=Path(results_dir) / "logs" / "run_all.log")
@@ -58,8 +61,14 @@ def main(models, datasets, gpu, results_dir, seed, force, verbose):
     total = len(model_list) * len(dataset_list)
     logger.info(f"Running {len(model_list)} models x {len(dataset_list)} datasets = {total} experiments")
 
-    # Import train_single here to avoid circular imports
-    from scripts.train import train_single
+    # By default each experiment runs in its own subprocess so that a CUDA
+    # out-of-memory error (which can poison the CUDA context irrecoverably)
+    # cannot cascade to later experiments — the process exits, its GPU memory
+    # is fully reclaimed by the OS, and the next experiment starts clean.
+    train_script = Path(__file__).resolve().parent / "train.py"
+    train_single = None
+    if in_process:
+        from scripts.train import train_single  # noqa: F401
 
     raw_dir = results_path / "raw"
     completed = 0
@@ -84,9 +93,31 @@ def main(models, datasets, gpu, results_dir, seed, force, verbose):
                 try:
                     timer = Timer()
                     with timer:
-                        train_single(model_name, ds_name, results_path, gpu=gpu, seed=seed)
-                    completed += 1
-                    logger.info(f"Completed in {timer.result.elapsed:.1f}s")
+                        if in_process:
+                            train_single(model_name, ds_name, results_path, gpu=gpu, seed=seed)
+                        else:
+                            cmd = [
+                                sys.executable, str(train_script),
+                                "--model", model_name,
+                                "--dataset", ds_name,
+                                "--results-dir", str(results_path),
+                                "--seed", str(seed),
+                            ]
+                            if gpu is not None:
+                                cmd += ["--gpu", str(gpu)]
+                            if verbose:
+                                cmd += ["--verbose"]
+                            subprocess.run(cmd, check=True, env=os.environ.copy())
+                    # In subprocess mode, success is confirmed by the result file
+                    if in_process or result_file.exists():
+                        completed += 1
+                        logger.info(f"Completed in {timer.result.elapsed:.1f}s")
+                    else:
+                        failed += 1
+                        logger.error(f"FAILED: {model_name} x {ds_name}: no result file produced")
+                except subprocess.CalledProcessError as e:
+                    failed += 1
+                    logger.error(f"FAILED: {model_name} x {ds_name}: subprocess exited with code {e.returncode}")
                 except Exception as e:
                     failed += 1
                     logger.error(f"FAILED: {model_name} x {ds_name}: {e}", exc_info=True)

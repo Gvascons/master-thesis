@@ -23,6 +23,19 @@ logger = logging.getLogger("tabular_benchmark")
 optuna.logging.set_verbosity(optuna.logging.WARNING)
 
 
+def _is_oom_error(exc: Exception) -> bool:
+    """True if the exception is a CUDA out-of-memory / allocator error.
+
+    Covers torch.cuda.OutOfMemoryError, torch.AcceleratorError ("CUDA error:
+    out of memory"), and the downstream "unknown error" a prior OOM can trigger.
+    """
+    name = type(exc).__name__
+    if name in ("OutOfMemoryError", "AcceleratorError"):
+        return True
+    msg = str(exc).lower()
+    return "out of memory" in msg or "cuda error" in msg
+
+
 def tune_model(
     model_name: str,
     X_pool: np.ndarray | "pd.DataFrame",
@@ -108,11 +121,27 @@ def tune_model(
             #  full 64 samples are used in outer CV and final evaluation)
             if model_name == "stab":
                 model_kwargs["n_inference_samples"] = 8
-            model = create_model(model_name, info.task_type, info.n_classes, seed=trial_seed, **model_kwargs)
-            model.fit(prep.X_train, y_tr, prep.X_val, y_va)
 
-            # Evaluate
-            score = compute_primary_metric(model, prep.X_val, y_va, info.task_type)
+            # A single oversized config (large depth/width on a high-token input)
+            # can exceed GPU memory in one forward/backward pass. Catch that,
+            # free memory, and prune the trial so Optuna steers away from it
+            # instead of crashing the whole experiment.
+            try:
+                model = create_model(model_name, info.task_type, info.n_classes, seed=trial_seed, **model_kwargs)
+                model.fit(prep.X_train, y_tr, prep.X_val, y_va)
+                score = compute_primary_metric(model, prep.X_val, y_va, info.task_type)
+            except Exception as e:
+                if _is_oom_error(e):
+                    logger.warning(
+                        f"Trial {trial.number} fold {fold_idx} ran out of GPU memory "
+                        f"({type(e).__name__}); pruning this config."
+                    )
+                    model = locals().get("model", None)
+                    del model
+                    free_gpu_memory()
+                    raise optuna.TrialPruned()
+                raise
+
             fold_scores.append(score)
 
             # Release the fitted model's GPU memory before the next fold/trial.
