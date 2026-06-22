@@ -79,18 +79,32 @@ class TabPFNModel(BaseModel):
         self.is_fitted = True
         return self
 
+    # Cap on test rows per forward pass. Predicting a large test set at once
+    # (e.g. 16K rows against a 50K-sample context) exhausts GPU memory; chunking
+    # bounds peak memory without changing results (predictions are independent).
+    _PREDICT_BATCH = 2000
+
+    def _batched(self, fn, X):
+        """Apply `fn` over X in row-chunks and concatenate the outputs."""
+        X_arr = X.values if hasattr(X, "values") else X
+        n = X_arr.shape[0]
+        if n <= self._PREDICT_BATCH:
+            return fn(X_arr)
+        chunks = [fn(X_arr[i:i + self._PREDICT_BATCH]) for i in range(0, n, self._PREDICT_BATCH)]
+        return np.concatenate(chunks, axis=0)
+
     def predict(self, X):
         if self.task_type in ("binary", "multiclass"):
             proba = self.predict_proba(X)
             return np.argmax(proba, axis=1)
         else:
-            # Average regression predictions
-            preds = [m.predict(X) for m in self._ensemble_models]
+            # Average regression predictions across the ensemble, chunked
+            preds = [self._batched(m.predict, X) for m in self._ensemble_models]
             return np.mean(preds, axis=0)
 
     def predict_proba(self, X):
         if self.task_type == "regression":
             raise NotImplementedError("predict_proba not available for regression")
-        # Average probabilities across ensemble
-        proba_list = [m.predict_proba(X) for m in self._ensemble_models]
+        # Average probabilities across ensemble, chunked over test rows
+        proba_list = [self._batched(m.predict_proba, X) for m in self._ensemble_models]
         return np.mean(proba_list, axis=0)

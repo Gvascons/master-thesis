@@ -88,7 +88,16 @@ def preprocess_for_deep_learning(
     ])
     cat_pipe = Pipeline([
         ("imputer", SimpleImputer(strategy="most_frequent")),
-        ("encoder", OneHotEncoder(handle_unknown="ignore", sparse_output=False)),
+        # Cap one-hot at 50 levels: columns with >50 categories keep the 49 most
+        # frequent and collapse the rest into an "infrequent" bucket. One-hot of
+        # high-cardinality categoricals (e.g. ID-like columns with thousands of
+        # levels) otherwise explodes the input dimension and makes attention-based
+        # models OOM. Columns with <=50 levels are unaffected (identical output).
+        ("encoder", OneHotEncoder(
+            max_categories=50,
+            handle_unknown="infrequent_if_exist",
+            sparse_output=False,
+        )),
     ])
 
     transformers = []
