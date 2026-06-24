@@ -13,7 +13,7 @@ from src.evaluation.metrics import compute_primary_metric
 from src.models.factory import create_model, get_model_family
 from src.tuning.search_spaces import suggest_params
 from src.utils.config import load_experiment_config
-from src.utils.gpu import free_gpu_memory
+from src.utils.gpu import create_fit_with_retry, free_gpu_memory, is_oom_error
 from src.utils.reproducibility import set_seed
 from src.utils.timer import Timer
 
@@ -21,19 +21,6 @@ logger = logging.getLogger("tabular_benchmark")
 
 # Suppress Optuna's default logging
 optuna.logging.set_verbosity(optuna.logging.WARNING)
-
-
-def _is_oom_error(exc: Exception) -> bool:
-    """True if the exception is a CUDA out-of-memory / allocator error.
-
-    Covers torch.cuda.OutOfMemoryError, torch.AcceleratorError ("CUDA error:
-    out of memory"), and the downstream "unknown error" a prior OOM can trigger.
-    """
-    name = type(exc).__name__
-    if name in ("OutOfMemoryError", "AcceleratorError"):
-        return True
-    msg = str(exc).lower()
-    return "out of memory" in msg or "cuda error" in msg
 
 
 def tune_model(
@@ -123,18 +110,20 @@ def tune_model(
                 model_kwargs["n_inference_samples"] = 8
 
             # A single oversized config (large depth/width on a high-token input)
-            # can exceed GPU memory in one forward/backward pass. Catch that,
-            # free memory, and prune the trial so Optuna steers away from it
-            # instead of crashing the whole experiment.
+            # can exceed GPU memory in one forward/backward pass. create_fit_with_retry
+            # halves the batch size until it fits; if even the smallest batch OOMs,
+            # prune the trial so Optuna steers away from it instead of crashing.
             try:
-                model = create_model(model_name, info.task_type, info.n_classes, seed=trial_seed, **model_kwargs)
-                model.fit(prep.X_train, y_tr, prep.X_val, y_va)
+                model = create_fit_with_retry(
+                    model_name, info.task_type, info.n_classes, trial_seed, model_kwargs,
+                    prep.X_train, y_tr, prep.X_val, y_va,
+                )
                 score = compute_primary_metric(model, prep.X_val, y_va, info.task_type)
             except Exception as e:
-                if _is_oom_error(e):
+                if is_oom_error(e):
                     logger.warning(
-                        f"Trial {trial.number} fold {fold_idx} ran out of GPU memory "
-                        f"({type(e).__name__}); pruning this config."
+                        f"Trial {trial.number} fold {fold_idx} exceeded GPU memory even at "
+                        f"the smallest batch ({type(e).__name__}); pruning this config."
                     )
                     model = locals().get("model", None)
                     del model

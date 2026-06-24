@@ -25,7 +25,7 @@ from src.evaluation.metrics import compute_all_metrics
 from src.models.factory import create_model, get_model_family, list_models
 from src.tuning.tuner import tune_model
 from src.utils.config import load_experiment_config
-from src.utils.gpu import free_gpu_memory
+from src.utils.gpu import create_fit_with_retry, free_gpu_memory
 from src.utils.logging import setup_logging, get_logger
 from src.utils.reproducibility import set_seed
 from src.utils.timer import Timer
@@ -105,11 +105,13 @@ def train_single(
         model_kwargs = dict(**best_params)
         if prep.cat_feature_indices is not None:
             model_kwargs["cat_feature_indices"] = prep.cat_feature_indices
-        model = create_model(model_name, info.task_type, info.n_classes, seed=fold_seed, **model_kwargs)
 
         timer = Timer()
         with timer:
-            model.fit(prep.X_train, y_tr, prep.X_val, y_va)
+            model = create_fit_with_retry(
+                model_name, info.task_type, info.n_classes, fold_seed, model_kwargs,
+                prep.X_train, y_tr, prep.X_val, y_va,
+            )
 
         metrics = compute_all_metrics(model, prep.X_val, y_va, info.task_type)
         metrics["fold"] = fold_idx
@@ -134,11 +136,13 @@ def train_single(
     final_kwargs = dict(**best_params)
     if prep_final.cat_feature_indices is not None:
         final_kwargs["cat_feature_indices"] = prep_final.cat_feature_indices
-    final_model = create_model(model_name, info.task_type, info.n_classes, seed=seed, **final_kwargs)
 
     timer = Timer()
     with timer:
-        final_model.fit(prep_final.X_train, y_final_train, prep_final.X_val, y_final_val)
+        final_model = create_fit_with_retry(
+            model_name, info.task_type, info.n_classes, seed, final_kwargs,
+            prep_final.X_train, y_final_train, prep_final.X_val, y_final_val,
+        )
 
     test_metrics = compute_all_metrics(final_model, prep_final.X_test, y_test, info.task_type)
     test_metrics["train_time_s"] = timer.result.elapsed
