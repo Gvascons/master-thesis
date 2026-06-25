@@ -1,0 +1,12 @@
+model,family,n_test_rows,us_per_row,ms_total,n_repeats
+xgboost,gbdt,9769,0.33,3.2,5
+lightgbm,gbdt,9769,1.91,18.7,5
+catboost,gbdt,9769,1.43,13.94,5
+tabpfn,foundation_model,9769,7416.1,72447.87,5
+mlp,deep_learning,9769,2.37,23.18,5
+tabm,deep_learning,9769,3.48,34.0,5
+realmlp,deep_learning,9769,1.52,14.81,5
+tabnet,deep_learning,9769,17.09,166.91,5
+ft_transformer,deep_learning,9769,28.87,282.06,5
+saint,deep_learning,9769,44.69,436.61,5
+stab,deep_learning,9769,8644.82,84451.21,5
