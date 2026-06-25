@@ -43,6 +43,10 @@ def load_dataset(name: str, data_dir: Path | None = None) -> tuple[pd.DataFrame,
 
     if data_dir is None:
         data_dir = Path(exp_cfg.data_dir)
+        # exp_cfg.data_dir ("data/raw") is repo-relative by design; resolve it
+        # against the repo root so loading works from any CWD (e.g. notebooks/).
+        if not data_dir.is_absolute():
+            data_dir = Path(__file__).resolve().parents[2] / data_dir
 
     # Find config
     ds_cfg = None
