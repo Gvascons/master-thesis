@@ -46,9 +46,9 @@ def tune_model(
     inner_folds = inner_folds or exp_cfg.inner_folds
     seed = seed if seed is not None else exp_cfg.seed
 
-    # TabPFN is zero-shot — no tuning
-    if model_name == "tabpfn":
-        logger.info("TabPFN is zero-shot — skipping tuning")
+    # Foundation models are zero-shot — no tuning
+    if model_name in ("tabpfn", "tabfm"):
+        logger.info(f"{model_name} is zero-shot — skipping tuning")
         return {"best_params": {}, "best_score": None, "study": None, "elapsed": 0.0}
 
     model_family = get_model_family(model_name)
