@@ -207,6 +207,10 @@ tabpfn:
   # TabPFN is zero-shot — no tuning parameters
   # Subsampling ensemble configs are in experiment.yaml
 
+tabfm:
+  # TabFM (Google, 2026) is zero-shot — no tuning parameters
+  # Row cap (50K) and ensemble size are fixed in tabfm_model.py, mirroring TabPFN
+
 mlp:
   n_blocks:
     type: int
@@ -294,6 +298,58 @@ stab:
     low: 1.0e-5
     high: 1.0e-3
     log: true
+
+kan:
+  # Fixed (not tuned): spline_order=3, SiLU base, grid_range=[-2,2] after
+  # per-layer LayerNorm — see kan_model.py and the viability memo.
+  n_layers:
+    type: int
+    low: 1
+    high: 3
+  d_hidden:
+    type: categorical
+    choices: [32, 64, 128, 256]
+  grid_size:
+    type: categorical
+    choices: [3, 5, 10, 20]
+  learning_rate:
+    type: float
+    low: 1.0e-4
+    high: 1.0e-2
+    log: true
+  weight_decay:
+    type: float
+    low: 1.0e-6
+    high: 1.0e-3
+    log: true
+  reg_lambda:
+    type: float
+    low: 1.0e-8
+    high: 1.0e-2
+    log: true
+
+tabkan:
+  # ChebyKAN variant fixed (paper's best on average); ranges follow the
+  # paper's NAS section, trimmed to a 25-trial budget — see tabkan_model.py.
+  n_layers:
+    type: int
+    low: 1
+    high: 4
+  d_hidden:
+    type: categorical
+    choices: [16, 32, 64, 128]
+  degree:
+    type: int
+    low: 2
+    high: 5
+  learning_rate:
+    type: float
+    low: 1.0e-4
+    high: 1.0e-2
+    log: true
+  weight_decay:
+    type: categorical
+    choices: [0.0, 1.0e-6, 1.0e-5, 1.0e-4]
 
 tabm:
   arch_type:

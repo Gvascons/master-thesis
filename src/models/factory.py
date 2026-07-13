@@ -33,6 +33,9 @@ def _populate_registry():
         ("src.models.realmlp_model", "RealMLPModel"),
         ("src.models.mlp_model", "MLPModel"),
         ("src.models.stab_model", "STabModel"),
+        ("src.models.kan_model", "KANModel"),
+        ("src.models.tabkan_model", "TabKANModel"),
+        ("src.models.tabfm_model", "TabFMModel"),
     ]
 
     for module_path, class_name in _model_imports:
