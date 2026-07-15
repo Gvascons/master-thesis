@@ -68,7 +68,13 @@ def compute_classification_metrics(y_true, y_pred, y_proba=None, task_type="bina
             except ValueError as e:
                 logger.warning("ROC-AUC computation failed: %s", e)
                 metrics["roc_auc_ovr"] = np.nan
-            metrics["log_loss"] = log_loss(y_true, y_proba)
+            # labels pinned to the proba columns: without it sklearn infers the
+            # label set from y_true, which breaks if an eval split happens to
+            # miss a rare class (stratification makes this unlikely, not
+            # impossible — e.g. helena has 100 classes).
+            metrics["log_loss"] = log_loss(
+                y_true, y_proba, labels=np.arange(y_proba.shape[1]),
+            )
 
     return metrics
 

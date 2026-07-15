@@ -22,10 +22,26 @@ def friedman_test(scores_df: pd.DataFrame) -> dict:
     """
     model_scores = [scores_df[col].values for col in scores_df.columns]
     stat, p_value = stats.friedmanchisquare(*model_scores)
+
+    # Iman-Davenport correction (Demšar 2006): the chi-square approximation is
+    # conservative for small N; the corrected statistic follows an F
+    # distribution with (k-1, (k-1)(N-1)) degrees of freedom.
+    n = len(scores_df)          # datasets (blocks)
+    k = len(scores_df.columns)  # models (groups)
+    denom = n * (k - 1) - stat
+    if denom > 0:
+        f_stat = (n - 1) * stat / denom
+        f_p_value = float(stats.f.sf(f_stat, k - 1, (k - 1) * (n - 1)))
+    else:  # chi-square at its upper bound — all rankings identical
+        f_stat, f_p_value = np.inf, 0.0
+
     return {
         "statistic": stat,
         "p_value": p_value,
         "reject_null": p_value < 0.05,
+        "iman_davenport_f": f_stat,
+        "iman_davenport_p": f_p_value,
+        "reject_null_iman_davenport": f_p_value < 0.05,
     }
 
 
