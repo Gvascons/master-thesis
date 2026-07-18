@@ -1,3 +1,5 @@
+> **NOTA (18/07/2026):** este documento retrata a fase de **11 modelos** do benchmark. O estado atual (14 modelos, 250/252 células, TabFM líder nas três tarefas) está em `notebooks/00_presentation.ipynb` (§6.2), `notebooks/TABELA_RESULTADOS.md` e `docs/programa-de-pesquisa.md`. Mantido como registro histórico da fase.
+
 # The Benchmark, as a Story — Analytical Narrative & Design
 
 > **What this document is.** Before any plot is drawn, this is the *spine* of the

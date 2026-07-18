@@ -140,3 +140,23 @@ ponto/quantil, alvos a/b), ~1 dia de trabalho + horas de GPU:
 - **ago:** rotulagem OOF + piloto (2 datasets) → decisão; grade completa.
 - **set:** extensão de datasets + ablações + Pareto 3-estratégias.
 - **out:** escrita do preprint + integração à dissertação.
+
+---
+
+## Adendo de execução (18/07/2026) — decisões de implementação
+
+Registradas conforme o contrato de conduta (programa §7). Nenhuma altera
+hipóteses, métricas ou critérios de decisão pré-registrados:
+
+1. **Cap de 50k linhas no fit do teacher** (`fit_teacher`): o pool do
+   year_prediction (80k) excede o limite nativo do TabPFN. Optou-se por
+   subamostrar o contexto a 50k — a MESMA política do wrapper do benchmark —
+   em vez de `ignore_pretraining_limits=True`, para que o teacher da
+   destilação veja exatamente o que o TabPFN do benchmark via.
+2. **Predição do teacher em chunks de 2000 linhas + liberação de GPU entre
+   folds**: prever um fold de 16k linhas contra contexto de 50k numa passada
+   única estoura os 16 GB de VRAM. Predições são independentes por linha;
+   chunking não altera resultados.
+3. **Encadeamento tolerante a falhas**: o estágio de alunos executa com os
+   datasets rotulados disponíveis mesmo se um OOF falhar (o dataset faltante
+   é pulado e reportado).

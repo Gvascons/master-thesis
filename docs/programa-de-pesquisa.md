@@ -5,7 +5,8 @@
 > cada frente, os critérios de conclusão e os riscos. Versionado no
 > repositório para que nada dependa de estado local. Campos entre [ ] exigem
 > confirmação do aluno/secretaria — não foram assumidos.
-> Última revisão: 17/07/2026.
+> Última revisão: 18/07/2026 (benchmark 14×18 completo; AI-1 consolidada;
+> LODO@14 concluído; piloto de destilação em execução).
 
 ## 0. Fio condutor científico (a tese em um parágrafo)
 
@@ -29,21 +30,24 @@ custo → reversões/curvas de aprendizado → framework de decisão).
 **Formato/prazo:** [confirmar com a secretaria: formato do documento, data de
 entrega e de apresentação]. Material de apresentação já pronto.
 
-**Estado: ~95% — em consolidação final.**
+**Estado: ~99% — núcleo completo (18/07/2026).**
 
 | Item | Estado | Onde |
 |---|---|---|
-| Benchmark 11 modelos × 18 datasets (197/198) | ✅ | `results/raw`, `results/aggregated` |
-| Protocolo estatístico auditado formalmente | ✅ | `docs/metodologia-estatistica.md` |
+| Benchmark **14 modelos** × 18 datasets (250/252; 2 exclusões estruturais no helena) | ✅ | `results/raw`, `results/aggregated` |
+| Protocolo estatístico auditado + sensibilidade do ROPE | ✅ | `docs/metodologia-estatistica.md`, `rope_sensitivity.csv` |
 | Curvas de aprendizado / crossover (RQ2) | ✅ | `notebooks/10_learning_curves.ipynb` |
-| Deck de apresentação + roteiros + tabela mestra | ✅ | `notebooks/00_presentation.ipynb`, `ROTEIRO_APRESENTACAO.md`, `FALA_APRESENTACAO.md`, `TABELA_RESULTADOS.md` |
-| Expansão para 14 modelos (KAN, TabKAN, TabFM) | 🔄 33/53 experimentos | `results/raw/{kan,tabkan,tabfm}_*` |
-| Refresh de análises/notebooks/deck com 14 modelos | ⏳ bloqueado pelo run | tarefa #12 |
+| Notebooks 01-09 re-executados @14 + figuras | ✅ | `notebooks/`, `results/figures/` |
+| Deck @14 (narrativa em 2 movimentos, §6.2 nova) + tabela mestra | ✅ | `notebooks/00_presentation.ipynb`, `TABELA_RESULTADOS.md` |
+| Roteiros de fala atualizados @14 | ✅ 18/07 | `ROTEIRO_APRESENTACAO.md`, `FALA_APRESENTACAO.md` |
+| Latência dos 3 modelos novos | ⏳ (~10 min de GPU; após piloto de destilação) | `scripts/measure_latency.py` |
 
-**Critério de conclusão (definition of done):** benchmark 14×18 completo
-(52/53 possíveis; tabfm×helena é exclusão estrutural documentada), notebooks
-01-10 re-executados, deck e tabela mestra regenerados, tudo commitado e
-pushado, roteiro de fala atualizado com os números novos.
+**Achados-síntese do benchmark @14:** TabFM lidera as três tarefas (rank
+médio 2,7/1,0/1,2) e é o nº 1 absoluto em 13/18 datasets, ao custo de
+latência ~5 ordens acima dos GBDTs; KAN/TabKAN ficam no último terço nas
+três tarefas (teste independente desfavorável às alegações do TabKAN);
+o "empate" do estudo original fica corretamente re-escopado como retrato da
+geração ≤2025.
 
 ## 2. Entrega 2 — ATIVIDADE DE ORIENTAÇÃO INDIVIDUAL (AI-2)
 
@@ -61,13 +65,14 @@ direção das hipóteses (ponto: destilado 0.610 vs controle 0.636 RMSE;
 distribucional: CRPS −11%, calibração 0.73 vs 0.36 de PICP80). Meta:
 **preprint até outubro/2026** (a área anda em ciclos de ~3 meses).
 
-**Pilar B — Framework de decisão validado (o produto).** Elevação do
-framework de descritivo para validado: (i) resultado negativo rigoroso — 
-roteamento por meta-features não generaliza sob LODO (hit 0.11 vs baseline
-0.44); (ii) política "FM primeiro, desvie por restrição" com o menor regret
-(mediano 0.018); (iii) matriz multicritério e flowchart regenerados com 14
-modelos. O framework fica constraint-driven — exatamente o desenho do nosso
-flowchart — agora com validação em vez de intuição.
+**Pilar B — Framework de decisão validado (o produto). CONCLUÍDO em
+essência (18/07):** (i) resultado negativo rigoroso — roteamento por
+meta-features não generaliza sob LODO (hit 0.11 vs baseline 0.44 no estudo
+@11); (ii) política "FM primeiro, desvie por restrição" com regret mediano
+0.018 @11 e **0.000 @14** (`lodo_validation_14.csv`) — com a geração 2026 a
+questão do roteamento por desempenho se dissolve e restam as restrições;
+(iii) matriz multicritério e flowchart regenerados com 14 modelos. Resta
+apenas a redação do relatório consolidado (com o Pilar A).
 
 **Formato/prazo:** [confirmar formato exigido; prazo interno: alinhado ao
 cronograma da prorrogação — set/out 2026].

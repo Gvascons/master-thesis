@@ -1,125 +1,87 @@
-# Fala pro professor — texto corrido, informal e direto
+# Fala pro professor — texto corrido, informal e direto (estado: 14 modelos)
 
-> Pra ler falando numa conversa 1-a-1 com o orientador. Tom direto, sem
-> formalidade de plateia. As marcações *(em itálico)* são só dica de quando abrir
-> a figura — não se lê em voz alta.
+> Pra ler falando numa conversa 1-a-1 com o orientador. As marcações
+> *(em itálico)* são dicas de quando abrir a figura — não se lê em voz alta.
+> Números conferidos contra `TABELA_RESULTADOS.md` e o deck em 18/07/2026.
 
 ---
 
-Então, professor, deixa eu te mostrar o que eu fiz. A ideia toda parte de uma frase
-que todo mundo repete: "em dado tabular, boosting sempre vence". Boosting é o
-XGBoost, LightGBM, CatBoost — esses modelos que empilham centenas de arvorezinhas,
-cada uma corrigindo o erro da anterior. A crença é que eles ganham do deep learning e
-acabou. Só que essa frase é de antes da leva nova de 2024-2025: redes feitas
-sob medida pra dado tabular, tipo TabM e RealMLP, e os *foundation models*, o TabPFN
-à frente — um modelo que já vem pré-treinado e você usa em modo *zero-shot*, sem
-treinar nada. Então minha pergunta é: essa frase ainda vale? E se não, o que muda?
+Então, professor, deixa eu te atualizar — desde a última conversa o benchmark
+cresceu pros quatorze modelos que combinamos, e o resultado mudou a história de
+um jeito que eu acho que o senhor vai gostar.
 
-Pra testar isso direito eu montei um benchmark grande — onze modelos em dezoito
-datasets do OpenML, cobrindo os três tipos de tarefa: dez de classificação binária,
-três de multiclasse e cinco de regressão, de mil a quinhentas e oitenta mil amostras.
-Um detalhe honesto: seis modelos vieram de biblioteca oficial, mas quatro eu
-implementei do zero em PyTorch a partir do paper — incluindo o SAINT e o STab, que
-não têm pacote maduro. Foi bastante trabalho de engenharia, e é justo registrar
-porque, se um desses vai mal, fica a dúvida se é o modelo ou a minha implementação.
+Relembrando a espinha: a frase "em dado tabular, boosting sempre vence" foi
+formada antes da leva nova. Eu montei o benchmark pra re-testar isso direito —
+nested cross-validation, tuning bayesiano igual pra todo mundo, teste
+estatístico frequentista e bayesiano, quatorze modelos em dezoito datasets. Dos
+quatorze, sete vieram de biblioteca oficial, um da comunidade, um é backbone
+vendorizado com adaptações documentadas, e cinco eu implementei do zero a
+partir dos papers — incluindo os dois novos da família Kolmogorov-Arnold, o KAN
+e o TabKAN. E os dois foundation models: o TabPFN e o TabFM do Google, que saiu
+há três semanas — a gente deve estar entre os primeiros do mundo a medi-lo num
+protocolo neutro.
 
-*(esquema do protocolo)*
+A história agora tem dois movimentos.
 
-Sobre medir de forma justa, o esqueleto é validação cruzada aninhada. Rapidão: um
-laço externo só pra medir o modelo honestamente, e dentro dele um laço interno só pra
-escolher os hiperparâmetros — os "botões" de cada algoritmo. O pulo do gato é que a
-escolha dos botões nunca vê o teste, então eu não tenho vazamento de dado, que é o
-modelo parecer melhor do que é porque espiou a resposta sem querer. Essa busca dos
-botões eu faço com o Optuna, que é uma otimização que aprende onde vale a pena
-procurar em vez de testar no chute.
+**Movimento um: o empate — que era a manchete até aqui — vale para a geração
+até 2025.** Entre boosting, deep learning e o TabPFN, o topo é estatisticamente
+indistinguível: pelo teste bayesiano com zona de indiferença de um ponto de
+AUC, oito dos dez modelos são praticamente equivalentes ao líder. E eu fiz a
+análise de sensibilidade desse limiar, que era uma pendência de rigor: com
+meio ponto, sobram XGBoost e CatBoost equivalentes; com dois pontos, todos. Ou
+seja, a conclusão qualitativa aguenta o aperto. E oitenta por cento da variância
+de rank é interna às famílias — o modelo importa mais que a família.
 
-Agora os resultados. Eu penso em três atos porque tem uma virada.
+*(mostrar a §6.2 do deck)*
 
-**Ato um: o empate.** No desempenho puro, o topo é estatisticamente indistinguível.
-Eu rodei o teste de Friedman — que pergunta "tem diferença real ou é só ruído?" — e
-ele diz que tem. Mas o teste seguinte, o *post-hoc*, que é o que localiza onde estão
-as diferenças, não separa o pelotão de cima: tá todo mundo amontoado.
+**Movimento dois: a geração 2026 quebra o empate.** O TabFM, zero-shot, sem um
+segundo de tuning, é o número um absoluto em **treze dos dezoito datasets** — e
+lidera o rank médio nas **três** tarefas: 2.7 na binária, 1.0 perfeito na
+multiclasse, 1.2 na regressão. Não foi o deep learning tunado que alcançou o
+boosting, como a literatura de 2024 sugeria; foi o pré-treino que atropelou os
+dois. Só que tem o contrapeso, e ele é brutal: a inferência custa na casa de
+cem milissegundos por linha nos contextos grandes — medimos ~300 mil vezes o
+XGBoost. O melhor modelo em acurácia é o pior em latência. Então a pergunta de
+decisão mudou de "qual família?" para "**a latência do foundation model cabe no
+meu caso de uso?**" — e é exatamente isso que o nosso framework multicritério
+responde.
 
-*(average_ranks e cd_diagram_binary)*
+Dois achados menores que valem menção. Primeiro, as KANs: fui rigoroso na
+integração — sanity check contra o paper, desvios de protocolo documentados — e
+no teste independente elas afundaram: meio de tabela na binária, último terço
+nas três tarefas, o TabKAN atrás até do TabNet em multiclasse e regressão. O
+paper delas comparava contra um XGBoost fraco; sob protocolo uniforme, a
+alegação não se sustenta. É resultado negativo, mas é o primeiro teste neutro
+da família que a literatura ganha — isso tem valor.
 
-E aqui já aparece a primeira pista: o TabPFN lidera binária e regressão, mas na
-multiclasse quem lidera é o deep learning — o vencedor já depende da tarefa. Nesse
-diagrama de diferença crítica, todo mundo ligado pela barra grossa é empatado, e o
-topo é um bloco só. Pra não confiar num teste só, reforcei o empate de dois jeitos:
-um teste bayesiano, que em vez de "sim ou não" me dá a probabilidade de um ser melhor
-que o outro dentro de uma margem que na prática não importa — e por essa lente, oito
-dos dez modelos são praticamente equivalentes ao TabPFN. E uma decomposição de
-variância, que mostrou que oitenta por cento da variação de desempenho está *dentro*
-das famílias, não entre elas. Ou seja: "boosting versus deep learning" é uma
-abstração fraca, o modelo específico importa muito mais que a família. O único sinal
-robusto é lá no fundo — o TabNet é sempre o pior.
+Segundo, eu validei o framework de decisão de um jeito que ele ainda não tinha
+sido: leave-one-dataset-out. A árvore de meta-features, como preditor, **não**
+generaliza — acerto abaixo do baseline trivial, e eu digo isso com todas as
+letras. Mas a política "**foundation model primeiro, desvie só por
+restrição**" tem regret mediano **zero** com os quatorze modelos. Ou seja: o
+flowchart, que sempre foi orientado a restrições — latência? tamanho? número de
+classes? — sai da validação fortalecido. As perguntas certas eram as
+restrições, não adivinhar o vencedor.
 
-**Ato dois: o custo.** Se todo mundo empata em acurácia, a decisão migra pra outro
-eixo. E esses modelos que empatam são absurdamente diferentes em custo: o treino
-varia trezentas vezes, e a latência de inferência varia vinte e seis mil vezes.
+E aí chega a parte da contribuição, onde eu fui atrás do rigor máximo antes de
+gastar um mês de GPU. A ideia era destilar o foundation model num aluno rápido
+— pegar a acurácia do TabFM e servir com latência de XGBoost. Fiz a checagem de
+novidade datada, e descobri que a formulação básica **já foi publicada em maio
+deste ano** — um grupo destilou foundation models em árvores para
+**classificação**, em 153 datasets. Se eu tivesse construído sem checar, seria
+refutado na primeira revisão. Mas o recorte que sobrou é forte e é nosso: a
+**regressão distribucional** ninguém fez — os foundation models preveem
+distribuições na regressão, não pontos, e destilar a distribuição inteira num
+GBDT de quantis, medindo com CRPS e calibração de intervalos, é gap aberto.
+Registrei o desenho antes de rodar: hipóteses com números, controles, critérios
+de go/no-go. O piloto está rodando agora; no smoke test os dois sinais que eu
+previa já apareceram — o aluno destilado ganha do controle em RMSE, e herda a
+**calibração** do teacher: cobertura de 0.73 contra 0.36 do aluno comum, para
+um nominal de 0.80. Se confirmar nos dados completos, é o núcleo do preprint
+que eu quero submeter até outubro, dentro do cronograma da prorrogação.
 
-*(pareto_binary e inference_time)*
-
-Esse gráfico é a fronteira de Pareto — quem está nela é porque não existe ninguém ao
-mesmo tempo mais barato e melhor. E a fronteira é TabPFN, XGBoost e LightGBM; todo o
-deep learning fica dominado, sempre tem alguém mais barato e igual ou melhor. E o
-achado que eu considero a âncora é a inversão do TabPFN: ele é o mais barato pra
-treinar — um segundo, zero tuning, porque é zero-shot — mas é o segundo mais caro pra
-usar, umas vinte e duas mil vezes mais lento que o XGBoost na inferência. Vira a
-lógica de cabeça pra baixo: de graça pra treinar, caríssimo pra pôr em produção.
-
-**Ato três: as reversões.** É onde a frase original desmorona de vez — a melhor
-família depende da estrutura do problema.
-
-*(cd_diagram_multiclass e robustness_riskmap)*
-
-Na multiclasse, o deep learning sobe pro topo (STab, TabM, RealMLP) — a reversão mais
-marcante, mas com a ressalva de serem só três datasets, então é descritivo. Sob dados
-muito desbalanceados, tipo fraude, o boosting se sai relativamente melhor. Com muita
-variável categórica, os modelos de atenção engasgam porque a codificação explode de
-tamanho. E esse mapa de risco mostra uma coisa legal do TabPFN: ele tem o melhor
-desempenho médio e o melhor pior-caso ao mesmo tempo — quase nunca é catastrófico,
-enquanto todos os outros têm pelo menos um dataset onde despencam.
-
-*(learning_curves — a parte nova)*
-
-E essa aqui é a parte que eu fiz depois e que amarra tudo. Repara que a briga
-original — "boosting ganha" contra "o deep learning alcançou" — é no fundo uma
-questão de quantos dados você tem. Então eu fui medir de frente: peguei cinco
-datasets e re-treinei cada modelo em fatias crescentes, de quinhentas amostras até o
-conjunto todo, pra ver onde a liderança troca de mãos. E em três dos cinco, o deep
-learning começa atrás e ultrapassa o boosting conforme o dado cresce, sem devolver a
-liderança; num deles o boosting retoma lá pelas quatro mil amostras; e num deles fica
-boosting o tempo todo. Não tem resposta única, o ponto de cruzamento é específico de
-cada problema. Mas o número mais limpo é o do regime de poucos dados: até quatro mil
-amostras, o TabPFN é o melhor nos cinco datasets, sem exceção. É a prova quantitativa
-de que os foundation models mudaram o jogo quando você tem pouco dado — e casa com o
-custo do ato dois: barato de treinar e o melhor justo onde o dado é escasso.
-
-*(decision_matrix e decision_flowchart)*
-
-Juntando tudo, a contribuição concreta — que não existe na literatura pra essa leva
-de 2024-2025 — é um framework de decisão. Uma matriz que pontua cada modelo em cada
-critério, e a mensagem é que ninguém tira nota máxima em tudo: o TabPFN domina
-desempenho e robustez mas é fraco em latência, e o boosting é o generalista
-equilibrado. E um fluxograma prático: o cara responde três perguntas — precisa de
-resposta rápida? qual o tamanho e a dimensão? tem muito categórico? — e sai com uma
-lista curta e defensável de modelos pra testar.
-
-Fechando, e sendo transparente nos limites: meu poder estatístico é baixo, são dez,
-três e cinco datasets por tarefa, e por isso eu não cravo "fulano é o vencedor" —
-sustento o empate com o bayesiano e a decomposição de variância, que são honestos
-sobre a incerteza. E o mais importante: pra onde isso aponta. O gargalo mais concreto
-que apareceu foi como o deep learning lida com variável categórica — aquela explosão
-que estoura a memória da GPU. Minha próxima etapa nasce daí: um jeito melhor de
-representar categórico com *embeddings* aprendidos, pra fechar a distância pro
-boosting nesse tipo de dado. E o bom é que agora eu tenho como medir sucesso de forma
-objetiva — é mover aquela curva de aprendizado pra esquerda, fazer o deep learning
-alcançar o boosting com menos dado. Não é um "melhorar" vago, é um alvo num gráfico
-que eu já sei desenhar.
-
-Resumindo numa frase: a regra de que boosting sempre vence não é falsa, é
-incompleta. Ela vale numa foto, e o que eu mostro é o filme — quando a acurácia
-empata, e ela empata, a decisão esperta migra pro custo, pra latência, pra estrutura
-do problema e pro tamanho do dado. É isso que transforma "qual o melhor modelo?" em
-"melhor pra quê, com quantos dados, e a que custo?". É isso, o que você acha?
+Resumindo numa frase: a regra de que boosting sempre vence não é falsa — ela
+expirou. Valia até 2025; em 2026 o pré-treino quebrou o empate, o custo virou o
+eixo da decisão, e a nossa contribuição ataca exatamente o preço que o novo
+líder cobra. Benchmark completo, framework validado, contribuição desenhada e
+em execução. É isso — o que o senhor acha?

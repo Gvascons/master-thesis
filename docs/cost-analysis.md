@@ -1,3 +1,5 @@
+> **NOTA (18/07/2026):** este documento retrata a fase de **11 modelos** do benchmark. O estado atual (14 modelos, 250/252 células, TabFM líder nas três tarefas) está em `notebooks/00_presentation.ipynb` (§6.2), `notebooks/TABELA_RESULTADOS.md` e `docs/programa-de-pesquisa.md`. Mantido como registro histórico da fase.
+
 # Cost vs Performance — Phase 1 (preliminary)
 
 > Companion to `results-overview.md`. Where raw performance is a statistical

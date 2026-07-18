@@ -22,9 +22,10 @@
 - Alegações dos proponentes (TabKAN; TabKANet) vs avaliações céticas (Yu et
   al.; benchmark de Poeta et al.); ausência de KAN nos benchmarks neutros.
 - **Posicionamento:** nosso benchmark fornece o teste independente sob
-  protocolo uniforme que faltava (com resultado desfavorável às alegações
-  fortes — dado parcial @17/07: meio de tabela em binária, fundo em
-  multiclasse).
+  protocolo uniforme que faltava — resultado final (18/07, 250 células):
+  KAN/TabKAN no último terço nas três tarefas (ranks 11,0/11,4 na binária;
+  TabKAN em último na multiclasse e regressão), desfavorável às alegações
+  fortes do paper.
 
 ## 3.4 Foundation models tabulares: avaliação e aceleração
 - Linha PFN/ICL (TabPFN v2/2.5, TabICL, TabFlex, MotherNet); TabFM.

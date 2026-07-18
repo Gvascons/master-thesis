@@ -194,10 +194,16 @@ que a família".
   de HPs exclusivamente no CV interno, pré-processamento ajustado só no
   treino de cada fold.
 
-## 7. Pendências registradas (não bloqueiam)
+## 7. Pendências — estado em 18/07/2026
 
-1. Análise de sensibilidade do ROPE (0.005 / 0.01 / 0.02).
-2. Re-execução de todos os testes com os 14 modelos quando o benchmark novo
-   concluir (a matriz binária vira 10×14; multiclasse ganha a segunda
-   exclusão estrutural do tabfm).
-3. Diagramas CD regenerados com N=14 (o CD cresce com k — declarar).
+1. ~~Análise de sensibilidade do ROPE~~ **FEITA** (17/07): 0.005/0.01/0.02 →
+   2/8/10 de 10 modelos equivalentes ao líder; no limiar estrito, XGBoost
+   (P(equiv)=0.65) e CatBoost (0.54) permanecem equivalentes
+   (`results/aggregated/rope_sensitivity.csv`).
+2. ~~Re-execução @14~~ **FEITA** (18/07): notebooks 01-09 e deck re-executados
+   sobre a matriz de 250 células; a análise bayesiana do "empate" ficou
+   **explicitamente escopada aos 11 modelos da geração ≤2025** (decisão
+   editorial declarada no deck §4/§6.2).
+3. ~~CD @14~~ **FEITO**, com a cautela declarada: com k=14 e N=10 o CD é
+   largo; a separação do TabFM se sustenta na consistência entre datasets
+   (13/18) e no bayesiano, não no Nemenyi.

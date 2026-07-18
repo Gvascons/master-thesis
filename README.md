@@ -1,6 +1,6 @@
 # Foundation Models vs Gradient-Boosted Decision Trees on Tabular Data
 
-A rigorous empirical comparison of gradient-boosted decision trees, deep learning architectures, and foundation models on tabular prediction tasks. This repository contains the full experimental pipeline for a master's thesis that benchmarks 11 models across 18 OpenML datasets, using nested cross-validation with Bayesian hyperparameter optimization, followed by statistical significance testing and multi-dimensional analysis (scaling behavior, computational cost, and model interpretability).
+A rigorous empirical comparison of gradient-boosted decision trees, deep learning architectures, and foundation models on tabular prediction tasks. This repository contains the full experimental pipeline for a master's thesis that benchmarks 14 models across 18 OpenML datasets, using nested cross-validation with Bayesian hyperparameter optimization, followed by statistical significance testing and multi-dimensional analysis (scaling behavior, computational cost, and model interpretability).
 
 ## Research Questions
 
@@ -11,7 +11,7 @@ A rigorous empirical comparison of gradient-boosted decision trees, deep learnin
 
 ## Models
 
-Eleven models organized into three families, each receiving family-appropriate preprocessing:
+Fourteen models organized into three families, each receiving family-appropriate preprocessing:
 
 | Family | Model | Key Reference |
 |---|---|---|
@@ -25,7 +25,10 @@ Eleven models organized into three families, each receiving family-appropriate p
 | | RealMLP | Holzmuller et al., 2024 (NeurIPS 2024) |
 | | MLP (baseline) | -- |
 | | STab | Voskou, Christoforou & Chatzis, 2024 |
-| **Foundation Model** | TabPFN v2 | Hollmann et al., 2025 |
+| | KAN | Liu et al., 2024 (ICLR 2025); vendored efficient-kan backbone |
+| | TabKAN | Eslamian, Aghaei & Cheng, 2025 (own reimplementation) |
+| **Foundation Model** | TabPFN v2.5 | Hollmann et al., 2025 |
+| | TabFM | Google Research, 2026 (blog + model card; no peer-reviewed paper as of Jul/2026) |
 
 **Preprocessing by family:**
 - **GBDT**: ordinal-encode categoricals, median-impute missing values
