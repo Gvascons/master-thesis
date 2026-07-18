@@ -36,12 +36,16 @@ META = {
     "ft_transformer": ("DL (attn)",  "própria"),
     "saint":          ("DL (attn)",  "própria"),
     "stab":           ("DL (attn)",  "própria"),
+    "kan":            ("DL (KAN)",   "vendorizado"),
+    "tabkan":         ("DL (KAN)",   "própria"),
+    "tabfm":          ("Foundation", "oficial"),
 }
 # nicer display names
 DISP = {
     "xgboost": "XGBoost", "lightgbm": "LightGBM", "catboost": "CatBoost",
     "tabpfn": "TabPFN", "realmlp": "RealMLP", "tabm": "TabM", "tabnet": "TabNet",
     "mlp": "MLP", "ft_transformer": "FT-Transformer", "saint": "SAINT", "stab": "STab",
+    "kan": "KAN", "tabkan": "TabKAN", "tabfm": "TabFM",
 }
 
 
@@ -125,11 +129,13 @@ def main():
 
     # ================= build the document =================
     md = []
-    md.append("# Tabela mestra de resultados — benchmark tabular 2025\n")
-    md.append("> **11 modelos × 18 datasets** (10 binárias · 3 multiclasse · 5 regressão), "
+    md.append("# Tabela mestra de resultados — benchmark tabular 2026\n")
+    md.append("> **14 modelos × 18 datasets** (10 binárias · 3 multiclasse · 5 regressão), "
               "resultado no hold-out (seed 42). Gerado por `scripts/build_results_table.py` "
               "a partir de `results/aggregated/test_results.csv` (+ latência e curvas RQ2). "
-              "Cobertura: **197/198** — falta só TabPFN×helena (100 classes > limite do modelo).\n")
+              "Cobertura: **250/252** — as 2 ausências são exclusões estruturais no helena "
+              "(100 classes excede o limite de TabPFN e TabFM). Latência e curvas RQ2 cobrem "
+              "os 11 modelos originais (medições dos 3 novos: pendência registrada).\n")
     md.append("Métrica primária por tarefa: **binária → ROC-AUC (↑)**, "
               "**multiclasse → log-loss (↓)**, **regressão → RMSE (↓)**. "
               "Em cada coluna o **melhor valor está em negrito**; `Rank méd.` é o rank médio "
@@ -154,10 +160,10 @@ def main():
         sd = fmt(small_rank.get(m), 1)
         md.append(f"| **{DISP[m]}** | {fam} | {impl} | {rb} | {rm} | {rr} | "
                   f"{tr} | {tu} | {la} | {sd} |")
-    md.append("\n*Leitura rápida: **TabPFN** tem o melhor rank em binária, multi e regressão "
-              "(e no small-data), mas latência altíssima (~7.4 ms/linha, só atrás do STab); os "
-              "**GBDTs** são os all-rounders baratos; **TabNet** é consistentemente o pior; o DL "
-              "pesado (SAINT, STab, FT-Transformer) custa minutos de treino sem liderar.*")
+    md.append("\n*Leitura rápida: **TabFM** lidera as três tarefas (zero-shot), com latência "
+              "proibitiva (~100 ms/linha em contextos grandes); **TabPFN** é o vice consistente; os "
+              "**GBDTs** são os all-rounders baratos; **KAN/TabKAN** ficam no fundo junto ao TabNet "
+              "(teste independente desfavorável); o DL pesado custa minutos de treino sem liderar.*")
 
     # 2. per-task tables
     md.append("\n---\n\n## 2. Binária — ROC-AUC ↑ (10 datasets)\n")

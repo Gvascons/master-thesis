@@ -143,16 +143,48 @@ def sort_quantiles(Q):
 # --------------------------------------------------------------------------- #
 # stage: oof — teacher labels the pool out-of-fold + anchors on the hold-out
 # --------------------------------------------------------------------------- #
+TEACHER_MAX_ROWS = 50_000  # TabPFN v2.5 native limit; mirrors tabpfn_max_samples
+
+
 def make_teacher(device):
     from tabpfn import TabPFNRegressor
     return TabPFNRegressor(device=device, n_estimators=8, random_state=SEED)
 
-def teacher_predict(model, X):
-    """Mean + quantile grid in one predict call each (API verified 15/07)."""
-    mean = np.asarray(model.predict(X, output_type="mean"))
-    qs = model.predict(X, output_type="quantiles", quantiles=QUANTILES)
-    Q = np.column_stack([np.asarray(q) for q in qs])
-    return mean, sort_quantiles(Q)
+
+def fit_teacher(model, X, y):
+    """Fit respecting the teacher's 50K context limit (same subsampling
+    policy as the benchmark's TabPFN wrapper, for comparability)."""
+    if len(y) > TEACHER_MAX_ROWS:
+        rng = np.random.default_rng(SEED)
+        idx = rng.choice(len(y), size=TEACHER_MAX_ROWS, replace=False)
+        X, y = X[idx], y[idx]
+    model.fit(X, y)
+    return model
+
+def teacher_predict(model, X, batch=2000):
+    """Mean + quantile grid, chunked over rows: predicting a large fold in
+    one pass against a 50K context OOMs the 16GB GPU (predictions are
+    independent, so chunking bounds peak memory without changing results —
+    same rationale as the benchmark's TabPFN wrapper)."""
+    means, Qs = [], []
+    for i in range(0, len(X), batch):
+        xb = X[i:i + batch]
+        means.append(np.asarray(model.predict(xb, output_type="mean")))
+        qs = model.predict(xb, output_type="quantiles", quantiles=QUANTILES)
+        Qs.append(np.column_stack([np.asarray(q) for q in qs]))
+    return np.concatenate(means), sort_quantiles(np.vstack(Qs))
+
+
+def free_teacher(model):
+    """Release the teacher's GPU context between folds."""
+    del model
+    try:
+        import gc, torch
+        gc.collect()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+    except ImportError:
+        pass
 
 
 def run_oof(datasets, device, cap=None):
@@ -177,10 +209,11 @@ def run_oof(datasets, device, cap=None):
         t0 = time.perf_counter()
         for fi, (tr, ho) in enumerate(kf.split(Xp)):
             model = make_teacher(device)
-            model.fit(Xp[tr], y_pool[tr])
+            fit_teacher(model, Xp[tr], y_pool[tr])
             m, Q = teacher_predict(model, Xp[ho])
             mean_oof[ho] = m
             Q_oof[ho] = Q
+            free_teacher(model)
             print(f"  fold {fi+1}/{OOF_FOLDS} rotulado "
                   f"({time.perf_counter()-t0:.0f}s)", flush=True)
         assert not np.isnan(mean_oof).any()
@@ -193,8 +226,9 @@ def run_oof(datasets, device, cap=None):
 
         # teacher anchor on the hold-out (fit on the FULL pool, as deployed)
         model = make_teacher(device)
-        model.fit(Xp, y_pool)
+        fit_teacher(model, Xp, y_pool)
         m, Q = teacher_predict(model, Xt)
+        free_teacher(model)
         rmse = float(np.sqrt(np.mean((y_test - m) ** 2)))
         row = {"dataset": ds, "teacher": "tabpfn", "rmse": round(rmse, 6),
                "mae": round(float(np.mean(np.abs(y_test - m))), 6),
