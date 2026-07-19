@@ -183,20 +183,26 @@ def main():
                     "n_test": n_test, "fit_time_s": round(ft, 2)})
             print(f"  [{name}] rmse={rmse:.4f} crps={crps} lat={us:.1f}us/row", flush=True)
 
-        # ---- ancora TabFM (ponto, contexto cheio) ----
+    # ---- segunda passada: ancoras TabFM (o backbone fica cacheado no
+    # processo; roda depois de TODO o trabalho TabPFN para nao roubar VRAM) ----
+    from distill import make_teacher
+    for ds in DATASETS:
         key = (ds, "tabfm_full", "8")
-        if key not in done:
-            from distill import make_teacher
-            model = make_teacher("auto", "tabfm")
-            t0 = time.perf_counter()
-            model.fit(Xp, y_pool)
-            ft = time.perf_counter() - t0
-            rmse, crps, us = timed_teacher_eval(model, Xt, y_test, teacher="tabfm")
-            free_teacher(model)
-            append({"dataset": ds, "system": "tabfm_full", "config": "8",
-                    "rmse": round(rmse, 6), "crps": "", "us_per_row": round(us, 2),
-                    "n_test": n_test, "fit_time_s": round(ft, 2)})
-            print(f"  [tabfm_full] rmse={rmse:.4f} lat={us:.0f}us/row", flush=True)
+        if key in done:
+            print(f"  [skip] tabfm_full {ds}", flush=True)
+            continue
+        X_pool, y_pool, X_test, y_test, info = prep_pool(ds, exp_cfg)
+        Xp, Xt = ordinal_encode(X_pool, X_test)
+        model = make_teacher("auto", "tabfm")
+        t0 = time.perf_counter()
+        model.fit(Xp, y_pool)
+        ft = time.perf_counter() - t0
+        rmse, crps, us = timed_teacher_eval(model, Xt, y_test, teacher="tabfm")
+        free_teacher(model)
+        append({"dataset": ds, "system": "tabfm_full", "config": "8",
+                "rmse": round(rmse, 6), "crps": "", "us_per_row": round(us, 2),
+                "n_test": len(y_test), "fit_time_s": round(ft, 2)})
+        print(f"  [tabfm_full {ds}] rmse={rmse:.4f} lat={us:.0f}us/row", flush=True)
 
     print("\nPARETO DONE", flush=True)
 
