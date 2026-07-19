@@ -12,8 +12,8 @@ formato não.
 | 3. Trabalhos relacionados | `cap3-related-work-outline.md` | esqueleto com fontes |
 | 4. Metodologia | `cap4-metodologia.md` | **rascunho completo v1** |
 | 5. Benchmark (4 atos) | — | aguarda refresh @14 |
-| 6. Framework validado | — | material: notebooks 08-09 + LODO |
-| 7. Destilação | — | material: desenho pré-registrado + resultados futuros |
+| 6. Framework validado | `cap6-framework.md` | **rascunho completo v1** |
+| 7. Destilação | `cap7-destilacao.md` | **rascunho v1** (§7.6 aguarda Pareto) |
 | 8. Conclusão | — | por último |
 
 Regra de escrita (contrato de conduta, programa §7): números só com origem
