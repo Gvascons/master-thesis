@@ -22,3 +22,9 @@ year_prediction,teacher_ctx,1000,9.276665,4.703391,1318.94,20000,0.25
 year_prediction,teacher_ctx,5000,8.826475,4.397545,4575.52,20000,1.08
 year_prediction,teacher_ctx,10000,8.749168,4.345745,10988.89,20000,2.02
 year_prediction,teacher_ctx,25000,8.661175,4.279134,45050.09,20000,4.83
+year_prediction,teacher_ctx,50000,8.6097,4.246261,148623.09,20000,10.67
+year_prediction,teacher_ens,1,8.676917,4.30338,22849.18,20000,1.94
+year_prediction,teacher_ens,4,8.619438,4.248706,74318.52,20000,5.42
+year_prediction,student_point_hard,tuned,8.672737,,3.67,20000,61.69
+year_prediction,student_quant_hard,tuned,9.246438,4.557298,127.57,20000,900.76
+year_prediction,student_quant_soft,tuned,9.120371,4.427021,169.16,20000,1345.27

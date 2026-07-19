@@ -107,12 +107,14 @@ alunos destilados e a âncora TabFM (Figura 7.X,
 4.045 µs/linha) — a estratégia "reduzir ensemble" é mais forte do que o
 default da biblioteca sugere, e entra na fronteira em faixas intermediárias.
 
-**Limitação de hardware documentada:** o ponto cronometrado do
-year_prediction a contexto de 50k não pôde ser medido — o pico de memória da
-passada de quantis com 8 membros excede deterministicamente os 16 GB da RTX
-5080 mesmo com modo de economia de memória e chunks de 500 linhas (a
-acurácia desse ponto está ancorada, sem timing, pela avaliação OOF:
-RMSE 8,610/CRPS 4,246). O grid cronometrado do conjunto termina em 25k.
+**Nota de hardware:** o ponto do year_prediction a contexto de 50k só é
+mensurável na RTX 5080 (16 GB) com o modo de economia de memória do TabPFN
+**forçado** (a heurística "auto" subestima o pico e estoura a VRAM); o custo
+desse modo aparece na própria medição — 148,6 ms/linha, ~3,3× a latência do
+ponto de 25k (45,1 ms/linha) para um ganho de RMSE de apenas 8,661→8,610.
+Em GPUs de 16 GB, o último passo de contexto compra pouquíssima acurácia por
+um multiplicador severo de latência — um argumento adicional, e involuntário,
+a favor das alternativas ao teacher completo.
 
 ## 7.7 Discussão
 

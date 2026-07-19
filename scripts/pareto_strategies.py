@@ -48,12 +48,10 @@ OUT = REPO / "results" / "distillation" / "pareto.csv"
 DATASETS = ["california_housing", "diamonds", "year_prediction"]
 CTX_GRID = [1000, 5000, 10000, 25000, TEACHER_MAX_ROWS]
 ENS_GRID = [1, 4]
-# year @ 50K context, 8 members: the timed quantile pass deterministically
-# peaks past the 16GB VRAM (OOMs even with memory_saving_mode=True and
-# batch=500). The point is omitted from the TIMED grid — its accuracy is
-# still anchored (untimed) in teacher_eval.csv; documented in cap7 §7.6.
-SKIP_TIMED = {("year_prediction", "teacher_ctx", "50000"),
-              ("year_prediction", "teacher_ens", "8")}
+# year @ 50K context fits ONLY with memory_saving_mode forced True (the
+# "auto" heuristic underestimates and OOMs); the measured cost of that mode
+# is ~3x the latency (148.6 vs ~45 ms/row at 25K) — reported as-is.
+SKIP_TIMED = set()
 HEADER = ["dataset", "system", "config", "rmse", "crps", "us_per_row",
           "n_test", "fit_time_s"]
 
