@@ -88,24 +88,38 @@ partir de n=2.000) mas **não no california** (ruído em todos os tamanhos).
 Leitura honesta: o moderador não é apenas o tamanho do pool — é
 dataset-dependente. Registrado como observação, não como afirmação geral.
 
-### A leitura de Pareto (H3, preliminar)
+### Fase 3 — a fronteira de Pareto (H3): COMPLETA (19/07)
 
-No california_housing: o aluno-quantil destilado entrega CRPS 0,109 (vs
-0,180 do hard e 0,069 do teacher) a latência de GBDT (~µs), enquanto o
-teacher cobra 7.416 µs/linha — **retém 64% da vantagem distribucional a
-~3 ordens de magnitude menos latência**. Esta é a célula-semente da figura
-central do paper; a fronteira completa (destilar × contexto-reduzido ×
-ensemble-reduzido) é a próxima etapa.
+30 células medidas em 3 datasets (`results/distillation/pareto.csv`; figura
+`results/figures/pareto_distill.png/pdf` — paleta validada, marcadores como
+codificação secundária). Leitura em dois planos:
 
-## Próximas etapas (fase 3)
+- **Plano pontual (RMSE):** o aluno clássico ocupa o regime rápido (2,6-5,3
+  µs/linha) — H1 refutada, visível; o TabFM ancora o extremo de acurácia a
+  custo brutal (18 ms/linha no california; **394 ms/linha no year**).
+- **Plano distribucional (CRPS) — onde H3 se confirma:** abaixo de
+  ~250 µs/linha (california) e ~1.300 µs/linha (year), **só os alunos
+  existem, e o destilado é o CRPS-ótimo entre eles**: california 0,109@99µs
+  (teacher mais barato: 0,094@245µs); year 4,43@169µs contra 4,70@1.319µs do
+  teacher mais barato — o teacher precisa de 10.989 µs/linha para superar o
+  aluno destilado em CRPS.
+- **Achados colaterais:** (i) ensemble de 1 membro do TabPFN ≈ ou melhor que
+  8 membros a 1/7 da latência (california: 0,2521 vs 0,2556) — "reduzir
+  ensemble" é subestimada; (ii) o último passo de contexto (25k→50k) no year
+  só é mensurável com memory-saving forçado e custa 3,3× de latência por
+  ΔRMSE de 0,05 — argumento involuntário contra o teacher completo em GPUs
+  de 16 GB. (Correção registrada: a alegação anterior de OOM "determinístico"
+  no ponto 50k estava errada — commit 64b410a.)
 
-1. Fronteira de Pareto completa (H3): medir teacher com contexto
-   {1k,5k,10k,25k} e ensemble {1,4,8} + latência dos alunos-quantil.
-2. Aluno MLP-quantil (a família do aluno importa?).
-3. Ablação OOF vs in-sample (réplica do achado Pocket FM em regressão).
-4. Extensão de datasets (OpenML-CTR23) para N que suporte inferência.
-5. Exploratório: distribuição interna do TabFM (bins) como alvo.
-6. Redação do preprint (título de trabalho no desenho; alvo out/2026).
+## Próximas etapas (fase 4)
+
+1. Aluno MLP-quantil (a família do aluno importa?).
+2. Ablação OOF vs in-sample (réplica do achado Pocket FM em regressão).
+3. Extensão de datasets (OpenML-CTR23) para N que suporte inferência.
+4. Exploratório: distribuição interna do TabFM (bins) como alvo.
+5. Redação do preprint (título de trabalho no desenho; alvo out/2026 — 
+   material das fases 1-3 já cobre motivação, método, resultados centrais e
+   figura principal).
 
 ## Enquadramento honesto para orientador/banca
 

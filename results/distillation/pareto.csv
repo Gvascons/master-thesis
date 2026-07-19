@@ -28,3 +28,4 @@ year_prediction,teacher_ens,4,8.619438,4.248706,74318.52,20000,5.42
 year_prediction,student_point_hard,tuned,8.672737,,3.67,20000,61.69
 year_prediction,student_quant_hard,tuned,9.246438,4.557298,127.57,20000,900.76
 year_prediction,student_quant_soft,tuned,9.120371,4.427021,169.16,20000,1345.27
+year_prediction,tabfm_full,8,8.379663,,394300.66,20000,2.06
