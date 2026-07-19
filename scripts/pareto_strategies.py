@@ -48,6 +48,12 @@ OUT = REPO / "results" / "distillation" / "pareto.csv"
 DATASETS = ["california_housing", "diamonds", "year_prediction"]
 CTX_GRID = [1000, 5000, 10000, 25000, TEACHER_MAX_ROWS]
 ENS_GRID = [1, 4]
+# year @ 50K context, 8 members: the timed quantile pass deterministically
+# peaks past the 16GB VRAM (OOMs even with memory_saving_mode=True and
+# batch=500). The point is omitted from the TIMED grid — its accuracy is
+# still anchored (untimed) in teacher_eval.csv; documented in cap7 §7.6.
+SKIP_TIMED = {("year_prediction", "teacher_ctx", "50000"),
+              ("year_prediction", "teacher_ens", "8")}
 HEADER = ["dataset", "system", "config", "rmse", "crps", "us_per_row",
           "n_test", "fit_time_s"]
 
@@ -79,11 +85,13 @@ def subsample(X, y, n, seed=42):
     return X[idx], y[idx]
 
 
-def timed_teacher_eval(model, Xt, y_test, teacher="tabpfn"):
-    """Warm-up on a small chunk, then one timed full pass (see module doc)."""
-    _ = teacher_predict(model, Xt[:200], teacher=teacher)
+def timed_teacher_eval(model, Xt, y_test, teacher="tabpfn", batch=2000):
+    """Warm-up on a small chunk, then one timed full pass (see module doc).
+    batch=500 for 50K contexts: the quantile expansion on wide data
+    fragments a 16GB GPU at batch=2000."""
+    _ = teacher_predict(model, Xt[:200], teacher=teacher, batch=batch)
     t0 = time.perf_counter()
-    m, Q = teacher_predict(model, Xt, teacher=teacher)
+    m, Q = teacher_predict(model, Xt, teacher=teacher, batch=batch)
     dt = time.perf_counter() - t0
     rmse = float(np.sqrt(np.mean((y_test - m) ** 2)))
     crps = round(crps_from_quantiles(y_test, Q), 6) if Q is not None else ""
@@ -122,15 +130,22 @@ def main():
         for ctx in CTX_GRID:
             ctx_eff = min(ctx, len(y_pool))
             key = (ds, "teacher_ctx", str(ctx_eff))
+            if key in SKIP_TIMED:
+                print(f"  [skip-vram] teacher_ctx {ctx_eff} (ver SKIP_TIMED)", flush=True)
+                continue
             if key in done or (ctx != ctx_eff and (ds, "teacher_ctx", str(ctx_eff)) in done):
                 print(f"  [skip] teacher_ctx {ctx_eff}", flush=True)
                 continue
             Xs, ys = subsample(Xp, y_pool, ctx_eff)
-            model = TabPFNRegressor(device="auto", n_estimators=8, random_state=42)
+            # force memory-saving above 25K context: "auto" underestimates and
+            # the 50K/8-member quantile pass peaks past 16GB
+            model = TabPFNRegressor(device="auto", n_estimators=8, random_state=42,
+                                    memory_saving_mode=True if ctx_eff > 25000 else "auto")
             t0 = time.perf_counter()
             model.fit(Xs, ys)
             ft = time.perf_counter() - t0
-            rmse, crps, us = timed_teacher_eval(model, Xt, y_test)
+            rmse, crps, us = timed_teacher_eval(
+                model, Xt, y_test, batch=500 if ctx_eff > 25000 else 2000)
             free_teacher(model)
             append({"dataset": ds, "system": "teacher_ctx", "config": str(ctx_eff),
                     "rmse": round(rmse, 6), "crps": crps, "us_per_row": round(us, 2),
@@ -147,11 +162,13 @@ def main():
                 print(f"  [skip] teacher_ens {ens}", flush=True)
                 continue
             Xs, ys = subsample(Xp, y_pool, TEACHER_MAX_ROWS)
-            model = TabPFNRegressor(device="auto", n_estimators=ens, random_state=42)
+            model = TabPFNRegressor(device="auto", n_estimators=ens, random_state=42,
+                                    memory_saving_mode=True if len(y_pool) > 25000 else "auto")
             t0 = time.perf_counter()
             model.fit(Xs, ys)
             ft = time.perf_counter() - t0
-            rmse, crps, us = timed_teacher_eval(model, Xt, y_test)
+            rmse, crps, us = timed_teacher_eval(
+                model, Xt, y_test, batch=500 if len(ys) > 25000 else 2000)
             free_teacher(model)
             append({"dataset": ds, "system": "teacher_ens", "config": str(ens),
                     "rmse": round(rmse, 6), "crps": crps, "us_per_row": round(us, 2),

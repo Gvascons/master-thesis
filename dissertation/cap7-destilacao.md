@@ -79,16 +79,40 @@ dataset-dependente, não como afirmação geral.
 
 ## 7.6 A fronteira de Pareto (H3)
 
-[Seção a completar com `results/distillation/pareto.csv` — medições de
-teacher com contexto {1k, 5k, 10k, 25k, 50k}, ensemble {1, 4, 8}, alunos
-destilados e âncora TabFM, nos três conjuntos com gap positivo.]
+Medimos, no hold-out do benchmark, acurácia (RMSE; CRPS para os sistemas
+distribucionais) e latência de inferência (µs/linha) de cada estratégia de
+aceleração nos três conjuntos com gap positivo: teacher com contexto
+comprimido {1k, 5k, 10k, 25k, cheio}, teacher com ensemble reduzido {1, 4},
+alunos destilados e a âncora TabFM (Figura 7.X,
+`results/figures/pareto_distill.png`; dados em
+`results/distillation/pareto.csv`).
 
-Leitura preliminar (california_housing): o teacher com contexto de 1.000
-linhas atinge CRPS 0,094 a 245 µs/linha; o aluno-quantil destilado atinge
-CRPS 0,109 a ~unidades de µs/linha. A fronteira é genuína — em orçamentos de
-latência estritos (< ~250 µs/linha) apenas o aluno destilado existe; acima,
-a compressão de contexto compete. A figura central do capítulo plota
-acurácia × latência (log) com as três estratégias e os baselines clássicos.
+**Leitura em dois planos, correspondendo a H1 e H2:**
+
+- **Plano pontual (RMSE):** o aluno clássico de rótulos duros já ocupa o
+  regime de baixa latência (2,6 µs/linha no california com RMSE 0,260) — a
+  refutação de H1 tornada visível: não há o que a destilação pontual
+  adicionar ali. As curvas do teacher compram acurácia com latência
+  (california: RMSE 0,299→0,256 entre 245 e 4.045 µs/linha), e o TabFM
+  ancora o extremo de acurácia a 18.159 µs/linha.
+- **Plano distribucional (CRPS):** o aluno-quantil destilado é o único
+  habitante da fronteira abaixo de ~250 µs/linha — california: CRPS 0,109 a
+  99 µs contra 0,181 do controle a 50 µs e 0,094 do teacher mais barato a
+  245 µs. Confirma H3 no recorte que importa: **para servir distribuições
+  em orçamentos estritos de latência, destilar é a única opção no menu** —
+  e retém a maior parte da vantagem do teacher (§7.4).
+
+**Achado colateral — o ensemble do TabPFN:** reduzir de 8 para 1 membro
+*melhorou* o RMSE no california (0,252 vs 0,256) a 1/7 da latência (589 vs
+4.045 µs/linha) — a estratégia "reduzir ensemble" é mais forte do que o
+default da biblioteca sugere, e entra na fronteira em faixas intermediárias.
+
+**Limitação de hardware documentada:** o ponto cronometrado do
+year_prediction a contexto de 50k não pôde ser medido — o pico de memória da
+passada de quantis com 8 membros excede deterministicamente os 16 GB da RTX
+5080 mesmo com modo de economia de memória e chunks de 500 linhas (a
+acurácia desse ponto está ancorada, sem timing, pela avaliação OOF:
+RMSE 8,610/CRPS 4,246). O grid cronometrado do conjunto termina em 25k.
 
 ## 7.7 Discussão
 
