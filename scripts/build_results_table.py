@@ -134,8 +134,8 @@ def main():
               "resultado no hold-out (seed 42). Gerado por `scripts/build_results_table.py` "
               "a partir de `results/aggregated/test_results.csv` (+ latência e curvas RQ2). "
               "Cobertura: **250/252** — as 2 ausências são exclusões estruturais no helena "
-              "(100 classes excede o limite de TabPFN e TabFM). Latência e curvas RQ2 cobrem "
-              "os 11 modelos originais (medições dos 3 novos: pendência registrada).\n")
+              "(100 classes excede o limite de TabPFN e TabFM). Latência medida para os 14 modelos (adult); curvas RQ2 cobrem os 6 "
+              "modelos varridos.\n")
     md.append("Métrica primária por tarefa: **binária → ROC-AUC (↑)**, "
               "**multiclasse → log-loss (↓)**, **regressão → RMSE (↓)**. "
               "Em cada coluna o **melhor valor está em negrito**; `Rank méd.` é o rank médio "

@@ -1,0 +1,4 @@
+dataset,teacher,rmse,mae,crps,picp80,width80,picp90,width90,n_test
+wine_quality,tabpfn,0.605056,0.480829,0.30771,0.8875,1.242285,0.94375,1.515664,160
+wine_quality,tabfm,0.609057,0.46365,,,,,,160
+california_housing,tabpfn,0.31975,0.197913,0.107585,0.95625,0.419771,0.9625,0.472756,160

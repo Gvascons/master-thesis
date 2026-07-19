@@ -1,6 +1,6 @@
 # Tabela mestra de resultados — benchmark tabular 2026
 
-> **14 modelos × 18 datasets** (10 binárias · 3 multiclasse · 5 regressão), resultado no hold-out (seed 42). Gerado por `scripts/build_results_table.py` a partir de `results/aggregated/test_results.csv` (+ latência e curvas RQ2). Cobertura: **250/252** — as 2 ausências são exclusões estruturais no helena (100 classes excede o limite de TabPFN e TabFM). Latência e curvas RQ2 cobrem os 11 modelos originais (medições dos 3 novos: pendência registrada).
+> **14 modelos × 18 datasets** (10 binárias · 3 multiclasse · 5 regressão), resultado no hold-out (seed 42). Gerado por `scripts/build_results_table.py` a partir de `results/aggregated/test_results.csv` (+ latência e curvas RQ2). Cobertura: **250/252** — as 2 ausências são exclusões estruturais no helena (100 classes excede o limite de TabPFN e TabFM). Latência medida para os 14 modelos (adult); curvas RQ2 cobrem os 6 modelos varridos.
 
 Métrica primária por tarefa: **binária → ROC-AUC (↑)**, **multiclasse → log-loss (↓)**, **regressão → RMSE (↓)**. Em cada coluna o **melhor valor está em negrito**; `Rank méd.` é o rank médio do modelo naquela tarefa (1 = melhor).
 
@@ -13,7 +13,7 @@ Ranks médios por tarefa (↓ melhor) + custo típico. `Rank n≤4k` é o rank n
 
 | Modelo | Família | Impl. | Rank bin. | Rank multi | Rank reg. | Treino (s) | Tuning (s) | Latência (µs/linha) | Rank n≤4k |
 |---|---|---|---|---|---|---|---|---|---|
-| **TabFM** | Foundation | oficial | 2.7 | 1.0 | 1.2 | 0.2 | 0 |  |  |
+| **TabFM** | Foundation | oficial | 2.7 | 1.0 | 1.2 | 0.2 | 0 | 43262.0 |  |
 | **TabPFN** | Foundation | oficial | 4.2 | 2.5 | 3.0 | 1.3 | 0 | 7416.1 | 1.0 |
 | **XGBoost** | GBDT | oficial | 5.0 | 6.0 | 5.0 | 0.7 | 132 | 0.3 | 2.8 |
 | **CatBoost** | GBDT | oficial | 5.3 | 7.0 | 5.8 | 3.8 | 648 | 1.4 | 3.6 |
@@ -24,8 +24,8 @@ Ranks médios por tarefa (↓ melhor) + custo típico. `Rank n≤4k` é o rank n
 | **RealMLP** | DL (MLP) | oficial | 7.7 | 4.3 | 5.2 | 36.9 | 1475 | 1.5 | 5.4 |
 | **STab** | DL (attn) | própria | 8.8 | 3.7 | 9.6 | 198.9 | 14956 | 8644.8 |  |
 | **MLP** | DL (MLP) | própria | 9.3 | 7.7 | 11.0 | 13.0 | 1150 | 2.4 |  |
-| **KAN** | DL (KAN) | vendorizado | 11.0 | 12.0 | 9.8 | 11.9 | 750 |  |  |
-| **TabKAN** | DL (KAN) | própria | 11.4 | 13.3 | 11.8 | 9.1 | 748 |  |  |
+| **KAN** | DL (KAN) | vendorizado | 11.0 | 12.0 | 9.8 | 11.9 | 750 | 3.1 |  |
+| **TabKAN** | DL (KAN) | própria | 11.4 | 13.3 | 11.8 | 9.1 | 748 | 2.3 |  |
 | **TabNet** | DL (attn) | comunidade | 11.8 | 11.7 | 11.4 | 65.0 | 6164 | 17.1 |  |
 
 *Leitura rápida: **TabFM** lidera as três tarefas (zero-shot), com latência proibitiva (~100 ms/linha em contextos grandes); **TabPFN** é o vice consistente; os **GBDTs** são os all-rounders baratos; **KAN/TabKAN** ficam no fundo junto ao TabNet (teste independente desfavorável); o DL pesado custa minutos de treino sem liderar.*
@@ -109,16 +109,16 @@ Medianas entre datasets; latência medida no `adult`. **~300× de variação no 
 | CatBoost | GBDT | 3.76 | 648 | 1.43 |
 | RealMLP | DL (MLP) | 36.90 | 1475 | 1.52 |
 | LightGBM | GBDT | 0.66 | 106 | 1.91 |
+| TabKAN | DL (KAN) | 9.15 | 748 | 2.32 |
 | MLP | DL (MLP) | 12.95 | 1150 | 2.37 |
+| KAN | DL (KAN) | 11.94 | 750 | 3.07 |
 | TabM | DL (MLP) | 33.76 | 3515 | 3.48 |
 | TabNet | DL (attn) | 64.97 | 6164 | 17.09 |
 | FT-Transformer | DL (attn) | 87.22 | 4761 | 28.87 |
 | SAINT | DL (attn) | 202.19 | 12245 | 44.69 |
 | TabPFN | Foundation | 1.35 | 0 | 7416.10 |
 | STab | DL (attn) | 198.85 | 14956 | 8644.82 |
-| KAN | DL (KAN) | 11.94 | 750 |  |
-| TabFM | Foundation | 0.18 | 0 |  |
-| TabKAN | DL (KAN) | 9.15 | 748 |  |
+| TabFM | Foundation | 0.18 | 0 | 43262.04 |
 
 *A inversão do TabPFN: ~1s de treino e **zero tuning**, mas ~7.400 µs/linha de inferência (~22.000× o XGBoost). O tier rápido de latência inclui os 3 GBDTs **e** os DL tipo-MLP (RealMLP/MLP/TabM); só atenção, in-context e sampling são lentos.*
 

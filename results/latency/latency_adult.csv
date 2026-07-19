@@ -10,3 +10,6 @@ tabnet,deep_learning,9769,17.09,166.91,5
 ft_transformer,deep_learning,9769,28.87,282.06,5
 saint,deep_learning,9769,44.69,436.61,5
 stab,deep_learning,9769,8644.82,84451.21,5
+kan,deep_learning,9769,3.07,29.99,5
+tabkan,deep_learning,9769,2.32,22.66,5
+tabfm,foundation_model,9769,43262.04,422626.91,5
