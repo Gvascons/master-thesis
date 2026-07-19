@@ -146,9 +146,18 @@ def sort_quantiles(Q):
 TEACHER_MAX_ROWS = 50_000  # TabPFN v2.5 native limit; mirrors tabpfn_max_samples
 
 
-def make_teacher(device):
-    from tabpfn import TabPFNRegressor
-    return TabPFNRegressor(device=device, n_estimators=8, random_state=SEED)
+def make_teacher(device, teacher="tabpfn"):
+    if teacher == "tabpfn":
+        from tabpfn import TabPFNRegressor
+        return TabPFNRegressor(device=device, n_estimators=8, random_state=SEED)
+    # TabFM: point-only teacher (mean of the ensemble); n_estimators=8 and the
+    # 50K row cap mirror our benchmark TabFM wrapper for comparability.
+    import torch
+    from tabfm import TabFMRegressor, tabfm_v1_0_0_pytorch
+    dev = "cuda" if (device in ("auto", "cuda") and torch.cuda.is_available()) else "cpu"
+    backbone = tabfm_v1_0_0_pytorch.load("regression", device=dev)
+    return TabFMRegressor(model=backbone, n_estimators=8,
+                          max_num_rows=TEACHER_MAX_ROWS, random_state=SEED)
 
 
 def fit_teacher(model, X, y):
@@ -161,7 +170,7 @@ def fit_teacher(model, X, y):
     model.fit(X, y)
     return model
 
-def teacher_predict(model, X, batch=2000):
+def teacher_predict(model, X, batch=2000, teacher="tabpfn"):
     """Mean + quantile grid, chunked over rows: predicting a large fold in
     one pass against a 50K context OOMs the 16GB GPU (predictions are
     independent, so chunking bounds peak memory without changing results —
@@ -169,9 +178,14 @@ def teacher_predict(model, X, batch=2000):
     means, Qs = [], []
     for i in range(0, len(X), batch):
         xb = X[i:i + batch]
-        means.append(np.asarray(model.predict(xb, output_type="mean")))
-        qs = model.predict(xb, output_type="quantiles", quantiles=QUANTILES)
-        Qs.append(np.column_stack([np.asarray(q) for q in qs]))
+        if teacher == "tabpfn":
+            means.append(np.asarray(model.predict(xb, output_type="mean")))
+            qs = model.predict(xb, output_type="quantiles", quantiles=QUANTILES)
+            Qs.append(np.column_stack([np.asarray(q) for q in qs]))
+        else:  # tabfm: point-only
+            means.append(np.asarray(model.predict(xb)))
+    if not Qs:
+        return np.concatenate(means), None
     return np.concatenate(means), sort_quantiles(np.vstack(Qs))
 
 
@@ -187,12 +201,12 @@ def free_teacher(model):
         pass
 
 
-def run_oof(datasets, device, cap=None):
+def run_oof(datasets, device, cap=None, teacher="tabpfn"):
     OOF_DIR.mkdir(parents=True, exist_ok=True)
     exp_cfg = load_experiment_config()
     for ds in datasets:
         teacher_eval, _, suffix = artifact_paths(cap)
-        oof_path = OOF_DIR / f"tabpfn_{ds}{suffix}.parquet"
+        oof_path = OOF_DIR / f"{teacher}_{ds}{suffix}.parquet"
         if oof_path.exists():
             print(f"[skip] OOF ja existe: {oof_path.name}", flush=True)
             continue
@@ -200,7 +214,7 @@ def run_oof(datasets, device, cap=None):
         assert info.task_type == "regression", f"{ds} nao e regressao"
         Xp, Xt = ordinal_encode(X_pool, X_test)
         n = len(y_pool)
-        print(f"=== OOF tabpfn/{ds}: pool={n} test={len(y_test)} "
+        print(f"=== OOF {teacher}/{ds}: pool={n} test={len(y_test)} "
               f"device={device} ===", flush=True)
 
         mean_oof = np.full(n, np.nan)
@@ -208,32 +222,38 @@ def run_oof(datasets, device, cap=None):
         kf = KFold(n_splits=OOF_FOLDS, shuffle=True, random_state=SEED)
         t0 = time.perf_counter()
         for fi, (tr, ho) in enumerate(kf.split(Xp)):
-            model = make_teacher(device)
+            model = make_teacher(device, teacher)
             fit_teacher(model, Xp[tr], y_pool[tr])
-            m, Q = teacher_predict(model, Xp[ho])
+            m, Q = teacher_predict(model, Xp[ho], teacher=teacher)
             mean_oof[ho] = m
-            Q_oof[ho] = Q
+            if Q is not None:
+                Q_oof[ho] = Q
             free_teacher(model)
             print(f"  fold {fi+1}/{OOF_FOLDS} rotulado "
                   f"({time.perf_counter()-t0:.0f}s)", flush=True)
         assert not np.isnan(mean_oof).any()
 
-        df = pd.DataFrame(Q_oof, columns=[f"q{int(t*100):02d}" for t in QUANTILES])
+        if np.isnan(Q_oof).all():   # point-only teacher: no quantile columns
+            df = pd.DataFrame()
+        else:
+            df = pd.DataFrame(Q_oof, columns=[f"q{int(t*100):02d}" for t in QUANTILES])
         df.insert(0, "mean", mean_oof)
         df.insert(0, "y", y_pool)
         df.to_parquet(oof_path)
         print(f"  OOF salvo: {oof_path.name}", flush=True)
 
         # teacher anchor on the hold-out (fit on the FULL pool, as deployed)
-        model = make_teacher(device)
+        model = make_teacher(device, teacher)
         fit_teacher(model, Xp, y_pool)
-        m, Q = teacher_predict(model, Xt)
+        m, Q = teacher_predict(model, Xt, teacher=teacher)
         free_teacher(model)
         rmse = float(np.sqrt(np.mean((y_test - m) ** 2)))
-        row = {"dataset": ds, "teacher": "tabpfn", "rmse": round(rmse, 6),
+        row = {"dataset": ds, "teacher": teacher, "rmse": round(rmse, 6),
                "mae": round(float(np.mean(np.abs(y_test - m))), 6),
-               "crps": round(crps_from_quantiles(y_test, Q), 6),
-               **{k: round(v, 6) for k, v in interval_metrics(y_test, Q).items()},
+               "crps": round(crps_from_quantiles(y_test, Q), 6) if Q is not None else "",
+               **({k: round(v, 6) for k, v in interval_metrics(y_test, Q).items()}
+                  if Q is not None else
+                  {k: "" for k in ("picp80", "width80", "picp90", "width90")}),
                "n_test": len(y_test)}
         hdr = list(row.keys())
         write_hdr = not teacher_eval.exists()
@@ -242,7 +262,7 @@ def run_oof(datasets, device, cap=None):
             if write_hdr:
                 w.writeheader()
             w.writerow(row)
-        print(f"  teacher anchor: rmse={rmse:.4f} crps={row['crps']:.4f}", flush=True)
+        print(f"  teacher anchor: rmse={rmse:.4f} crps={row['crps'] or '-'}", flush=True)
 
 
 # --------------------------------------------------------------------------- #
@@ -260,7 +280,7 @@ def already_done(student_csv):
     if student_csv.exists():
         with open(student_csv) as f:
             for r in csv.DictReader(f):
-                done.add((r["dataset"], r["student"], r["target"], int(r["seed"])))
+                done.add((r["teacher"], r["dataset"], r["student"], r["target"], int(r["seed"])))
     return done
 
 
@@ -303,14 +323,14 @@ def fit_xgb_quant_soft(Xtr, Q_targets, params, seed):
     return m
 
 
-def run_students(datasets, seeds, cap=None):
+def run_students(datasets, seeds, cap=None, teacher="tabpfn"):
     exp_cfg = load_experiment_config()
     teacher_eval, student_csv, suffix = artifact_paths(cap)
     done = already_done(student_csv)
     baseline = pd.read_csv(REPO / "results" / "aggregated" / "test_results.csv")
 
     for ds in datasets:
-        oof_path = OOF_DIR / f"tabpfn_{ds}{suffix}.parquet"
+        oof_path = OOF_DIR / f"{teacher}_{ds}{suffix}.parquet"
         if not oof_path.exists():
             print(f"[skip] sem OOF para {ds} — rode --stage oof antes", flush=True)
             continue
@@ -324,7 +344,7 @@ def run_students(datasets, seeds, cap=None):
         b = baseline[(baseline.dataset == ds) & (baseline.model == "xgboost")]
         rmse_baseline = float(b.rmse.iloc[0])
         t_eval = pd.read_csv(teacher_eval)
-        t_row = t_eval[(t_eval.dataset == ds) & (t_eval.teacher == "tabpfn")]
+        t_row = t_eval[(t_eval.dataset == ds) & (t_eval.teacher == teacher)]
         rmse_teacher = float(t_row.rmse.iloc[0]) if len(t_row) else np.nan
 
         targets = {
@@ -335,15 +355,17 @@ def run_students(datasets, seeds, cap=None):
         print(f"=== students {ds}: baseline_rmse={rmse_baseline:.4f} "
               f"teacher_rmse={rmse_teacher:.4f} ===", flush=True)
 
+        has_quantiles = all(c in oof.columns for c in qcols)
         for seed in seeds:
             variants = (
                 [("xgb_point", tname, lambda tv=tvec: fit_xgb_point(Xp, tv, params, seed))
                  for tname, tvec in targets.items()]
-                + [("xgb_quant", "hard", lambda: fit_xgb_quant_hard(Xp, y_pool, params, seed)),
-                   ("xgb_quant", "soft", lambda: fit_xgb_quant_soft(Xp, oof[qcols].to_numpy(), params, seed))]
+                + [("xgb_quant", "hard", lambda: fit_xgb_quant_hard(Xp, y_pool, params, seed))]
+                + ([("xgb_quant", "soft", lambda: fit_xgb_quant_soft(Xp, oof[qcols].to_numpy(), params, seed))]
+                   if has_quantiles else [])
             )
             for student, tname, fit_fn in variants:
-                if (ds, student, tname, seed) in done:
+                if (teacher, ds, student, tname, seed) in done:
                     continue
                 set_seed(seed)
                 t0 = time.perf_counter()
@@ -360,7 +382,7 @@ def run_students(datasets, seeds, cap=None):
 
                 rmse = float(np.sqrt(np.mean((y_test - point) ** 2)))
                 row = {
-                    "dataset": ds, "teacher": "tabpfn", "student": student,
+                    "dataset": ds, "teacher": teacher, "student": student,
                     "target": tname, "seed": seed, "n_train": len(y_pool),
                     "n_test": len(y_test), "rmse": round(rmse, 6),
                     "mae": round(float(np.mean(np.abs(y_test - point))), 6),
@@ -388,12 +410,13 @@ def main():
     ap.add_argument("--device", default="auto", help="tabpfn device (cpu para smoke test)")
     ap.add_argument("--seeds", default=3, type=int)
     ap.add_argument("--cap", default=None, type=int, help="subamostra o dataset (smoke test; artefatos separados)")
+    ap.add_argument("--teacher", default="tabpfn", choices=["tabpfn", "tabfm"])
     args = ap.parse_args()
     datasets = args.datasets.split(",")
     if args.stage == "oof":
-        run_oof(datasets, args.device, cap=args.cap)
+        run_oof(datasets, args.device, cap=args.cap, teacher=args.teacher)
     else:
-        run_students(datasets, list(range(args.seeds)), cap=args.cap)
+        run_students(datasets, list(range(args.seeds)), cap=args.cap, teacher=args.teacher)
 
 
 if __name__ == "__main__":

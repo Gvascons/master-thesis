@@ -39,7 +39,16 @@ MODELS = [
     "xgboost", "lightgbm", "catboost", "tabpfn",
     "mlp", "tabm", "realmlp", "tabnet",
     "ft_transformer", "saint", "stab",
+    "kan", "tabkan", "tabfm",
 ]
+
+
+def _reset_prediction_cache(model):
+    """TabFM's wrapper caches the last predict_proba (metrics-computation
+    optimization); latency timing must clear it so every pass pays full
+    inference cost."""
+    if hasattr(model, "_proba_cache"):
+        model._proba_cache = None
 
 
 def already_done():
@@ -91,6 +100,7 @@ def measure(model_name, X_pool, y_pool, X_test, y_test, info):
     n = Xte.shape[0]
 
     # warm-up (build any lazy CUDA graphs / caches)
+    _reset_prediction_cache(model)
     _ = model.predict(Xte)
     try:
         import torch
@@ -101,6 +111,7 @@ def measure(model_name, X_pool, y_pool, X_test, y_test, info):
 
     times = []
     for _ in range(N_REPEATS):
+        _reset_prediction_cache(model)
         t0 = time.perf_counter()
         _ = model.predict(Xte)
         try:
