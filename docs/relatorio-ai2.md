@@ -191,11 +191,25 @@ OOF barato). Onde ela persiste (california +0,64, abalone +0,60,
 cpu_activity +0,50, year +0,42), a destilação entrega a fronteira de
 latência. (`results/distillation/ablation_logtarget.csv`)
 
-## Próximas etapas (fase 6 — escrita e refinos)
+### Fase 6b — exploratório dos bins do TabFM (20/07): fechado com negativo citável
 
-1. Exploratório: distribuição interna do TabFM (bins) como alvo.
-2. Redação do preprint (alvo out/2026) — material empírico FECHADO,
-   incluindo a regra de decisão acima como contribuição prática central.
+Inspeção do código interno (tabfm/src/pytorch/model.py): a cabeça de
+regressão do TabFM é `MLP(d_model → hidden → 1)` — decodifica um escalar.
+**Arquiteturalmente não existe distribuição interna a extrair.** O único
+sinal disponível — o spread dos 8 membros do ensemble (`_predict_internal`)
+— foi medido no california: **CRPS 0,524** (vs 0,069 do TabPFN) e
+**PICP80 = 0,163** com intervalos minúsculos — sobreconfiança catastrófica
+(incerteza epistêmica sem a aleatória). Implicação de posicionamento para o
+paper: **líder em acurácia pontual ≠ líder distribucional** — a
+bar-distribution head do TabPFN é uma vantagem arquitetural genuína, e o
+nosso aluno-quantil destilado permanece o único sistema distribucional
+sub-milissegundo do estudo.
+
+## Próximas etapas (fase 6 — escrita)
+
+1. Redação do preprint (alvo out/2026) — material empírico FECHADO em
+   definitivo, incluindo a regra de decisão "quando destilar" e o
+   posicionamento pontual-vs-distribucional acima.
 
 ## Enquadramento honesto para orientador/banca
 
