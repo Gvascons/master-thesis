@@ -3,7 +3,7 @@
 > **Draft v1** (20/07/2026) — full prose, Markdown master; LaTeX conversion at
 > venue-formatting time. Every number is traceable to a versioned artifact in
 > the public repository (paths in comments throughout). Authors and order:
-> pending advisor decision. Competition re-verification sweep: in progress.
+> pending advisor decision. Competition re-verification sweep: done 20/07/2026 — cut confirmed open (see docs/memo-novidade-destilacao.md).
 
 ## Abstract
 
