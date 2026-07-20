@@ -172,12 +172,30 @@ distribucional em 15 datasets únicos** (`extension.csv` + core):
   maioria dos casos com retenção mediana de 13%, o efeito é heterogêneo,
   e caracterizamos os modos de falha — enunciado honesto e defensável.
 
+### Fase 6a — ablação log-target (20/07): hipótese refutada, insight melhor
+
+Re-rodamos teacher e alunos-quantil com y'=log1p(y) nos 3 datasets de
+falha + 2 controles de preço. **O log NÃO recupera a retenção** (fifa
+segue fortemente negativo, −1,67; diamonds_real −0,05; health +0,04) — e
+também **encolhe os sucessos** (kings_county +0,21→+0,04). A causa
+visível: **as vantagens do teacher praticamente desaparecem no espaço
+log** (gaps de CRPS caem à casa de 0,004-0,025) — boa parte da vantagem
+distribucional do foundation model em alvos de escala de preço É o
+tratamento da escala, que uma transformação barata reproduz.
+
+**Regra de decisão consolidada (o "quando destilar" do paper):** antes de
+destilar, tente (i) transformação do alvo e (ii) um aluno nativo forte
+(MLP-quantil) — ambos baratos; **destile quando uma vantagem
+distribucional real do teacher persistir depois disso** (verificável pelo
+OOF barato). Onde ela persiste (california +0,64, abalone +0,60,
+cpu_activity +0,50, year +0,42), a destilação entrega a fronteira de
+latência. (`results/distillation/ablation_logtarget.csv`)
+
 ## Próximas etapas (fase 6 — escrita e refinos)
 
-1. Ablação log-target nos 4 datasets de falha (moderador de cauda pesada).
-2. Exploratório: distribuição interna do TabFM (bins) como alvo.
-3. Redação do preprint (alvo out/2026) — todo o material empírico
-   principal está fechado.
+1. Exploratório: distribuição interna do TabFM (bins) como alvo.
+2. Redação do preprint (alvo out/2026) — material empírico FECHADO,
+   incluindo a regra de decisão acima como contribuição prática central.
 
 ## Enquadramento honesto para orientador/banca
 
