@@ -8,10 +8,10 @@ formato não.
 | Capítulo | Arquivo | Estado |
 |---|---|---|
 | 1. Introdução | — | após fechamento dos resultados @14 |
-| 2. Fundamentação | `cap2-fundamentacao-outline.md` | esqueleto com fontes |
-| 3. Trabalhos relacionados | `cap3-related-work-outline.md` | esqueleto com fontes |
+| 2. Fundamentação | `cap2-fundamentacao.md` | **prosa v1** (outline mantido como fonte) |
+| 3. Trabalhos relacionados | `cap3-related-work.md` | **prosa v1** (outline mantido como fonte) |
 | 4. Metodologia | `cap4-metodologia.md` | **rascunho completo v1** |
-| 5. Benchmark (4 atos) | — | aguarda refresh @14 |
+| 5. Benchmark (4 atos) | `cap5-benchmark.md` | **prosa v1** |
 | 6. Framework validado | `cap6-framework.md` | **rascunho completo v1** |
 | 7. Destilação | `cap7-destilacao.md` | **rascunho v1** (§7.6 aguarda Pareto) |
 | 8. Conclusão | — | por último |
