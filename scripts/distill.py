@@ -64,7 +64,7 @@ TEACHER_EVAL = OUT_DIR / "teacher_eval.csv"
 STUDENT_CSV = OUT_DIR / "distill.csv"
 
 REG_DATASETS = ["wine_quality", "california_housing", "superconduct",
-                "diamonds", "year_prediction"]
+                "kin8nm", "year_prediction"]
 
 STUDENT_HEADER = [
     "dataset", "teacher", "student", "target", "seed", "n_train", "n_test",

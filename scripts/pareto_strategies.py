@@ -45,7 +45,7 @@ from src.utils.config import load_experiment_config
 from src.utils.reproducibility import set_seed
 
 OUT = REPO / "results" / "distillation" / "pareto.csv"
-DATASETS = ["california_housing", "diamonds", "year_prediction"]
+DATASETS = ["california_housing", "kin8nm", "year_prediction"]
 CTX_GRID = [1000, 5000, 10000, 25000, TEACHER_MAX_ROWS]
 ENS_GRID = [1, 4]
 # year @ 50K context fits ONLY with memory_saving_mode forced True (the

@@ -1,3 +1,5 @@
+> **ERRATA 20/07/2026:** o dataset historicamente rotulado "diamonds" e o kin8nm (OpenML 44980) — ver `docs/errata-diamonds-kin8nm.md`. Rotulos deste documento ja corrigidos; o diamonds real (44979) entrou pela extensao como `diamonds_real`.
+
 # Preprint outline — working title:
 # "Distilling Tabular Foundation Models Beyond Classification:
 #  Distributional Regression and the Distill/Compress/Cache Pareto Frontier"

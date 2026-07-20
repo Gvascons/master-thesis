@@ -1,6 +1,6 @@
 {
   "model": "tabpfn",
-  "dataset": "diamonds",
+  "dataset": "kin8nm",
   "task_type": "regression",
   "best_params": {},
   "tuning_time_s": 0.0,

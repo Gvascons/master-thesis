@@ -80,7 +80,7 @@ Ranks médios por tarefa (↓ melhor) + custo típico. `Rank n≤4k` é o rank n
 
 *RMSE está na escala de cada alvo — compare **dentro** da coluna, não entre colunas.*
 
-| Modelo | california_housing | diamonds | superconduct | wine_quality | year_prediction | **Rank méd.** |
+| Modelo | california_housing | kin8nm | superconduct | wine_quality | year_prediction | **Rank méd.** |
 |---|---|---|---|---|---|---|
 | TabFM | **0.2346** | 0.0652 | **0.8269** | **0.5747** | **8.3634** | 1.20 |
 | TabPFN | 0.2570 | 0.0667 | 0.8284 | 0.6129 | 8.5952 | 3.00 |

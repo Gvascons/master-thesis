@@ -1,6 +1,6 @@
 {
   "model": "ft_transformer",
-  "dataset": "diamonds",
+  "dataset": "kin8nm",
   "task_type": "regression",
   "best_params": {
     "n_blocks": 4,

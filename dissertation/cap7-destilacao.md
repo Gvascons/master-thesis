@@ -1,3 +1,5 @@
+> **ERRATA 20/07/2026:** o dataset historicamente rotulado "diamonds" e o kin8nm (OpenML 44980) — ver `docs/errata-diamonds-kin8nm.md`. Rotulos deste documento ja corrigidos; o diamonds real (44979) entrou pela extensao como `diamonds_real`.
+
 # Capítulo 7 — Destilação Distribucional de Foundation Models
 
 > Rascunho v1 (19/07/2026). Fontes: `docs/desenho-experimental-destilacao.md`
@@ -57,7 +59,7 @@ o aluno pontual destilado supera o controle com rótulos verdadeiros.
 
 **H2 é confirmada onde o teacher tem vantagem.** Retenção do gap de CRPS:
 california_housing **+0,64**, year_prediction **+0,42**, superconduct
-+0,26, diamonds +0,13; wine_quality −0,97 — o único conjunto em que o
++0,26, kin8nm +0,13; wine_quality −0,97 — o único conjunto em que o
 próprio teacher é inferior ao baseline, condição de falha antecipada pelo
 pré-registro. O aluno-quantil destilado herda parte substancial da qualidade
 distribucional do teacher operando na casa de microssegundos por linha.

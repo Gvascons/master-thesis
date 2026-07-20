@@ -137,13 +137,17 @@ regression:
     approx_features: 90
     feature_types: numerical
 
-  diamonds:
+  kin8nm:
+    # ERRATA 20/07/2026: esta entrada chamava-se "diamonds" mas o
+    # openml_id 44980 sempre foi o kin8nm (CTR23). Todos os resultados
+    # historicos rotulados "diamonds" sao deste dataset. O diamonds real
+    # (44979) entrou depois via regression_extension. Commit de retificacao.
     openml_id: 44980
     version: 1
     task_type: regression
-    approx_samples: 54000
-    approx_features: 9
-    feature_types: mixed
+    approx_samples: 8192
+    approx_features: 8
+    feature_types: numerical
 
   wine_quality:
     openml_id: 287
@@ -181,13 +185,14 @@ regression_extension:
     approx_samples: 8192
     approx_features: 21
     feature_types: numerical
-  kin8nm:
-    openml_id: 44980
+  diamonds_real:
+    # o diamonds verdadeiro da CTR23 (44979), nunca rodado antes da errata
+    openml_id: 44979
     version: 1
     task_type: regression
-    approx_samples: 8192
-    approx_features: 8
-    feature_types: numerical
+    approx_samples: 53940
+    approx_features: 9
+    feature_types: mixed
   grid_stability:
     openml_id: 44973
     version: 1

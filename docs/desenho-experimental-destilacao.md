@@ -74,8 +74,8 @@
 ## 3. Protocolo
 
 - **Datasets:** os 5 de regressão do benchmark (wine_quality 6.5k,
-  california_housing 20.6k, superconduct 21k, diamonds 54k, year_prediction
-  80k — cobrem 1.5 ordens de grandeza). *Extensão pós-piloto (para o paper):
+  california_housing 20.6k, superconduct 21k, kin8nm 8.2k (ver
+  docs/errata-diamonds-kin8nm.md), year_prediction 80k — cobrem 1.5 ordens de grandeza). *Extensão pós-piloto (para o paper):
   +8–10 datasets do OpenML-CTR23/TabArena regressão — barata, pois o custo
   dominante (rotulagem OOF pelo teacher) é pago uma vez por dataset.*
 - **Splits:** os MESMOS do benchmark (hold-out 20% seed 42; pool de treino

@@ -40,7 +40,7 @@ from src.utils.config import load_experiment_config
 from src.utils.reproducibility import set_seed
 
 OUT = REPO / "results" / "distillation" / "ablation_insample.csv"
-DATASETS = ["wine_quality", "california_housing", "superconduct", "diamonds"]
+DATASETS = ["wine_quality", "california_housing", "superconduct", "kin8nm"]
 SEEDS = [0, 1, 2]
 HEADER = ["dataset", "regime", "student", "seed", "rmse", "crps",
           "picp80", "fit_time_s"]

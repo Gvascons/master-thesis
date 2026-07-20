@@ -45,7 +45,7 @@ from src.utils.reproducibility import set_seed
 
 EXT_DIR = REPO / "results" / "distillation" / "extension"
 OUT = REPO / "results" / "distillation" / "extension.csv"
-DATASETS = ["abalone", "cpu_activity", "kin8nm", "grid_stability",
+DATASETS = ["abalone", "cpu_activity", "diamonds_real", "grid_stability",
             "miami_housing", "fifa", "kings_county", "health_insurance",
             "physiochemical_protein", "video_transcoding"]
 SEEDS = [0, 1, 2]

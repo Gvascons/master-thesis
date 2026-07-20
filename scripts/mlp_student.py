@@ -43,7 +43,7 @@ from src.utils.reproducibility import set_seed
 
 OUT = REPO / "results" / "distillation" / "mlp_students.csv"
 DATASETS = ["wine_quality", "california_housing", "superconduct",
-            "diamonds", "year_prediction"]
+            "kin8nm", "year_prediction"]
 SEEDS = [0, 1, 2]
 HEADER = ["dataset", "student", "target", "seed", "rmse", "crps", "picp80",
           "fit_time_s"]

@@ -1,3 +1,5 @@
+> **ERRATA 20/07/2026:** o dataset historicamente rotulado "diamonds" e o kin8nm (OpenML 44980) — ver `docs/errata-diamonds-kin8nm.md`. Rotulos deste documento ja corrigidos; o diamonds real (44979) entrou pela extensao como `diamonds_real`.
+
 # Relatório técnico consolidado — AI-2 (Atividade de Orientação Individual)
 
 > Estado em 19/07/2026, após as fases 1 e 2 do programa experimental de
@@ -53,7 +55,7 @@ são de 4 a 5 ordens de magnitude mais lentos para servir.
   hard em pool completo.
 - **H2 (distribuição, CRPS): CONFIRMADA onde o teacher tem vantagem.**
   Retenção do gap de CRPS: california **+0,64**, year_prediction **+0,42**,
-  superconduct +0,26, diamonds +0,13; wine −0,97 (único dataset onde o
+  superconduct +0,26, kin8nm +0,13; wine −0,97 (único dataset onde o
   teacher TabPFN é *pior* que o baseline — falha prevista pelo desenho §6).
 - Calibração transferida: no california, PICP80 do aluno destilado 0,60 vs
   0,88 do hard (nominal 0,80) — em year, 0,79 vs 0,71 (destilado mais
@@ -117,14 +119,14 @@ Em regressão, alvos in-sample **não** degradam RMSE/CRPS (ficam iguais ou
 levemente melhores que OOF nos 4 datasets) — ao contrário do colapso
 reportado em classificação. O dano aparece em outro eixo: **a cobertura de
 intervalos do aluno cai consistentemente** (PICP80: −6 p.p. california,
-−4 diamonds, −10 wine) — o teacher é sobreconfiante nas linhas do próprio
+−4 kin8nm, −10 wine) — o teacher é sobreconfiante nas linhas do próprio
 contexto e transfere essa sobreconfiança ao aluno como intervalos estreitos
 demais. **Desconfundido em 20/07 (célula de contexto fixo):** o tripé
 `oof / insample_ctx80 / insample` — os dois primeiros com contexto
 idêntico de 80%, diferindo só no vazamento — mostra que (i) o vazamento
 por si só não degrada RMSE/CRPS (chega a ajudar levemente), (ii) a
 **erosão de cobertura é efeito puro do vazamento** (PICP80 do ctx80 abaixo
-do OOF nos 4 datasets: −5,1 p.p. california, −4,5 diamonds, −0,5
+do OOF nos 4 datasets: −5,1 p.p. california, −4,5 kin8nm, −0,5
 superconduct, −4,6 wine), e (iii) o tamanho do contexto contribui quase
 nada (insample ≈ insample_ctx80 em tudo). **Leitura final para o paper:**
 em regressão, a rotulagem OOF importa *pela calibração do aluno*, não pela
@@ -138,7 +140,7 @@ acurácia — refinamento desconfundido e genuíno sobre o Pocket FM.
   consertam).
 - **MLP-quantil:** com rótulos duros já é forte em datasets
   pequenos/numéricos — **iguala o XGB destilado sem teacher nenhum** no
-  california (CRPS 0,110 vs 0,109) e o **supera com folga** no diamonds
+  california (CRPS 0,110 vs 0,109) e o **supera com folga** no kin8nm
   (0,047 vs 0,064). Mas é instável no year (CRPS 9,66, intervalos
   absurdamente largos) — onde **a destilação o resgata** (9,66→4,91).
 - **Síntese honesta (condições de valor da destilação):** destilar vale a

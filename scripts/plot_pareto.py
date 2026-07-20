@@ -56,7 +56,7 @@ def facet(ax, sub, metric):
 def main():
     df = pd.read_csv(CSV)
     df["crps"] = pd.to_numeric(df["crps"], errors="coerce")
-    datasets = [d for d in ("california_housing", "diamonds", "year_prediction")
+    datasets = [d for d in ("california_housing", "kin8nm", "year_prediction")
                 if d in set(df.dataset)]
     n = len(datasets)
     fig, axes = plt.subplots(2, n, figsize=(4.6 * n, 7.4))
