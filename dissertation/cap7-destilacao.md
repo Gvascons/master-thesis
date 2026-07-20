@@ -128,6 +128,12 @@ a favor das alternativas ao teacher completo.
 - **Quando vale a pena:** teacher com vantagem real sobre o baseline
   (pré-condição verificável via OOF barato) e demanda por predição
   distribucional em produção de baixa latência.
+- **Destilação como suavizador de calibração:** as curvas de
+  confiabilidade (Fig. 7.Y) mostram o aluno destilado mais próximo da
+  diagonal que o controle — e, no california_housing, que o próprio
+  teacher, cuja calibração por nível de quantil é imperfeita (forma-S). A
+  combinação transferência-de-curvas + ordenação atua como regularizador
+  de calibração, não mera cópia.
 - **Limitações:** 5 conjuntos (extensão OpenML-CTR23 planejada); aluno único
   (XGBoost; MLP-quantil planejado); TabFM sem distribuição exposta; CRPS
   aproximado pela grade de 19 quantis.

@@ -231,9 +231,13 @@ dataset where the teacher trails the baseline outright (wine_quality, the
 failure mode our pre-registered gate anticipated) and three price-scale,
 heavy-tailed targets (fifa, diamonds, health_insurance) where §5.5 shows the
 teacher's apparent edge is largely reproducible by a log transform.
-Calibration accompanies the transfer: on year_prediction the distilled
-student's PICP80 is 0.79 against the hard control's 0.71.
-<!-- results/distillation/distill.csv + extension.csv -->
+Calibration accompanies the transfer — and exceeds it. Reliability curves
+(Fig. 2) show the distilled student closest to the diagonal on both panels;
+on california_housing it is better calibrated than the hard control *and*
+than its own teacher, whose per-level quantile calibration is imperfect
+(S-shaped). Curve transfer plus sorting acts as a calibration regularizer,
+not a mere copy.
+<!-- results/distillation/distill.csv + extension.csv; results/figures/calibration_distill.pdf -->
 
 ### 5.3 The serving frontier: distill vs. compress vs. shrink
 

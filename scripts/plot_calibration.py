@@ -33,7 +33,10 @@ from distill import (QUANTILES, OOF_DIR, fit_teacher, fit_xgb_quant_hard,
 from src.utils.config import load_experiment_config
 from src.utils.reproducibility import set_seed
 
-DATASETS = ["california_housing", "year_prediction"]
+# year_prediction trocado por cpu_activity: mesma mensagem (retencao forte,
+# +0.50) a 1/50 do custo — a passada do teacher@50k no year excedeu o
+# time-box (>2h). Decisao documentada.
+DATASETS = ["california_housing", "cpu_activity"]
 STYLE = {  # same identity colors as the Pareto figure
     "teacher":   ("#2a78d6", "o", "TabPFN (teacher)"),
     "distilled": ("#e87ba4", "*", "Aluno-quantil destilado"),
@@ -54,7 +57,14 @@ def main():
         X_pool, y_pool, X_test, y_test, info = prep_pool(ds, exp_cfg)
         Xp, Xt = ordinal_encode(X_pool, X_test)
         oof = pd.read_parquet(OOF_DIR / f"tabpfn_{ds}.parquet")
-        params = load_xgb_params(ds)
+        # params tunados: core em results/raw; datasets da extensao CTR23 em
+        # results/distillation/extension
+        try:
+            params = load_xgb_params(ds)
+        except FileNotFoundError:
+            import json
+            p = REPO / "results/distillation/extension" / f"xgboost_{ds}.json"
+            params = json.loads(p.read_text()).get("best_params", {}) or {}
 
         curves = {}
         model = make_teacher("auto")
@@ -83,7 +93,7 @@ def main():
         ax.tick_params(labelsize=8)
     np.atleast_1d(axes)[0].set_ylabel("cobertura empírica P(y ≤ q_τ)", fontsize=10)
     np.atleast_1d(axes)[0].legend(fontsize=9, frameon=False, loc="upper left")
-    fig.suptitle("Calibração no hold-out: o aluno destilado herda a calibração do teacher",
+    fig.suptitle("Calibração no hold-out: o aluno destilado é o mais próximo da diagonal — melhor que o controle e, no california, que o próprio teacher",
                  fontsize=12)
     plt.tight_layout()
     for ext in ("png", "pdf"):
