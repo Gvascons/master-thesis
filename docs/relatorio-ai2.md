@@ -111,15 +111,49 @@ codificação secundária). Leitura em dois planos:
   de 16 GB. (Correção registrada: a alegação anterior de OOM "determinístico"
   no ponto 50k estava errada — commit 64b410a.)
 
-## Próximas etapas (fase 4)
+### Fase 4a — ablação OOF vs in-sample (19/07): o achado muda de eixo
 
-1. Aluno MLP-quantil (a família do aluno importa?).
-2. Ablação OOF vs in-sample (réplica do achado Pocket FM em regressão).
-3. Extensão de datasets (OpenML-CTR23) para N que suporte inferência.
-4. Exploratório: distribuição interna do TabFM (bins) como alvo.
-5. Redação do preprint (título de trabalho no desenho; alvo out/2026 — 
-   material das fases 1-3 já cobre motivação, método, resultados centrais e
-   figura principal).
+Em regressão, alvos in-sample **não** degradam RMSE/CRPS (ficam iguais ou
+levemente melhores que OOF nos 4 datasets) — ao contrário do colapso
+reportado em classificação. O dano aparece em outro eixo: **a cobertura de
+intervalos do aluno cai consistentemente** (PICP80: −6 p.p. california,
+−4 diamonds, −10 wine) — o teacher é sobreconfiante nas linhas do próprio
+contexto e transfere essa sobreconfiança ao aluno como intervalos estreitos
+demais. *Caveat declarado:* a comparação confunde vazamento com tamanho de
+contexto (o teacher in-sample vê o pool inteiro; o OOF, 80%) — o que
+enviesa RMSE/CRPS a favor do in-sample, mas torna a erosão de calibração
+ainda mais convincente (contexto maior deveria melhorá-la, e ela piora).
+**Leitura para o paper:** em regressão, OOF importa *pela calibração*, não
+pela acurácia — refinamento genuíno sobre o Pocket FM.
+(`results/distillation/ablation_insample.csv`)
+
+### Fase 4b — aluno MLP-quantil (19/07): a família do aluno importa MUITO
+
+- **XGB-quantil:** destilação ajuda de forma consistente (o pinball nativo
+  do XGB é um aprendiz distribucional fraco; os alvos do teacher o
+  consertam).
+- **MLP-quantil:** com rótulos duros já é forte em datasets
+  pequenos/numéricos — **iguala o XGB destilado sem teacher nenhum** no
+  california (CRPS 0,110 vs 0,109) e o **supera com folga** no diamonds
+  (0,047 vs 0,064). Mas é instável no year (CRPS 9,66, intervalos
+  absurdamente largos) — onde **a destilação o resgata** (9,66→4,91).
+- **Síntese honesta (condições de valor da destilação):** destilar vale a
+  pena quando o objetivo distribucional nativo do aluno é fraco (XGB) ou
+  instável (MLP em dados grandes/difíceis); quando existe aluno nativo
+  forte (MLP em dados pequenos/numéricos), ele dispensa o teacher. H2
+  permanece válida como enunciada (vs controle da mesma família), e esta
+  análise cruzada é o contexto que a torna publicável com maturidade.
+(`results/distillation/mlp_students.csv`)
+
+## Próximas etapas (fase 5)
+
+1. Extensão de datasets (OpenML-CTR23) para N que suporte inferência.
+2. Exploratório: distribuição interna do TabFM (bins) como alvo.
+3. Ablação limpa de contexto fixo (desconfundir vazamento × tamanho de
+   contexto na 4a — desenho: OOF e in-sample com contexto idêntico).
+4. Redação do preprint (alvo out/2026) — fases 1-4 cobrem motivação,
+   método, resultados centrais, figura principal e as duas análises de
+   condição (quando destilar / por que OOF).
 
 ## Enquadramento honesto para orientador/banca
 
