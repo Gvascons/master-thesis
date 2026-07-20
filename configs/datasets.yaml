@@ -242,3 +242,38 @@ regression_extension:
     approx_samples: 68784
     approx_features: 18
     feature_types: mixed
+  space_ga:
+    openml_id: 45402
+    version: 1
+    task_type: regression
+    approx_samples: 3107
+    approx_features: 6
+    feature_types: numerical
+  pumadyn32nh:
+    openml_id: 44981
+    version: 1
+    task_type: regression
+    approx_samples: 8192
+    approx_features: 32
+    feature_types: numerical
+  fps_benchmark:
+    openml_id: 44992
+    version: 1
+    task_type: regression
+    approx_samples: 24624
+    approx_features: 43
+    feature_types: mixed
+  cps88wages:
+    openml_id: 44984
+    version: 1
+    task_type: regression
+    approx_samples: 28155
+    approx_features: 6
+    feature_types: mixed
+  sarcos:
+    openml_id: 44976
+    version: 1
+    task_type: regression
+    approx_samples: 48933
+    approx_features: 21
+    feature_types: numerical

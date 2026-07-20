@@ -45,9 +45,14 @@ from src.utils.reproducibility import set_seed
 
 EXT_DIR = REPO / "results" / "distillation" / "extension"
 OUT = REPO / "results" / "distillation" / "extension.csv"
+# Pool elegivel COMPLETO da CTR23 (regra de elegibilidade fixada antes de
+# qualquer resultado: 3k-100k linhas, sem leakage, sem sobreposicao com o
+# core). A segunda leva (space_ga..sarcos) completa a populacao elegivel —
+# decisao principiada, nao adicao seletiva pos-resultado.
 DATASETS = ["abalone", "cpu_activity", "diamonds_real", "grid_stability",
             "miami_housing", "fifa", "kings_county", "health_insurance",
-            "physiochemical_protein", "video_transcoding"]
+            "physiochemical_protein", "video_transcoding",
+            "space_ga", "pumadyn32nh", "fps_benchmark", "cps88wages", "sarcos"]
 SEEDS = [0, 1, 2]
 HEADER = ["dataset", "cell", "seed", "rmse", "crps", "picp80", "time_s"]
 
