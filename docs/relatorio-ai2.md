@@ -119,13 +119,17 @@ reportado em classificação. O dano aparece em outro eixo: **a cobertura de
 intervalos do aluno cai consistentemente** (PICP80: −6 p.p. california,
 −4 diamonds, −10 wine) — o teacher é sobreconfiante nas linhas do próprio
 contexto e transfere essa sobreconfiança ao aluno como intervalos estreitos
-demais. *Caveat declarado:* a comparação confunde vazamento com tamanho de
-contexto (o teacher in-sample vê o pool inteiro; o OOF, 80%) — o que
-enviesa RMSE/CRPS a favor do in-sample, mas torna a erosão de calibração
-ainda mais convincente (contexto maior deveria melhorá-la, e ela piora).
-**Leitura para o paper:** em regressão, OOF importa *pela calibração*, não
-pela acurácia — refinamento genuíno sobre o Pocket FM.
-(`results/distillation/ablation_insample.csv`)
+demais. **Desconfundido em 20/07 (célula de contexto fixo):** o tripé
+`oof / insample_ctx80 / insample` — os dois primeiros com contexto
+idêntico de 80%, diferindo só no vazamento — mostra que (i) o vazamento
+por si só não degrada RMSE/CRPS (chega a ajudar levemente), (ii) a
+**erosão de cobertura é efeito puro do vazamento** (PICP80 do ctx80 abaixo
+do OOF nos 4 datasets: −5,1 p.p. california, −4,5 diamonds, −0,5
+superconduct, −4,6 wine), e (iii) o tamanho do contexto contribui quase
+nada (insample ≈ insample_ctx80 em tudo). **Leitura final para o paper:**
+em regressão, a rotulagem OOF importa *pela calibração do aluno*, não pela
+acurácia — refinamento desconfundido e genuíno sobre o Pocket FM.
+(`results/distillation/ablation_insample.csv`, 72 linhas, 3 regimes)
 
 ### Fase 4b — aluno MLP-quantil (19/07): a família do aluno importa MUITO
 
