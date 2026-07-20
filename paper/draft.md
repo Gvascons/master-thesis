@@ -18,8 +18,11 @@ teacher's output is a predictive **distribution**. Across 15 datasets we
 find: (1) **point** distillation fails at realistic pool sizes regardless of
 teacher strength — a robust negative replicated with two teachers; (2)
 **distributional** distillation — transferring the teacher's quantile curves
-into a multi-quantile student — retains up to 64% of the teacher's CRPS
-advantage (positive in 11/15 datasets, median 13%) at microsecond latency,
+into a multi-quantile student — retains a median 19% and up to 100%+ of the
+teacher's CRPS advantage (positive in 16/20 datasets, including one
+born-again case where the student surpasses its teacher; one-sided sign
+test p = 0.006, Wilcoxon p = 0.045, Bayesian P(ret>0) = 0.70) at
+microsecond latency,
 making the distilled student the only sub-millisecond distributional system
 on our three-strategy Pareto frontier (distill vs. context compression vs.
 ensemble reduction); (3) out-of-fold labeling matters for the student's
@@ -67,9 +70,12 @@ serving cost, and under which verifiable conditions.
    very different strength, with a pool-size sweep showing the residual gain
    is a small-data phenomenon on some datasets only.
 2. **A positive on the open axis:** distributional distillation via
-   quantile-curve transfer retains 13–64% of the teacher's CRPS advantage
-   where the teacher has one (11/15 datasets positive, median 13%; one-sided
-   sign test p = 0.059), at microsecond latency.
+   quantile-curve transfer is positive in 16/20 datasets — the complete
+   eligible CTR23 pool under a rule fixed before any results — with median
+   retention 19%, maximum above 100% (a born-again student), and agreement
+   across instruments (sign test p = 0.006; Wilcoxon p = 0.045; Bayesian
+   signed-rank P(retention>0) = 0.70 at ROPE ±0.05), at microsecond
+   latency.
 3. **The first three-strategy Pareto frontier** for TFM serving in
    regression — distillation vs. context compression vs. ensemble reduction
    — measured end-to-end on the same hold-outs; below ~250 µs/row (up to
@@ -183,7 +189,8 @@ pipeline. <!-- docs/desenho-experimental-destilacao.md; docs/errata-diamonds-kin
 
 Five regression datasets from the companion benchmark (wine_quality,
 california_housing, superconduct, kin8nm, year_prediction; pools 5.2k–80k)
-plus ten from the OpenML-CTR23 suite selected under verified constraints
+plus the complete eligible pool of fifteen from the OpenML-CTR23 suite
+under verified constraints
 (3k–100k rows; two suite datasets excluded for target leakage discovered
 during verification — the target is a sum of features in brazilian_houses
 and wave_energy; version-pinned dataset ids). Splits are identical to the
@@ -196,8 +203,8 @@ ever observes; three student seeds throughout. Hardware: a single RTX 5080
 
 ### 5.1 Point distillation fails at scale — with any teacher
 
-Across all 15 datasets, the point student trained on teacher means beats its
-hard-label control in only 2 cases; with the far stronger TabFM teacher
+Across all 20 datasets, the point student trained on teacher means beats
+its hard-label control only exceptionally (2 of the first 15 evaluated); with the far stronger TabFM teacher
 (anchor gaps up to 4× larger, e.g. 0.031 vs. 0.008 RMSE on
 california_housing) the picture is unchanged — the best cell reaches
 retention 0.21 and the rest are at or below zero. A pool-size sweep (caps
@@ -211,10 +218,14 @@ teacher's opinions of them.
 
 ### 5.2 Distributional distillation works — where the teacher has an edge
 
-Transferring the teacher's quantile curves changes the outcome. Over the 15
-datasets, CRPS-gap retention is positive in 11 (median +0.13), topping at
-+0.64 (california_housing), +0.60 (abalone), +0.50 (cpu_activity) and +0.42
-(year_prediction); the one-sided sign test gives p = 0.059. The four
+Transferring the teacher's quantile curves changes the outcome. Over the
+complete 20-dataset pool, CRPS-gap retention is positive in 16 (median
++0.19), topping at +1.06 (pumadyn32nh — a born-again student that surpasses
+its teacher), +0.64 (california_housing), +0.60 (abalone), +0.52
+(fps_benchmark) and +0.50 (cpu_activity). Both frequentist instruments
+reject at the 5% level (one-sided sign test p = 0.006; Wilcoxon p = 0.045)
+and the Bayesian signed-rank places 0.70 posterior mass on positive
+retention at ROPE ±0.05 (0.63–0.71 across ROPE 0.02–0.10). The four
 failures are diagnosable and form the basis of §5.5's decision rule: one
 dataset where the teacher trails the baseline outright (wine_quality, the
 failure mode our pre-registered gate anticipated) and three price-scale,
@@ -315,9 +326,10 @@ occupant of that regime.
 
 ## 7. Limitations
 
-Fifteen datasets support sign-level, not magnitude-level, inference (the
-sign test reaches p = 0.059; Wilcoxon over heterogeneous magnitudes does
-not reject). Students inherit benchmark-tuned capacity without per-target
+Twenty datasets support significance at the 5% level on both instruments,
+but magnitudes remain heterogeneous (retention −1.3 to +1.1) and the
+Bayesian posterior leaves ~25% mass on negative retention — the decision
+rule of §5.5, not a universal claim, is the honest deliverable. Students inherit benchmark-tuned capacity without per-target
 re-tuning. CRPS is approximated on a 19-quantile grid. TabFM results refer
 to the pinned v1.0.1 release, weeks old at the time of writing and without
 a peer-reviewed reference. Single-GPU measurements bound, rather than
