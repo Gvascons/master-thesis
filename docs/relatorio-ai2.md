@@ -151,15 +151,33 @@ acurácia — refinamento desconfundido e genuíno sobre o Pocket FM.
   análise cruzada é o contexto que a torna publicável com maturidade.
 (`results/distillation/mlp_students.csv`)
 
-## Próximas etapas (fase 5)
+### Fase 5 — extensão CTR23 e o quadro final N=15 (20/07)
 
-1. Extensão de datasets (OpenML-CTR23) para N que suporte inferência.
+Extensão executada em 10 datasets verificados da suíte CTR23 (com as
+armadilhas de leakage brazilian_houses/wave_energy excluídas na
+verificação; episódio da errata diamonds/kin8nm documentado em
+`docs/errata-diamonds-kin8nm.md`). **Quadro consolidado da destilação
+distribucional em 15 datasets únicos** (`extension.csv` + core):
+
+- Retenção de CRPS **positiva em 11/15** (mediana +0,13; máx +0,64);
+  teste de sinal unilateral p=0,059 — sugestivo, não significativo a 5%.
+- **As falhas refinam a história:** com N=5, "teacher sem vantagem"
+  explicava a única falha; com N=15, três das quatro falhas (fifa −1,29;
+  diamonds_real −0,32; health_insurance −0,26) ocorrem COM vantagem do
+  teacher — e concentram-se em **alvos de cauda pesada/escala de preço**.
+  A pré-condição sozinha não basta; a hipótese viva é a transformação do
+  alvo (log) como moderador — célula de ablação log-target registrada
+  como pendência.
+- Leitura calibrada para o paper: a destilação distribucional ajuda na
+  maioria dos casos com retenção mediana de 13%, o efeito é heterogêneo,
+  e caracterizamos os modos de falha — enunciado honesto e defensável.
+
+## Próximas etapas (fase 6 — escrita e refinos)
+
+1. Ablação log-target nos 4 datasets de falha (moderador de cauda pesada).
 2. Exploratório: distribuição interna do TabFM (bins) como alvo.
-3. Ablação limpa de contexto fixo (desconfundir vazamento × tamanho de
-   contexto na 4a — desenho: OOF e in-sample com contexto idêntico).
-4. Redação do preprint (alvo out/2026) — fases 1-4 cobrem motivação,
-   método, resultados centrais, figura principal e as duas análises de
-   condição (quando destilar / por que OOF).
+3. Redação do preprint (alvo out/2026) — todo o material empírico
+   principal está fechado.
 
 ## Enquadramento honesto para orientador/banca
 

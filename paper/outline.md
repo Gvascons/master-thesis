@@ -63,9 +63,12 @@
   smoke-vs-pilot size contrast + pool sweep (wine replicates at n=800,
   gone by 2k; california noisy) — reported as observation.
   (`results/distillation/distill.csv`, `distill_cap*.csv`)
-- 5.2 Distributional distillation works where the teacher has an edge
-  (H2): retention +0.64/+0.42/+0.26/+0.13; fails only where the teacher
-  trails the baseline (wine, predicted by the pre-registered gate).
+- 5.2 Distributional distillation, N=15 (core + CTR23 extension):
+  positive CRPS-gap retention in 11/15 (median +0.13, max +0.64; sign
+  test p=0.059). Failure modes characterized: no-teacher-edge (wine) and
+  heavy-tailed/price-scale targets (fifa, diamonds, health_insurance) —
+  log-target moderator queued as ablation. Calibrated claim, not a
+  universal one. (`extension.csv` + `distill.csv`)
 - 5.3 The Pareto frontier (H3): figure
   (`results/figures/pareto_distill.pdf`); below ~250us (california) /
   ~1.3ms (year) only students exist; distilled = CRPS-optimal. TabFM
@@ -98,7 +101,8 @@
   feature.
 
 ## TODO before submission
-- [ ] CTR23 extension executed (or scoped down with justification)
+- [x] CTR23 extension executed (10 datasets; erratum episode documented)
+- [ ] Log-target ablation on the 4 failure datasets
 - [ ] Fixed-context ablation folded into §5.4  [running]
 - [ ] Figure polish (fonts/sizes for two-column), table formatting
 - [ ] Related-work re-verification sweep (arXiv monitor: "tabular

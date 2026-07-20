@@ -116,3 +116,16 @@ video_transcoding,student_point_hard,2,0.84219,,,2.39
 video_transcoding,student_point_soft,2,1.552198,,,2.28
 video_transcoding,student_quant_hard,2,1.265394,0.301338,0.8873,97.85
 video_transcoding,student_quant_soft,2,0.986608,0.297401,0.8407,44.13
+diamonds_real,teacher,0,507.441975,183.07341,0.826,192.2
+diamonds_real,student_point_hard,0,526.937476,,,0.89
+diamonds_real,student_point_soft,0,528.627147,,,0.91
+diamonds_real,student_quant_hard,0,531.198531,192.531325,0.7827,101.86
+diamonds_real,student_quant_soft,0,533.906232,195.459734,0.7373,20.37
+diamonds_real,student_point_hard,1,528.184324,,,0.99
+diamonds_real,student_point_soft,1,529.20505,,,1.02
+diamonds_real,student_quant_hard,1,530.239403,192.476127,0.7817,99.72
+diamonds_real,student_quant_soft,1,534.234736,195.468495,0.7363,17.36
+diamonds_real,student_point_hard,2,527.266175,,,1.0
+diamonds_real,student_point_soft,2,529.443044,,,1.0
+diamonds_real,student_quant_hard,2,530.914832,192.478077,0.7809,99.15
+diamonds_real,student_quant_soft,2,534.020276,195.456264,0.7341,19.1
