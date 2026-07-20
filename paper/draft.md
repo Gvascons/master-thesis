@@ -111,11 +111,19 @@ compression via soft labels; born-again trees) supplies the mechanics we
 adapt to quantile curves.
 
 **Acceleration without distillation.** TACO compresses the in-context set to
-~1% with large speedups; MotherNet amortizes fitting into a hypernetwork
-that emits MLP weights; simple engineering (context truncation, ensemble
-reduction, KV-caching) is folklore. Our frontier measures the two
-engineering strategies head-to-head with distillation on identical
-hold-outs.
+~1% with large speedups; CRUMB selects a compact context via MMD for
+efficient PFN inference without retraining — a representative method of the
+context-compression arm our frontier measures; MotherNet amortizes fitting
+into a hypernetwork that emits MLP weights; TL-ANDI combines locally
+distilled labels with optimal-transport context selection for cross-task
+transfer (orthogonal goal, no fast students, no distributional axis); simple
+engineering (context truncation, ensemble reduction, KV-caching) is
+folklore. Our frontier measures the engineering strategies head-to-head with
+distillation on identical hold-outs. On OOF labeling specifically, the
+health-data companion of Pocket FM already establishes stratified OOF for
+classification soft-labels; our contribution on that axis is confined to
+what OOF protects in *distributional regression* — calibration, not
+accuracy (§5.4).
 
 **Distributional regression.** Quantile regression with pinball loss, CRPS
 as a proper scoring rule, and coverage/sharpness diagnostics are standard;
@@ -124,7 +132,10 @@ a hard-label control and as the student body for curve transfer.
 
 ## 3. Method
 
-**Teachers.** TabPFN v2.5 is our distributional teacher: its native API
+**Teachers.** TabPFN v2.5 is our distributional teacher (v2.5 rather than
+the newer TabPFN-3 for version-pinned comparability with the companion
+benchmark and verified 16 GB-GPU operation; nothing in our method is
+version-specific): its native API
 returns arbitrary quantiles of the predictive distribution, from which we
 take a 19-level grid (τ = 0.05, …, 0.95). TabFM is a point-only teacher —
 we verify architecturally (its regression head decodes a single scalar) and

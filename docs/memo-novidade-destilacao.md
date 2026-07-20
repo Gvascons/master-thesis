@@ -69,3 +69,15 @@ A área anda em ciclos de ~3 meses (TabPFN-2.5 nov/25 → Pocket FM mai/26 →
 TabFM jun/26). Executar o recorte de regressão + preprint idealmente até
 **outubro/2026** — compatível com o cronograma da prorrogação (contribuição
 em set-out, redação em nov).
+
+
+## Re-varredura de 20/07/2026 (pré-redação)
+
+Recorte segue aberto. Novos itens mapeados: TL-ANDI (arXiv 2607.04809 —
+transferência entre tarefas com rótulos destilados; ortogonal, citar),
+CRUMB (arXiv 2606.11473 — compressão de contexto via MMD; baseline
+representativo do braço "comprimir"), TabPFN-3 existe (arXiv 2605.13986 —
+justificamos v2.5 por pinagem/hardware). Pocket FM segue v1
+(classificação apenas); Prior Labs adquirida pela SAP (17/07, sem anúncio
+técnico novo). Buscas dirigidas por distillation+quantile/CRPS tabular:
+zero colisões.
