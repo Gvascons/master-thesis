@@ -21,10 +21,11 @@ def download_dataset(name: str, data_dir: Path | None = None, max_retries: int =
     datasets_cfg = load_datasets_config()
     exp_cfg = load_experiment_config()
 
-    # Find dataset in classification or regression
+    # Find dataset in classification, regression or the distillation
+    # extension group (see registry.load_dataset)
     ds_cfg = None
-    for task_group in ("classification", "regression"):
-        if name in datasets_cfg[task_group]:
+    for task_group in ("classification", "regression", "regression_extension"):
+        if task_group in datasets_cfg and name in datasets_cfg[task_group]:
             ds_cfg = datasets_cfg[task_group][name]
             break
     if ds_cfg is None:

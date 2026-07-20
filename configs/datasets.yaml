@@ -160,3 +160,80 @@ regression:
     approx_samples: 21000
     approx_features: 81
     feature_types: numerical
+
+# CTR23 distillation-extension datasets (AI-2 phase 5). Loaded by
+# dataset_id of the suite's dedicated 2023 uploads (never by name — old
+# same-name versions differ). Invisible to the benchmark's dataset list.
+# Suite 353; selection memo: verified 20/07/2026 (leakage traps
+# brazilian_houses/wave_energy excluded by design).
+regression_extension:
+  abalone:
+    openml_id: 44956
+    version: 1
+    task_type: regression
+    approx_samples: 4177
+    approx_features: 8
+    feature_types: mixed
+  cpu_activity:
+    openml_id: 44978
+    version: 1
+    task_type: regression
+    approx_samples: 8192
+    approx_features: 21
+    feature_types: numerical
+  kin8nm:
+    openml_id: 44980
+    version: 1
+    task_type: regression
+    approx_samples: 8192
+    approx_features: 8
+    feature_types: numerical
+  grid_stability:
+    openml_id: 44973
+    version: 1
+    task_type: regression
+    approx_samples: 10000
+    approx_features: 12
+    feature_types: numerical
+  miami_housing:
+    openml_id: 44983
+    version: 1
+    task_type: regression
+    approx_samples: 13932
+    approx_features: 15
+    feature_types: numerical
+  fifa:
+    openml_id: 45012
+    version: 1
+    task_type: regression
+    approx_samples: 19178
+    approx_features: 28
+    feature_types: mixed
+  kings_county:
+    openml_id: 44989
+    version: 1
+    task_type: regression
+    approx_samples: 21613
+    approx_features: 21
+    feature_types: mixed
+  health_insurance:
+    openml_id: 44993
+    version: 1
+    task_type: regression
+    approx_samples: 22272
+    approx_features: 11
+    feature_types: mixed
+  physiochemical_protein:
+    openml_id: 44963
+    version: 1
+    task_type: regression
+    approx_samples: 45730
+    approx_features: 9
+    feature_types: numerical
+  video_transcoding:
+    openml_id: 44974
+    version: 1
+    task_type: regression
+    approx_samples: 68784
+    approx_features: 18
+    feature_types: mixed

@@ -48,10 +48,12 @@ def load_dataset(name: str, data_dir: Path | None = None) -> tuple[pd.DataFrame,
         if not data_dir.is_absolute():
             data_dir = Path(__file__).resolve().parents[2] / data_dir
 
-    # Find config
+    # Find config. "regression_extension" hosts the CTR23 distillation-
+    # extension datasets: loadable like any other, but invisible to
+    # get_all_dataset_names() so the 14-model benchmark surface is unchanged.
     ds_cfg = None
-    for task_group in ("classification", "regression"):
-        if name in datasets_cfg[task_group]:
+    for task_group in ("classification", "regression", "regression_extension"):
+        if task_group in datasets_cfg and name in datasets_cfg[task_group]:
             ds_cfg = datasets_cfg[task_group][name]
             break
     if ds_cfg is None:
