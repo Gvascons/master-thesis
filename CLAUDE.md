@@ -40,6 +40,9 @@ de decisão + contribuição de destilação. Documento-mestre do programa:
 | Tabela mestra de resultados | `scripts/build_results_table.py` → `notebooks/TABELA_RESULTADOS.md` |
 | Deck de apresentação | `notebooks/00_presentation.ipynb` (autocontido) |
 | Rascunhos da dissertação | `dissertation/` (Markdown; conversão via pandoc depois) |
+| Preprint (AI-2) | `paper/draft.md` (+ `outline.md`); figuras `pareto_distill` e `calibration_distill` |
+| Análises AI-2 | `scripts/{pareto_strategies,ablation_*,mlp_student,extension_ctr23,paper_analysis,plot_*}.py` |
+| Errata diamonds/kin8nm | `docs/errata-diamonds-kin8nm.md` (registro canônico) |
 
 ## Hardware
 

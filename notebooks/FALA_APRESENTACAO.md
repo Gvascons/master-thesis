@@ -2,7 +2,7 @@
 
 > Pra ler falando numa conversa 1-a-1 com o orientador. As marcações
 > *(em itálico)* são dicas de quando abrir a figura — não se lê em voz alta.
-> Números conferidos contra `TABELA_RESULTADOS.md` e o deck em 18/07/2026.
+> Números conferidos contra `TABELA_RESULTADOS.md`, o deck e `paper_retention.csv` em 21/07/2026.
 
 ---
 
@@ -74,14 +74,22 @@ refutado na primeira revisão. Mas o recorte que sobrou é forte e é nosso: a
 distribuições na regressão, não pontos, e destilar a distribuição inteira num
 GBDT de quantis, medindo com CRPS e calibração de intervalos, é gap aberto.
 Registrei o desenho antes de rodar: hipóteses com números, controles, critérios
-de go/no-go. O piloto está rodando agora; no smoke test os dois sinais que eu
-previa já apareceram — o aluno destilado ganha do controle em RMSE, e herda a
-**calibração** do teacher: cobertura de 0.73 contra 0.36 do aluno comum, para
-um nominal de 0.80. Se confirmar nos dados completos, é o núcleo do preprint
-que eu quero submeter até outubro, dentro do cronograma da prorrogação.
+de go/no-go. E executei o programa inteiro — seis fases, vinte datasets, que é
+o pool elegível completo da suíte CTR23 sob regra fixada antes de qualquer
+resultado. O que saiu: a destilação **pontual** não funciona em escala
+realista — refutei a minha própria hipótese, com dois teachers diferentes. Mas
+a **distribucional** — transferir as curvas de quantis do teacher — funciona:
+positiva em dezesseis dos vinte datasets, retenção mediana de dezenove por
+cento, chegando a um caso em que o aluno *supera* o próprio teacher. E com
+significância nos dois instrumentos: teste de sinal p=0,006, Wilcoxon p=0,045,
+mais setenta por cento de massa posterior no bayesiano. Também descobri quando
+NÃO destilar — virou uma regra de decisão prática: transforme o alvo e teste
+um aluno nativo forte primeiro; destile quando a vantagem do teacher
+sobreviver a isso. O preprint está com o draft completo, duas figuras
+validadas, e eu quero submeter até outubro, dentro do cronograma.
 
 Resumindo numa frase: a regra de que boosting sempre vence não é falsa — ela
 expirou. Valia até 2025; em 2026 o pré-treino quebrou o empate, o custo virou o
 eixo da decisão, e a nossa contribuição ataca exatamente o preço que o novo
-líder cobra. Benchmark completo, framework validado, contribuição desenhada e
-em execução. É isso — o que o senhor acha?
+líder cobra. Benchmark completo, framework validado, contribuição executada e
+com draft de preprint pronto pra sua revisão. É isso — o que o senhor acha?

@@ -2,8 +2,8 @@
 
 # Relatório técnico consolidado — AI-2 (Atividade de Orientação Individual)
 
-> Estado em 19/07/2026, após as fases 1 e 2 do programa experimental de
-> destilação e a validação completa do framework. Todos os números provêm de
+> Estado em 21/07/2026 — programa experimental COMPLETO (fases 1-6;
+> N=20, o pool elegível integral) e framework validado. Todos os números provêm de
 > artefatos versionados (`results/distillation/*`, `results/aggregated/*`,
 > `results/latency/*`). Desenho pré-registrado:
 > `docs/desenho-experimental-destilacao.md` (+ adendo de execução).

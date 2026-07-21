@@ -56,7 +56,7 @@ Eighteen datasets sourced from OpenML, spanning binary classification, multiclas
 | helena | Multiclass (100) | ~65,000 | 27 | Numerical |
 | california_housing | Regression | ~21,000 | 8 | Numerical |
 | wine_quality | Regression | ~6,500 | 11 | Numerical |
-| diamonds | Regression | ~54,000 | 9 | Mixed |
+| kin8nm | Regression | 8,192 | 8 | Numerical |
 | superconduct | Regression | ~21,000 | 81 | Numerical |
 | year_prediction | Regression | ~515,000 | 90 | Numerical |
 

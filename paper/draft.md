@@ -65,10 +65,11 @@ what distillation can and cannot transfer in tabular regression, at what
 serving cost, and under which verifiable conditions.
 
 **Contributions.**
-1. **A robust negative:** point distillation of TFMs fails at realistic pool
-   sizes (positive in only 2/15 datasets), replicated with two teachers of
-   very different strength, with a pool-size sweep showing the residual gain
-   is a small-data phenomenon on some datasets only.
+1. **A robust negative:** point distillation of TFMs fails as a rule at
+   realistic pool sizes (soft targets beat the hard-label control in only
+   4/20 datasets), replicated with two teachers of very different strength,
+   with a pool-size sweep showing the residual gain is a small-data
+   phenomenon on some datasets only.
 2. **A positive on the open axis:** distributional distillation via
    quantile-curve transfer is positive in 16/20 datasets — the complete
    eligible CTR23 pool under a rule fixed before any results — with median
@@ -204,7 +205,7 @@ ever observes; three student seeds throughout. Hardware: a single RTX 5080
 ### 5.1 Point distillation fails at scale — with any teacher
 
 Across all 20 datasets, the point student trained on teacher means beats
-its hard-label control only exceptionally (2 of the first 15 evaluated); with the far stronger TabFM teacher
+its hard-label control in only 4; with the far stronger TabFM teacher
 (anchor gaps up to 4× larger, e.g. 0.031 vs. 0.008 RMSE on
 california_housing) the picture is unchanged — the best cell reaches
 retention 0.21 and the rest are at or below zero. A pool-size sweep (caps

@@ -69,9 +69,10 @@ def main():
         pl, pr, pg = bayesian_signed_rank(r, rope=rope)
         print(f"  ROPE ±{rope}: P(ret<0)={pl:.2f}  P(equiv)={pr:.2f}  P(ret>0)={pg:.2f}")
         stats_rows.append({"rope": rope, "p_neg": pl, "p_equiv": pr, "p_pos": pg})
-    out = REPO / "results/distillation/paper_stats.csv"
-    pd.concat([R, pd.DataFrame(stats_rows)], axis=1).to_csv(out, index=False)
-    print(f"\nsalvo: {out}")
+    R.to_csv(REPO / "results/distillation/paper_retention.csv", index=False)
+    pd.DataFrame(stats_rows).to_csv(
+        REPO / "results/distillation/paper_stats.csv", index=False)
+    print("\nsalvos: paper_retention.csv + paper_stats.csv")
 
 
 if __name__ == "__main__":

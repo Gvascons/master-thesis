@@ -5,8 +5,9 @@
 > cada frente, os critérios de conclusão e os riscos. Versionado no
 > repositório para que nada dependa de estado local. Campos entre [ ] exigem
 > confirmação do aluno/secretaria — não foram assumidos.
-> Última revisão: 18/07/2026 (benchmark 14×18 completo; AI-1 consolidada;
-> LODO@14 concluído; piloto de destilação em execução).
+> Última revisão: 21/07/2026 (AI-1 completa; AI-2 com pacote empírico
+> FECHADO — 6 fases, N=20, ambos os testes significativos; paper draft v1
+> com 2 figuras; dissertação com caps. 2-7 em prosa).
 
 ## 0. Fio condutor científico (a tese em um parágrafo)
 
@@ -40,7 +41,7 @@ entrega e de apresentação]. Material de apresentação já pronto.
 | Notebooks 01-09 re-executados @14 + figuras | ✅ | `notebooks/`, `results/figures/` |
 | Deck @14 (narrativa em 2 movimentos, §6.2 nova) + tabela mestra | ✅ | `notebooks/00_presentation.ipynb`, `TABELA_RESULTADOS.md` |
 | Roteiros de fala atualizados @14 | ✅ 18/07 | `ROTEIRO_APRESENTACAO.md`, `FALA_APRESENTACAO.md` |
-| Latência dos 3 modelos novos | ⏳ (~10 min de GPU; após piloto de destilação) | `scripts/measure_latency.py` |
+| Latência dos 3 modelos novos | ✅ 19/07 (TabFM 43.262 µs/linha) | `results/latency/latency_adult.csv` |
 
 **Achados-síntese do benchmark @14:** TabFM lidera as três tarefas (rank
 médio 2,7/1,0/1,2) e é o nº 1 absoluto em 13/18 datasets, ao custo de
@@ -58,12 +59,13 @@ benchmark:
 estado da arte).** Recorte validado por checagem de novidade
 (`docs/memo-novidade-destilacao.md`): regressão distribucional (inédita),
 fronteira de Pareto destilar-vs-comprimir-vs-cachear, TabFM como teacher.
-Desenho pré-registrado com hipóteses falsificáveis
-(`docs/desenho-experimental-destilacao.md`); harness implementado e validado
-em smoke test (`scripts/distill.py`), com os sinais qualitativos já na
-direção das hipóteses (ponto: destilado 0.610 vs controle 0.636 RMSE;
-distribucional: CRPS −11%, calibração 0.73 vs 0.36 de PICP80). Meta:
-**preprint até outubro/2026** (a área anda em ciclos de ~3 meses).
+**CONCLUÍDO (21/07): programa de 6 fases executado sobre o pool elegível
+completo (N=20).** Resultado: destilação pontual refutada (4/20); destilação
+distribucional positiva em 16/20 (mediana +0,19, máx +1,06 born-again;
+sinal p=0,006, Wilcoxon p=0,045, bayesiano P=0,70); regra de decisão
+"quando destilar" derivada de duas hipóteses refutadas; 2 figuras validadas;
+paper draft v1 completo. Relatório: `docs/relatorio-ai2.md`. Meta de
+preprint (out/2026) folgada.
 
 **Pilar B — Framework de decisão validado (o produto). CONCLUÍDO em
 essência (18/07):** (i) resultado negativo rigoroso — roteamento por
@@ -71,8 +73,8 @@ meta-features não generaliza sob LODO (hit 0.11 vs baseline 0.44 no estudo
 @11); (ii) política "FM primeiro, desvie por restrição" com regret mediano
 0.018 @11 e **0.000 @14** (`lodo_validation_14.csv`) — com a geração 2026 a
 questão do roteamento por desempenho se dissolve e restam as restrições;
-(iii) matriz multicritério e flowchart regenerados com 14 modelos. Resta
-apenas a redação do relatório consolidado (com o Pilar A).
+(iii) matriz multicritério e flowchart regenerados com 14 modelos.
+Relatório consolidado escrito (`docs/relatorio-ai2.md`).
 
 **Formato/prazo:** [confirmar formato exigido; prazo interno: alinhado ao
 cronograma da prorrogação — set/out 2026].
