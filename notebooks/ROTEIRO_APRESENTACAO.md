@@ -2,7 +2,7 @@
 
 > **Como usar:** roteiro estruturado seguindo o `00_presentation.ipynb` de
 > cima a baixo. **[FIGURA: nome.png]** = mostrar a imagem (mesmos `show()` do
-> deck). Números em **negrito** conferidos contra os artefatos em 18/07/2026.
+> deck). Números em **negrito** conferidos contra os artefatos em 21/07/2026.
 > Para a versão corrida/informal, ver `FALA_APRESENTACAO.md`.
 
 ---
@@ -107,15 +107,17 @@ prediction_agreement.png]** GBDT interpretável por construção; FMs caixa-pret
 
 Caveats: N pequeno (poder), piso do Wilcoxon em N=5 (0,0625 — impossível
 rejeitar), helena 2× excluído, TabFM v1.0.1 sem paper, multiclasse descritivo.
-**AI-2 = destilação distribucional de FMs para regressão** (novidade checada e
-datada: classificação já coberta pelo Pocket FM mai/2026 — nosso recorte é
-regressão + Pareto destilar/comprimir/cachear + TabFM teacher). Desenho
-pré-registrado; smoke com os sinais previstos (aluno herda calibração: PICP80
-0,73 vs 0,36 do controle); piloto em execução; meta: preprint out/2026.
+**AI-2 = destilação distribucional de FMs para regressão — EXECUTADA** (6
+fases, N=20 = pool CTR23 elegível completo). Resultado: pontual refutada
+(4/20); **distribucional positiva em 16/20** (mediana +0,19; born-again no
+pumadyn32nh; sinal p=0,006, Wilcoxon p=0,045, bayesiano P=0,70); regra de
+decisão "quando destilar"; OOF protege calibração (desconfundido); fronteira
+de Pareto 3-estratégias + figura de calibração. Paper draft completo
+(`paper/draft.md`); meta de preprint out/2026 folgada.
 
 ---
 
-## Colinha de números (@14, conferidos 18/07/2026)
+## Colinha de números (conferidos 21/07/2026)
 
 | Número | Valor |
 |---|---|
@@ -130,4 +132,4 @@ pré-registrado; smoke com os sinais previstos (aluno herda calibração: PICP80
 | LODO: hit da árvore vs baseline | 0,11 vs 0,44 |
 | LODO@14: regret mediano FM-primeiro | **0,000** |
 | Wilcoxon N=5: piso do p-valor | 0,0625 (Holm satura em 1,0) |
-| Smoke destilação: PICP80 soft vs hard | 0,73 vs 0,36 (nominal 0,80) |
+| Destilação N=20: retenção positiva | **16/20** (mediana +0,19; p=0,006/0,045) |
