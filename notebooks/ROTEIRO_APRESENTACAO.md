@@ -76,7 +76,8 @@ adult inverte em n≈4000). **TabPFN rank 1,0 em TODOS os datasets em n≤4k.**
 
 - **TabFM: nº 1 absoluto em 13/18 datasets** (participa de 17; helena excede
   o limite de 10 classes — mesma exclusão do TabPFN). Zero-shot, fit de
-  segundos, latência ~100 ms/linha (~300.000× o XGBoost, medição de piloto).
+  segundos, latência 43.262 µs/linha no adult (protocolo padrão) — 131.097×
+  o XGBoost; maior ainda em contextos grandes (ex.: 394 ms/linha no year).
 - **KANs: teste independente desfavorável** — último terço nas 3 tarefas;
   contradiz as alegações do paper do TabKAN (baseline sub-tunado é a
   explicação provável); confirma a literatura cética (Yu et al. 2024).
@@ -124,7 +125,7 @@ pré-registrado; smoke com os sinais previstos (aluno herda calibração: PICP80
 | Variância intra-família | 80% (η²=0,20) |
 | TabFM: vitórias absolutas | **13/18** |
 | TabFM: rank médio bin/multi/reg | 2,7 / 1,00 / 1,2 |
-| TabFM: latência (piloto, contexto 35-50k) | ~100 ms/linha (~300.000× XGBoost) |
+| TabFM: latência (adult, protocolo padrão) | 43.262 µs/linha (131.097× XGBoost) |
 | KAN / TabKAN rank binária | 11,0 / 11,4 (TabNet: 11,8) |
 | LODO: hit da árvore vs baseline | 0,11 vs 0,44 |
 | LODO@14: regret mediano FM-primeiro | **0,000** |

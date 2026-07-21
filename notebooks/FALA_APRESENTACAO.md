@@ -39,9 +39,9 @@ segundo de tuning, é o número um absoluto em **treze dos dezoito datasets** �
 lidera o rank médio nas **três** tarefas: 2.7 na binária, 1.0 perfeito na
 multiclasse, 1.2 na regressão. Não foi o deep learning tunado que alcançou o
 boosting, como a literatura de 2024 sugeria; foi o pré-treino que atropelou os
-dois. Só que tem o contrapeso, e ele é brutal: a inferência custa na casa de
-cem milissegundos por linha nos contextos grandes — medimos ~300 mil vezes o
-XGBoost. O melhor modelo em acurácia é o pior em latência. Então a pergunta de
+dois. Só que tem o contrapeso, e ele é brutal: a inferência custa 43 milissegundos
+por linha no adult, sob o mesmo protocolo de latência dos outros modelos —
+131 mil vezes o XGBoost, e mais ainda nos contextos maiores. O melhor modelo em acurácia é o pior em latência. Então a pergunta de
 decisão mudou de "qual família?" para "**a latência do foundation model cabe no
 meu caso de uso?**" — e é exatamente isso que o nosso framework multicritério
 responde.
