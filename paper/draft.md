@@ -14,7 +14,7 @@ a consistent second. This leadership carries an extreme cost: in-context
 inference runs at 7.4–43 ms/row — four to five orders of magnitude slower
 than gradient-boosted trees (0.33 µs/row). Prior work distills tabular
 foundation models for *classification*; we study *regression*, where the
-teacher's output is a predictive **distribution**. Across 15 datasets we
+teacher's output is a predictive **distribution**. Across 20 datasets we
 find: (1) **point** distillation fails at realistic pool sizes regardless of
 teacher strength — a robust negative replicated with two teachers; (2)
 **distributional** distillation — transferring the teacher's quantile curves
@@ -148,7 +148,7 @@ take a 19-level grid (τ = 0.05, …, 0.95). TabFM is a point-only teacher —
 we verify architecturally (its regression head decodes a single scalar) and
 empirically (its 8-member ensemble spread yields CRPS 0.524 vs. the
 TabPFN teacher's 0.069 on california_housing, with 16.3% coverage at 80%
-nominal) that no usable predictive distribution is available from it. Both
+nominal; results/distillation/tabfm_spread.csv) that no usable predictive distribution is available from it. Both
 teachers run with an 8-member inference ensemble and a 50k-row context cap,
 matching the companion benchmark's policies (for TabFM, 8 members measured
 accuracy-equivalent to the library default of 32 at ¼ the cost).
@@ -207,8 +207,9 @@ ever observes; three student seeds throughout. Hardware: a single RTX 5080
 Across all 20 datasets, the point student trained on teacher means beats
 its hard-label control in only 4; with the far stronger TabFM teacher
 (anchor gaps up to 4× larger, e.g. 0.031 vs. 0.008 RMSE on
-california_housing) the picture is unchanged — the best cell reaches
-retention 0.21 and the rest are at or below zero. A pool-size sweep (caps
+california_housing) the picture is unchanged — no cell reaches material retention (the best,
+california/mixed, retains 0.21; five of ten cells are marginally positive
+and the rest at or below zero). A pool-size sweep (caps
 800/2k/8k) shows a genuine small-data gain on wine_quality (Δ = +0.026 at
 n=800) that vanishes by n=2,000 and does not replicate on
 california_housing; we report it as an observation with a dataset-dependent
@@ -222,16 +223,16 @@ teacher's opinions of them.
 Transferring the teacher's quantile curves changes the outcome. Over the
 complete 20-dataset pool, CRPS-gap retention is positive in 16 (median
 +0.19), topping at +1.06 (pumadyn32nh — a born-again student that surpasses
-its teacher), +0.64 (california_housing), +0.60 (abalone), +0.52
+its teacher), +0.64 (california_housing), +0.59 (abalone), +0.52
 (fps_benchmark) and +0.50 (cpu_activity). Both frequentist instruments
 reject at the 5% level (one-sided sign test p = 0.006; Wilcoxon p = 0.045)
 and the Bayesian signed-rank places 0.70 posterior mass on positive
 retention at ROPE ±0.05 (0.63–0.71 across ROPE 0.02–0.10). The four
-failures are diagnosable and form the basis of §5.5's decision rule: one
-dataset where the teacher trails the baseline outright (wine_quality, the
-failure mode our pre-registered gate anticipated) and three price-scale,
-heavy-tailed targets (fifa, diamonds, health_insurance) where §5.5 shows the
-teacher's apparent edge is largely reproducible by a log transform.
+failures are diagnosable and form the basis of §5.5's decision rule: wine_quality — where the teacher trails the tuned baseline on RMSE (the
+axis of our pre-registered gate) and its small CRPS edge (+0.04) inverts
+under transfer — and three price-scale, heavy-tailed targets (fifa,
+diamonds, health_insurance) where §5.5 shows the teacher's apparent edge is
+largely reproducible by a log transform.
 Calibration accompanies the transfer — and exceeds it. Reliability curves
 (Fig. 2) show the distilled student closest to the diagonal on both panels;
 on california_housing it is better calibrated than the hard control *and*
@@ -254,11 +255,13 @@ occupies the fast regime (2.6–5.3 µs/row) — §5.1 made visible. For
 ~1,300 µs/row (year_prediction) the students are alone, and the distilled
 one is CRPS-optimal among them: 0.109 at 99 µs/row where the cheapest
 teacher configuration needs 245 µs/row for 0.094 (california), and 4.43 at
-169 µs/row where the teacher needs 10,989 µs/row to do better (year). The
-TabFM anchor holds the accuracy extreme at 18,159–394,301 µs/row.
+169 µs/row where the cheapest teacher configuration that beats it costs
+4,576 µs/row — 27× the latency (year). The
+TabFM anchor holds the accuracy extreme at 4,905–394,301 µs/row across
+the three datasets.
 
 Two side-findings have independent value. Reducing the TabPFN ensemble from
-8 to 1 member *improved* RMSE on california_housing (0.2521 vs. 0.2556) at
+8 to 1 member *improved* RMSE on california_housing (0.2521 vs. 0.2555) at
 1/7 the latency — ensemble reduction is an underrated first lever. And the
 last context doubling (25k→50k) on year_prediction requires the library's
 memory-saving mode on a 16 GB GPU and costs 3.3× the latency (148.6 vs.
@@ -271,9 +274,10 @@ Classification results in prior work suggest in-sample teacher labels
 collapse toward one-hot and must be avoided. Regression behaves differently.
 Our three-regime ablation — OOF (80% context, leak-free), in-sample at the
 *same* 80% context (leaky), and in-sample at full context — shows that
-leakage alone leaves RMSE and CRPS intact (it even helps slightly), that
-context size contributes almost nothing, and that the harm is concentrated
-in **coverage**: at identical context, in-sample-labeled students lose 0.5
+leakage alone leaves RMSE and CRPS intact (RMSE improves in all four
+datasets, CRPS in three), that context size contributes little to accuracy
+(though on wine_quality it costs a further 5.9 p.p. of coverage), and that
+the harm is concentrated in **coverage**: at identical context, in-sample-labeled students lose 0.5
 to 5.1 points of PICP80 across all four datasets tested. The teacher is
 overconfident on rows it has in context, and that overconfidence — invisible
 to accuracy metrics — transfers to the student as too-narrow intervals. OOF
@@ -293,7 +297,7 @@ rescues it (→4.91). <!-- results/distillation/mlp_students.csv -->
 *Is heavy tail the failure moderator?* We re-ran teacher and students under
 y′ = log1p(y) on the three failing price-scale datasets plus two positive
 controls. The transform does **not** rescue the failures (fifa persists at
-−1.67) — instead it collapses the teacher's own edge (CRPS gaps shrink to
+−1.69) — instead it collapses the teacher's own edge (CRPS gaps shrink to
 0.004–0.025 in log space) and shrinks the successes too. Much of the TFM's
 distributional advantage on raw price-scale targets *is* scale handling,
 reproducible for free. <!-- results/distillation/ablation_logtarget.csv -->
@@ -309,7 +313,7 @@ Together these yield the paper's practical rule:
 ## 6. Discussion
 
 **What distillation transfers.** Not the mean — the *shape*. The consistent
-pattern across 15 datasets, two teachers, two student families and three
+pattern across 20 datasets, two teachers, two student families and three
 ablations is that point information saturates from raw labels, while
 distributional information (quantile structure, calibrated width) is
 teacher-borne and transferable — exactly the component a hard-label student
@@ -318,8 +322,8 @@ cannot recover and the component priced most steeply by in-context serving.
 **Point leader ≠ distributional leader.** TabFM leads every accuracy table
 in the companion benchmark yet contributes nothing to the distributional
 axis: its regression head is architecturally point-only, and its ensemble
-spread is measurably useless as an uncertainty estimate (16% coverage at
-80% nominal). TabPFN's bar-distribution head emerges as a genuine
+spread is measurably useless as an uncertainty estimate (16.3% coverage
+at 80% nominal). TabPFN's bar-distribution head emerges as a genuine
 architectural moat, and our results argue that future TFMs should ship
 distributional heads — we quantify what their absence costs.
 
@@ -353,8 +357,8 @@ documented as part of the method.
 
 Tabular foundation models ended the accuracy tie; their serving cost is now
 the binding constraint, and distillation attacks it selectively. In
-regression, what survives the transfer is the distribution — up to 64% of
-the teacher's CRPS edge at microsecond latency — under conditions a
+regression, what survives the transfer is the distribution — a median 19% and up to
+the entirety of the teacher's CRPS edge at microsecond latency — under conditions a
 practitioner can verify in minutes. The rest of the teacher's advantage
 either saturates from raw labels, dissolves under a log transform, or waits
 on architectures that expose what their training already knows.

@@ -143,7 +143,7 @@ destilado sem teacher algum em conjuntos pequenos/numéricos (CRPS 0,110 vs
 year_prediction (CRPS 9,66) — onde a destilação o resgata (→4,91).
 
 **O moderador de cauda pesada, refutado — e substituído.** A transformação
-log1p não resgata os conjuntos de falha (fifa persiste em −1,67) e encolhe
+log1p não resgata os conjuntos de falha (fifa persiste em −1,69) e encolhe
 os próprios gaps do teacher (para 0,004–0,025 em espaço log): boa parte da
 vantagem distribucional do foundation model em alvos de escala de preço É
 tratamento de escala, reproduzível de graça. Das duas hipóteses refutadas

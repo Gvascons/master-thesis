@@ -106,7 +106,7 @@ codificação secundária). Leitura em dois planos:
   teacher mais barato — o teacher precisa de 10.989 µs/linha para superar o
   aluno destilado em CRPS.
 - **Achados colaterais:** (i) ensemble de 1 membro do TabPFN ≈ ou melhor que
-  8 membros a 1/7 da latência (california: 0,2521 vs 0,2556) — "reduzir
+  8 membros a 1/7 da latência (california: 0,2521 vs 0,2555) — "reduzir
   ensemble" é subestimada; (ii) o último passo de contexto (25k→50k) no year
   só é mensurável com memory-saving forçado e custa 3,3× de latência por
   ΔRMSE de 0,05 — argumento involuntário contra o teacher completo em GPUs
@@ -176,7 +176,7 @@ distribucional em 15 datasets únicos** (`extension.csv` + core):
 
 Re-rodamos teacher e alunos-quantil com y'=log1p(y) nos 3 datasets de
 falha + 2 controles de preço. **O log NÃO recupera a retenção** (fifa
-segue fortemente negativo, −1,67; diamonds_real −0,05; health +0,04) — e
+segue fortemente negativo, −1,69; diamonds_real −0,05; health +0,04) — e
 também **encolhe os sucessos** (kings_county +0,21→+0,04). A causa
 visível: **as vantagens do teacher praticamente desaparecem no espaço
 log** (gaps de CRPS caem à casa de 0,004-0,025) — boa parte da vantagem
@@ -187,7 +187,7 @@ tratamento da escala, que uma transformação barata reproduz.
 destilar, tente (i) transformação do alvo e (ii) um aluno nativo forte
 (MLP-quantil) — ambos baratos; **destile quando uma vantagem
 distribucional real do teacher persistir depois disso** (verificável pelo
-OOF barato). Onde ela persiste (california +0,64, abalone +0,60,
+OOF barato). Onde ela persiste (california +0,64, abalone +0,59,
 cpu_activity +0,50, year +0,42), a destilação entrega a fronteira de
 latência. (`results/distillation/ablation_logtarget.csv`)
 
