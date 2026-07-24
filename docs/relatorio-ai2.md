@@ -66,9 +66,11 @@ são de 4 a 5 ordens de magnitude mais lentos para servir.
 Âncoras confirmam gaps bem maiores (california 0,031 vs 0,008 do TabPFN;
 wine +0,036 — positivo, ao contrário do TabPFN; year 0,255). Ainda assim:
 
-- A destilação pontual **continua sem ganho confiável**: única célula
-  positiva relevante é california/misto (retenção 0,21); nos demais, hard ≥
-  soft. Conclusão robusta: **em pool completo, o aluno GBDT não absorve a
+- A destilação pontual **continua sem ganho confiável**: apenas as duas
+  células soft do california batem o controle hard (melhor retenção
+  intra-pipeline: 0,11, california/misto); nas demais, hard ≥ soft.
+  *(Correção da revisão de código de 24/07: o valor 0,21 anteriormente
+  citado vinha de uma âncora de pipeline distinto — ver commit.)* Conclusão robusta: **em pool completo, o aluno GBDT não absorve a
   vantagem pontual do foundation model — independente do tamanho do gap.**
 - Implicação de desenho: o caminho promissor para o TabFM-teacher é expor a
   distribuição interna (bins) — item exploratório registrado — ou aceitar o

@@ -47,8 +47,12 @@ reportar resultados negativos.
 Protocolo: mesmos splits do benchmark (hold-out seed 42); alunos XGBoost com
 os hiperparâmetros tunados do benchmark (comparação controlada — só o alvo
 muda); alvos duro/soft-OOF/misto; grade de 19 quantis; 3 sementes; métricas
-RMSE/MAE, CRPS (integral de pinball), PICP80/90 e larguras; retenção
-normalizada do gap. Teachers: TabPFN v2.5 (distribucional) e TabFM
+RMSE/MAE, CRPS estimado como 2× a média das pinball losses na grade de 19
+quantis (estimador-padrão da prática probabilística; validado contra a
+forma fechada gaussiana, ele sobre-estima o CRPS exato num fator quase
+constante de ~4-5% — todas as comparações internas e retenções ficam
+preservadas, mas os valores absolutos não são comparáveis aos de outros
+trabalhos), PICP80/90 e larguras; retenção normalizada do gap. Teachers: TabPFN v2.5 (distribucional) e TabFM
 (pontual), ambos com contexto limitado a 50 mil linhas — a política do
 benchmark.
 
@@ -59,9 +63,9 @@ o aluno pontual destilado supera o controle com rótulos verdadeiros.
 
 **H2 é confirmada — e generaliza.** Na fase 1 (5 conjuntos), a retenção do
 gap de CRPS é positiva em 4/5 (california_housing +0,64, year_prediction
-+0,42, superconduct +0,26, kin8nm +0,13; wine_quality −0,97, o único
-conjunto em que o teacher é inferior ao baseline — falha antecipada pelo
-pré-registro). A extensão ao **pool elegível completo da CTR23 (N=20,
++0,42, superconduct +0,26, kin8nm +0,13; wine_quality −0,97 — onde o
+teacher fica atrás do baseline em RMSE, o eixo do gate pré-registrado, e
+sua pequena vantagem de CRPS (+0,04) inverte na transferência). A extensão ao **pool elegível completo da CTR23 (N=20,
 regra de elegibilidade fixada antes de qualquer resultado)** consolida:
 retenção positiva em **16/20**, mediana **+0,19**, máximo **+1,06**
 (pumadyn32nh — efeito *born-again*: o aluno supera o próprio teacher), com
@@ -74,7 +78,8 @@ distribucional do teacher operando na casa de microssegundos por linha.
 
 Com o TabFM, os gaps de âncora são maiores (california 0,031 vs 0,008;
 wine passa a +0,036; year 0,255). Ainda assim, a destilação pontual não
-apresenta ganho confiável (melhor célula: california/misto, retenção 0,21).
+apresenta ganho confiável: apenas as duas células soft do california batem o
+controle hard (melhor retenção intra-pipeline: 0,11, california/misto).
 A conclusão negativa de H1 é, portanto, **independente do teacher**: em pool
 completo, o aluno GBDT não absorve a vantagem pontual do foundation model.
 

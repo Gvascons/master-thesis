@@ -1,0 +1,2 @@
+dataset,system,n_members,n_test,crps,picp80,width80
+california_housing,tabfm_ensemble_spread,8,4127,0.524025,0.1631,0.057432

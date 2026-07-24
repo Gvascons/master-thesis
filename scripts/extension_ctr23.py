@@ -153,6 +153,7 @@ def main():
         params = tuned_params(ds, X_pool, y_pool, info)
         print(f"  tuning OK ({len(params)} HPs)", flush=True)
         oof = oof_targets(ds, Xp, y_pool, Xt, y_test, done)
+        assert len(oof) == len(y_pool), "OOF desalinhado com o pool"
         print(f"  OOF/anchor OK (pool={len(y_pool)}, test={len(y_test)})", flush=True)
 
         for seed in SEEDS:

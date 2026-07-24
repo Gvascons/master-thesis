@@ -242,7 +242,8 @@ def run_oof(datasets, device, cap=None, teacher="tabpfn"):
         df.to_parquet(oof_path)
         print(f"  OOF salvo: {oof_path.name}", flush=True)
 
-        # teacher anchor on the hold-out (fit on the FULL pool, as deployed)
+        # teacher anchor on the hold-out (fit on the pool; fit_teacher
+        # subsamples to 50K when larger — the benchmark's own policy)
         model = make_teacher(device, teacher)
         fit_teacher(model, Xp, y_pool)
         m, Q = teacher_predict(model, Xt, teacher=teacher)
@@ -323,6 +324,16 @@ def fit_xgb_quant_soft(Xtr, Q_targets, params, seed):
     return m
 
 
+def lookup_hard_rmse(student_csv, teacher, ds, seed):
+    """Resume path: recover the hard-control RMSE from rows already on disk."""
+    if not Path(student_csv).exists():
+        return None
+    d = pd.read_csv(student_csv)
+    m = d[(d.teacher == teacher) & (d.dataset == ds)
+          & (d.student == "xgb_point") & (d.target == "hard") & (d.seed == seed)]
+    return float(m.rmse.iloc[0]) if len(m) else None
+
+
 def run_students(datasets, seeds, cap=None, teacher="tabpfn"):
     exp_cfg = load_experiment_config()
     teacher_eval, student_csv, suffix = artifact_paths(cap)
@@ -356,6 +367,7 @@ def run_students(datasets, seeds, cap=None, teacher="tabpfn"):
               f"teacher_rmse={rmse_teacher:.4f} ===", flush=True)
 
         has_quantiles = all(c in oof.columns for c in qcols)
+        hard_rmse = {}  # within-pipeline anchor, per seed
         for seed in seeds:
             variants = (
                 [("xgb_point", tname, lambda tv=tvec: fit_xgb_point(Xp, tv, params, seed))
@@ -392,9 +404,22 @@ def run_students(datasets, seeds, cap=None, teacher="tabpfn"):
                 im = interval_metrics(y_test, Q) if Q is not None else {}
                 for k in ("picp80", "picp90", "width80", "width90"):
                     row[k] = round(im[k], 6) if im else ""
-                gap = rmse_baseline - rmse_teacher
+                # Retention anchor must live in THIS pipeline (audit 24/07):
+                # the benchmark baseline trains on a different pool/preproc,
+                # which alone inflated retentions by ~2x. Anchor = the
+                # hard-label point control of the same seed; quant students
+                # get retention on CRPS in the analysis scripts instead
+                # (their point is a median — incomparable to an MSE anchor).
+                if student == "xgb_point" and tname == "hard":
+                    hard_rmse[seed] = rmse
+                anchor = hard_rmse.get(seed)
+                if anchor is None:
+                    anchor = lookup_hard_rmse(student_csv, teacher, ds, seed)
+                gap = (anchor - rmse_teacher) if anchor is not None else np.nan
                 row["retention_rmse"] = (
-                    round((rmse_baseline - rmse) / gap, 4) if gap > 1e-12 else "")
+                    round((anchor - rmse) / gap, 4)
+                    if student == "xgb_point" and tname != "hard"
+                    and np.isfinite(gap) and gap > 1e-12 else "")
                 append_student_row(row, student_csv)
                 print(f"  [{student:9s}/{tname:5s} seed={seed}] rmse={rmse:.4f} "
                       f"crps={row['crps'] or '-'} ret={row['retention_rmse']} "

@@ -170,8 +170,12 @@ fixed and only the target changes, isolating the distillation effect.
   labels (hard) or MSE on teacher curves (soft) — symmetric with the XGBoost
   pair, to test whether the student family matters.
 
-**Metrics.** RMSE and MAE for point quality; CRPS via the pinball-loss
-integral over the grid; PICP80/90 with interval widths for calibration; and
+**Metrics.** RMSE and MAE for point quality; CRPS estimated as twice the
+mean pinball loss over the 19-level grid — the standard grid estimator in
+probabilistic-forecasting practice, which we validated against the Gaussian
+closed form: it carries a near-constant multiplicative overestimate of
+~4–5%, so within-paper comparisons and retention ratios are unaffected but
+absolute CRPS values should not be compared across papers; PICP80/90 with interval widths for calibration; and
 a normalized retention score, (CRPS_hard − CRPS_soft)/(CRPS_hard −
 CRPS_teacher), where 1 means the student recovers the teacher's entire edge
 over its own hard-label control and negative values mean distillation hurt.
@@ -207,9 +211,9 @@ ever observes; three student seeds throughout. Hardware: a single RTX 5080
 Across all 20 datasets, the point student trained on teacher means beats
 its hard-label control in only 4; with the far stronger TabFM teacher
 (anchor gaps up to 4× larger, e.g. 0.031 vs. 0.008 RMSE on
-california_housing) the picture is unchanged — no cell reaches material retention (the best,
-california/mixed, retains 0.21; five of ten cells are marginally positive
-and the rest at or below zero). A pool-size sweep (caps
+california_housing) the picture is unchanged — only california's two soft-target cells beat
+the hard-label control at all, with best within-pipeline retention 0.11
+(california/mixed); the remaining eight cells are at or below the control. A pool-size sweep (caps
 800/2k/8k) shows a genuine small-data gain on wine_quality (Δ = +0.026 at
 n=800) that vanishes by n=2,000 and does not replicate on
 california_housing; we report it as an observation with a dataset-dependent

@@ -35,7 +35,7 @@ def retention_table():
         qs = ge.loc[(ds, "student_quant_soft"), "crps"]
         gap = qh - t
         rows.append({"dataset": ds, "source": "ctr23",
-                     "ret_crps": (qh - qs) / gap if abs(gap) > 1e-9 else np.nan,
+                     "ret_crps": (qh - qs) / gap if gap > 1e-9 else np.nan,
                      "teacher_edge": gap})
     d = pd.read_csv(REPO / "results/distillation/distill.csv")
     d = d[d.teacher == "tabpfn"]
@@ -47,7 +47,7 @@ def retention_table():
         qs = gd.loc[(ds, "xgb_quant", "soft"), "crps"]
         gap = qh - t5.loc[ds, "crps"]
         rows.append({"dataset": ds, "source": "core",
-                     "ret_crps": (qh - qs) / gap if abs(gap) > 1e-9 else np.nan,
+                     "ret_crps": (qh - qs) / gap if gap > 1e-9 else np.nan,
                      "teacher_edge": gap})
     return pd.DataFrame(rows).sort_values("ret_crps", ascending=False)
 
@@ -55,6 +55,13 @@ def retention_table():
 def main():
     R = retention_table()
     print(R.round(3).to_string(index=False))
+    # Datasets where the teacher does NOT beat the hard control (gap <= 0)
+    # are excluded, not sign-flipped: a retention ratio over a negative gap
+    # inverts its meaning and would silently corrupt the sign test.
+    dropped = R[~(R.teacher_edge > 1e-9)]
+    if len(dropped):
+        print(f"[aviso] {len(dropped)} dataset(s) excluidos por gap <= 0: "
+              f"{', '.join(dropped.dataset)}")
     r = R.ret_crps.dropna().values
     n, pos = len(r), int((r > 0).sum())
     print(f"\n=== N={n} datasets unicos ===")

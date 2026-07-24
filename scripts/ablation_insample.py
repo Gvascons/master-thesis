@@ -8,7 +8,7 @@ students trained on in-sample targets (teacher fit on the full pool,
 predicting that same pool) vs the OOF targets already cached.
 
 Datasets: the four whose pool fits the 50K context entirely (wine_quality,
-california_housing, superconduct, diamonds) — year_prediction is excluded
+california_housing, superconduct, kin8nm) — year_prediction is excluded
 because 30K of its 80K rows would fall outside the context, making the
 "in-sample" condition only partial (documented design choice).
 
