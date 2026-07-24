@@ -57,11 +57,17 @@ benchmark.
 **H1 é refutada em escala de pool completo.** Em nenhum dos cinco conjuntos
 o aluno pontual destilado supera o controle com rótulos verdadeiros.
 
-**H2 é confirmada onde o teacher tem vantagem.** Retenção do gap de CRPS:
-california_housing **+0,64**, year_prediction **+0,42**, superconduct
-+0,26, kin8nm +0,13; wine_quality −0,97 — o único conjunto em que o
-próprio teacher é inferior ao baseline, condição de falha antecipada pelo
-pré-registro. O aluno-quantil destilado herda parte substancial da qualidade
+**H2 é confirmada — e generaliza.** Na fase 1 (5 conjuntos), a retenção do
+gap de CRPS é positiva em 4/5 (california_housing +0,64, year_prediction
++0,42, superconduct +0,26, kin8nm +0,13; wine_quality −0,97, o único
+conjunto em que o teacher é inferior ao baseline — falha antecipada pelo
+pré-registro). A extensão ao **pool elegível completo da CTR23 (N=20,
+regra de elegibilidade fixada antes de qualquer resultado)** consolida:
+retenção positiva em **16/20**, mediana **+0,19**, máximo **+1,06**
+(pumadyn32nh — efeito *born-again*: o aluno supera o próprio teacher), com
+significância nos dois instrumentos (teste de sinal p=0,006; Wilcoxon
+p=0,045) e 0,70 de massa posterior bayesiana em retenção positiva (ROPE
+±0,05). O aluno-quantil destilado herda parte substancial da qualidade
 distribucional do teacher operando na casa de microssegundos por linha.
 
 ## 7.5 Resultados — fase 2 (teacher TabFM) e o efeito do tamanho
@@ -118,6 +124,36 @@ Em GPUs de 16 GB, o último passo de contexto compra pouquíssima acurácia por
 um multiplicador severo de latência — um argumento adicional, e involuntário,
 a favor das alternativas ao teacher completo.
 
+## 7.6b Ablações e condições de valor
+
+**Por que rotular out-of-fold (desconfundido).** O tripé
+oof/insample-ctx80/insample — os dois primeiros com contexto idêntico de
+80% — mostra que o vazamento de rótulo, por si só, não degrada RMSE/CRPS
+(chega a ajudar levemente), mas **erode a cobertura de intervalos** do
+aluno em todos os conjuntos testados (PICP80 −0,5 a −5,1 p.p. a contexto
+fixo); o tamanho do contexto contribui quase nada. Em regressão, o OOF é
+uma salvaguarda de *calibração*, não de acurácia — refinamento sobre o
+achado de classificação do Pocket FM.
+
+**A família do aluno importa.** O objetivo pinball nativo do XGBoost é um
+aprendiz distribucional fraco que a destilação conserta de forma
+consistente; um aluno MLP-quantil com rótulos duros iguala o XGBoost
+destilado sem teacher algum em conjuntos pequenos/numéricos (CRPS 0,110 vs
+0,109 no california; 0,047 vs 0,064 no kin8nm), mas colapsa no
+year_prediction (CRPS 9,66) — onde a destilação o resgata (→4,91).
+
+**O moderador de cauda pesada, refutado — e substituído.** A transformação
+log1p não resgata os conjuntos de falha (fifa persiste em −1,67) e encolhe
+os próprios gaps do teacher (para 0,004–0,025 em espaço log): boa parte da
+vantagem distribucional do foundation model em alvos de escala de preço É
+tratamento de escala, reproduzível de graça. Das duas hipóteses refutadas
+emerge a regra de decisão prática do trabalho:
+
+> **Antes de destilar: (i) aplique transformações baratas de alvo; (ii)
+> teste um aluno-quantil nativo forte. Destile quando uma vantagem
+> distribucional genuína do teacher persistir após ambos — verificável com
+> uma única rotulagem OOF, de custo de minutos.**
+
 ## 7.7 Discussão
 
 - **O que a destilação transfere:** não a média (H1), mas a *forma* da
@@ -134,15 +170,22 @@ a favor das alternativas ao teacher completo.
   teacher, cuja calibração por nível de quantil é imperfeita (forma-S). A
   combinação transferência-de-curvas + ordenação atua como regularizador
   de calibração, não mera cópia.
-- **Limitações:** 5 conjuntos (extensão OpenML-CTR23 planejada); aluno único
-  (XGBoost; MLP-quantil planejado); TabFM sem distribuição exposta; CRPS
-  aproximado pela grade de 19 quantis.
+- **Limitações:** N=20 dá significância a 5% nos dois instrumentos, mas as
+  magnitudes são heterogêneas (retenção −1,3 a +1,1) e ~25% da massa
+  posterior permanece em retenção negativa — a regra de decisão, não uma
+  claim universal, é o entregável honesto. Alunos herdam capacidade tunada
+  do benchmark sem re-tuning por regime; CRPS aproximado pela grade de 19
+  quantis; TabFM sem distribuição exposta (negativo arquitetural medido:
+  spread do ensemble com CRPS 0,524 e cobertura de 16% a nominal 80%).
 
 ## 7.8 Síntese
 
 A contribuição delimita com precisão o espaço em que destilar foundation
-models tabulares para regressão funciona: o eixo distribucional — 
-exatamente o recorte sem trabalho público anterior — com retenção de até
-64% da vantagem de CRPS a três ordens de magnitude menos latência, e dois
-resultados negativos robustos (ponto em pool completo; independência do
-teacher) que orientam a prática e a pesquisa subsequente.
+models tabulares para regressão funciona: o eixo distribucional —
+exatamente o recorte sem trabalho público anterior — positivo em 16 de 20
+conjuntos (mediana 19% de retenção, chegando a superar o teacher), a três
+ordens de magnitude menos latência; três resultados negativos robustos
+(ponto em pool completo, independência do teacher, moderador de cauda
+refutado) que se convertem numa regra de decisão prática; e a demonstração
+de que a rotulagem OOF protege a calibração do aluno. O pacote empírico
+sustenta o preprint em preparação.
