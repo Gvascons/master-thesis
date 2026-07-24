@@ -43,6 +43,7 @@ de decisão + contribuição de destilação. Documento-mestre do programa:
 | Preprint (AI-2) | `paper/draft.md` (+ `outline.md`); figuras `pareto_distill` e `calibration_distill` |
 | Análises AI-2 | `scripts/{pareto_strategies,ablation_*,mlp_student,extension_ctr23,paper_analysis,plot_*}.py` |
 | Errata diamonds/kin8nm | `docs/errata-diamonds-kin8nm.md` (registro canônico) |
+| Entregas em LaTeX (Overleaf) | `latex/{ai1,ai2}/` — artigos autocontidos; pendências no `latex/README.md` |
 
 ## Hardware
 
