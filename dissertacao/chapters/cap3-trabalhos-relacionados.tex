@@ -1,4 +1,499 @@
 \chapter{Trabalhos Relacionados}
 \label{chap:related}
 
-[Conteúdo portado de \texttt{dissertation/cap3-trabalhos-relacionados.md} na fase de escrita.]
+\begin{resumocapitulo}
+Este capítulo posiciona a dissertação em seis eixos da literatura: os
+benchmarks tabulares que consolidaram a comparação GBDT vs.\ aprendizado
+profundo; a avaliação dos \emph{foundation models} tabulares; a família
+Kolmogorov--Arnold aplicada a dados tabulares; as estratégias de aceleração
+e \emph{serving} desses modelos; a destilação de \emph{foundation models}
+tabulares; e a seleção de algoritmos por \emph{meta-learning}. Cada seção
+fecha com a lacuna específica que este trabalho ocupa, e a
+Seção~\ref{sec:rel-sintese} consolida o mapa de lacunas numa tabela-síntese
+que liga cada lacuna ao capítulo que a ataca. Como o campo avança em ciclos
+de poucos meses, toda caracterização de trabalho de terceiros neste capítulo
+provém de verificações online datadas --- conduzidas entre 13 e 20 de julho
+de 2026 e revisadas em varredura completa em 4 de outubro de 2026 ---, e os
+qualificadores de escopo dos trabalhos citados (``classificação apenas'',
+``sem metodologia pública'', ``contemporâneo a este trabalho'') são
+preservados deliberadamente.
+\end{resumocapitulo}
+
+\publicacaoassociada{As seções de \emph{Related Work} dos dois artigos
+intermediários (\texttt{latex/ai1/main.tex} e \texttt{latex/ai2/main.tex} no
+repositório do projeto) condensam este capítulo em inglês e foram auditadas
+contra as fontes primárias. Os registros canônicos das verificações de
+novidade, com datas e vereditos, estão em
+\texttt{docs/memo-novidade-destilacao.md} (15/07, 20/07 e 04/10/2026) e
+\texttt{docs/memo-novos-modelos-kan-tabkan-tabfm.md} (13/07 e 04/10/2026).}
+
+Uma nota de método antes do conteúdo. A literatura coberta por este
+capítulo move-se em ciclos de aproximadamente três meses --- TabPFN-2.5 em
+novembro de 2025, Pocket FM em maio de 2026, TabFM em junho de 2026, o
+trabalho contemporâneo de \citet{jeong2026} em outubro de 2026 --- e boa
+parte dos trabalhos centrais ainda não passou por revisão por pares.
+Qualquer afirmação do tipo ``nenhum trabalho faz X'' é, portanto,
+perecível. O contrato de conduta científica deste projeto
+(Capítulo~\ref{chap:metodologia}) exige que afirmações de novidade sejam
+sustentadas por verificação online datada; as datas relevantes são
+13--20/07/2026 (antes de investir nas contribuições) e 04/10/2026
+(re-varredura pré-entrega, que inclusive corrigiu um lapso nosso,
+registrado na Seção~\ref{sec:rel-kan}). As lacunas enunciadas a seguir
+devem ser lidas como ``abertas até onde verificamos, nas datas
+declaradas'' --- nunca como certezas atemporais.
+
+O percurso do capítulo segue a ordem das contribuições. A
+Seção~\ref{sec:rel-benchmarks} revisa os benchmarks que definiram o estado
+da arte da comparação entre famílias e a controvérsia GBDT vs.\ aprendizado
+profundo; a Seção~\ref{sec:rel-tfm} cobre os \emph{foundation models}
+tabulares e como vêm sendo avaliados; a Seção~\ref{sec:rel-kan}, as
+avaliações existentes da família Kolmogorov--Arnold em dados tabulares; a
+Seção~\ref{sec:rel-serving}, as estratégias de aceleração que competem com
+a destilação; a Seção~\ref{sec:rel-destilacao}, a linhagem de destilação
+--- da compressão de modelos clássica aos trabalhos de 2026 sobre
+\emph{foundation models} tabulares; e a Seção~\ref{sec:rel-selecao}, a
+literatura de seleção de algoritmos que o nosso arcabouço de decisão
+confronta. A Seção~\ref{sec:rel-sintese} fecha com a tabela-síntese de
+lacunas.
+
+\section{Benchmarks tabulares e a controvérsia GBDT vs.\ aprendizado profundo}
+\label{sec:rel-benchmarks}
+
+\paragraph{Os benchmarks de referência.} O protocolo moderno de comparação
+entre \emph{gradient boosting} e aprendizado profundo em dados tabulares
+foi estabelecido por dois trabalhos. \citet{grinsztajn2022} deram forma
+quantitativa ao ditado ``árvores vencem em tabelas'', identificando os
+vieses indutivos que explicam a vantagem: a irregularidade das funções-alvo
+tabulares e a presença de atributos não informativos favorecem métodos
+baseados em árvores sobre redes neurais. \citet{mcelfresh2023} matizaram a
+conclusão em escala maior de conjuntos: redes vencem com frequência não
+trivial, e meta-características dos conjuntos predizem parcialmente quando
+isso ocorre. Antes de ambos, \citet{gorishniy2021} haviam padronizado os
+protocolos de comparação para o aprendizado profundo tabular ---
+arquiteturas de referência, \emph{tuning} equalizado, múltiplas sementes.
+Mais recentemente, o TabArena \citep{tabarena2025} mantém um benchmark ``vivo'' com dezenas
+de conjuntos e ranking contínuo, atualizado à medida que novos modelos são
+lançados.
+
+\paragraph{A tradição de comparação estatística.} Paralela aos benchmarks
+corre a literatura sobre \emph{como} comparar classificadores em múltiplos
+conjuntos de dados. O protocolo frequentista canônico ---
+Friedman com \emph{post-hoc} corrigido, operando sobre conjuntos e nunca
+sobre \emph{folds} --- foi fixado por \citet{demsar2006};
+\citet{benavoli2017} argumentaram, uma década depois, que testes de
+hipótese nula respondem à pergunta errada (``há diferença?'' em vez de
+``a diferença importa?'') e propuseram a alternativa bayesiana com região
+de equivalência prática (ROPE). Os benchmarks tabulares de referência
+adotam o primeiro arcabouço; a camada bayesiana, embora disponível há
+quase uma década, raramente aparece neles --- e a sensibilidade das
+conclusões ao raio da ROPE quase nunca é analisada.
+
+\paragraph{A controvérsia como afirmação condicional.} As duas narrativas
+--- ``árvores vencem'' \citep{grinsztajn2022} e ``o aprendizado profundo
+moderno alcançou'' \citep{realmlp2024,tabm2025} --- são frequentemente
+tratadas como contraditórias. Nossa leitura, sustentada pelas curvas de
+aprendizado do Capítulo~\ref{chap:benchmark}, é que ambas são afirmações
+condicionais ao tamanho amostral e à estrutura da tarefa, verdadeiras em
+regimes distintos: o cruzamento de liderança entre famílias é real,
+específico por conjunto, e mensurável quando se varre diretamente o tamanho
+do treino. A chegada dos \emph{foundation models} desloca a controvérsia
+inteira: o novo eixo não é árvore vs.\ rede, mas pré-treinado vs.\ treinado
+do zero. Cabe registrar que os dois benchmarks de referência são anteriores
+à segunda geração de \emph{foundation models} tabulares --- não é defeito
+metodológico, é datação: nenhum deles poderia ter incluído modelos que
+ainda não existiam.
+
+\paragraph{Lacuna.} Nosso benchmark não compete em largura (18 conjuntos é
+menos do que o TabArena cobre); diferencia-se em três frentes que
+permaneciam abertas. Primeira, profundidade de protocolo por célula:
+validação cruzada aninhada com \emph{tuning} uniforme por família, e
+inferência frequentista \emph{e} bayesiana --- esta última com a camada de
+equivalência prática via ROPE \citep{benavoli2017} e análise de
+sensibilidade do raio --- sobre as mesmas células. Segunda, avaliação
+multicritério: latência de inferência, custo de treinamento e de
+\emph{tuning}, robustez e interpretabilidade medidos sob o mesmo protocolo,
+e não apenas acurácia. Terceira, atualidade verificada: inclusão simultânea
+da geração 2026 de \emph{foundation models} (TabFM, medido semanas após o
+lançamento) e da família Kolmogorov--Arnold, ambas ausentes dos benchmarks
+neutros à data das nossas verificações (13--15/07/2026). O
+Capítulo~\ref{chap:benchmark} executa esse desenho.
+
+\section{\emph{Foundation models} tabulares e sua avaliação}
+\label{sec:rel-tfm}
+
+\paragraph{A linhagem PFN/ICL.} O TabPFN v2 \citep{hollmann2025} e sua
+atualização v2.5 \citep{priorlabs2025} estabeleceram o aprendizado em
+contexto com redes ajustadas a \emph{priors} (\emph{prior-fitted networks})
+para dados tabulares: uma rede pré-treinada em conjuntos sintéticos
+condiciona no conjunto de treino como \emph{prompt} no momento da predição,
+sem atualização de gradientes na tarefa-alvo. A linha evoluiu rapidamente
+--- TabPFN-3 e, mais recentemente, TabPFN-3.5 \citep{tabpfn3-2026} --- e
+inspirou variantes que exploram escala e velocidade: o TabICL
+\citep{tabicl2025} estende o paradigma a conjuntos grandes; o TabFlex
+\citep{tabflex2025} usa atenção linear para escalar a milhões de linhas; o
+MotherNet \citep{mothernet2023} amortiza o ajuste num hiperrede
+(\emph{hypernetwork}) que emite os pesos de um MLP em um único
+\emph{forward}.
+
+\paragraph{TabFM.} O TabFM \citep{tabfm2026} é uma implementação
+independente do mesmo paradigma pelo Google Research, com arquitetura
+híbrida de atenção sobre colunas e compressão de linhas, liberada com pesos
+em junho de 2026. À data da nossa integração (julho de 2026), não havia
+artigo: a citação possível era o blog oficial, o \emph{model card} e o
+repositório. Desde o final de setembro de 2026 existe um relatório técnico
+oficial \citep{kong2026}, ainda sem revisão por pares --- que, entre outras
+coisas, confirma em fonte primária a cabeça de regressão escalar que
+havíamos verificado arquiteturalmente (fato que importa ao
+Capítulo~\ref{chap:destilacao}). O enquadramento honesto, que adotamos em
+toda a dissertação, é o de \emph{replicação inter-laboratórios} do
+paradigma PFN/ICL --- Google vs.\ Prior Labs ---, não o de um segundo
+paradigma.
+
+\paragraph{Como esses modelos vêm sendo avaliados.} Os números públicos do
+TabFM à data do lançamento provinham do próprio proponente (avaliação do
+Google sobre o TabArena), com verificação independente apenas parcial ---
+prática padrão em lançamentos industriais, mas que deixa a comunidade sem
+evidência neutra justamente no período em que as decisões de adoção são
+tomadas. Em paralelo, uma linha recente avalia \emph{foundation models}
+tabulares diretamente como estimadores de densidade condicional em
+regressão, com regras de pontuação próprias
+\citep{izbicki2026,landsgesell2026} --- avaliação distribucional do
+\emph{teacher}, sem qualquer componente de destilação ou de \emph{serving}.
+
+\paragraph{Lacuna.} Até onde verificamos (13/07/2026, reconfirmado em
+04/10/2026), não havia comparação neutra TabPFN~$\times$~TabFM sob
+protocolo idêntico --- mesmas partições, mesmo pré-processamento, mesma
+política de subamostragem de contexto. A exigência não é burocrática: num
+campo em que os modelos recebem atualizações mensais e os resultados
+publicados misturam versões, uma comparação só é interpretável com
+versões pinadas e políticas espelhadas (no nosso caso, o mesmo teto de 50
+mil linhas de contexto e a mesma exclusão estrutural do conjunto de 100
+classes para ambos os modelos). O Capítulo~\ref{chap:benchmark}
+fornece essa comparação, enquadrada como replicação inter-laboratórios do
+paradigma; e a avaliação distribucional dos \emph{teachers} ---
+complementar aos benchmarks de densidade condicional citados --- reaparece
+no Capítulo~\ref{chap:destilacao} como insumo da destilação, eixo que
+nenhum dos trabalhos de avaliação cobre.
+
+\section{A família Kolmogorov--Arnold em dados tabulares}
+\label{sec:rel-kan}
+
+\paragraph{Proponentes.} As redes de Kolmogorov--Arnold (KAN)
+\citep{kan2024} invertem o MLP: funções de ativação univariadas aprendíveis
+(B-splines) vivem nas arestas, e os nós apenas somam --- um viés indutivo
+de aditividade suave. O trabalho teve recepção de alto impacto (apresentação
+oral na ICLR 2025), mas sua evidência original concentra-se em regressão
+simbólica e problemas científicos, não em dados tabulares heterogêneos. A
+extensão tabular mais direta é o TabKAN \citep{tabkan2025}, um arcabouço
+modular de variantes KAN cuja melhor configuração reportada (ChebyKAN)
+alega superar XGBoost e \emph{transformers} tabulares em dez conjuntos ---
+AUC média de 0,857 contra 0,814 do XGBoost nos oito binários. Há ainda o
+TabKANet \citep{tabkanet2024}, que usa camadas KAN apenas como módulo de
+\emph{embedding} numérico dentro de um \emph{transformer}.
+
+\paragraph{Avaliações independentes.} A literatura crítica aponta na
+direção oposta aos proponentes. \citet{kancritical2024} compararam KAN e
+MLP sob paridade simultânea de parâmetros \emph{e} FLOPs e encontraram o
+MLP vencendo em seis de oito tarefas de aprendizado de máquina, com o KAN
+dominando apenas em regressão simbólica. \citet{poeta2024} conduziram o
+primeiro benchmark independente KAN-vs-MLP em dados tabulares, com
+resultados favoráveis ao KAN em acurácia mas custo computacional maior; é
+um estudo pioneiro e suas escolhas são defensáveis para uma primeira
+investigação, mas duas limitações de escopo importam aqui --- não há
+\emph{baselines} GBDT e o treino usa apenas dez épocas --- de modo que o
+estudo não responde à pergunta que o praticante faz (``KAN compete com o
+XGBoost?''). Quanto ao TabKAN, as ressalvas devem-se menos aos autores ---
+um grupo pequeno publicando em venue recém-criada, com orçamento
+computacional limitado --- do que ao estado da evidência: seis dos dez
+conjuntos têm menos de 8 mil amostras, não há regressão, e o XGBoost de
+comparação parece subajustado (AUC de 0,726 em \texttt{credit\_g}, quando
+nosso próprio \emph{tuning} obtém acima de 0,77 no mesmo conjunto).
+
+\paragraph{Registro de um lapso nosso.} Nas checagens de julho de 2026
+afirmáramos que nenhum benchmark independente de KANs tabulares existia; a
+re-varredura de 04/10/2026 identificou que \citet{poeta2024} é anterior
+(junho de 2024) e o registro foi corrigido em adendo datado, com a
+reivindicação reescopada nos artigos e nesta dissertação. O episódio
+ilustra por que este capítulo insiste em verificações datadas: o erro foi
+nosso, e o mecanismo de correção previsto no contrato de conduta
+funcionou.
+
+\paragraph{Lacuna.} O que permanecia aberto --- e segue aberto até
+04/10/2026, fora deste trabalho --- é o teste da família Kolmogorov--Arnold
+contra o \emph{slate} completo GBDT/DL/\emph{foundation models} num
+benchmark multicritério de protocolo uniforme: \citet{poeta2024} não têm
+GBDTs, \citet{kancritical2024} não têm GBDTs nem \emph{foundation models},
+e nenhum dos dois mede eixos de custo. Nenhum benchmark tabular neutro de
+larga escala incluía KANs às datas verificadas. O
+Capítulo~\ref{chap:benchmark} fornece exatamente esse teste, com
+\emph{sanity checks} contra os valores publicados pelos proponentes; o
+resultado é desfavorável às alegações fortes --- KAN e TabKAN terminam no
+último terço nas três tarefas, com o TabKAN atrás do próprio TabNet em
+multiclasse e regressão --- em linha com a literatura crítica e
+consistente com a hipótese de \emph{baselines} subajustados nos artigos
+originais.
+
+\section{Aceleração e \emph{serving} de \emph{foundation models} tabulares}
+\label{sec:rel-serving}
+
+A principal fraqueza operacional dos \emph{foundation models} tabulares é o
+custo de inferência: cada predição recondiciona no conjunto de treino
+inteiro. Uma literatura de aceleração \emph{sem destilação} cresceu
+rapidamente em 2026, e é a concorrente direta da estratégia que estudamos
+no Capítulo~\ref{chap:destilacao}.
+
+\paragraph{Compressão de contexto.} O TACO \citep{taco2026} aprende, de
+ponta a ponta, uma compressão do conjunto em contexto para cerca de 1\% do
+tamanho original, com inferência até 94$\times$ mais rápida. O CRUMB
+\citep{crumb2026} seleciona um contexto compacto por casamento
+distribucional (MMD), sem retreinamento do modelo --- é o método
+representativo do braço ``comprimir contexto'' que usamos como referência
+conceitual (nossa fronteira mede a variante mais simples, por
+subamostragem). Na mesma direção geral, há propostas de \emph{foundation
+models} tabulares eficientes em memória \citep{memeff2026}.
+
+\paragraph{Amortização e transferência.} O MotherNet
+\citep{mothernet2023} amortiza o ajuste num hiperrede que emite os pesos de
+um MLP em um único \emph{forward} --- elimina o custo de recondicionamento
+trocando-o por uma rede geradora. O TL-ANDI \citep{tlandi2026} combina
+rótulos destilados e ancoragem para transferência a tarefas com contexto
+restrito --- objetivo ortogonal ao nosso (não produz alunos rápidos nem
+trata o eixo distribucional), citado por completude do mapa.
+
+\paragraph{Quantização e calibração pós-hoc.} A quantização FP8 da atenção
+\citep{kubler2026} é uma quarta alavanca emergente de \emph{serving}, que
+não medimos neste trabalho. E a calibração conformal pós-hoc do próprio
+\emph{teacher} \citep{park2026} é a rota complementar para obter intervalos
+calibrados sem nenhum aluno rápido --- paga-se a latência do \emph{foundation
+model} em troca de garantias de cobertura.
+
+\paragraph{Engenharia simples, raramente medida.} Truncar o contexto,
+reduzir o ensemble de inferência e fazer \emph{cache} do contexto
+processado são prática corrente --- e, até onde verificamos, folclore: os
+trabalhos acima raramente comparam suas propostas contra essas alavancas
+baratas, e as alavancas baratas quase nunca são medidas entre si.
+
+\paragraph{Lacuna.} Cada trabalho citado avalia a própria estratégia contra
+o \emph{teacher} cheio; nenhum mede as estratégias \emph{entre si} ---
+destilar vs.\ comprimir contexto vs.\ reduzir ensemble --- nos mesmos
+conjuntos de \emph{hold-out}, sob o mesmo protocolo e com os mesmos eixos
+de custo. Essa fronteira cruzada é uma das contribuições do
+Capítulo~\ref{chap:destilacao}, que a executa e extrai dela dois achados
+próprios: a redução de ensemble é subestimada (um membro aproxima oito a
+um sétimo da latência) e o último dobro de contexto é desproporcionalmente
+caro em GPUs de 16~GB.
+
+\section{Destilação de \emph{foundation models} tabulares}
+\label{sec:rel-destilacao}
+
+\paragraph{A linhagem clássica.} A mecânica de treinar um modelo pequeno
+nas saídas de um modelo grande é literatura estabelecida: a compressão de
+modelos via rótulos suaves e conjuntos de transferência remonta a
+\citet{bucila2006}, a formulação moderna com temperatura é de
+\citet{hinton2015}, e a transposição para árvores tem linhagem própria ---
+\citet{breiman1996}, as \emph{born-again trees} de \citet{vidal2020} e a
+destilação para árvores de decisão suaves de \citet{frosst2017}. É dessa
+mecânica que partimos; o que muda com os \emph{foundation models} é o
+\emph{teacher} (um modelo de aprendizado em contexto, cujo custo é na
+inferência) e, no nosso caso, o alvo (curvas de quantis, não rótulos).
+
+\paragraph{Pocket FM: a formulação para classificação.} O trabalho que
+estabelece a destilação de \emph{foundation models} tabulares é o Pocket FM
+\citep{pocketfm2026}: alunos XGBoost/CatBoost/LightGBM/MLP treinados em
+rótulos suaves de múltiplos \emph{teachers} (TabICLv2, TabPFNv2.6, LimiX,
+Orion-MSP) sobre 153 conjuntos, retendo 96,5\% do AUC do \emph{teacher}
+com acelerações de 38--860$\times$. Duas contribuições metodológicas do
+Pocket FM importam diretamente a esta dissertação: a demonstração de que a
+rotulagem \emph{out-of-fold} (OOF) estratificada é necessária --- um
+\emph{teacher} de aprendizado em contexto que pontua o próprio treino
+produz rótulos quase determinísticos, colapsando os alvos suaves --- e a
+análise de quando a destilação funciona ou falha (ganhos concentrados em
+baixa dimensionalidade). O artigo-irmão clínico \citep{pocketfmhealth2026}
+estende a análise a 19 conjuntos de saúde, adicionando calibração e
+\emph{fairness}, e reporta que múltiplos \emph{teachers} não superam o
+melhor \emph{teacher} único. Ambos os trabalhos são \textbf{exclusivamente
+de classificação}. Adotamos a rotulagem OOF do Pocket FM como base ---
+reinventá-la seria pior, ignorá-la seria vazamento --- e delimitamos nossa
+contribuição nesse eixo específico ao que o OOF protege \emph{em regressão
+distribucional}: calibração, não acurácia
+(Capítulo~\ref{chap:destilacao}).
+
+\paragraph{Variantes e vizinhos.} O GEAR \citep{gear2026} adiciona uma
+variante em dois estágios com expansão sintética do conjunto de
+transferência --- classificação apenas. O TabDistill \citep{tabdistill2025}
+destila \emph{transformers} em MLPs minúsculos no regime \emph{few-shot} de
+classificação (e ocupa o nome, razão pela qual não o usamos). Outra linha
+destila \emph{foundation models} em modelos aditivos generalizados (GAMs)
+para interpretabilidade, não velocidade \citep{tfmgam2026}. E a Prior Labs
+comercializa, junto ao TabPFN-2.5, um motor de destilação fechado
+\citep{priorlabs2025}: proprietário, com comparações de
+acurácia--latência no relatório técnico mas \textbf{sem metodologia nem
+código públicos} --- evidência de demanda industrial pela estratégia, não
+evidência científica sobre ela.
+
+\paragraph{As peças distribucionais existem --- separadas.} Vale registrar
+que nenhum ingrediente isolado da destilação distribucional é novo, e a
+lacuna está precisamente na composição. A regressão quantílica com perda
+\emph{pinball} --- a perda assimétrica cujo minimizador é o quantil
+$\tau$ --- é clássica \citep{koenker1978}; o CRPS como regra de pontuação
+própria e seu estimador padrão em grade de quantis são padrão em
+previsão probabilística \citep{gneiting2007,gneiting2011}; e o XGBoost
+\citep{chen2016} suporta, desde a versão 2.0, objetivos multi-quantil
+nativos --- o que faz de um GBDT quantílico um corpo de aluno natural
+para receber curvas de quantis. Do lado do \emph{teacher}, o TabPFN v2.5
+expõe quantis arbitrários da distribuição preditiva pela API nativa.
+As peças estavam todas sobre a mesa; nenhum trabalho público as havia
+conectado num protocolo de destilação avaliado por CRPS e cobertura.
+
+\paragraph{Trabalho contemporâneo.} Contemporâneo a este trabalho
+(01/10/2026, quando nossos experimentos já estavam concluídos),
+\citet{jeong2026} estendem a destilação a \textbf{alvos pontuais} de
+regressão: transferência por erro quadrático das médias do \emph{teacher},
+avaliada apenas em RMSE, com \emph{teachers} mais fortes (TabPFN~v3 e
+TabICLv2) e protocolo distinto, reportando ganhos pontuais. O
+Capítulo~\ref{chap:destilacao} discute a reconciliação entre esses ganhos
+e o nosso resultado negativo de escopo delimitado --- o moderador
+plausível é o regime de poucos dados, que nosso \emph{sweep} de tamanho de
+treino varre diretamente, somado à diferença de \emph{teacher} e
+protocolo. O ponto de posicionamento permanece: \citet{jeong2026} não
+tocam quantis, CRPS, calibração nem fronteira de estratégias.
+
+\paragraph{Lacuna.} Às datas verificadas (13--20/07/2026; re-varredura em
+04/10/2026, incluindo buscas dirigidas por destilação combinada com
+quantis/CRPS), nenhum trabalho público cobria: (i) destilação
+\emph{distribucional} em regressão --- transferência de curvas de quantis,
+avaliada por CRPS e cobertura de intervalos; (ii) uma fronteira entre
+estratégias de \emph{serving} medidas nos mesmos \emph{hold-outs}; (iii) o
+TabFM como \emph{teacher} de destilação. As três permaneciam abertas; o
+Capítulo~\ref{chap:destilacao} ataca as três --- a última fechando com um
+negativo arquitetural: a cabeça de regressão do TabFM é pontual (confirmado
+pelo relatório técnico oficial, \citealp{kong2026}), e o espalhamento do
+seu ensemble é mensuravelmente inútil como distribuição preditiva. Por fim,
+registramos o que \emph{não} reivindicamos: a formulação básica
+``destilar \emph{foundation model} tabular em aluno rápido'' é do Pocket FM,
+e em hipótese alguma reivindicamos a primeira destilação de \emph{foundation
+models} tabulares.
+
+\section{Seleção de algoritmos e \emph{meta-learning}}
+\label{sec:rel-selecao}
+
+\paragraph{A tradição.} A recomendação de algoritmo a partir de
+meta-características do problema remonta ao problema de seleção de
+algoritmos de \citet{rice1976} e tem literatura longa em
+\emph{meta-learning}. O resultado de \citet{mcelfresh2023} --- de que
+meta-características predizem parcialmente quando redes vencem árvores ---
+é a versão moderna dessa promessa. A experiência histórica, porém, é de
+fragilidade fora de grandes coleções de conjuntos: com poucas observações,
+roteadores aprendidos sobreajustam. Evidência contemporânea independente
+aponta na mesma direção na era dos \emph{foundation models}: abordagens
+globais de meta-características não se mostram robustas para explicar ou
+selecionar entre modelos dessa geração \citep{herre2026}.
+
+\paragraph{Lacuna.} O que falta na prática não é mais um recomendador, e
+sim a validação honesta do recomendador no regime em que benchmarks reais
+operam: $N$ pequeno de conjuntos. Com $N{=}18$, a honestidade exige
+validação explícita \emph{leave-one-dataset-out} (LODO) --- cada conjunto
+predito por um modelo treinado nos demais ---, que a literatura de
+recomendação raramente reporta nesse regime. Nossa análise LODO
+(Capítulo~\ref{chap:framework}) mostra que a árvore de meta-características
+não supera \emph{baselines} triviais como preditor (taxa de acerto 0,11
+contra 0,44 do \emph{baseline} de classe majoritária, no estudo de 11
+modelos), e que a política fixa ``\emph{foundation model} primeiro,
+desviar por restrições'' domina por \emph{regret}. O arcabouço resultante é
+deliberadamente orientado a restrições verificáveis
+(\emph{constraint-driven}) em vez de roteamento aprendido --- uma posição
+metodológica que registramos como contribuição de honestidade frente à
+tentação de sobreajustar recomendadores a poucas observações.
+
+\section{Síntese das lacunas}
+\label{sec:rel-sintese}
+
+A Tabela~\ref{tab:lacunas} consolida o capítulo: para cada eixo, o que a
+literatura já oferece, a lacuna identificada nas verificações datadas, e o
+capítulo desta dissertação que a ataca. A tabela também serve de mapa de
+leitura reverso --- o leitor interessado numa única contribuição pode
+partir da linha correspondente.
+
+\begin{table}[htbp]
+\centering
+\caption{Mapa de lacunas por eixo da literatura. Caracterizações conforme
+verificações online datadas (13--20/07/2026; re-varredura em 04/10/2026),
+registradas nos memorandos citados na abertura do capítulo.}
+\label{tab:lacunas}
+\small
+\begin{tabular}{p{0.21\textwidth}p{0.30\textwidth}p{0.27\textwidth}p{0.10\textwidth}}
+\toprule
+\textbf{Eixo} & \textbf{O que existe} & \textbf{Lacuna} & \textbf{Onde atacamos} \\
+\midrule
+Benchmarks GBDT vs.\ DL &
+Protocolos consolidados \citep{grinsztajn2022,mcelfresh2023,gorishniy2021};
+benchmark vivo (TabArena) &
+Geração 2026 e família KAN ausentes; multicritério com custo medido sob o
+mesmo protocolo &
+Cap.~\ref{chap:benchmark} \\
+\addlinespace
+Avaliação de TFMs &
+Números do proponente (TabFM); avaliação distribucional dos
+\emph{teachers} sem destilação \citep{izbicki2026,landsgesell2026} &
+Comparação neutra TabPFN $\times$ TabFM sob protocolo idêntico &
+Cap.~\ref{chap:benchmark} \\
+\addlinespace
+Família KAN em tabular &
+Avaliações independentes estreitas \citep{poeta2024,kancritical2024}, sem
+GBDT/TFM nem eixos de custo &
+Teste contra o \emph{slate} completo GBDT/DL/TFM em protocolo multicritério
+uniforme &
+Cap.~\ref{chap:benchmark} \\
+\addlinespace
+Aceleração/\emph{serving} de TFMs &
+Estratégias avaliadas isoladamente: TACO, CRUMB, MotherNet, quantização
+FP8 \citep{taco2026,crumb2026,mothernet2023,kubler2026} &
+Fronteira cruzada destilar $\times$ comprimir $\times$ reduzir ensemble nos
+mesmos \emph{hold-outs} &
+Cap.~\ref{chap:destilacao} \\
+\addlinespace
+Destilação de TFMs &
+Classificação \citep{pocketfm2026,pocketfmhealth2026,gear2026}; regressão
+pontual contemporânea \citep{jeong2026}; motor comercial fechado
+\citep{priorlabs2025} &
+Regressão \emph{distribucional}: curvas de quantis, CRPS, cobertura; papel
+do OOF na calibração; TabFM como \emph{teacher} &
+Cap.~\ref{chap:destilacao} \\
+\addlinespace
+Seleção de algoritmos &
+Meta-características desde \citet{rice1976}; fragilidade na era TFM
+\citep{herre2026} &
+Validação LODO honesta com $N$ pequeno; política por restrições validada
+por \emph{regret} &
+Cap.~\ref{chap:framework} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Três observações fecham o capítulo. Primeira, nenhuma das lacunas é uma
+lacuna de formulação: a mecânica da destilação é clássica
+(Seção~\ref{sec:rel-destilacao}), os protocolos de benchmark são
+consolidados (Seção~\ref{sec:rel-benchmarks}) --- as lacunas são de
+\emph{medição sob protocolo uniforme}, exatamente o tipo de contribuição
+que um benchmark neutro com infraestrutura reutilizável pode dar. Segunda,
+duas das lacunas foram parcialmente erodidas durante a execução do projeto
+--- \citet{poeta2024} antecipou o teste independente de KANs em escopo
+estreito, e \citet{jeong2026} alcançou a regressão pontual dias antes da
+nossa entrega --- e ambas as erosões estão registradas com data e
+reescopo explícito, em vez de silenciadas; o pilar distribucional e a
+fronteira de estratégias permaneciam, em 04/10/2026, inéditos. Terceira, a
+tabela deixa visível que as três frentes empíricas da dissertação
+(Capítulos~\ref{chap:benchmark}, \ref{chap:framework}
+e~\ref{chap:destilacao}) atacam lacunas distintas mas encadeadas: o
+benchmark gera a evidência que o arcabouço de decisão organiza, e a
+inversão de custo que o benchmark quantifica é precisamente o problema que
+a destilação ataca.
+
+\begin{transicao}
+Mapeadas as lacunas e fixado o posicionamento, o
+Capítulo~\ref{chap:metodologia} especifica o instrumento que as ataca: o
+protocolo experimental comum a toda a parte empírica --- 14 modelos, 18
+conjuntos, validação cruzada aninhada com \emph{hold-out} intocado,
+inferência frequentista e bayesiana, medição de custo de ponta a ponta ---
+com as limitações do desenho declaradas antes de qualquer resultado.
+\end{transicao}
