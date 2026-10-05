@@ -19,13 +19,15 @@ caminho do artefato de origem.
 
 1. **E-mail do orientador** nos dois `main.tex` (placeholder
    `[advisor email]`); o do aluno já está preenchido.
-2. **Referências marcadas `TODO-verify`** nos dois `refs.bib`: entradas de
-   2025-26 cujos IDs de arXiv vêm dos memorandos datados, mas cujas listas
-   de autores/títulos exatos não foram registradas lá (regra do projeto:
-   não inventar metadados). Verificar online antes da versão final:
-   - ai2: pocketfm2026, pocketfmhealth2026, tabdistill2025, tfmgam2026,
-     taco2026, crumb2026, tlandi2026, tabpfn3-2026, tabicl2025, tabflex2025
-   - ai1: tabkan2025, kancritical2024, stab-ref, tabm2025
-3. **Formato oficial** da entrega (a confirmar com a secretaria): se houver
+2. **Formato oficial** da entrega (a confirmar com a secretaria): se houver
    template obrigatório (ex.: SBC/ABNT/CIn), portar o conteúdo — a prosa e
    as tabelas transferem direto.
+
+Referências: todas as entradas 2025-26 dos dois `refs.bib` foram conferidas
+em 24/07/2026 contra as páginas primárias (arXiv, Springer, OpenReview,
+ICLR, página de aceites do workshop FMSD). Correções aplicadas na conferência:
+títulos reais de 4 trabalhos que eram citados pelo acrônimo do método
+(TACO, TL-ANDI) ou por título presumido; listas de autores completas;
+duas afirmações de prosa ajustadas ao que as fontes confirmam (TACO: "até
+94× mais rápido" em vez de "~1% de contexto"; TL-ANDI: "anchoring +
+distillation" em vez de "optimal transport").

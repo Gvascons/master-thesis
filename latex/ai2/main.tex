@@ -164,14 +164,15 @@ compression via soft labels \citep{bucila2006,hinton2015}; born-again trees
 to quantile curves.
 
 \paragraph{Acceleration without distillation.} TACO \citep{taco2026}
-compresses the in-context set to ${\sim}1\%$ with large speedups; CRUMB
+learns end-to-end compression of the in-context set (up to 94$\times$
+faster inference); CRUMB
 \citep{crumb2026} selects a compact context via MMD for efficient PFN
 inference without retraining --- a representative method of the
 context-compression arm our frontier measures; MotherNet
 \citep{mothernet2023} amortizes fitting into a hypernetwork that emits MLP
-weights; TL-ANDI \citep{tlandi2026} combines locally distilled labels with
-optimal-transport context selection for cross-task transfer (orthogonal
-goal, no fast students, no distributional axis); simple engineering
+weights; TL-ANDI \citep{tlandi2026} transfers to context-constrained downstream
+tasks via anchoring and data distillation (orthogonal goal, no fast
+students, no distributional axis); simple engineering
 (context truncation, ensemble reduction, KV-caching) is folklore. Our
 frontier measures the engineering strategies head-to-head with distillation
 on identical hold-outs. On OOF labeling specifically, the health-data

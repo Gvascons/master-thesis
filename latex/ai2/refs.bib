@@ -1,8 +1,8 @@
 % References for the AI-2 article. arXiv identifiers for the 2025-26
 % entries were recorded in dated novelty checks
 % (docs/memo-novidade-destilacao.md, docs/memo-novos-modelos-kan-tabkan-tabfm.md).
-% Entries marked TODO-verify carry details not present in those memos —
-% confirm title/venue before camera-ready.
+% All 2025-26 entries verified against arXiv abstract pages and the FMSD
+% 2026 accepted-papers page on 24/07/2026.
 
 @article{hollmann2025,
   author  = {Hollmann, Noah and M{\"u}ller, Samuel and Purucker, Lennart and
@@ -25,11 +25,12 @@
 }
 
 @article{tabpfn3-2026,
-  author = {{Prior Labs}},
-  title  = {{TabPFN}-3},
+  author = {Grinsztajn, L{\'e}o and Fl{\"o}ge, Klemens and Key, Oscar and
+            Hollmann, Noah and Hutter, Frank and others},
+  title  = {{TabPFN}-3: Technical Report},
   journal = {arXiv preprint arXiv:2605.13986},
   year   = {2026},
-  note   = {TODO-verify: author list and exact title before camera-ready}
+  note   = {Technical report (Prior Labs), 41 authors; not peer-reviewed}
 }
 
 @misc{tabfm2026,
@@ -44,19 +45,22 @@
 
 @inproceedings{tabicl2025,
   author = {Qu, Jingang and Holzm{\"u}ller, David and Varoquaux, Ga{\"e}l and
-            Le Morvan, Marine},
+            {Le Morvan}, Marine},
   title  = {{TabICL}: A Tabular Foundation Model for In-Context Learning on
             Large Data},
   booktitle = {International Conference on Machine Learning (ICML)},
   year   = {2025},
-  note   = {TODO-verify: venue/authors before camera-ready}
+  note   = {arXiv:2502.05564}
 }
 
-@misc{tabflex2025,
-  author = {Zeng, Yuchen and others},
-  title  = {{TabFlex}: Scaling Tabular Learning with Linear Attention},
+@inproceedings{tabflex2025,
+  author = {Zeng, Yuchen and Dinh, Tuan and Kang, Wonjun and Mueller,
+            Andreas C.},
+  title  = {{TabFlex}: Scaling Tabular Learning to Millions with Linear
+            Attention},
+  booktitle = {International Conference on Machine Learning (ICML)},
   year   = {2025},
-  note   = {TODO-verify: full reference before camera-ready}
+  note   = {arXiv:2506.05584}
 }
 
 @article{mothernet2023,
@@ -68,67 +72,68 @@
 }
 
 @inproceedings{pocketfm2026,
-  author = {Tanna and others},
-  title  = {Pocket Foundation Models: Distilling Tabular In-Context Learners
-            into Fast Per-Dataset Students},
-  booktitle = {2nd ICML Workshop on Foundation Models for Structured Data},
+  author = {Tanna, Aditya and Bouarour, Nassim and Bouadi, Mohamed and
+            Sankarapu, Vinay Kumar and Seth, Pratinav},
+  title  = {Pocket Foundation Models: Distilling {TFMs} into {CPU}-Ready
+            Gradient-Boosted Trees},
+  booktitle = {2nd ICML Workshop on Foundation Models for Structured Data
+               (FMSD)},
   year   = {2026},
-  note   = {arXiv:2605.18654. TODO-verify: full author list and exact title
-            before camera-ready}
+  note   = {arXiv:2605.18654}
 }
 
 @article{pocketfmhealth2026,
-  author = {Tanna and others},
-  title  = {Distilling Tabular Foundation Models for Clinical Prediction},
+  author = {Tanna, Aditya and Bouarour, Nassim and Bouadi, Mohamed and
+            Sankarapu, Vinay Kumar and Seth, Pratinav},
+  title  = {Distilling Tabular Foundation Models for Structured Health
+            Data},
   journal = {arXiv preprint arXiv:2605.18702},
-  year   = {2026},
-  note   = {TODO-verify: full author list and exact title before
-            camera-ready}
+  year   = {2026}
 }
 
 @article{tabdistill2025,
-  author = {{TabDistill authors}},
-  title  = {{TabDistill}: Distilling Transformers into Compact Networks for
+  author = {Dissanayake, Pasan and Dutta, Sanghamitra},
+  title  = {{TabDistill}: Distilling Transformers into Neural Nets for
             Few-Shot Tabular Classification},
   journal = {arXiv preprint arXiv:2511.05704},
-  year   = {2025},
-  note   = {TODO-verify: author list before camera-ready}
+  year   = {2025}
 }
 
 @article{tfmgam2026,
-  author = {{Anonymous}},
-  title  = {Distilling Tabular Foundation Models into Generalized Additive
-            Models},
+  author = {Jia, Jingyun and Singh, Chandan and Caruana, Rich and
+            Lengerich, Ben},
+  title  = {Selecting Feature Interactions for Generalized Additive Models
+            by Distilling Foundation Models},
   journal = {arXiv preprint arXiv:2604.13332},
-  year   = {2026},
-  note   = {TODO-verify: author list and exact title before camera-ready}
+  year   = {2026}
 }
 
 @inproceedings{taco2026,
-  author = {{TACO authors}},
-  title  = {{TACO}: Context Compression for Tabular In-Context Learning},
+  author = {Zab{\"e}rgja, Guri and Kamel, Rafiq and Kadra, Arlind and
+            Frey, Christian M. M. and Grabocka, Josif},
+  title  = {End-to-End Compression for Tabular Foundation Models},
   booktitle = {International Conference on Machine Learning (ICML)},
   year   = {2026},
-  note   = {arXiv:2602.05649. TODO-verify: author list and exact title
-            before camera-ready}
+  note   = {arXiv:2602.05649; spotlight. Method name: TACO}
 }
 
 @article{crumb2026,
-  author = {{CRUMB authors}},
-  title  = {{CRUMB}: Compact Context Selection via Maximum Mean Discrepancy
-            for Efficient {PFN} Inference},
+  author = {Heredge, Jamie and Villani, Mattia J. and Deshpande, Pranav and
+            Seshadri, Akshay and Kumar, Niraj},
+  title  = {{CRUMB}: Efficient Prior Fitted Network Inference via
+            Distributionally Matched Context Batching},
   journal = {arXiv preprint arXiv:2606.11473},
-  year   = {2026},
-  note   = {TODO-verify: author list and exact title before camera-ready}
+  year   = {2026}
 }
 
 @article{tlandi2026,
-  author = {{TL-ANDI authors}},
-  title  = {Transfer Learning with Locally Distilled Labels and
-            Optimal-Transport Context Selection},
+  author = {Lin, Yijun and Li, Sai},
+  title  = {Context-Constrained Transfer Learning for Tabular Foundation
+            Models via Data Distillation},
   journal = {arXiv preprint arXiv:2607.04809},
   year   = {2026},
-  note   = {TODO-verify: author list and exact title before camera-ready}
+  note   = {Framework name: TL-ANDI (Transfer Learning via ANchoring and
+            DIstillation)}
 }
 
 @inproceedings{bucila2006,

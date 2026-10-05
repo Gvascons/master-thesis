@@ -117,13 +117,13 @@ serving frontier — the axes of this paper. The classical lineage (model
 compression via soft labels; born-again trees) supplies the mechanics we
 adapt to quantile curves.
 
-**Acceleration without distillation.** TACO compresses the in-context set to
-~1% with large speedups; CRUMB selects a compact context via MMD for
+**Acceleration without distillation.** TACO learns end-to-end compression of
+the in-context set (up to 94× faster inference); CRUMB selects a compact context via MMD for
 efficient PFN inference without retraining — a representative method of the
 context-compression arm our frontier measures; MotherNet amortizes fitting
-into a hypernetwork that emits MLP weights; TL-ANDI combines locally
-distilled labels with optimal-transport context selection for cross-task
-transfer (orthogonal goal, no fast students, no distributional axis); simple
+into a hypernetwork that emits MLP weights; TL-ANDI transfers to
+context-constrained downstream tasks via anchoring and data distillation
+(orthogonal goal, no fast students, no distributional axis); simple
 engineering (context truncation, ensemble reduction, KV-caching) is
 folklore. Our frontier measures the engineering strategies head-to-head with
 distillation on identical hold-outs. On OOF labeling specifically, the
