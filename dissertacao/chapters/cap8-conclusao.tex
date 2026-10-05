@@ -100,12 +100,9 @@ regra de decisão, não em promessa.
 
 \paragraph{Re-respondendo as perguntas de pesquisa.} As três perguntas
 enunciadas no Capítulo~\ref{chap:introducao} recebem, ao final do
-percurso, respostas diretas.\footnote{[VERIFICAR: alinhar a paráfrase
-das QPs abaixo com o enunciado final do Capítulo~1, em redação paralela
-a este capítulo; a formulação aqui segue a do
-Capítulo~\ref{chap:metodologia}.]} \textbf{QP1} --- \emph{as famílias
-modernas de modelos tabulares diferem de forma praticamente relevante
-sob protocolo uniforme?} O Capítulo~\ref{chap:benchmark} responde em
+percurso, respostas diretas. \textbf{QP1} --- \emph{o empate de acurácia entre
+as famílias de modelos tabulares sobrevive a um protocolo rigoroso e à
+chegada da geração 2026 de foundation models?} O Capítulo~\ref{chap:benchmark} responde em
 dois tempos: dentro da geração anterior a 2026, não --- o topo é
 equivalência prática positivamente aferida (8/10 equivalentes sob ROPE
 $\pm0{,}01$; sensibilidade $0{,}005/0{,}01/0{,}02 \to 2/8/10$), com 80\%
@@ -114,8 +111,10 @@ paradigma pré-treinado separa-se do pelotão (TabFM com \emph{ranks}
 médios 2,7/1,0/1,2 nas três tarefas; TabPFN como vice consistente),
 sustentado pela consistência entre conjuntos e pelo instrumento
 bayesiano, não pelo \emph{post-hoc} frequentista de baixo poder.
-\textbf{QP2} --- \emph{como a vantagem relativa varia com a estrutura do
-problema, e como usar essa variação para escolher?} As reversões
+\textbf{QP2} --- \emph{que artefato de decisão um benchmark com $N$
+realista de conjuntos consegue, honestamente, sustentar --- um roteador
+aprendido ou uma política por restrições --- e como essa resposta muda
+quando a decisão pondera acurácia e custo?} As reversões
 condicionais são reais --- o aprendizado profundo recente toma o topo
 multiclasse (descritivo, $N{=}3$), os GBDTs ganham vantagem sob
 desbalanceamento severo, o TabPFN domina o regime de poucos dados
@@ -127,8 +126,9 @@ verificáveis antes de qualquer treino (latência, limites arquiteturais,
 interpretabilidade), com a política ``\emph{foundation model} primeiro''
 como \emph{default} regret-ótimo e o ponto de inversão por custo
 localizado pelo E2 entre $w{=}0{,}9$ e $w{=}0{,}8$ de peso na acurácia.
-\textbf{QP3} --- \emph{o líder caro pode ser recuperado dentro do
-orçamento de microssegundos?} O Capítulo~\ref{chap:destilacao} responde:
+\textbf{QP3} --- \emph{o que a destilação de conhecimento transfere de
+um foundation model tabular em regressão, a que custo de serviço, e sob
+quais condições verificáveis a priori?} O Capítulo~\ref{chap:destilacao} responde:
 parcialmente, e sob condições verificáveis --- não a média (negativo
 robusto, 4/20), mas a distribuição (positivo, 16/20, mediana de 19\% de
 retenção do gap de CRPS, com um caso \emph{born-again}), com a rotulagem
