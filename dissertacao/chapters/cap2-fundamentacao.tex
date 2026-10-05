@@ -1,42 +1,17 @@
 \chapter{Fundamentação Teórica}
 \label{chap:fundamentacao}
 
-\begin{resumocapitulo}
-Este capítulo constrói, do concreto ao abstrato, todo o vocabulário técnico
-de que a dissertação precisa: o que são dados tabulares e por que eles
-resistem às arquiteturas que revolucionaram visão e linguagem
-(\S\ref{sec:fund-tabular}); como uma única árvore de decisão aprende e por
-que \emph{ensembles} de árvores com \emph{boosting} se tornaram o padrão da
-área (\S\ref{sec:fund-gbdt}); as três linhagens da resposta do aprendizado
-profundo, do MLP aos Transformers e às redes de Kolmogorov--Arnold
-(\S\ref{sec:fund-dl}); os \emph{foundation models} tabulares e o mecanismo
-de aprendizado em contexto que dispensa treinamento na tarefa
-(\S\ref{sec:fund-fm}); a destilação de conhecimento
-(\S\ref{sec:fund-destilacao}); o ferramental da regressão distribucional
---- perda \emph{pinball}, CRPS, calibração --- que sustenta a contribuição
-do Capítulo~\ref{chap:destilacao} (\S\ref{sec:fund-distribucional}); e os testes estatísticos
-com que o Capítulo~\ref{chap:benchmark} compara os modelos (\S\ref{sec:fund-estatistica}). A
-profundidade matemática cresce com a proximidade das contribuições: o
-\emph{boosting} é apresentado verbalmente, a atenção com suas equações
-completas, e a regressão distribucional e a inferência estatística com o
-detalhe necessário para ler os resultados sem consultar as fontes.
-\end{resumocapitulo}
-
-\publicacaoassociada{As formulações de CRPS, PICP, perda \emph{pinball} e
-aprendizado em contexto das Seções~\ref{sec:fund-fm}
-e~\ref{sec:fund-distribucional} seguem as glosas auditadas dos dois artigos
-que acompanham esta dissertação (\texttt{latex/ai1} e \texttt{latex/ai2} no
-repositório), aqui traduzidas e expandidas didaticamente.}
-
-\paragraph{Roteiro.} O leitor já familiarizado com \emph{gradient boosting}
-e redes neurais pode saltar diretamente para a
-Seção~\ref{sec:fund-fm}, onde começa o material menos difundido
-(aprendizado em contexto e cabeças distribucionais); quem conhece os
-\emph{foundation models} tabulares, para as
-Seções~\ref{sec:fund-distribucional} e~\ref{sec:fund-estatistica}, que são
-pré-requisito direto dos Capítulos~\ref{chap:benchmark} e~\ref{chap:destilacao}. As demais seções foram escritas
-para que um leitor com formação geral em computação acompanhe toda a
-dissertação sem fontes externas.
+Este capítulo tem como objetivo construir, do concreto ao abstrato, o
+vocabulário técnico de que o restante da dissertação precisa: os dados
+tabulares e sua heterogeneidade constitutiva, as árvores de decisão e o
+\emph{gradient boosting}, as três linhagens do aprendizado profundo
+tabular, os \emph{foundation models} e o aprendizado em contexto, a
+destilação de conhecimento, o ferramental da regressão distribucional e
+os testes estatísticos para comparação de algoritmos. A profundidade
+matemática cresce com a proximidade das contribuições: o \emph{boosting}
+é apresentado verbalmente, a atenção com suas equações completas, e a
+regressão distribucional e a inferência estatística com o detalhe
+necessário para ler os resultados sem consultar as fontes.
 
 \section{Dados tabulares e aprendizagem supervisionada}
 \label{sec:fund-tabular}
@@ -51,10 +26,8 @@ pessoa excede 50 mil dólares \citep{kohavi1996}.
 
 \begin{table}[htb]
 \centering
-\caption[Fragmento ilustrativo de um conjunto tabular]{Fragmento \emph{ilustrativo} de um conjunto tabular no estilo do
-\texttt{adult}. As linhas são fictícias, porém plausíveis; servem apenas
-para fixar o formato: atributos numéricos e categóricos convivem na mesma
-tabela, há valores ausentes (``?'') e a última coluna é o alvo a prever.}
+\caption{Fragmento ilustrativo, com linhas fictícias, de um conjunto
+tabular no estilo do \texttt{adult}.}
 \label{tab:adult-exemplo}
 \begin{tabular}{rllrl}
 \toprule
@@ -69,7 +42,7 @@ idade & escolaridade & ocupação & horas/semana & renda $>$ 50K? \\
 \end{tabular}
 \end{table}
 
-\paragraph{A heterogeneidade é constitutiva.} A Tabela~\ref{tab:adult-exemplo}
+\emph{A heterogeneidade é constitutiva.} A Tabela~\ref{tab:adult-exemplo}
 já exibe tudo o que torna o formato difícil: \texttt{idade} e
 \texttt{horas/semana} são números em escalas distintas;
 \texttt{escolaridade} é uma categoria com ordem natural;
@@ -80,7 +53,7 @@ mistura, portanto, variáveis contínuas, contagens, categorias e lacunas ---
 e cada coluna é um eixo semântico independente: trocar duas colunas de
 lugar não altera o problema, mas trocar dois pixels de uma imagem, sim.
 
-\paragraph{Por que as revoluções de visão e linguagem não transferiram?}
+\emph{Por que as revoluções de visão e linguagem não transferiram?}
 Redes convolucionais exploram a estrutura espacial das imagens (pixels
 vizinhos são correlacionados; padrões se repetem em qualquer posição);
 Transformers de linguagem exploram a estrutura sequencial do texto. Dados
@@ -93,8 +66,8 @@ a outra família de modelos, os \emph{ensembles} de árvores de decisão
 \citep{grinsztajn2022,mcelfresh2023}. As Seções~\ref{sec:fund-gbdt}
 e~\ref{sec:fund-dl} desenvolvem os dois lados dessa disputa.
 
-\paragraph{O problema da aprendizagem supervisionada.} Formalizemos o
-mínimo necessário. Dado um conjunto de treino
+Formalizemos o mínimo necessário do problema da aprendizagem
+supervisionada. Dado um conjunto de treino
 $D = \{(\mathbf{x}_i, y_i)\}_{i=1}^{n}$ de pares observação--alvo,
 assumidos amostras independentes de uma distribuição desconhecida, o
 objetivo é aprender uma função $f$ que prediga bem o alvo de observações
@@ -108,7 +81,7 @@ viu; o Capítulo~\ref{chap:metodologia} traduz esse princípio em protocolo (con
 separado antes de tudo, validação cruzada aninhada para a seleção de
 hiperparâmetros).
 
-\paragraph{As três tarefas.} Este trabalho considera os três tipos
+Este trabalho considera os três tipos
 canônicos de tarefa supervisionada sobre tabelas: \emph{classificação
 binária} (prever uma de duas classes, como na
 Tabela~\ref{tab:adult-exemplo}), \emph{classificação multiclasse} (prever
@@ -137,12 +110,9 @@ Tabela~\ref{tab:adult-exemplo}.
 % Diagrama pré-compilado (fonte editável: tikz-src/tikz-cap2-1.tex;
 % recompilar com: tectonic tikz-src/tikz-cap2-1.tex && mv tikz-cap2-1.pdf images/)
 \includegraphics{images/tikz-cap2-1.pdf}
-\caption[Árvore de decisão ilustrativa sobre o exemplo do \texttt{adult}]{\textbf{Uma árvore de decisão responde por partições sucessivas do
-espaço de atributos.} Árvore ilustrativa de profundidade 2 sobre o exemplo
-da Tabela~\ref{tab:adult-exemplo}; em cada folha, $\hat{p}$ é a fração de
-exemplos de treino daquela região com renda $>$ 50K (valores fictícios,
-para ilustração). Para classificar uma linha nova, percorre-se o caminho
-ditado pelas respostas e lê-se a predição na folha alcançada.}
+\caption{Árvore de decisão ilustrativa, de profundidade 2, sobre o
+exemplo da Tabela~\ref{tab:adult-exemplo}; em cada folha, $\hat{p}$ é a
+fração (fictícia) de exemplos de treino com renda $>$ 50K.}
 \label{fig:arvore-exemplo}
 \end{figure}
 
@@ -177,7 +147,7 @@ decomposição \emph{viés--variância}, árvores rasas sofrem de viés alto e
 \emph{ensembles} --- comitês de árvores --- atacam cada chifre do dilema
 por um caminho distinto.
 
-\paragraph{Caminho 1: reduzir a variância em paralelo.} O \emph{bagging} e
+O primeiro caminho reduz a variância em paralelo. O \emph{bagging} e
 seu refinamento mais célebre, as florestas aleatórias, treinam muitas
 árvores profundas em réplicas perturbadas dos dados (reamostragem com
 reposição e sorteio de atributos por nó) e tiram a média das predições: os
@@ -185,7 +155,7 @@ erros idiossincráticos de cada árvore, aproximadamente independentes,
 cancelam-se na média, e a variância do comitê despenca sem elevar o viés
 \citep{breiman2001}.
 
-\paragraph{Caminho 2: reduzir o viés em sequência.} O \emph{boosting}
+O segundo caminho reduz o viés em sequência. O \emph{boosting}
 inverte a lógica: parte de árvores \emph{rasas} (viés alto, variância
 baixa) e as treina em sequência, cada nova árvore concentrada em corrigir
 os erros que o comitê acumulado ainda comete. A predição final é a soma
@@ -221,7 +191,7 @@ de alvo usadas para codificar categorias são computadas apenas sobre
 exemplos ``anteriores'' numa permutação aleatória, evitando o vazamento de
 alvo das codificações ingênuas.
 
-\paragraph{Os botões de ajuste.} Na prática, o comportamento de um GBDT é
+Na prática, o comportamento de um GBDT é
 governado por um punhado de hiperparâmetros com papéis interpretáveis à luz
 do dilema viés--variância: a \emph{profundidade} das árvores controla a
 ordem das interações que cada correção pode capturar; o \emph{número de
@@ -233,7 +203,7 @@ todos os conjuntos de dados --- razão pela qual qualquer comparação justa
 entre modelos precisa otimizar os hiperparâmetros de cada um sob o mesmo
 orçamento, como especifica o Capítulo~\ref{chap:metodologia}.
 
-\paragraph{Por que o \emph{boosting} domina dados tabulares?} Reunindo os
+\emph{Por que o \emph{boosting} domina dados tabulares?} Reunindo os
 fios: as partições alinhadas aos eixos capturam não-linearidades e
 interações por atributo sem supor qualquer geometria entre colunas; a
 invariância a transformações monótonas dispensa normalização e absorve
@@ -279,7 +249,7 @@ MLP pode aproximar qualquer função contínua \citep{hornik1989} --- a questão
 tabulares nunca foi expressividade, e sim se o treinamento encontra, com
 dados finitos e heterogêneos, soluções tão boas quanto as dos GBDTs.
 
-\paragraph{O gargalo do encoding categórico.} Antes de qualquer camada, há
+Antes de qualquer camada, há
 uma decisão incômoda: como entregar \texttt{ocupação} a uma rede que só
 consome números? A codificação \emph{one-hot} --- uma coluna binária por
 categoria --- explode a dimensionalidade quando a cardinalidade é alta: no
@@ -291,7 +261,7 @@ categoria é mapeada a um vetor denso de baixa dimensão, treinado junto com
 a rede --- solução que todas as arquiteturas a seguir adotam de alguma
 forma.
 
-\paragraph{A receita importa: RealMLP e TabM.} Duas propostas recentes
+\emph{A receita importa.} Duas propostas recentes
 mostram que boa parte da desvantagem histórica do MLP era de \emph{receita},
 não de arquitetura. O \textbf{RealMLP} \citep{realmlp2024} demonstra que um
 MLP com um conjunto cuidadoso de melhorias --- \emph{embeddings} numéricos,
@@ -301,7 +271,7 @@ ataca outro flanco: obtém o efeito estabilizador de um \emph{ensemble} de
 MLPs com custo próximo ao de um modelo único, parametrizando eficientemente
 múltiplas ``sub-redes'' que compartilham a maior parte dos pesos.
 
-\paragraph{Por que insistir em redes para tabelas?} Se os GBDTs dominam,
+Se os GBDTs dominam,
 por que a área continua investindo em redes? Por três promessas que
 árvores não fazem. Primeiro, redes aprendem \emph{representações}:
 \emph{embeddings} de categorias e camadas intermediárias reutilizáveis,
@@ -335,7 +305,7 @@ três papéis --- \emph{consulta} (\emph{query}), \emph{chave} (\emph{key}) e
 com matrizes de projeção aprendidas, e produz, para cada posição, uma média
 dos valores ponderada pela afinidade entre sua consulta e todas as chaves:
 \begin{equation}
-  \operatorname{Atenção}(\mathbf{Q}, \mathbf{K}, \mathbf{V})
+  \text{Atenção}(\mathbf{Q}, \mathbf{K}, \mathbf{V})
   \;=\; \operatorname{softmax}\!\left(
     \frac{\mathbf{Q}\mathbf{K}^{\top}}{\sqrt{d_k}}
   \right)\mathbf{V},
@@ -362,7 +332,7 @@ arquitetura completa original empilha esses blocos em um \emph{encoder}
 (que processa a entrada inteira de uma vez, com atenção irrestrita) e um
 \emph{decoder} (que gera texto token a token, com atenção causal).
 
-\paragraph{Por que dados tabulares usam só o \emph{encoder}?} Porque não há
+\emph{Por que dados tabulares usam só o \emph{encoder}?} Porque não há
 nada a \emph{gerar} sequencialmente: a predição sobre uma linha é um único
 rótulo ou valor, não uma sequência. Os Transformers tabulares tratam as
 \emph{colunas} de uma linha como a ``sequência'' de entrada --- cada
@@ -372,7 +342,8 @@ predição é lida de um token especial agregador. O \emph{decoder} e sua
 máscara causal, feitos para a ordem temporal do texto, não têm contraparte
 numa linha de tabela.
 
-\paragraph{As arquiteturas de atenção do benchmark.} O \textbf{TabNet}
+Quatro arquiteturas de atenção integram o benchmark deste trabalho. O
+\textbf{TabNet}
 \citep{arik2021} foi pioneiro em levar atenção a tabelas, combinando-a com
 seleção \emph{esparsa} de atributos: a cada passo de processamento, uma
 máscara aprendida elege poucos atributos relevantes, o que confere ao
@@ -383,7 +354,7 @@ um token-\emph{embedding} e um Transformer padrão processa a linha; é a
 referência arquitetural da linhagem. O \textbf{SAINT} \citep{somepalli2021}
 acrescenta à atenção entre colunas uma atenção \emph{entre linhas}
 (\emph{intersample}): ao classificar uma linha, o modelo pode consultar
-outras linhas do lote --- uma antecipação, em miniatura,, em miniatura, da ideia de usar
+outras linhas do lote --- uma antecipação, em miniatura, da ideia de usar
 exemplos como contexto que a Seção~\ref{sec:fund-fm} leva ao extremo. O
 \textbf{STab} \citep{stab-ref} completa a linhagem com um mecanismo
 distinto: em vez de ativações determinísticas, suas camadas usam
@@ -410,7 +381,7 @@ uma pequena curva ajustável. Variantes trocam a base das funções de aresta
 o \textbf{TabKAN} \citep{tabkan2025} organiza essas variantes num arcabouço
 voltado a dados tabulares.
 
-\paragraph{Uma recepção controversa.} A promessa das KANs --- mais
+A promessa das KANs --- mais
 expressividade por parâmetro e interpretabilidade das curvas aprendidas ---
 encontrou ceticismo empírico: sob comparação com paridade de parâmetros e
 de FLOPs, o MLP vence as KANs na maioria das tarefas de aprendizado de
@@ -430,7 +401,7 @@ essencial entender o mecanismo --- não apenas o efeito --- porque tanto o
 custo de inferência medido no Capítulo~\ref{chap:benchmark} quanto a destilação do Capítulo~\ref{chap:destilacao}
 decorrem diretamente dele.
 
-\paragraph{O mecanismo: treinar virou condicionar.} Um modelo de
+\emph{Treinar virou condicionar.} Um modelo de
 \emph{aprendizado em contexto} (\emph{in-context learning}, ICL) é uma rede
 pré-treinada que condiciona no conjunto de treino como se fosse um
 \emph{prompt}, no momento da predição, sem nenhuma atualização de gradiente
@@ -447,17 +418,12 @@ Figura~\ref{fig:icl-mecanismo} esquematiza as duas fases.
 % Diagrama pré-compilado (fonte editável: tikz-src/tikz-cap2-2.tex;
 % recompilar com: tectonic tikz-src/tikz-cap2-2.tex && mv tikz-cap2-2.pdf images/)
 \includegraphics{images/tikz-cap2-2.pdf}
-\caption[O mecanismo de aprendizado em contexto (ICL)]{\textbf{No aprendizado em contexto, o conjunto de treino entra
-como entrada do modelo, não como alvo de otimização.} Na fase 1, o
-Transformer é pré-treinado uma única vez sobre milhões de tarefas
-sintéticas amostradas de um prior. Na fase 2, diante de uma tarefa real, o
-conjunto de treino e a linha de consulta são concatenados na entrada e um
-único passe direto, sem qualquer atualização de gradiente, produz a
-distribuição preditiva.}
+\caption{O mecanismo de aprendizado em contexto (ICL), em suas duas
+fases: pré-treinamento sintético e predição por um único passe direto.}
 \label{fig:icl-mecanismo}
 \end{figure}
 
-\paragraph{De onde vem a capacidade de ``aprender'' sem gradiente?} Do
+\emph{De onde vem a capacidade de ``aprender'' sem gradiente?} Do
 pré-treinamento. As \emph{prior-fitted networks} (PFNs) são pré-treinadas
 em milhões de pequenos conjuntos de dados \emph{sintéticos}, amostrados de
 um prior sobre mecanismos geradores --- tipicamente modelos causais
@@ -471,7 +437,7 @@ e suas versões v2/v2.5 \citep{priorlabs2025} estabeleceram o paradigma na
 prática, com um limite nativo de contexto (50 mil linhas na v2.5) herdado
 do custo quadrático da atenção.
 
-\paragraph{Cabeça distribucional vs.\ cabeça escalar.} Um detalhe
+Um detalhe
 arquitetural do TabPFN é central ao Capítulo~\ref{chap:destilacao}: em regressão, sua camada de
 saída não devolve um número, mas uma \emph{bar distribution} --- um
 histograma discretizado sobre o intervalo do alvo, do qual se leem quantis
@@ -491,7 +457,7 @@ está documentado em relatório técnico, sem artigo revisado por pares
 \citep{tabfm2026,kong2026} --- limites que se tornam células ausentes do
 benchmark e exigem a política estatística declarada no Capítulo~\ref{chap:metodologia}.
 
-\paragraph{O \emph{trade-off} constitutivo.} O mecanismo da
+O mecanismo da
 Figura~\ref{fig:icl-mecanismo} tem um preço estrutural: \emph{o conjunto de
 treino viaja com o modelo a cada predição}. O custo de treinamento é
 próximo de zero --- montar o contexto ---, mas cada passe de inferência
@@ -511,7 +477,6 @@ rápido (o \emph{aluno}) para imitar as saídas de um modelo caro (o
 de dados não rotulados, e uma rede pequena é treinada nesses rótulos ---
 e ganha sua formulação moderna com \citet{hinton2015}.
 
-\paragraph{\emph{Soft targets}: por que imitar é mais fácil que aprender.}
 A observação central de \citet{hinton2015} é que as \emph{probabilidades}
 que o professor atribui às classes erradas carregam informação que o rótulo
 verdadeiro não tem: ao classificar a quarta linha da
@@ -532,7 +497,7 @@ Em regressão, a receita análoga substitui o rótulo pelo valor predito pelo
 professor --- e, na extensão distribucional do Capítulo~\ref{chap:destilacao}, pela \emph{curva
 de quantis} inteira do professor.
 
-\paragraph{Destilar para árvores.} A linhagem \emph{born-again} mostrou
+A linhagem \emph{born-again} mostrou
 cedo que o aluno não precisa ser uma rede: \citet{breiman1996} comprimem um
 \emph{ensemble} de árvores numa única árvore treinada nas predições do
 comitê, com perda de fidelidade surpreendentemente pequena;
@@ -544,7 +509,7 @@ que até a auto-imitação pode melhorar o aluno \citep{furlanello2018}. A liç�
 transversal: a destilação é agnóstica ao par professor--aluno; o que se
 transfere é a \emph{função} aprendida, exposta pelas saídas.
 
-\paragraph{Destilar \emph{foundation models} tabulares.} Com professores
+Com professores
 ICL, a destilação ganha um atrativo adicional: ela remove exatamente o
 gargalo constitutivo da família (o contexto que viaja a cada predição),
 convertendo um professor de inferência cara num aluno de inferência
@@ -591,7 +556,7 @@ quantil): com erro $u = y - \hat{q}_\tau$,
   \label{eq:pinball}
 \end{equation}
 
-\paragraph{A intuição assimétrica.} A perda é uma rampa com duas
+A perda é uma rampa com duas
 inclinações (Figura~\ref{fig:pinball}): para $\tau = 0{,}9$, subestimar
 custa $0{,}9$ por unidade de erro e superestimar custa apenas $0{,}1$. O
 minimizador ótimo, portanto, prefere errar para cima --- e erra para cima
@@ -609,17 +574,12 @@ uma discretização da distribuição preditiva inteira.
 % Diagrama pré-compilado (fonte editável: tikz-src/tikz-cap2-3.tex;
 % recompilar com: tectonic tikz-src/tikz-cap2-3.tex && mv tikz-cap2-3.pdf images/)
 \includegraphics{images/tikz-cap2-3.pdf}
-\caption[A perda \emph{pinball} e sua assimetria]{\textbf{A perda \emph{pinball} penaliza os dois lados do erro com
-inclinações diferentes, e é essa assimetria que aponta o minimizador para o
-quantil~$\tau$.} Para $\tau = 0{,}9$ (linha sólida), subestimar o alvo
-custa nove vezes mais que superestimar, de modo que a predição ótima se
-posiciona no ponto em que o alvo só a excede 10\% das vezes --- o quantil
-$0{,}9$. Em $\tau = 0{,}5$ (tracejada), a perda é simétrica e recupera o
-erro absoluto, cujo minimizador é a mediana.}
+\caption{A perda \emph{pinball} e sua assimetria, para $\tau = 0{,}9$
+(linha sólida) e $\tau = 0{,}5$ (linha tracejada).}
 \label{fig:pinball}
 \end{figure}
 
-\paragraph{Um efeito colateral da grade: o cruzamento de quantis.} Quando
+Quando
 os níveis da grade são estimados de forma independente, nada garante a
 monotonicidade que a definição exige --- o modelo pode produzir
 $\hat{q}_{0{,}8} < \hat{q}_{0{,}7}$ para alguma linha, o chamado
@@ -652,7 +612,7 @@ Segundo, ele \emph{generaliza o erro absoluto}: se $F$ colapsa num ponto
 modo que o CRPS permite comparar, na mesma régua e na unidade do alvo,
 modelos pontuais e distribucionais. Menor é melhor.
 
-\paragraph{O estimador de grade.} Na prática, quando o modelo entrega uma
+Na prática, quando o modelo entrega uma
 grade de quantis em vez de uma CDF contínua, o CRPS é estimado como duas
 vezes a média da perda \emph{pinball} sobre a grade de níveis
 \citep{gneiting2011},
@@ -712,7 +672,7 @@ teoria dos testes que o Capítulo~\ref{chap:metodologia} adota como protocolo e 
 aplica; a exposição segue o arcabouço canônico da área
 \citep{demsar2006,benavoli2017}.
 
-\paragraph{Por que não uma ANOVA sobre as métricas?} Porque as métricas não
+\emph{Por que não uma ANOVA sobre as métricas?} Porque as métricas não
 são \emph{comensuráveis} entre conjuntos de dados: uma AUC de $0{,}95$ num
 conjunto fácil e uma de $0{,}75$ num difícil não estão na mesma escala, e
 médias ou variâncias entre conjuntos misturam alhos com bugalhos --- além
@@ -721,7 +681,7 @@ de a normalidade, pressuposto da ANOVA, não ter por que valer. A solução de
 ordenam-se os $k$ modelos do melhor ($1$) ao pior ($k$); os ranks, ao
 contrário das métricas, são comparáveis entre conjuntos por construção.
 
-\paragraph{Qual é a unidade de análise?} Uma segunda decisão precede
+Uma segunda decisão precede
 qualquer teste: o que conta como uma observação independente? Quando cada
 modelo é avaliado por validação cruzada, é tentador tratar cada
 \emph{fold} como uma réplica --- mas os folds de um mesmo conjunto de
@@ -733,7 +693,9 @@ modelo (a média entre folds), e os folds alimentam apenas a descrição da
 variabilidade intra-conjunto. Todos os testes a seguir pressupõem essa
 escolha.
 
-\paragraph{Friedman: o teste \emph{omnibus}.} O teste de Friedman pergunta
+\subsection{Friedman: o teste \emph{omnibus}}
+
+O teste de Friedman pergunta
 se as diferenças entre os ranks médios $R_j$ dos $k$ modelos sobre os $N$
 conjuntos são explicáveis pelo acaso \citep{friedman1937}. Sob a hipótese nula de equivalência
 entre todos os modelos, a estatística
@@ -754,7 +716,9 @@ que segue uma distribuição $F$ e rejeita com mais poder \citep{imandavenport19
 significativo diz apenas que \emph{alguma} diferença existe; localizá-la é
 tarefa dos testes \emph{post-hoc}.
 
-\paragraph{Nemenyi e o diagrama de diferença crítica.} O \emph{post-hoc} de
+\subsection{Nemenyi e o diagrama de diferença crítica}
+
+O \emph{post-hoc} de
 Nemenyi compara todos os pares de modelos pelos ranks médios, com controle
 embutido do erro de família \citep{nemenyi1963}: dois modelos diferem significativamente se seus
 ranks médios distam mais que a \emph{diferença crítica}
@@ -777,7 +741,9 @@ Eq.~\ref{eq:cd} mostra que o CD cresce com $k$ e encolhe lentamente com
 $N$: com muitos modelos e poucos conjuntos, barras largas são a
 consequência aritmética esperada, não uma anomalia.
 
-\paragraph{Wilcoxon pareado com correção de Holm.} Para pares específicos
+\subsection{Wilcoxon pareado com correção de Holm}
+
+Para pares específicos
 de modelos, o teste de postos sinalizados de Wilcoxon é mais poderoso que o
 Nemenyi, porque usa as \emph{magnitudes} das diferenças por conjunto de
 dados, não apenas os ranks globais \citep{wilcoxon1945}. Ao testar muitos pares, porém, multiplica-se a
@@ -791,8 +757,9 @@ conjuntos de dados, o menor p-valor bilateral que o Wilcoxon pode produzir
 $0{,}05$ é \emph{matematicamente impossível}, antes de qualquer correção. O
 Capítulo~\ref{chap:metodologia} declara as consequências protocolares desse piso.
 
-\paragraph{O que significa ``praticamente equivalente''? O teste bayesiano
-com ROPE.} O arcabouço frequentista tem uma assimetria incômoda: ele pode
+\subsection{O teste bayesiano com região de equivalência prática}
+
+O arcabouço frequentista tem uma assimetria incômoda: ele pode
 rejeitar a igualdade, mas não pode \emph{afirmá-la} --- não-rejeição não é
 evidência de equivalência, especialmente com $N$ pequeno e pouco poder.
 \citet{benavoli2017} oferecem o complemento bayesiano: o teste de postos
@@ -811,7 +778,9 @@ não-resultado. É esse instrumento que autoriza as conclusões de empate do
 Capítulo~\ref{chap:benchmark}; a escolha do raio da ROPE e sua análise de sensibilidade são
 decisões de protocolo, especificadas no Capítulo~\ref{chap:metodologia}.
 
-\paragraph{Tamanho de efeito e decomposição de variância.} Significância
+\subsection{Tamanho de efeito e decomposição de variância}
+
+Significância
 não mede relevância, e dois complementos fecham o arcabouço. O tamanho de
 efeito de Cohen na variante pareada,
 $d_z = \bar{d} / s_d$ (média das diferenças por conjunto dividida pelo seu
@@ -824,16 +793,6 @@ agrupamento: $\eta^2$ alto diria que a família (GBDT, aprendizado profundo,
 \emph{foundation model}) determina o desempenho; $\eta^2$ baixo, que a
 variação dentro das famílias domina e a escolha do modelo individual
 importa mais que a do paradigma. O Capítulo~\ref{chap:benchmark} usa exatamente essa leitura.
-
-\begin{transicao}
-Este capítulo montou o vocabulário: o objeto (dados tabulares), os
-competidores (GBDTs, aprendizado profundo, \emph{foundation models} com
-ICL), as técnicas transversais (destilação, regressão distribucional) e a
-régua (testes estatísticos sobre ranks, com a camada bayesiana de
-equivalência). O próximo capítulo usa esse vocabulário para mapear o estado
-da arte --- os benchmarks tabulares existentes e seus protocolos, a
-literatura de destilação de \emph{foundation models} tabulares e as
-avaliações distribucionais independentes --- e para demarcar, com datas e
-verificações explícitas, as lacunas que as três contribuições desta
-dissertação ocupam.
-\end{transicao}
+Com esse vocabulário montado, o Capítulo~\ref{chap:related} mapeia o
+estado da arte e demarca, com verificações datadas, as lacunas que as
+contribuições desta dissertação ocupam.

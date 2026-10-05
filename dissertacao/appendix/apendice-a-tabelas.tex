@@ -10,8 +10,8 @@ e~\ref{tab:app-regressao} --- uma por tarefa, porque a métrica
 primária difere entre tarefas e valores de métricas distintas não são
 comparáveis entre si.
 
-\paragraph*{Como ler as tabelas.} Cada linha é um conjunto de dados;
-cada coluna, um modelo, na ordem canônica do benchmark (os três GBDTs,
+Em cada tabela, cada linha é um conjunto de dados e cada coluna, um
+modelo, na ordem canônica do benchmark (os três GBDTs,
 os modelos profundos, as redes KAN e os dois \emph{foundation
 models}). A métrica primária segue a definição do protocolo:
 \begin{itemize}
@@ -31,7 +31,7 @@ TabPFN/TabFM) são as exclusões estruturais do estudo: o conjunto tem
 \emph{foundation models}. O estado completo é, portanto, de 250
 células medidas em $14 \times 18 = 252$ possíveis.
 
-\paragraph*{Proveniência e reprodutibilidade.} Todos os números
+Quanto à proveniência, todos os números
 provêm de
 \texttt{results/aggregated/test\_results.csv}, o agregado versionado
 do benchmark; as tabelas em si são geradas automaticamente por
@@ -43,7 +43,7 @@ do Capítulo~5, estão em \texttt{results/aggregated/fold\_results.csv}
 do controle de versão remoto por tamanho), reproduzível a partir de
 \texttt{results/raw} e das sementes registradas.
 
-\paragraph*{Nota de layout.} Com 15 colunas (o conjunto de dados mais
+Quanto ao layout, com 15 colunas (o conjunto de dados mais
 os 14 modelos), as tabelas não cabem na orientação de retrato; optou-se
 por páginas rotacionadas (\texttt{sidewaystable}, pacote
 \texttt{rotating}) com os nomes dos modelos rotacionados no cabeçalho,

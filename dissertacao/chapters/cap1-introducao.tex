@@ -126,14 +126,17 @@ brutos não entregam ao aluno, como recorte central.
 \section{Objetivos}
 \label{sec:intro-objetivos}
 
-\paragraph*{Objetivo geral.} Estabelecer, sob protocolo experimental único
+\subsection{Objetivo geral}
+
+Estabelecer, sob protocolo experimental único
 e estatisticamente honesto, a evidência comparativa das três famílias de
 modelos tabulares na era dos \emph{foundation models}, e convertê-la em
 instrumentos validados de decisão --- incluindo a avaliação, por
 destilação de conhecimento, de até que ponto o principal obstáculo
 operacional da família líder pode ser removido.
 
-\paragraph*{Objetivos específicos.}
+\subsection{Objetivos específicos}
+
 \begin{itemize}
   \item Executar um benchmark multicritério de 14 modelos sobre 18
     conjuntos de dados públicos do OpenML, sob validação cruzada aninhada
@@ -194,23 +197,19 @@ acumulada, na conclusão.
 A Figura~\ref{fig:intro-qps} resume o encadeamento: a resposta de cada
 pergunta cria a pergunta seguinte --- o empate e sua quebra (QP1) tornam a
 decisão multicritério inevitável (QP2), e a política de decisão validada
-esbarra num único obstáculo, cuja remoção é o objeto da QP3.
+esbarra num único obstáculo, cuja remoção é o objeto da QP3. No diagrama,
+as setas sólidas ligam cada pergunta ao capítulo que a responde, e as
+tracejadas marcam esse encadeamento lógico; os
+Capítulos~\ref{chap:fundamentacao} a~\ref{chap:metodologia} fornecem,
+respectivamente, o vocabulário, o posicionamento na literatura e o
+protocolo comuns às três frentes.
 
 \begin{figure}[htb]
 \centering
 % Diagrama pré-compilado (fonte editável: tikz-src/tikz-cap1-1.tex;
 % recompilar com: tectonic tikz-src/tikz-cap1-1.tex && mv tikz-cap1-1.pdf images/)
 \includegraphics{images/tikz-cap1-1.pdf}
-\caption[Perguntas de pesquisa e capítulos que as respondem]{\textbf{Cada
-pergunta de pesquisa é respondida por um capítulo, e a resposta de cada
-uma cria a seguinte.} As setas sólidas ligam cada pergunta ao capítulo que
-a responde; as tracejadas marcam o encadeamento lógico: o empate de
-acurácia e sua quebra pela geração 2026 (QP1) deslocam a decisão para o
-terreno multicritério (QP2), e a política validada que de lá emerge tem na
-latência seu único obstáculo --- precisamente o que a destilação ataca
-(QP3). Os Capítulos~\ref{chap:fundamentacao}
-a~\ref{chap:metodologia} fornecem, respectivamente, o vocabulário, o
-posicionamento na literatura e o protocolo comuns às três frentes.}
+\caption{Perguntas de pesquisa e capítulos que as respondem.}
 \label{fig:intro-qps}
 \end{figure}
 
@@ -303,10 +302,11 @@ do projeto:
 \end{itemize}
 
 Os dois relatórios são trabalhos avaliativos do programa, sem revisão por
-pares externa até a data desta escrita; os capítulos correspondentes desta
-dissertação indicam, em suas aberturas, a relação exata com cada relatório
---- incluindo os dois experimentos (E1 e E2) que são contribuições novas
-da dissertação, inéditas em relação aos relatórios.
+pares externa até a data desta escrita; seu conteúdo corresponde,
+respectivamente, aos Capítulos~\ref{chap:benchmark}
+e~\ref{chap:framework} e ao Capítulo~\ref{chap:destilacao}, que incluem
+ainda os dois experimentos (E1 e E2) que são contribuições novas da
+dissertação, inéditas em relação aos relatórios.
 
 \section{Como ler esta dissertação}
 \label{sec:intro-comoler}
@@ -331,11 +331,7 @@ restante: as tabelas completas por conjunto
 (Apêndice~\ref{app:tabelas}), os espaços de busca de hiperparâmetros
 (Apêndice~\ref{app:espacos-busca}) e os resultados suplementares e
 ablações; todos os artefatos citados têm caminho explícito no repositório
-público do projeto. Por fim, os recursos didáticos recorrentes --- caixa
-de resumo na abertura de cada capítulo, nota de material associado,
-achados numerados nos capítulos de resultados e caixa de transição ao
-final --- permitem reconstruir o argumento central folheando apenas as
-caixas.
+público do projeto.
 
 \section{Estrutura da dissertação}
 \label{sec:intro-estrutura}
@@ -382,13 +378,3 @@ limitações e ameaças à validade do programa como um todo e aponta os
 trabalhos futuros. Os \textbf{apêndices} reúnem as tabelas completas de
 resultados por conjunto, os espaços de busca de hiperparâmetros e os
 resultados suplementares e ablações.
-
-\begin{transicao}
-Antes dos resultados, o vocabulário. O Capítulo~\ref{chap:fundamentacao}
-parte de uma tabela concreta e constrói, camada a camada, tudo o que a
-leitura dos capítulos empíricos pressupõe --- por que árvores dominaram
-dados tabulares por uma década, o que exatamente um \emph{foundation
-model} tabular faz num único passe de inferência, o que significa destilar
-uma distribuição e como se afirma, com honestidade estatística, que dois
-modelos empatam.
-\end{transicao}

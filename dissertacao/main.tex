@@ -21,10 +21,26 @@
 % tikz removido do preâmbulo: os 6 diagramas são pré-compilados em
 % images/tikz-*.pdf (fontes editáveis em tikz-src/) — corta o tempo de
 % compilação p/ caber no limite do plano grátis do Overleaf.
-\usepackage{thesisextras}
 % paragraphs sem numeração (a classe numera até nível 5 por default)
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{2}
+
+%% ---- Formato de títulos no padrão das dissertações do CIn (análise
+%% forense de 06/10/2026: corpus abnTeX2 local usa 12pt, hierarquia por
+%% destaque tipográfico, nunca por tamanho — NBR 14724/manual SIB) ----
+\titleformat{\chapter}[hang]
+  {\normalsize\bfseries}{\thechapter}{1em}{\MakeUppercase}
+\titleformat{name=\chapter,numberless}[hang]
+  {\normalsize\bfseries\filcenter}{}{0pt}{\MakeUppercase}
+\titlespacing*{\chapter}{0pt}{0pt}{24pt}
+\titleformat{\section}
+  {\normalsize}{\thesection}{1em}{\MakeUppercase}
+\titleformat{\subsection}
+  {\normalsize\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalsize\itshape}{\thesubsubsection}{1em}{}
+%% Legendas: 10pt (menores e uniformes, regra do manual)
+\captionsetup{font=small,labelfont=small,skip=6pt}
 
 \newcommand{\us}{\textmu s}
 

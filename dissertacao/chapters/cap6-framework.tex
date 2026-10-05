@@ -24,51 +24,18 @@
 \chapter{O Arcabouço de Decisão Validado}
 \label{chap:framework}
 
-\begin{resumocapitulo}
-O benchmark do Capítulo~\ref{chap:benchmark} descreve; este capítulo
-decide. Elevamos o arcabouço de decisão de descritivo a \emph{validado}
-por meio de três estudos sobre os mesmos 18 conjuntos: (i)~um resultado
-negativo --- o roteamento por meta-características não generaliza sob validação
-\emph{leave-one-dataset-out} (taxa de acerto de 0,11 contra um \emph{baseline} de
-classe majoritária de 0,44 no estudo com 11 modelos; 0,72 contra 0,78
-com 14) ---, corroborado por evidência independente contemporânea;
-(ii)~um resultado positivo --- a política fixa ``\emph{foundation model}
-primeiro'' é regret-ótima na métrica primária, com \emph{regret} mediano zero
-na geração 2026; e (iii)~um experimento pré-registrado de \emph{regret}
-multicritério ponderado, que localiza o peso de latência em que essa
-recomendação se inverte: basta deslocar 10--20\% do peso da acurácia
-para a latência para que a política FM deixe de ser ótima. O arcabouço
-resultante é um fluxograma de quatro restrições verificáveis
+Este capítulo tem como objetivo elevar o arcabouço de decisão de
+descritivo a validado, por meio de três estudos sobre os mesmos 18
+conjuntos de dados do benchmark: um resultado negativo, em que o
+roteamento por meta-características não generaliza sob validação
+\emph{leave-one-dataset-out}; um resultado positivo, em que a política
+fixa ``\emph{foundation model} primeiro'' é regret-ótima na métrica
+primária; e um experimento pré-registrado de \emph{regret} multicritério
+ponderado, que localiza o peso de latência em que essa recomendação se
+inverte --- basta deslocar 10--20\% do peso da acurácia para a latência.
+O arcabouço resultante é um fluxograma de quatro restrições verificáveis
 \emph{a priori}, no qual a primeira pergunta --- latência --- é agora
 quantitativamente justificada.
-\end{resumocapitulo}
-
-\publicacaoassociada{Este capítulo corresponde à seção \emph{The
-Validated Decision Framework} do trabalho individual AI-1
-(\texttt{latex/ai1/}). A Seção~\ref{sec:regret-ponderado} (\emph{regret}
-multicritério ponderado) é contribuição nova desta dissertação,
-pré-registrada em \texttt{docs/desenho-melhorias-finais.md} (experimento
-E2, 05/10/2026) e inédita em relação ao artigo. Artefatos:
-\texttt{scripts/lodo\_validation.py},
-\texttt{results/aggregated/lodo\_validation\{,\_14\}.csv} e
-\texttt{results/aggregated/lodo\_weighted\_regret.csv}.}
-
-Este capítulo está organizado em cinco movimentos. A
-Seção~\ref{sec:descritivo-validado} parte dos instrumentos descritivos
-que o benchmark produz por construção --- a matriz multicritério e o
-fluxograma --- e explica por que descrever não basta: um arcabouço de
-decisão precisa ser testado contra dados que não viu. A
-Seção~\ref{sec:resultado-negativo} apresenta o resultado negativo
-(roteamento aprendido por meta-características não generaliza) e a
-Seção~\ref{sec:resultado-positivo}, o positivo (a política fixa
-``FM primeiro'' e sua evolução entre as gerações de modelos). A
-Seção~\ref{sec:regret-ponderado} estende a validação para o cenário
-multicritério, respondendo à pergunta que as anteriores deixam em
-aberto: a política ótima em acurácia sobrevive quando o custo de
-inferência entra na conta? A Seção~\ref{sec:arcabouco-resultante}
-consolida o arcabouço final --- quatro restrições verificáveis antes de
-qualquer treino --- e a Seção~\ref{sec:limitacoes-framework} declara suas
-limitações.
 
 \section{Do descritivo ao validado}
 \label{sec:descritivo-validado}
@@ -80,23 +47,16 @@ descritivos. O primeiro é a matriz multicritério, que resume a posição
 de cada um dos 14 modelos em seis critérios medidos no benchmark ---
 desempenho, custo de treino, custo de ajuste de hiperparâmetros,
 latência de inferência, robustez e interpretabilidade. A
-Figura~\ref{fig:decision-matrix} apresenta essa matriz, e sua leitura
-motiva todo o restante do capítulo.
+Figura~\ref{fig:decision-matrix} apresenta essa matriz, com escores de 1
+a 3 estrelas computados do benchmark (3 = melhor; tom mais escuro =
+melhor), e sua leitura motiva todo o restante do capítulo.
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.92\linewidth]{images/decision_matrix.png}
-\caption[Matriz de decisão multicritério (14 modelos)]{\textbf{Nenhum
-modelo domina todos os critérios: a decisão é um compromisso, não uma
-escolha de ``melhor modelo''.} Matriz de decisão multicritério dos 14
-modelos (linhas, ordenadas por desempenho) em seis critérios (colunas:
-desempenho, custo de treino, custo de ajuste, latência, robustez,
-interpretabilidade), com escores de 1 a 3 estrelas computados do
-benchmark do Capítulo~\ref{chap:benchmark} (3 = melhor; tom mais escuro
-= melhor). Os líderes de desempenho (famílias de \emph{foundation models}, no
-topo) recebem 1 estrela justamente em latência e interpretabilidade;
-os GBDTs são os únicos com 3 estrelas simultâneas em latência e
-interpretabilidade. Rótulos internos da figura em inglês e decimais com ponto (figura canônica do \emph{benchmark}); eixos e leitura descritos nesta legenda. Fonte: \texttt{results/figures/decision\_matrix.png}.}
+\caption{Matriz de decisão multicritério dos 14 modelos (linhas,
+ordenadas por desempenho) em seis critérios (colunas; rótulos internos da
+figura em inglês). Fonte: \texttt{results/figures/decision\_matrix.png}.}
 \label{fig:decision-matrix}
 \end{figure}
 
@@ -162,7 +122,7 @@ nosso protocolo LODO e um estudo externo, com metodologia distinta,
 reforça que o resultado negativo não é um artefato da nossa amostra de
 conjuntos.
 
-\achado{6.1}{Roteamento por meta-características não generaliza sob LODO.}
+\emph{Roteamento por meta-características não generaliza sob LODO.}
 Com $N{=}18$ conjuntos, um roteador aprendido (árvore de profundidade
 2) não supera o \emph{baseline} de classe majoritária em nenhuma das duas
 gerações de modelos (0,11 vs.\ 0,44 com 11 modelos; 0,72 vs.\ 0,78 com
@@ -181,19 +141,17 @@ independentemente do conjunto. Para compará-las, usamos a métrica de
 0 significa que a família recomendada contém o melhor modelo do
 conjunto; 1, que contém apenas o pior. A
 Tabela~\ref{tab:regret-lodo} resume o \emph{regret} das quatro políticas ---
-a árvore sob LODO e as três políticas fixas --- nos dois estudos.
+a árvore sob LODO e as três políticas fixas --- nos dois estudos; as
+linhas da árvore e da política sempre-FM agregam sobre os 17 conjuntos em
+que a família FM participa (\texttt{helena} é excluída por limite
+arquitetural de 100 classes), e as linhas sempre-GBDT e sempre-DL, sobre
+todos os 18.
 
 \begin{table}[htb]
 \centering
-\caption[Regret normalizado das políticas fixas sob LODO]{Regret
-normalizado das políticas de recomendação sob LODO, nos estudos com 11
-modelos (núcleo de 11) e 14 modelos (incluindo a geração 2026).
-Convenção: \textbf{negrito} = melhor política da coluna. Nota sobre os
-$N$s: as colunas da árvore e da política sempre-FM agregam sobre os 17
-conjuntos em que a família FM participa (\texttt{helena} é excluída por
-limite arquitetural de 100 classes); as colunas sempre-GBDT e sempre-DL
-agregam sobre todos os 18. Fonte:
-\texttt{results/aggregated/lodo\_validation\{,\_14\}.csv}.}
+\caption{Regret normalizado das políticas de recomendação sob LODO, nos
+estudos com 11 e com 14 modelos (\textbf{negrito} = melhor política da
+coluna). Fonte: \texttt{results/aggregated/lodo\_validation\{,\_14\}.csv}.}
 \label{tab:regret-lodo}
 \small
 \begin{tabular}{lcccc}
@@ -224,7 +182,7 @@ mas mantendo taxa de acerto \emph{abaixo} do \emph{baseline} de classe majoritá
 \emph{regret} sem esse modo de falha; o colapso da árvore é mais um sintoma de
 que não há estrutura aprendível, não uma vitória do roteador.
 
-\achado{6.2}{``Foundation model primeiro'' é a política regret-ótima na
+\emph{``Foundation model primeiro'' é a política regret-ótima na
 métrica primária.} Na geração 2026, a política fixa sempre-FM atinge
 \emph{regret} médio 0,021 e mediano 0,000 sob LODO --- nenhuma política
 aprendida ou fixa a supera. A recomendação de desempenho deixou de
@@ -296,24 +254,15 @@ desta seção devem ser lidas com essa ressalva.
 A Figura~\ref{fig:lodo-weighted} mostra o que a
 Tabela~\ref{tab:regret-lodo} não pode mostrar: como o \emph{regret} de cada
 política evolui à medida que o peso se desloca da acurácia para a
-latência.
+latência --- o painel esquerdo traz a mediana e o direito, a média sobre
+os conjuntos.
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=\linewidth]{images/lodo_weighted_regret.pdf}
-\caption[Regret multicritério ponderado das políticas fixas (E2)]{%
-\textbf{A política ``FM primeiro'' só é ótima quando a acurácia pesa
-90\% ou mais; com pesos menores, a recomendação inverte-se em favor dos
-GBDTs.} Regret normalizado das três políticas fixas (14 modelos) em
-função do peso da acurácia $w$ no score
-$S = w \cdot r_{\text{acc}} + (1-w) \cdot r_{\text{lat}}$
-(Eq.~\ref{eq:score-ponderado}); o painel esquerdo mostra a mediana e o
-direito, a média sobre os conjuntos (18 para GBDT/DL; 17 para FM,
-\texttt{helena} excluída). Em $w{=}1{,}0$ (só acurácia), sempre-FM tem
-\emph{regret} mediano zero; o cruzamento ocorre entre $w{=}0{,}9$ e
-$w{=}0{,}8$ na mediana, e entre $w{=}0{,}8$ e $w{=}0{,}7$ na média;
-para $w \leq 0{,}6$, sempre-GBDT tem \emph{regret} mediano zero. Latência via
-proxy do \texttt{adult} (ver ressalva no texto). Fonte:
+\caption{Regret multicritério ponderado das três políticas fixas em
+função do peso da acurácia $w$ (Eq.~\ref{eq:score-ponderado}; experimento
+E2, estudo com 14 modelos). Fonte:
 \texttt{results/aggregated/lodo\_weighted\_regret.csv}.}
 \label{fig:lodo-weighted}
 \end{figure}
@@ -324,14 +273,11 @@ tenha origem inspecionável.
 
 \begin{table}[htb]
 \centering
-\caption[Regret mediano por política e peso da acurácia (E2)]{Regret
-normalizado mediano das três políticas fixas em função do peso da
-acurácia $w$ (estudo com 14 modelos; valores selecionados da varredura
-completa $w \in \{1{,}0;\, 0{,}9;\, \ldots;\, 0{,}0\}$). Convenção:
-\textbf{negrito} = melhor política da coluna. $N{=}18$ conjuntos para
-sempre-GBDT e sempre-DL; $N{=}17$ para sempre-FM (\texttt{helena}
-excluída). Fonte: \texttt{results/aggregated/lodo\_weighted\_regret.csv}
-(medianas recomputadas do artefato).}
+\caption{Regret normalizado mediano das três políticas fixas em função do
+peso da acurácia $w$ (estudo com 14 modelos; \textbf{negrito} = melhor
+política da coluna). Fonte:
+\texttt{results/aggregated/lodo\_weighted\_regret.csv} (medianas
+recomputadas do artefato).}
 \label{tab:weighted-regret}
 \small
 \begin{tabular}{lccccccc}
@@ -392,7 +338,7 @@ Figura~\ref{fig:decision-matrix} já o mostrava em estrelas); depois de
 E2, sabemos \emph{quanto} ela precisa importar para mudar a resposta ---
 e a resposta é: pouco.
 
-\achado{6.3}{A recomendação ``FM primeiro'' inverte-se com 10--20\% de
+\emph{A recomendação ``FM primeiro'' inverte-se com 10--20\% de
 peso na latência.} Sob o score ponderado
 $S = w \cdot r_{\text{acc}} + (1-w) \cdot r_{\text{lat}}$, a política
 sempre-FM só é regret-ótima na mediana para $w \geq 0{,}9$; em
@@ -414,15 +360,8 @@ validado na sua forma final, com os 14 modelos do estudo completo.
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.88\linewidth]{images/decision_flowchart_14_pt.pdf}
-\caption[Fluxograma de decisão validado (14 modelos)]{\textbf{Quatro
-perguntas verificáveis antes de qualquer treino; só quando nenhuma
-restrição está ativa aplica-se o \emph{default} regret-ótimo --- foundation
-model primeiro.} Fluxograma de decisão do praticante, validado pelos
-estudos de \emph{regret} deste capítulo (estudo com 14 modelos). Cada losango
-é uma restrição verificável \emph{a priori}: orçamento de latência,
-limites arquiteturais, exigência de interpretabilidade intrínseca; a
-ordem das perguntas é justificada quantitativamente pela
-Seção~\ref{sec:regret-ponderado}. Gerado por
+\caption{Fluxograma de decisão validado, estudo com 14 modelos: cada
+losango é uma restrição verificável \emph{a priori}. Gerado por
 \texttt{scripts/figures\_ai1\_display.py}.}
 \label{fig:flowchart-14}
 \end{figure}
@@ -468,13 +407,13 @@ sustentam.
 As limitações deste capítulo são declaradas na mesma moeda dos seus
 resultados.
 
-\textbf{Tamanho da amostra de conjuntos.} $N{=}18$ impede validação
+Quanto ao tamanho da amostra de conjuntos, $N{=}18$ impede validação
 estatística fina do próprio arcabouço; o LODO é a ferramenta honesta
 possível nessa escala, e é exatamente por isso que o resultado negativo
 da Seção~\ref{sec:resultado-negativo} é formulado como ``não aprendível
 sob LODO com esta classe de modelo'', e não como impossibilidade geral.
 
-\textbf{Métrica do \emph{regret}.} O estudo original calcula o \emph{regret} sobre a
+Quanto à métrica, o estudo original calcula o \emph{regret} sobre a
 métrica primária. A extensão multicritério da
 Seção~\ref{sec:regret-ponderado} fecha parte dessa lacuna, mas herda
 duas simplificações próprias: o score pondera apenas dois critérios
@@ -485,7 +424,7 @@ máquina declarada --- a direção do viés desse proxy é conhecida e foi
 declarada no pré-registro, mas sua magnitude por conjunto não foi
 medida.
 
-\textbf{Datação.} A fronteira de modelos muda em ciclos de meses --- a
+Por fim, a datação: a fronteira de modelos muda em ciclos de meses --- a
 diferença entre as colunas @11 e @14 da Tabela~\ref{tab:regret-lodo} é,
 ela própria, a demonstração. O arcabouço é datado por construção e
 versionado com o benchmark que o sustenta; recomendações derivadas dele
@@ -503,18 +442,9 @@ multicritério ponderado, pré-registrado como experimento E2, localiza o
 ponto em que essa recomendação vira --- entre $w{=}0{,}9$ e $w{=}0{,}8$
 de peso na acurácia pela mediana --- e com isso justifica
 quantitativamente a arquitetura do fluxograma: a latência é a primeira
-pergunta porque é a que mais cedo muda a resposta.
-
-\begin{transicao}
-O arcabouço validado deixa um único obstáculo entre o praticante e a
-política regret-ótima: a latência de inferência. Quando o orçamento é
-de microssegundos, a família de \emph{foundation models} --- a melhor em
-acurácia em metade ou mais dos conjuntos --- está excluída na forma
-nativa, e a Seção~\ref{sec:regret-ponderado} mostrou que basta um peso
-modesto nesse critério para a recomendação inverter. A pergunta que o
-Capítulo~\ref{chap:destilacao} enfrenta é, portanto, a que este
-capítulo torna inevitável: é possível \emph{destilar} o conhecimento do
-\emph{foundation model} em um aluno que viva no \emph{tier} de microssegundos ---
-preservando não só a predição pontual, mas a distribuição preditiva
-completa?
-\end{transicao}
+pergunta porque é a que mais cedo muda a resposta. O único obstáculo que
+resta entre o praticante e a política regret-ótima --- a latência de
+inferência --- é o objeto do Capítulo~\ref{chap:destilacao}: destilar o
+conhecimento do \emph{foundation model} em um aluno que viva no
+\emph{tier} de microssegundos, preservando não só a predição pontual, mas
+a distribuição preditiva completa.

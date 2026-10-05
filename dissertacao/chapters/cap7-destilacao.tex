@@ -27,66 +27,18 @@
 \chapter{Destilação Distribucional de Foundation Models}
 \label{chap:destilacao}
 
-\begin{resumocapitulo}
 O Capítulo~\ref{chap:framework} deixou um único obstáculo entre o
-praticante e a política regret-ótima ``\emph{foundation model} primeiro'': o
-custo de servir. Este capítulo ataca esse obstáculo por destilação de
-conhecimento, com um recorte verificado como inédito --- a
-\emph{regressão distribucional}: transferir não a média, mas a
-distribuição preditiva completa do \emph{professor} (\emph{teacher}) para um aluno de
-microssegundos. Em 20 conjuntos de dados, sob desenho pré-registrado,
-quatro resultados estruturam o capítulo: (i)~um negativo robusto --- a
-destilação \emph{pontual} falha em escala de \emph{pool} de treino --- a partição de desenvolvimento de 80\% do Capítulo~\ref{chap:metodologia} --- realista, com
-qualquer um dos dois professores; (ii)~um positivo no eixo aberto --- a
-transferência das curvas de quantis retém mediana de 19\% da vantagem
-de CRPS do professor, positiva em 16 de 20 conjuntos (teste de sinal
-$p=0{,}006$), incluindo um caso \emph{born-again} em que o aluno supera
-o próprio professor; (iii)~a primeira fronteira de três estratégias de
-serving --- destilar $\times$ comprimir contexto $\times$ reduzir
-\emph{ensemble} --- medida de ponta a ponta, na qual o aluno destilado é o
-sistema CRPS-ótimo abaixo da configuração competitiva mais barata do
-professor onde a vantagem deste é grande; e (iv)~um experimento final
-pré-registrado (E1) contra baselines distribucionais clássicos (NGBoost
-e florestas quantílicas), que o aluno destilado vence em 17 de 20
-conjuntos ($p=0{,}0013$) --- com três reveses instrutivos que
-enriquecem, em vez de enfraquecer, a regra de decisão prática que
+praticante e a política regret-ótima ``\emph{foundation model}
+primeiro'': o custo de servir. Este capítulo tem como objetivo atacar
+esse obstáculo por destilação de conhecimento, com um recorte
+verificado como inédito --- a \emph{regressão distribucional}:
+transferir não a média, mas a distribuição preditiva completa do
+\emph{professor} (\emph{teacher}) para um aluno de microssegundos.
+Além disso, sob desenho pré-registrado em 20 conjuntos de dados,
+confronta-se a destilação com as alternativas de engenharia de
+\emph{serving} e com \emph{baselines} distribucionais clássicos, e os
+sucessos e fracassos convertem-se na regra de decisão prática que
 encerra o capítulo.
-\end{resumocapitulo}
-
-\publicacaoassociada{\sloppy Este capítulo corresponde ao segundo
-trabalho individual do programa (AI-2), cuja versão em formato de
-artigo está em \texttt{latex/ai2/} no repositório do estudo. O
-desenho experimental foi pré-registrado em
-\texttt{docs/}\allowbreak\texttt{desenho-experimental-destilacao.md}
-(julho de 2026) e as checagens de novidade datadas estão em
-\texttt{docs/}\allowbreak\texttt{memo-novidade-destilacao.md}. A
-Seção~\ref{sec:destil-e1} (baselines distribucionais clássicos) é
-contribuição nova desta dissertação, pré-registrada em
-\texttt{docs/}\allowbreak\texttt{desenho-melhorias-finais.md}
-(experimento E1, 05/10/2026) e inédita em relação ao artigo; seus
-números foram recomputados do artefato
-\texttt{results/}\allowbreak\texttt{distillation/}\allowbreak\texttt{baselines\_analysis.csv}.}
-
-O capítulo segue a ordem lógica do estudo. A
-Seção~\ref{sec:destil-motivacao} estabelece a motivação --- a latência
-como único obstáculo à política validada --- e documenta a checagem de
-novidade datada que delimitou o recorte, incluindo a colisão parcial
-contemporânea de outubro de 2026 e sua reconciliação. A
-Seção~\ref{sec:destil-desenho} apresenta as hipóteses pré-registradas
-H1--H3 e os compromissos de conduta; a Seção~\ref{sec:destil-metodo},
-o método: professores, rotulagem \emph{out-of-fold}, famílias de alunos,
-métricas e o conjunto experimental. Os resultados vêm em quatro
-movimentos: a refutação da destilação pontual
-(Seção~\ref{sec:destil-ponto}), o sucesso da destilação distribucional
-com sua tabela de retenção completa e ressalvas
-(Seção~\ref{sec:destil-dist}), a fronteira destilar $\times$ comprimir
-$\times$ reduzir \emph{ensemble} (Seção~\ref{sec:destil-fronteira}) e a
-ablação que explica por que a rotulagem \emph{out-of-fold} importa
-(Seção~\ref{sec:destil-oof}). A Seção~\ref{sec:destil-e1} apresenta o
-experimento E1 --- baselines distribucionais clássicos ---, a
-Seção~\ref{sec:destil-regra} converte duas hipóteses refutadas e o E1
-na regra de decisão final, e a Seção~\ref{sec:destil-discussao} fecha
-com a discussão, as limitações e a síntese.
 
 \section{Motivação e checagem de novidade}
 \label{sec:destil-motivacao}
@@ -284,23 +236,19 @@ efeito de tuning. São três famílias:
 \end{itemize}
 
 A Figura~\ref{fig:destil-pipeline} resume o \emph{pipeline} e o papel de cada
-variante.
+variante: as variantes de rótulos verdadeiros (\emph{hard}) são os
+controles que toda variante destilada (\emph{soft}) precisa superar, e
+todos os sistemas são avaliados no mesmo \emph{hold-out} intocado de
+20\%.
 
 \begin{figure}[htb]
 \centering
 % Diagrama pré-compilado (fonte editável: tikz-src/tikz-cap7-1.tex;
 % recompilar com: tectonic tikz-src/tikz-cap7-1.tex && mv tikz-cap7-1.pdf images/)
 \includegraphics{images/tikz-cap7-1.pdf}
-\caption[Pipeline de destilação distribucional]{\textbf{O \emph{pipeline} de
-destilação: o professor rotula o \emph{pool} fora de dobra, e alunos de
-capacidade idêntica diferem apenas no alvo de treino.} O professor
-rotula cada linha do \emph{pool} \emph{out-of-fold} ($K{=}5$: condicionado em
-4/5 do \emph{pool}, rotula o quinto retido), produzindo, em cache, uma média
-e 19 curvas de quantis por linha. Os alunos compartilham a capacidade
-ajustada do benchmark e diferem somente no alvo: as variantes de rótulos
-verdadeiros (\emph{hard}) são os controles que toda variante destilada
-precisa superar. Todos os sistemas são avaliados no mesmo \emph{hold-out}
-intocado de 20\%. Diagrama portado do artigo AI-2
+\caption{Pipeline de destilação distribucional: o professor rotula o
+\emph{pool} fora de dobra e alunos de capacidade idêntica diferem
+apenas no alvo de treino. Fonte: diagrama portado do artigo AI-2
 (\texttt{latex/ai2/main.tex}).}
 \label{fig:destil-pipeline}
 \end{figure}
@@ -402,7 +350,7 @@ negativo é escopado com precisão: tamanhos de \emph{pool} realistas (3 mil a
 As duas leituras são compatíveis; a nossa delimita onde a deles deixa
 de valer.
 
-\achado{7.1}{A destilação pontual falha em escala de \emph{pool} realista,
+\emph{A destilação pontual falha em escala de \emph{pool} realista,
 independentemente do professor.} O aluno pontual destilado supera o
 controle de rótulos verdadeiros em apenas 4 de 20 conjuntos; a
 replicação com um professor quase $6\times$ mais forte (gap de âncora
@@ -422,23 +370,15 @@ resultado central do capítulo sobre o \emph{pool} completo de 20 conjuntos:
 para cada um, a retenção do gap de CRPS
 (Eq.~\ref{eq:destil-retencao}), a vantagem absoluta do professor sobre o
 controle e a melhoria absoluta do aluno destilado, todas em unidades
-do alvo.
+do alvo. Na tabela, $n$ é o tamanho do \emph{pool} de treino após o
+\emph{hold-out} de 20\%, e \texttt{diamonds\_real} é o verdadeiro
+conjunto diamonds do OpenML, incluído quando a errata de rotulagem
+descrita no Capítulo~\ref{chap:metodologia} foi retificada.
 
 \begin{table}[htb]
 \centering
-\caption[Retenção do gap de CRPS do aluno destilado (20 conjuntos)]{%
-Retenção do gap de CRPS do aluno multiquantil destilado nos 20
-conjuntos (média de 3 sementes). $n$ é o tamanho do \emph{pool} de treino
-após o \emph{hold-out} de 20\%; a vantagem do professor é
-$\mathrm{CRPS}_{\mathrm{hard}} - \mathrm{CRPS}_{\mathrm{professor}}$ e
-$\Delta$CRPS
-$= \mathrm{CRPS}_{\mathrm{hard}} - \mathrm{CRPS}_{\mathrm{soft}}$
-(melhoria absoluta do aluno destilado sobre o controle de rótulos
-verdadeiros), ambas em unidades do alvo --- a retenção é a razão entre
-elas, instável quando a vantagem é próxima de zero. Positiva em
-16/20; mediana $+0{,}19$. \texttt{diamonds\_real} é o verdadeiro
-conjunto diamonds do OpenML, incluído quando a errata de rotulagem
-descrita no Capítulo~\ref{chap:metodologia} foi retificada. Fonte:
+\caption{Retenção do gap de CRPS do aluno multiquantil destilado nos
+20 conjuntos (média de 3 sementes). Fonte:
 \texttt{results/distillation/paper\_retention.csv}.}
 \label{tab:destil-retencao}
 \small
@@ -514,7 +454,7 @@ acompanha --- e, num caso, excede --- a transferência, como as curvas
 de confiabilidade da Seção~\ref{sec:destil-oof}
 (Figura~\ref{fig:destil-calibration}) mostram em detalhe.
 
-\achado{7.2}{A destilação distribucional retém mediana de 19\% da
+\emph{A destilação distribucional retém mediana de 19\% da
 vantagem de CRPS do professor, positiva em 16 de 20 conjuntos.} A
 transferência das 19 curvas de quantis para um aluno multiquantil é
 positiva em 16/20 conjuntos (teste de sinal $p=0{,}006$; Wilcoxon
@@ -539,32 +479,22 @@ contexto'', na variante simples de subamostragem --- CRUMB
 \citep{crumb2026} é o método representativo desse braço na
 literatura); o TabPFN com 1/4/8 membros de \emph{ensemble} (o braço ``reduzir
 \emph{ensemble}''); os alunos destilados e de controle (o braço
-``destilar''); e o TabFM de contexto completo como âncora de acurácia.
-A Figura~\ref{fig:destil-pareto} apresenta a fronteira resultante.
+``destilar''); e o TabFM de contexto completo como âncora de acurácia
+(4.905--394.301~\us/linha). A Figura~\ref{fig:destil-pareto} apresenta
+a fronteira resultante: o eixo de latência é \emph{logarítmico} ---
+distâncias horizontais iguais são fatores multiplicativos iguais ---,
+melhor é abaixo e à esquerda, e o que importa é a distância vertical
+entre o aluno destilado e a curva do professor na latência medida mais
+próxima.
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=\linewidth]{images/pareto_distill_en.pdf}
-\caption[Fronteira destilar $\times$ comprimir $\times$ reduzir ensemble]{\textbf{No
-plano distribucional, o aluno destilado (estrela) é o sistema
-CRPS-ótimo abaixo da configuração competitiva mais barata do professor
-nos dois conjuntos de vantagem grande; no \texttt{kin8nm}, de vantagem
-pequena, reduzir o \emph{ensemble} já basta.} Fronteira destilar $\times$
-comprimir $\times$ reduzir \emph{ensemble} em três conjuntos de vantagem
-positiva (colunas): RMSE (linha superior, acurácia pontual) e CRPS
-(linha inferior, acurácia distribucional) contra latência de
-inferência em \us/linha. Como ler: o eixo horizontal é
-\emph{logarítmico} --- distâncias horizontais iguais são fatores
-multiplicativos iguais --- e melhor é abaixo e à esquerda. Círculos
-azuis: professor TabPFN com contexto subamostrado (1 mil a completo);
-triângulos verdes: professor com \emph{ensemble} reduzido (1 e 4 membros);
-estrela rosa: aluno-quantil destilado; quadrado laranja e losango
-verde: alunos de controle (ponto e quantil, rótulos verdadeiros); cruz
-laranja: TabFM de contexto completo, a âncora de acurácia
-(4.905--394.301~\us/linha). O que importa é a distância vertical entre
-a estrela e a curva do professor na latência medida mais próxima ---
-discutida no texto. Rótulos internos em inglês, conforme a figura do
-artigo AI-2. Fonte: \texttt{results/distillation/pareto.csv}.}
+\caption{Fronteira destilar $\times$ comprimir $\times$ reduzir
+\emph{ensemble}: RMSE (acima) e CRPS (abaixo) contra latência de
+inferência em três conjuntos de vantagem positiva (rótulos internos em
+inglês, conforme a figura do artigo AI-2). Fonte:
+\texttt{results/distillation/pareto.csv}.}
 \label{fig:destil-pareto}
 \end{figure}
 
@@ -604,7 +534,7 @@ $3{,}3\times$ a latência (148,6 contra 45,1~ms/linha) por um ganho de
 RMSE de 0,05: em GPUs de porte comum, o professor de contexto completo
 não se paga.
 
-\achado{7.3}{Onde a vantagem do professor é grande, o aluno destilado é
+\emph{Onde a vantagem do professor é grande, o aluno destilado é
 o sistema distribucional CRPS-ótimo abaixo da configuração competitiva
 mais barata do professor; onde é pequena, reduzir o \emph{ensemble} basta.} Na
 fronteira medida de ponta a ponta, a configuração mais barata do
@@ -646,32 +576,27 @@ acurácia --- um refinamento desconfundido do achado de classificação.
 
 A Figura~\ref{fig:destil-calibration} fecha o eixo da calibração com
 as curvas de confiabilidade dos sistemas distribucionais ---
-prometidas na Seção~\ref{sec:destil-dist}.
+prometidas na Seção~\ref{sec:destil-dist}: para cada nível nominal
+$\tau$, a fração empírica de alvos abaixo do quantil $\tau$ predito,
+com a diagonal como calibração perfeita (curvas acima dela
+sobre-cobrem; abaixo dela, sub-cobrem). No \texttt{california\_housing},
+o controle de rótulos verdadeiros satura em sobrecobertura extrema e o
+professor exibe a forma em S de caudas mal calibradas, enquanto o
+aluno destilado é o mais próximo da diagonal; no \texttt{cpu\_activity},
+os três sistemas são bem calibrados e o destilado permanece
+competitivo. A transferência de curvas com reparo por ordenação atua
+como regularizador de calibração, não como cópia.
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=\linewidth]{images/calibration_distill_en.pdf}
-\caption[Curvas de confiabilidade dos quantis no hold-out]{\textbf{O
-aluno destilado é o sistema mais próximo da diagonal nos dois painéis
---- no \texttt{california\_housing}, mais bem calibrado que o controle
-e que o próprio professor.} Confiabilidade dos quantis no \emph{hold-out}: para
-cada nível nominal $\tau$ (eixo horizontal), a fração empírica de
-alvos abaixo do quantil $\tau$ predito (eixo vertical). Como ler: a
-diagonal tracejada é a calibração perfeita; curvas acima dela
-sobre-cobrem, abaixo dela sub-cobrem. No
-\texttt{california\_housing} (esquerda), o controle de rótulos
-verdadeiros (losangos verdes) satura em sobrecobertura extrema e o
-professor (círculos azuis) exibe a forma em S de caudas mal calibradas;
-o aluno destilado (estrelas rosas) é o mais próximo da diagonal. No
-\texttt{cpu\_activity} (direita), os três sistemas são bem calibrados
-e o destilado permanece competitivo. A transferência de curvas com
-reparo por ordenação atua como regularizador de calibração, não como
-cópia. Rótulos internos em inglês, conforme a figura do artigo AI-2.
-Fonte: \texttt{scripts/plot\_calibration.py}.}
+\caption{Curvas de confiabilidade dos quantis no \emph{hold-out}
+(rótulos internos em inglês, conforme a figura do artigo AI-2). Fonte:
+\texttt{scripts/plot\_calibration.py}.}
 \label{fig:destil-calibration}
 \end{figure}
 
-\achado{7.4}{A rotulagem out-of-fold protege a calibração do aluno,
+\emph{A rotulagem out-of-fold protege a calibração do aluno,
 não sua acurácia.} Com contexto idêntico, rótulos \emph{in-sample} não
 degradam RMSE nem CRPS, mas erodem a cobertura de intervalos em 0,5 a
 5,1~p.p.\ de PICP80 nos quatro conjuntos testados: a superconfiança
@@ -759,14 +684,10 @@ Tabela~\ref{tab:destil-e1-reveses} os expõe por extenso.
 
 \begin{table}[htb]
 \centering
-\caption[Os três reveses do E1: CRPS onde a QRF vence o aluno
-destilado]{Os três conjuntos (de 20) em que o melhor \emph{baseline} clássico
-vence o aluno destilado em CRPS (média de 3 sementes; menor é melhor).
-Convenção: \textbf{negrito} = melhor sistema da linha entre os três
-sistemas rápidos e o professor. No \texttt{wine\_quality}, a QRF supera
-inclusive o professor --- o único conjunto, em 20, onde isso ocorre.
-Fonte: \texttt{results/distillation/baselines\_analysis.csv} (valores
-recomputados do artefato em 05/10/2026).}
+\caption{Os três reveses do E1: CRPS onde o melhor \emph{baseline}
+clássico vence o aluno destilado (média de 3 sementes; menor é melhor;
+\textbf{negrito} = melhor da linha). Fonte:
+\texttt{results/distillation/baselines\_analysis.csv}.}
 \label{tab:destil-e1-reveses}
 \small
 \begin{tabular}{lrrrr}
@@ -785,7 +706,8 @@ Três leituras emergem. Primeiro, os reveses não são aleatórios: o
 pré-registrado já desaconselhava destilar (o professor atrás do \emph{baseline}
 em RMSE; retenção $-0{,}97$ na Tabela~\ref{tab:destil-retencao}), e lá
 a QRF \emph{default} bate \emph{inclusive o professor} (CRPS 0,279 contra
-0,289) --- a demonstração mais nítida, em todo o estudo, de que o
+0,289; o único conjunto, em 20, onde isso ocorre) --- a demonstração
+mais nítida, em todo o estudo, de que o
 passo ``teste um aluno nativo forte'' da regra de decisão não é
 retórico. Segundo, mesmo nos dois outros reveses, a destilação
 continua funcionando no seu próprio recorte (retenções $+0{,}64$ e
@@ -806,7 +728,7 @@ de treino, serve a microssegundos e, numa minoria previsível de
 conjuntos, resolve o problema antes que qualquer professor precise ser
 carregado.
 
-\achado{7.5}{Um nativo distribucional clássico forte não substitui a
+\emph{Um nativo distribucional clássico forte não substitui a
 destilação --- mas deve ser tentado antes.} O aluno destilado vence o
 melhor entre NGBoost e QRF em 17 de 20 conjuntos (teste de sinal
 $p=0{,}0013$; Wilcoxon $p=0{,}0008$), a latências do mesmo \emph{tier}
@@ -872,8 +794,8 @@ fronteira da Seção~\ref{sec:destil-fronteira} --- os casos
 \texttt{california\_housing}/\texttt{year\_prediction} de um lado e o
 \texttt{kin8nm} do outro.
 
-\achado{7.6}{A regra de decisão: transforme, teste um nativo forte,
-e destile somente a vantagem que sobrar --- ela é verificável em
+\emph{A regra de decisão --- transforme, teste um nativo forte,
+e destile somente a vantagem que sobrar --- é verificável em
 minutos.} As falhas da destilação distribucional não são aleatórias:
 concentram-se onde o professor não tem vantagem genuína (gate de RMSE)
 ou onde sua vantagem é reproduzível por transformação de alvo. A
@@ -962,18 +884,6 @@ ponto, cauda pesada, redundância com clássicos --- convertem-se numa
 regra de decisão cuja pré-condição se verifica em minutos. É a
 resposta da dissertação à QP3: o que o \emph{foundation model} sabe e o
 \emph{baseline} não aprende sozinho é a distribuição --- e é isso que se
-destila.
-
-\begin{transicao}
-Com este capítulo, as três perguntas de pesquisa têm resposta: o
-benchmark estabeleceu quem vence e a que custo
-(Capítulo~\ref{chap:benchmark}), o arcabouço validado disse como
-escolher sob restrições (Capítulo~\ref{chap:framework}), e a
-destilação distribucional mostrou como recuperar o líder dentro do
-orçamento de microssegundos --- quando, e somente quando, há vantagem
-genuína a transferir. Resta consolidar: o
-Capítulo~\ref{chap:conclusao} reúne as contribuições, confronta cada
-pergunta de pesquisa com a evidência acumulada, declara as limitações
-e ameaças à validade do programa como um todo e aponta os trabalhos
-futuros que este estudo deixa armados.
-\end{transicao}
+destila. Com as três perguntas de pesquisa respondidas, resta ao
+Capítulo~\ref{chap:conclusao} consolidar as contribuições, as
+limitações e os trabalhos futuros do programa.

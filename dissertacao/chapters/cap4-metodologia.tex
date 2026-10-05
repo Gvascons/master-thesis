@@ -1,50 +1,21 @@
 \chapter{Metodologia Experimental}
 \label{chap:metodologia}
 
-\begin{resumocapitulo}
-Este capítulo especifica o protocolo experimental que sustenta todos os
-resultados empíricos da dissertação: 14 modelos de três famílias (gradient
-boosting, aprendizado profundo e \emph{foundation models}) avaliados em 18
-conjuntos de dados públicos do OpenML sob validação cruzada aninhada
-(5~\emph{folds} externos $\times$ 3 internos), com \emph{hold-out} de 20\%
-separado antes de qualquer seleção e jamais observado pelo \emph{tuning}. O
-capítulo justifica cada decisão de desenho --- orçamentos de otimização de
-100/25 \emph{trials}, assimetria \emph{zero-shot} dos \emph{foundation
-models}, pré-processamento por família, métricas primárias
-\emph{threshold-free} --- e declara o protocolo de inferência estatística, a
-política para células faltantes (250 de 252 células; duas exclusões
-estruturais), o protocolo de medição de custo, o contrato de conduta
-científica e, antes de qualquer resultado, as limitações do próprio desenho.
-\end{resumocapitulo}
-
-\publicacaoassociada{A formulação condensada desta metodologia corresponde à
-seção \emph{Methodology} do artigo individual AI-1
-(\texttt{latex/ai1/main.tex} no repositório do projeto). A especificação
-estatística completa, com o registro da auditoria de corretude de julho de
-2026, está em \texttt{docs/metodologia-estatistica.md}; os parâmetros exatos
-do protocolo estão versionados em \texttt{configs/experiment.yaml} e
-\texttt{configs/datasets.yaml}.}
-
-Este capítulo descreve o desenho experimental comum a toda a parte empírica
-da dissertação. A Seção~\ref{sec:met-visao} enuncia os princípios que
-organizam o protocolo; as Seções~\ref{sec:met-datasets}
-e~\ref{sec:met-modelos} apresentam os conjuntos de dados e os modelos, com
-os critérios de seleção e a proveniência de cada implementação; as
-Seções~\ref{sec:met-protocolo} a~\ref{sec:met-metricas} detalham o protocolo
-de avaliação, o pré-processamento por família e as métricas; a
-Seção~\ref{sec:met-estatistica} declara o protocolo de aplicação dos testes
-estatísticos --- cuja fundamentação foi apresentada no
-Capítulo~\ref{chap:fundamentacao} --- incluindo a política para células
-faltantes; a Seção~\ref{sec:met-custo} especifica como custo de treinamento,
-custo de \emph{tuning} e latência de inferência são medidos, além dos
-experimentos complementares; as Seções~\ref{sec:met-reprodutibilidade}
-e~\ref{sec:met-conduta} documentam a infraestrutura de reprodutibilidade e o
-contrato de conduta científica; e a Seção~\ref{sec:met-limitacoes} fecha o
-capítulo com as limitações do desenho, declaradas \emph{antes} de qualquer
-resultado. O desenho experimental específico da destilação distribucional
-(AI-2) --- pré-registrado em documento próprio, com hipóteses falsificáveis
---- é apresentado no Capítulo~\ref{chap:destilacao}; aqui descrevemos apenas
-a infraestrutura compartilhada da qual ele herda dados, partições e
+Este capítulo tem como objetivo especificar o protocolo experimental que
+sustenta toda a parte empírica da dissertação: 14 modelos de três famílias
+(gradient boosting, aprendizado profundo e \emph{foundation models})
+avaliados em 18 conjuntos de dados públicos do OpenML sob validação cruzada
+aninhada, com \emph{hold-out} separado antes de qualquer seleção e jamais
+observado pelo \emph{tuning}. Além de justificar cada decisão de desenho ---
+orçamentos de otimização, assimetria \emph{zero-shot} dos \emph{foundation
+models}, pré-processamento por família e métricas primárias
+\emph{threshold-free} ---, o capítulo declara o protocolo de inferência
+estatística, a política para células faltantes, o protocolo de medição de
+custo, o contrato de conduta científica e, antes de qualquer resultado, as
+limitações do próprio desenho. O desenho experimental específico da
+destilação distribucional, pré-registrado em documento próprio, é
+apresentado no Capítulo~\ref{chap:destilacao}; aqui descreve-se apenas a
+infraestrutura compartilhada da qual ele herda dados, partições e
 hiperparâmetros.
 
 \section{Visão geral e princípios de desenho}
@@ -94,9 +65,8 @@ no repositório.
 
 \begin{table}[htbp]
 \centering
-\caption[Os 18 conjuntos de dados do benchmark]{Os 18 conjuntos de dados OpenML do benchmark (tamanhos aproximados
-antes do teto; as execuções limitam cada conjunto a 100~mil amostras).
-Fonte: \texttt{configs/datasets.yaml}.}
+\caption{Os 18 conjuntos de dados OpenML do benchmark (tamanhos aproximados
+antes do teto de 100~mil amostras). Fonte: \texttt{configs/datasets.yaml}.}
 \label{tab:datasets}
 \small
 \begin{tabular}{llrrrrl}
@@ -153,23 +123,22 @@ investigação:
 \end{itemize}
 
 A Figura~\ref{fig:dataset-landscape} situa os 18 conjuntos no plano
-tamanho~$\times$~dimensionalidade, evidenciando a cobertura obtida.
+tamanho~$\times$~dimensionalidade, com ambos os eixos em escala logarítmica
+e cores por tipo de tarefa, evidenciando a cobertura obtida: a dispersão sem
+aglomeração em um único quadrante é a condição estrutural para a análise
+condicional da QP1.
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.85\textwidth]{images/dataset_landscape.pdf}
-  \caption[Paisagem dos 18 conjuntos: amostras $\times$ atributos]{\textbf{O benchmark cobre três ordens de grandeza em amostras e
-  mais de uma ordem em atributos.} Cada ponto é um conjunto de dados,
-  posicionado pelo número de amostras (eixo vertical, escala logarítmica) e
-  de atributos (eixo horizontal, escala logarítmica), colorido pelo tipo de
-  tarefa (binária, multiclasse, regressão). A dispersão sem aglomeração em
-  um único quadrante é a condição estrutural para a análise condicional da
-  QP1. Rótulos internos da figura em inglês e decimais com ponto (figura canônica do \emph{benchmark}); eixos e leitura descritos nesta legenda. Fonte: \texttt{results/figures/dataset\_landscape.pdf}, gerado a
-  partir de \texttt{configs/datasets.yaml}.}
+  \caption{Paisagem dos 18 conjuntos de dados no plano amostras $\times$
+  atributos (rótulos internos da figura em inglês). Fonte:
+  \texttt{results/figures/dataset\_landscape.pdf}, gerado a partir de
+  \texttt{configs/datasets.yaml}.}
   \label{fig:dataset-landscape}
 \end{figure}
 
-\paragraph{Teto de 100~mil amostras.} Conjuntos com mais de 100~mil amostras
+Conjuntos com mais de 100~mil amostras
 (\texttt{covertype}, \texttt{year\_prediction},
 \texttt{give\_me\_some\_credit}) são subamostrados de forma estratificada
 para 100~mil amostras \emph{antes de qualquer particionamento}. A prática é
@@ -183,7 +152,7 @@ entre famílias permanece aberta. A integridade de cada conjunto é registrada
 por \emph{hash} SHA-256 em cada experimento, o que permite detectar qualquer
 alteração silenciosa dos dados entre execuções.
 
-\paragraph{Declaração sobre os dados.} Todos os conjuntos são públicos e
+Quanto à proveniência dos dados, todos os conjuntos são públicos e
 obtidos pelo OpenML por identificador numérico e versão fixados em
 configuração; nenhum dado pessoal ou sensível é processado além de sua forma
 pública. Um erro de rotulagem descoberto durante o estudo --- a chave de
@@ -204,9 +173,9 @@ proveniência de cada implementação.
 
 \begin{table}[htbp]
 \centering
-\caption[Os 14 modelos por família e proveniência]{Os 14 modelos do benchmark, por família, com a proveniência de cada
-implementação. ``Própria'' indica reimplementação a partir do artigo
-original, motivada pela ausência de pacote maduro.}
+\caption{Os 14 modelos do benchmark, por família, com a proveniência de
+cada implementação (``própria'' indica reimplementação a partir do artigo
+original).}
 \label{tab:modelos}
 \small
 \begin{tabular}{llll}
@@ -287,19 +256,16 @@ Seção~\ref{sec:met-estatistica}.
 \label{sec:met-protocolo}
 
 A Figura~\ref{fig:protocolo} resume o protocolo de avaliação, cujos
-componentes são justificados a seguir.
+componentes são justificados a seguir; no diagrama, as caixas sombreadas
+marcam os dados e a etapa que nenhum estágio de seleção observa.
 
 \begin{figure}[htbp]
 \centering
 % Diagrama pré-compilado (fonte editável: tikz-src/tikz-cap4-1.tex;
 % recompilar com: tectonic tikz-src/tikz-cap4-1.tex && mv tikz-cap4-1.pdf images/)
 \includegraphics{images/tikz-cap4-1.pdf}
-\caption[Protocolo experimental: \emph{hold-out} e validação aninhada]{\textbf{Separação estrita entre seleção e medição.} O
-\emph{hold-out} de 20\% é separado antes de qualquer validação cruzada e só
-é tocado uma única vez, na avaliação final; a seleção de hiperparâmetros
-ocorre exclusivamente no laço interno da validação cruzada aninhada, sobre a
-partição de desenvolvimento. Caixas sombreadas marcam os dados e a etapa que
-nenhum estágio de seleção observa.}
+\caption{Protocolo experimental: \emph{hold-out} prévio de 20\% e validação
+cruzada aninhada (seleção de hiperparâmetros restrita ao laço interno).}
 \label{fig:protocolo}
 \end{figure}
 
@@ -395,8 +361,8 @@ sensível à qualidade probabilística do modelo; as secundárias cobrem os
 
 \begin{table}[htbp]
 \centering
-\caption[Métricas por tipo de tarefa]{Métricas por tipo de tarefa. Setas indicam a direção de otimização.
-A acurácia é reportada por convenção, mas nunca fundamenta conclusões.}
+\caption{Métricas por tipo de tarefa (setas indicam a direção de
+otimização).}
 \label{tab:metricas}
 \small
 \begin{tabular}{llll}
@@ -495,7 +461,7 @@ referência; o registro completo está em
     conservadora.
 \end{enumerate}
 
-\paragraph{Política para células faltantes.} As duas exclusões estruturais
+As duas exclusões estruturais
 (\emph{foundation models} $\times$ \texttt{helena};
 Seção~\ref{sec:met-modelos}) exigem uma política explícita, no espírito da
 prática de benchmarks abertos de declarar falhas em vez de omiti-las:
@@ -708,11 +674,6 @@ conhecidas e as decisões tomadas diante delas.
     separados em vez de agregá-los prematuramente.
 \end{itemize}
 
-\begin{transicao}
 Com o protocolo fixado --- dados, modelos, partições, métricas, testes e
-limitações declaradas ---, o Capítulo~\ref{chap:benchmark} executa-o: 250
-células experimentais organizadas em quatro atos, do empate estatístico da
-do núcleo de 11 modelos à quebra desse empate pela geração 2026, passando pelos
-eixos de custo e pelas reversões condicionais que motivam o arcabouço de
-decisão do Capítulo~\ref{chap:framework}.
-\end{transicao}
+limitações declaradas ---, o Capítulo~\ref{chap:benchmark} executa-o sobre
+as 250 células experimentais da matriz.

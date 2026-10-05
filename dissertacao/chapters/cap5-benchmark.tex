@@ -19,50 +19,18 @@
 \chapter{O Benchmark Multicritério}
 \label{chap:benchmark}
 
-\begin{resumocapitulo}
-Este capítulo apresenta os resultados do benchmark de 14 modelos
-tabulares sobre 18 conjuntos de dados do OpenML (250 das 252 células
-possíveis; duas exclusões estruturais), executado sob o protocolo único do
-Capítulo~\ref{chap:metodologia}. A leitura tem dois movimentos. Primeiro,
-restrito ao núcleo de 11 modelos do estudo (os modelos anteriores à
-extensão de 2026 do benchmark), o topo da acurácia é um empate
-estatístico --- 8 dos 10 modelos não-líderes são praticamente
-equivalentes ao líder sob uma região de equivalência prática (ROPE) de
-$\pm$0,01 de AUC --- e 80\% da variância de rank é intrafamília
-($\eta^2 = 0{,}20$): o modelo específico importa mais que a família, e a
-decisão migra para custo, latência, robustez e estrutura da tarefa.
-Segundo, a geração 2026 quebra o empate: o TabFM, \emph{zero-shot},
-lidera o rank médio nas três tarefas e é o melhor modelo em 13 dos 18
-conjuntos --- ao custo de quatro a cinco ordens de magnitude em latência
-de inferência (43.262 vs.\ 0,33~\us/linha no \texttt{adult}). Como
-resultados complementares, o capítulo registra o teste independente
-desfavorável da família Kolmogorov--Arnold (KAN e TabKAN no último terço
-nas três tarefas) e as reversões condicionais que alimentam o arcabouço
-de decisão do Capítulo~\ref{chap:framework}.
-\end{resumocapitulo}
-
-\publicacaoassociada{Este capítulo corresponde ao primeiro trabalho
-individual do programa (AI-1), cuja versão em formato de artigo está em
-\texttt{latex/ai1/} no repositório do estudo. Todo número citado aqui
-rastreia a um artefato versionado; os caminhos estão registrados em
-comentários na fonte \LaTeX{} do artigo e na tabela mestra
-(\texttt{notebooks/TABELA\_RESULTADOS.md}).}
-
-O capítulo aplica os instrumentos estatísticos apresentados na
-Fundamentação (Capítulo~\ref{chap:fundamentacao}) às estimativas
-produzidas pelo protocolo experimental do
-Capítulo~\ref{chap:metodologia}, e organiza a evidência em quatro atos.
-A Seção~\ref{sec:cap5-cobertura} delimita a cobertura do benchmark e o
-roteiro da exposição. O Ato~I (Seção~\ref{sec:cap5-ato1}) estabelece o
-empate estatístico do núcleo de 11 modelos e disseca sua anatomia; o
-Ato~II (Seção~\ref{sec:cap5-ato2}) mostra que os modelos empatados em
-acurácia diferem em ordens de magnitude nos eixos de custo; o Ato~III
-(Seção~\ref{sec:cap5-ato3}) mapeia as reversões condicionais --- quando a
-estrutura do problema muda o vencedor --- e o eixo do tamanho amostral; o
-Ato~IV (Seção~\ref{sec:cap5-ato4}) registra a quebra do empate pela
-geração 2026 e o resultado negativo das redes de Kolmogorov--Arnold. A
-Seção~\ref{sec:cap5-sintese} encadeia os três fatos que motivam os dois
-capítulos seguintes.
+Este capítulo tem como objetivo apresentar os resultados do benchmark de
+14 modelos tabulares sobre os 18 conjuntos de dados do OpenML, executado
+sob o protocolo único do Capítulo~\ref{chap:metodologia}. A leitura tem
+dois movimentos: no núcleo de 11 modelos anteriores à extensão de 2026, o
+topo da acurácia é um empate estatístico aferido por equivalência prática
+e a maior parte da variância de rank é intrafamília, de modo que a decisão
+migra para custo, latência, robustez e estrutura da tarefa; a geração 2026
+quebra esse empate --- o TabFM, \emph{zero-shot}, lidera o rank médio nas
+três tarefas, ao custo de quatro a cinco ordens de magnitude em latência
+de inferência. Além disso, discutem-se o teste independente desfavorável
+da família Kolmogorov--Arnold e as reversões condicionais que alimentam o
+arcabouço de decisão do Capítulo~\ref{chap:framework}.
 
 \section{Cobertura e organização da evidência}
 \label{sec:cap5-cobertura}
@@ -94,7 +62,6 @@ conjuntos binários, 3 multiclasse e 5 de regressão, o poder estatístico
 por tarefa é limitado, e o texto declara essa limitação em cada ponto em
 que ela é vinculante.
 
-\paragraph{O núcleo de 11 modelos e a extensão de 2026.}
 Ao longo do capítulo, duas grades de comparação coexistem e precisam ser
 distinguidas desde já. O \emph{núcleo de 11 modelos} do estudo reúne os
 modelos anteriores à extensão de 2026 do benchmark: os três GBDTs
@@ -109,7 +76,6 @@ vence'' \citep{grinsztajn2022,mcelfresh2023} foi formulada e é sobre ele
 que o empate se estabelece; o Ato~IV lê a grade completa e mostra o que a
 extensão muda.
 
-\paragraph{O protocolo em uma frase (e suas assimetrias declaradas).}
 Para a leitura autocontida deste capítulo, vale recapitular o essencial
 do Capítulo~\ref{chap:metodologia}: validação cruzada aninhada ($5$
 folds externos $\times$ $3$ internos, com hiperparâmetros selecionados
@@ -131,8 +97,6 @@ dados.
 \section{Ato I --- o empate estatístico do núcleo de 11 modelos}
 \label{sec:cap5-ato1}
 
-\paragraph{O teste global rejeita a igualdade; o \emph{post-hoc} não
-separa o topo.}
 Restrita ao núcleo de 11 modelos, a classificação binária ($N{=}10$
 conjuntos) exibe um topo estatisticamente indistinguível. O teste
 omnibus rejeita a igualdade global de ranks (Friedman
@@ -142,25 +106,21 @@ em algum lugar da grade --- mas o post-hoc de Nemenyi
 \citep{demsar2006} não separa o pelotão superior: os modelos do topo
 caem dentro de uma mesma distância crítica. A
 Figura~\ref{fig:cap5-cd} apresenta o diagrama de distância crítica, o
-instrumento visual canônico dessa análise, aqui exibido já sobre a grade
-completa de 14 modelos para evitar duplicação de figura; as estatísticas
-do Ato~I são computadas sobre a restrição aos 11, cuja ordem relativa o
-diagrama preserva.
+instrumento visual canônico dessa análise, no qual o eixo é o rank médio
+(menor é melhor) e cada barra horizontal conecta um grupo de modelos a
+distância menor que o CD --- portanto estatisticamente inseparável; a
+largura dessas barras é a forma visual da cautela sobre o CD largo
+discutida na Seção~\ref{sec:cap5-ato4}. O diagrama é exibido já sobre a
+grade completa de 14 modelos para evitar duplicação de figura; as
+estatísticas do Ato~I são computadas sobre a restrição aos 11, cuja ordem
+relativa o diagrama preserva.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\linewidth]{images/cd_diagram_binary.pdf}
-\caption[Diagrama de distância crítica (Nemenyi) --- classificação
-binária]{\textbf{O post-hoc não separa o pelotão superior: as barras
-horizontais conectam grupos estatisticamente inseparáveis, e elas são
-largas.} Diagrama de distância crítica (Nemenyi) para a classificação
-binária, todos os 14 modelos ($N{=}10$ conjuntos, CD $= 6{,}27$). O eixo
-é o rank médio (menor é melhor); modelos a uma distância menor que a
-barra CD não são estatisticamente separáveis, e cada barra horizontal na
-parte inferior conecta um grupo inseparável --- a largura dessas barras é
-a forma visual da cautela sobre o CD largo discutida na
-Seção~\ref{sec:cap5-ato4}. As estatísticas do Ato~I no texto restringem-se
-ao núcleo de 11 modelos. Rótulos internos da figura em inglês e decimais com ponto (figura canônica do \emph{benchmark}); eixos e leitura descritos nesta legenda. Fonte:
+\caption{Diagrama de distância crítica (Nemenyi) para a classificação
+binária, grade completa de 14 modelos ($N{=}10$ conjuntos, CD $= 6{,}27$;
+rótulos internos da figura em inglês). Fonte:
 \texttt{latex/ai1/figures/cd\_diagram\_binary.pdf}.}
 \label{fig:cap5-cd}
 \end{figure}
@@ -172,8 +132,6 @@ pode significar apenas ``sem poder para separar''. É exatamente por isso
 que o protocolo pré-registrou instrumentos mais finos, apresentados no
 Capítulo~\ref{chap:fundamentacao} e aplicados a seguir.
 
-\paragraph{A leitura bayesiana: equivalência prática, não ausência de
-poder.}
 O teste bayesiano \emph{signed-rank} com região de equivalência prática
 (ROPE) \citep{benavoli2017} responde à pergunta que o frequentista não
 alcança: qual a probabilidade de a diferença entre dois modelos ser
@@ -190,16 +148,14 @@ estrito de 0,005, com o CatBoost no limite (0,54). O empate do topo,
 portanto, não é um artefato de baixo poder: é equivalência prática
 positivamente aferida.
 
-\achado{5.1}{No núcleo de 11 modelos, o topo da classificação binária é um
+\emph{No núcleo de 11 modelos, o topo da classificação binária é um
 empate estatístico: 8 dos 10 modelos não-líderes são praticamente
 equivalentes ao líder sob ROPE de $\pm$0,01 de AUC, e a conclusão
-sobrevive à variação do limiar.}
-O omnibus rejeita a igualdade global, mas o post-hoc não separa o
+sobrevive à variação do limiar.} O omnibus rejeita a igualdade global, mas o post-hoc não separa o
 pelotão superior e o instrumento bayesiano declara equivalência prática
 --- a máxima ``boosting sempre vence'' não encontra, nessa geração,
 margem de acurácia que a sustente.
 
-\paragraph{O escopo do empate: onde há poder para afirmá-lo.}
 Uma delimitação honesta antes de prosseguir: o empate é estabelecido na
 classificação binária, a única tarefa com $N$ suficiente ($N{=}10$) para
 que os instrumentos operem com poder útil. Na regressão, $N{=}5$ impõe
@@ -207,10 +163,9 @@ um piso combinatório ao p-valor do teste de Wilcoxon pareado (0,0625 ---
 nenhuma comparação pode cruzar o limiar convencional de 5\% ali, por
 aritmética, não por ausência de efeito); na multiclasse, $N{=}3$ reduz
 qualquer análise ao plano descritivo. Essas limitações são declaradas em
-cada seção em que se tornam vinculantes, e nenhum achado numerado deste
+cada seção em que se tornam vinculantes, e nenhuma conclusão central deste
 capítulo depende de significância em tarefa sem poder para aferi-la.
 
-\paragraph{A anatomia do empate: a família é uma abstração fraca.}
 Se o topo empata, resta perguntar o que, afinal, explica a variação de
 desempenho que existe. A decomposição de variância de ranks por família
 responde: $\eta^2 = 0{,}20$ --- apenas 20\% da variância de rank é
@@ -223,33 +178,28 @@ núcleo (3 GBDTs, 7 DL, 1 \emph{foundation model}), essa partição é mecanicam
 conservadora --- ainda assim, a ordem de grandeza da razão
 intra/entre-famílias sustenta a conclusão qualitativa.
 
-\achado{5.2}{Oitenta por cento da variância de rank é intrafamília
+\emph{Oitenta por cento da variância de rank é intrafamília
 ($\eta^2 = 0{,}20$): escolher bem o modelo dentro da família importa mais
-do que escolher a família.}
-Esse achado reorienta a pergunta prática de ``qual família?'' para ``qual
+do que escolher a família.} Esse achado reorienta a pergunta prática de ``qual família?'' para ``qual
 modelo, sob quais restrições?'' --- a semente do arcabouço do
 Capítulo~\ref{chap:framework}.
 
-\paragraph{O que o agregado esconde: a visão por conjunto.}
 O diagrama de distância crítica e o $\eta^2$ operam sobre ranks
 agregados; nenhum dos dois mostra as magnitudes absolutas nem onde,
 conjunto a conjunto, as diferenças moram. A
 Figura~\ref{fig:cap5-heatmap} complementa essa lacuna com o mapa de calor
-da classificação.
+da classificação: a métrica primária por modelo (colunas) e conjunto
+(linhas) --- ROC-AUC nas binárias (maior é melhor) e log-loss nas
+multiclasse (menor é melhor) ---, de modo que as duas métricas convivem
+na mesma grade e a comparação válida é dentro de cada linha, nunca entre
+linhas.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{images/heatmap_classification.pdf}
-\caption[Mapa de calor da classificação: métrica por modelo e
-conjunto]{\textbf{As margens absolutas no topo são pequenas --- em vários
-conjuntos binários, a diferença entre o melhor e a mediana dos modelos
-está na segunda casa decimal de AUC.} Métrica primária por modelo
-(colunas) e conjunto (linhas): ROC-AUC nas binárias (maior é melhor) e
-log-loss nas multiclasse (menor é melhor) --- as duas métricas convivem
-na mesma grade, de modo que a comparação válida é dentro de cada linha,
-nunca entre linhas. As células vazias na linha \texttt{helena} são as
-duas exclusões estruturais (TabPFN e TabFM, 100 classes acima do limite
-arquitetural). Rótulos internos da figura em inglês e decimais com ponto (figura canônica do \emph{benchmark}); eixos e leitura descritos nesta legenda. Fonte:
+\caption{Mapa de calor da classificação: métrica primária por modelo
+(colunas) e conjunto (linhas); células vazias em \texttt{helena} são as
+duas exclusões estruturais (rótulos internos da figura em inglês). Fonte:
 \texttt{results/figures/heatmap\_classification.pdf}.}
 \label{fig:cap5-heatmap}
 \end{figure}
@@ -263,7 +213,6 @@ reversões condicionais do Ato~III. A ressalva permanece: valores de
 \emph{hold-out} em uma única partição fixa não carregam, sozinhos, significância
 --- eles ilustram; a inferência vem dos testes pareados sobre os folds.
 
-\paragraph{O único sinal robusto do desempenho bruto está no fundo.}
 Enquanto o topo empata, o fundo não: o TabNet \citep{arik2021} é
 consistentemente o pior modelo da geração do núcleo, com ranks médios de
 11,8 (binária), 11,7 (multiclasse) e 11,4 (regressão) na grade completa.
@@ -281,7 +230,6 @@ seção percorre os três eixos de custo medidos pelo protocolo (tempo de
 treino, custo de ajuste de hiperparâmetros e latência de inferência) e os
 cruza com o desempenho na fronteira de Pareto.
 
-\paragraph{Treino: duas ordens e meia de magnitude.}
 O tempo de treino mediano varia cerca de $300\times$ dentro da grade:
 LightGBM e XGBoost ajustam o modelo final em ${\sim}0{,}7$~s, enquanto
 SAINT e STab consomem ${\sim}200$~s por ajuste --- e a diferença se
@@ -292,7 +240,6 @@ do TabPFN 1,35~s, com custo de ajuste \textbf{zero} --- não há busca de
 hiperparâmetros a pagar. Essa inversão, cujo outro lado aparece já no
 próximo parágrafo, é o fio que costura o capítulo.
 
-\paragraph{Ajuste de hiperparâmetros: o custo escondido.}
 O segundo eixo é o custo total do ajuste de hiperparâmetros, que o tempo
 de treino de um único ajuste subestima. Nas medianas entre conjuntos, os
 GBDTs pagam de 106~s (LightGBM) a 648~s (CatBoost) pelo ciclo completo de
@@ -303,28 +250,20 @@ sair do empate. Os \emph{foundation models} pagam zero. Esse eixo raramente
 aparece nos benchmarks da literatura, mas é o que o praticante paga a
 cada reajuste do modelo em produção.
 
-\paragraph{Inferência: cinco ordens de magnitude.}
 A latência de inferência é o eixo mais dramático do benchmark. A
 Figura~\ref{fig:cap5-latencia} apresenta a medição completa, feita sob
-protocolo idêntico para os 14 modelos: \us{} por linha, mediana de 5
-passadas sobre o \emph{hold-out} completo do \texttt{adult}, cada modelo em seu
+protocolo idêntico para os 14 modelos: \us{} por linha (em escala
+logarítmica na figura; menor é melhor), mediana de 5 passadas sobre o
+\emph{hold-out} completo do \texttt{adult}, cada modelo em seu
 dispositivo natural (GBDTs em CPU; modelos profundos e \emph{foundation models}
 em GPU).
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.95\linewidth]{images/inference_time.pdf}
-\caption[Latência de inferência no \texttt{adult} (\us/linha, escala
-logarítmica)]{\textbf{A latência de inferência atravessa cinco ordens de
-magnitude: GBDTs e DL tipo-MLP servem em microssegundos; atenção custa
-dezenas de \us; os paradigmas de inferência pesada custam milhares.}
-Latência em \us{} por linha no \emph{hold-out} do \texttt{adult} (mediana de 5
-passadas, escala logarítmica, menor é melhor), com cores por família.
-Cada modelo roda em seu dispositivo natural (GBDTs em CPU; profundos e
-\emph{foundation models} em GPU), de modo que as razões descrevem o regime de
-serving em lote amortizado em uma máquina declarada --- não a latência
-online de linha única, cujas diferenças são menores. Rótulos internos da figura em inglês e decimais com ponto (figura canônica do \emph{benchmark}); eixos e leitura descritos nesta legenda. Fonte:
-\texttt{results/figures/inference\_time.pdf} (dados em
+\caption{Latência de inferência no \texttt{adult}, em \us{} por linha
+(mediana de 5 passadas, escala logarítmica; rótulos internos da figura em
+inglês). Fonte: \texttt{results/figures/inference\_time.pdf} (dados em
 \texttt{results/latency/latency\_adult.csv}).}
 \label{fig:cap5-latencia}
 \end{figure}
@@ -340,13 +279,12 @@ pertence aos paradigmas de inferência estruturalmente pesada: TabPFN
 7.416, STab 8.645 e TabFM 43.262~\us/linha --- o custo do STab vem da
 inferência bayesiana que calcula a média de 64 passadas estocásticas; o
 dos \emph{foundation models}, de carregar o conjunto de treino como contexto a
-cada predição. A ressalva de regime, dita na legenda, merece repetição
-no corpo: essas razões descrevem o serviço em lote amortizado no
+cada predição. A ressalva de regime merece ênfase: essas razões
+descrevem o serviço em lote amortizado no
 hardware declarado no Capítulo~\ref{chap:metodologia}; o serviço online
 de linha única estreita as diferenças --- mas não as ordens de
 magnitude.
 
-\paragraph{O cruzamento: a fronteira de Pareto.}
 Nenhum dos eixos isolados decide; o instrumento de decisão é o
 cruzamento desempenho $\times$ custo. Sobre rank médio $\times$ custo
 --- sendo o rank o instrumento primário de comparação do estudo --- o
@@ -357,22 +295,18 @@ rank, o CatBoost também entra na fronteira --- e, no eixo de latência, o
 TabPFN sai dela); \textbf{todo o
 aprendizado profundo clássico é dominado} em ambos os cruzamentos. A
 Figura~\ref{fig:cap5-pareto} apresenta o retrato completo, já com os 14
-modelos.
+modelos, no plano rank binário médio $\times$ tempo mediano de treino
+(escala logarítmica; o eixo de rank é invertido, de modo que
+acima-à-esquerda é melhor); o ponto estrelado marca o Pareto-ótimo da
+grade completa (TabFM), e as comparações sobre o eixo de latência de
+inferência são as reportadas acima.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.92\linewidth]{images/pareto_binary.pdf}
-\caption[Fronteira de Pareto: rank binário médio vs.\ tempo de
-treino]{\textbf{Na grade completa, o TabFM toma a fronteira
-treino-desempenho sozinho: é simultaneamente o ajuste mais barato e o
-melhor rank.} Rank binário médio $\times$ tempo mediano de treino sobre
-os conjuntos binários (escala logarítmica; o eixo de rank é invertido, de
-modo que acima-à-esquerda é melhor), todos os 14 modelos. O ponto
-estrelado é Pareto-ótimo sobre a grade completa (TabFM); a fronteira
-\{TabPFN, XGBoost, LightGBM\} citada no texto é a restrição ao núcleo de
-11 modelos. As comparações sobre o eixo de latência de inferência são
-reportadas no texto. Rótulos internos da figura em inglês e decimais com ponto (figura canônica do \emph{benchmark}); eixos e leitura descritos nesta legenda. Fonte:
-\texttt{latex/ai1/figures/pareto\_binary.pdf}.}
+\caption{Fronteira de Pareto: rank binário médio \emph{versus} tempo
+mediano de treino, grade completa de 14 modelos (rótulos internos da
+figura em inglês). Fonte: \texttt{latex/ai1/figures/pareto\_binary.pdf}.}
 \label{fig:cap5-pareto}
 \end{figure}
 
@@ -386,12 +320,12 @@ eixo de restrições do arcabouço de decisão
 (Capítulo~\ref{chap:framework}) quanto a pergunta da destilação
 (Capítulo~\ref{chap:destilacao}): quanto desse preço é removível?
 
-\achado{5.3}{Modelos praticamente equivalentes em acurácia diferem em
+\emph{Modelos praticamente equivalentes em acurácia diferem em
 ${\sim}300\times$ no tempo de treino e em cinco ordens de magnitude na
 latência de inferência; no núcleo de 11, a fronteira de Pareto
 rank~$\times$~custo é \{TabPFN, XGBoost, LightGBM\} no eixo de treino ---
-e todo o aprendizado profundo clássico é dominado.}
-Quando o desempenho empata, o custo decide --- e o custo não empata.
+e todo o aprendizado profundo clássico é dominado.} Quando o desempenho
+empata, o custo decide --- e o custo não empata.
 
 \section{Ato III --- reversões condicionais e o eixo do tamanho}
 \label{sec:cap5-ato3}
@@ -401,43 +335,40 @@ problemas sejam iguais. Este ato condiciona os resultados à estrutura da
 tarefa e ao tamanho amostral, e encontra reversões reais --- a matéria-prima
 das perguntas de restrição do Capítulo~\ref{chap:framework}.
 
-\paragraph{Multiclasse: o DL recente assume o topo clássico.}
 Na classificação multiclasse, os modelos profundos da geração mais
 recente (STab e TabM, ambos com rank médio 3,67 na grade completa) tomam
 o topo clássico dos GBDTs (XGBoost, o melhor deles, fica em 6,0). A
 ressalva de poder é vinculante e repetida sempre que a multiclasse
 aparece: com $N{=}3$ conjuntos, a análise é \textbf{descritiva} --- não
-há teste com poder útil sobre três pontos --- e por isso nenhum achado
-numerado se apoia exclusivamente nela.
+há teste com poder útil sobre três pontos --- e por isso nenhuma conclusão
+central se apoia exclusivamente nela.
 
-\paragraph{Desbalanceamento severo: vantagem relativa dos GBDTs.}
 A segunda reversão aparece ao estratificar os conjuntos de classificação
 pela razão de desbalanceamento. A Figura~\ref{fig:cap5-imbalance}
-apresenta os ranks médios agregados por família em três faixas de
-severidade.
+apresenta os ranks médios agregados por família (menor é melhor; eixo
+invertido na figura) em três faixas de severidade da razão
+majoritária/minoritária: leve ($<$2:1), moderada (2--5:1) e severa
+($\geq$5:1).
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\linewidth]{images/imbalance_robustness.png}
-\caption[Robustez ao desbalanceamento: rank por família e faixa de
-severidade]{\textbf{Conforme o desbalanceamento se agrava, os GBDTs
-melhoram seu rank relativo e o aprendizado profundo clássico piora; os
-\emph{foundation models} permanecem à frente em todas as faixas.} Rank médio
-agregado por família (menor é melhor; eixo invertido) nos conjuntos de
-classificação, estratificados pela razão de desbalanceamento
-majoritária/minoritária: leve ($<$2:1), moderada (2--5:1) e severa
-($\geq$5:1). Ressalva: com poucos conjuntos por faixa, a figura é
-descritiva --- ela indica direção de tendência, não significância.
-Rótulos internos da figura em inglês e decimais com ponto (figura canônica do \emph{benchmark}); eixos e leitura descritos nesta legenda. O subtítulo embutido na figura (``$\sim$1000x+ slower to serve'') é um arredondamento editorial conservador da geração dela; os fatores medidos são os do texto (TabPFN 22.473$\times$, TabFM 131.097$\times$). Fonte: \texttt{results/figures/imbalance\_robustness.png}
+\caption{Robustez ao desbalanceamento: rank médio agregado por família e
+faixa de severidade nos conjuntos de classificação (rótulos internos da
+figura em inglês). Fonte: \texttt{results/figures/imbalance\_robustness.png}
 (\texttt{notebooks/07\_segmented\_robustness.ipynb}).}
 \label{fig:cap5-imbalance}
 \end{figure}
 
 A tendência é monotônica e na direção que a intuição de praticantes
 sugere --- árvores lidam melhor com classes raras do que redes treinadas
-por gradiente sobre perda média --- mas a ressalva da legenda é parte do
+por gradiente sobre perda média --- mas uma ressalva é parte do
 resultado: com poucos conjuntos por faixa, trata-se de direção
-descritiva, não de teste. Duas observações completam o quadro
+descritiva, não de teste. Registre-se ainda que o subtítulo embutido na
+figura (``$\sim$1000x+ slower to serve'') é um arredondamento editorial
+conservador da geração dela; os fatores medidos são os reportados neste
+capítulo (TabPFN 22.473$\times$, TabFM 131.097$\times$). Duas observações
+completam o quadro
 condicional: no extremo de cardinalidade categórica, a codificação
 one-hot penaliza os modelos de atenção (o caso
 \texttt{amazon\_employee} visível na Figura~\ref{fig:cap5-heatmap}); e o
@@ -445,26 +376,21 @@ TabPFN combina, dentro do núcleo, o melhor rank médio com o melhor
 pior-caso --- é o modelo que mais raramente falha de forma catastrófica,
 um atributo de robustez que rank médio sozinho não captura.
 
-\paragraph{O eixo do tamanho: curvas de aprendizado.}
 Nenhuma das análises anteriores responde à pergunta mais frequente do
 praticante: ``com \emph{meu} volume de dados, quem vence?''. As curvas
 de aprendizado --- 6 modelos $\times$ 5 conjuntos $\times$ 3 sementes,
 varrendo de 500 amostras ao \emph{pool} completo --- dão forma a esse eixo. A
-Figura~\ref{fig:cap5-curvas} apresenta a varredura completa.
+Figura~\ref{fig:cap5-curvas} apresenta a varredura completa: cada painel
+nomeia sua métrica e direção, as bandas são $\pm$1 desvio-padrão sobre as
+sementes, e um cruzamento é o ponto em que a curva de uma família cruza
+permanentemente a da outra.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{images/learning_curves.pdf}
-\caption[Curvas de aprendizado: 6 modelos, 5 conjuntos, 500 amostras ao
-pool completo]{\textbf{O cruzamento de liderança GBDT$\leftrightarrow$DL
-é real, mas específico por conjunto --- e o TabPFN lidera o regime de
-poucos dados em todos os cinco painéis.} Curvas de aprendizado (6
-modelos $\times$ 5 conjuntos $\times$ 3 sementes, de 500 amostras ao \emph{pool}
-completo). Cada painel nomeia sua métrica e direção ($\uparrow$ maior é
-melhor; $\downarrow$ menor, escala logarítmica); as bandas são $\pm$1
-desvio-padrão sobre as sementes. Um cruzamento é o ponto em que a curva
-de uma família cruza permanentemente a da outra. Rótulos internos da figura em inglês e decimais com ponto (figura canônica do \emph{benchmark}); eixos e leitura descritos nesta legenda. Fonte:
-\texttt{latex/ai1/figures/learning\_curves.pdf}
+\caption{Curvas de aprendizado de 6 modelos em 5 conjuntos, de 500
+amostras ao \emph{pool} completo (3 sementes; rótulos internos da figura
+em inglês). Fonte: \texttt{latex/ai1/figures/learning\_curves.pdf}
 (\texttt{notebooks/10\_learning\_curves.ipynb}).}
 \label{fig:cap5-curvas}
 \end{figure}
@@ -484,20 +410,19 @@ a quantificação do nicho de poucos dados do paradigma \emph{zero-shot}.
 Terceira, a ressalva: a varredura cobre 6 dos 14 modelos e 5 dos 18
 conjuntos; ela qualifica o eixo do tamanho, não o reordena.
 
-\achado{5.4}{A melhor família depende da estrutura do problema --- o DL
+\emph{A melhor família depende da estrutura do problema --- o DL
 recente toma o topo multiclasse (descritivo), os GBDTs ganham vantagem
 relativa sob desbalanceamento severo, o one-hot penaliza a atenção no
 extremo categórico --- e o cruzamento GBDT$\leftrightarrow$DL por
 tamanho é real mas específico por conjunto, com o TabPFN dominando o
-regime $n \leq 4.000$ em todos os conjuntos varridos.}
-As reversões não restauram a máxima de uma família vencedora: elas
+regime $n \leq 4.000$ em todos os conjuntos varridos.} As reversões não
+restauram a máxima de uma família vencedora: elas
 mostram que a resposta certa é condicional --- e condições verificáveis
 a priori são exatamente o que um arcabouço de decisão pode codificar.
 
 \section{Ato IV --- a quebra do empate: a geração 2026}
 \label{sec:cap5-ato4}
 
-\paragraph{A entrada do TabFM reorganiza a narrativa.}
 A expansão para a grade completa de 14 modelos muda o retrato. O TabFM
 --- \emph{foundation model} lançado em junho de 2026, avaliado aqui
 \emph{zero-shot}, sem qualquer ajuste por conjunto --- lidera o rank
@@ -505,20 +430,22 @@ médio \textbf{nas três tarefas}: 2,7 na binária, 1,0 na multiclasse
 (pontuação perfeita sobre seus dois conjuntos elegíveis;
 \texttt{helena} é exclusão estrutural) e 1,2 na regressão. É o melhor
 modelo absoluto em \textbf{13 dos 18 conjuntos}, participando de 17. A
-Tabela~\ref{tab:cap5-ranks} resume os ranks por tarefa e a
-Figura~\ref{fig:cap5-ranks} apresenta o retrato visual.
+Tabela~\ref{tab:cap5-ranks} resume os ranks por tarefa; a tabela mestra
+completa, com a métrica primária de cada modelo em cada um dos 18
+conjuntos, está no Apêndice~\ref{app:tabelas}. A
+Figura~\ref{fig:cap5-ranks} apresenta o retrato visual, em que os painéis
+de binária e regressão cobrem os 14 modelos e o painel multiclasse mostra
+os 12 modelos avaliados nos três conjuntos multiclasse, rankeados dentro
+desse subconjunto --- e por isso não diretamente comparável aos ranks de
+14 modelos da tabela, em que os \emph{foundation models} (excluídos no
+\texttt{helena}) são rankeados.
 
 \begin{table}[htbp]
 \centering
-\caption[Rank médio por tarefa --- geração 2026 vs.\ referências]{Rank
-médio por tarefa --- geração 2026 vs.\ referências ($k{=}14$ modelos;
-binária $N{=}10$, multiclasse $N{=}3$, regressão $N{=}5$; menor é melhor,
-\textbf{negrito} = melhor da coluna). Os ranks multiclasse de TabFM e
-TabPFN são médias sobre os 2 conjuntos excluindo \texttt{helena}
-(exclusão estrutural). A tabela mestra completa, com a métrica primária
-de cada modelo em cada um dos 18 conjuntos, está no
-Apêndice~\ref{app:tabelas}. Fonte:
-\texttt{notebooks/TABELA\_RESULTADOS.md}.}
+\caption{Rank médio por tarefa, geração 2026 \emph{versus} referências
+($k{=}14$ modelos; menor é melhor; \textbf{negrito} = melhor da coluna;
+ranks multiclasse dos \emph{foundation models} excluem \texttt{helena}).
+Fonte: \texttt{notebooks/TABELA\_RESULTADOS.md}.}
 \label{tab:cap5-ranks}
 \begin{tabular}{lccc}
 \toprule
@@ -536,15 +463,9 @@ TabKAN              & 11,4         & 13,3          & 11,8 \\
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.92\linewidth]{images/average_ranks.pdf}
-\caption[Ranks médios por tarefa, grade completa]{\textbf{A geração 2026
-(TabFM) separa-se do pelotão nos painéis de binária e regressão; as KANs
-ocupam o último terço em todos.} Ranks médios por tarefa. Os painéis de
-binária e regressão cobrem os 14 modelos; o painel multiclasse mostra os
-12 modelos avaliados nos três conjuntos multiclasse, rankeados dentro
-desse subconjunto --- e por isso não é diretamente comparável aos ranks
-de 14 modelos da Tabela~\ref{tab:cap5-ranks}, em que os foundation
-models (excluídos no \texttt{helena}) são rankeados. Rótulos internos da figura em inglês e decimais com ponto (figura canônica do \emph{benchmark}); eixos e leitura descritos nesta legenda. Fonte:
-\texttt{latex/ai1/figures/average\_ranks.pdf}.}
+\caption{Ranks médios por tarefa na grade completa (painel multiclasse
+restrito aos 12 modelos avaliados nos três conjuntos; rótulos internos da
+figura em inglês). Fonte: \texttt{latex/ai1/figures/average\_ranks.pdf}.}
 \label{fig:cap5-ranks}
 \end{figure}
 
@@ -575,7 +496,6 @@ apenas no fim de setembro de 2026 \citep{kong2026} e segue sem revisão
 por pares --- os resultados são sobre essa versão, e isso fica
 registrado.
 
-\paragraph{O contrapeso: o líder de acurácia é o pior em latência.}
 O contrapeso é frontal, e é o achado-âncora do programa: o líder de
 acurácia é o pior modelo da grade em latência de serviço ---
 43.262~\us/linha sob o protocolo padrão, $131.097\times$ o XGBoost, e
@@ -584,14 +504,12 @@ conjunto de regressão. A pergunta de decisão mudou de natureza: não é
 mais ``qual família vence?'', e sim ``\emph{a latência do foundation
 model cabe no caso de uso?}''.
 
-\achado{5.5}{A geração 2026 quebra o empate: o TabFM lidera o rank médio
-nas três tarefas e é o melhor modelo em 13 dos 18 conjuntos, \emph{zero-shot}
+\emph{A geração 2026 quebra o empate: o TabFM lidera o rank médio
+nas três tarefas e é o melhor modelo em 13 dos 18 conjuntos, zero-shot
 --- ao preço de quatro a cinco ordens de magnitude em latência de
-serving (43.262 vs.\ 0,33~\us/linha).}
-O empate não tornou o arcabouço multicritério obsoleto; a quebra o
+serving (43.262 vs.\ 0,33~\us/linha).} O empate não tornou o arcabouço multicritério obsoleto; a quebra o
 tornou mais necessário --- e apontou seu único obstáculo.
 
-\paragraph{O resultado negativo das redes de Kolmogorov--Arnold.}
 No mesmo movimento da extensão, o benchmark produz o teste independente
 da família Kolmogorov--Arnold --- e o resultado é o negativo de valor.
 KAN (ranks 11,0/12,0/9,8 em binária/multiclasse/regressão) e TabKAN
@@ -612,12 +530,11 @@ simétrico: ambas habitam o \emph{tier} rápido de latência (2,3--3,1~\us/linha
 e custam VRAM desprezível --- \textbf{o problema é o desempenho, não o
 custo}.
 
-\achado{5.6}{Sob protocolo uniforme, KAN e TabKAN ficam no último terço
+\emph{Sob protocolo uniforme, KAN e TabKAN ficam no último terço
 nas três tarefas --- as alegações dos artigos originais não se
 sustentam no primeiro teste independente contra a grade completa, até
 onde alcança nossa verificação datada --- embora ambas sejam baratas de
-servir.}
-O resultado negativo é reportado com o mesmo estatuto dos positivos,
+servir.} O resultado negativo é reportado com o mesmo estatuto dos positivos,
 conforme o contrato de conduta do estudo
 (Capítulo~\ref{chap:metodologia}): um benchmark neutro existe
 precisamente para que resultados assim venham a público.
@@ -644,16 +561,8 @@ para modelos pequenos. As ressalvas do capítulo acompanham os fatos:
 $N$ pequeno por tarefa (multiclasse descritiva; piso de p-valor na
 regressão), distância crítica larga na grade completa, latências medidas
 no regime de lote amortizado em dispositivo natural, e TabFM avaliado em
-versão fixada anterior à revisão por pares de seu relatório técnico.
-
-\begin{transicao}
-O Capítulo~\ref{chap:framework} converte o fato (i) e as reversões do
-Ato~III em um arcabouço de decisão por restrições --- e o valida por
-\emph{leave-one-dataset-out}, testando tanto a alternativa de roteamento
-por meta-características (resultado negativo) quanto a política fixa
-``\emph{foundation model} primeiro, desviar por restrições'' (resultado
-positivo). O obstáculo que resta a essa política --- as quatro a cinco
-ordens de magnitude de latência do fato (ii) --- é o objeto do
-Capítulo~\ref{chap:destilacao}: quanto dele a destilação remove, e sob
-quais condições verificáveis.
-\end{transicao}
+versão fixada anterior à revisão por pares de seu relatório técnico. O
+Capítulo~\ref{chap:framework} converte esses fatos em um arcabouço de
+decisão por restrições validado por \emph{leave-one-dataset-out}, e o
+obstáculo de latência que resta à política resultante é o objeto do
+Capítulo~\ref{chap:destilacao}.

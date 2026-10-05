@@ -3,10 +3,9 @@
 
 Este apêndice reúne dois tipos de material: as tabelas desagregadas
 das duas ablações da destilação discutidas no
-Capítulo~\ref{chap:destilacao} (Seção~\ref{sec:suple-ablacoes}) e o
-registro de processo do trabalho --- hipóteses que não sobreviveram
-ao contato com os dados e desvios operacionais documentados
-(Seção~\ref{sec:suple-cemiterio}).
+Capítulo~\ref{chap:destilacao} e o registro de processo do trabalho
+--- hipóteses que não sobreviveram ao contato com os dados e desvios
+operacionais documentados.
 
 \section{Ablações da destilação: tabelas desagregadas}
 \label{sec:suple-ablacoes}
@@ -120,7 +119,7 @@ programa de pesquisa exige que resultados negativos sejam reportados e
 que correções sejam feitas por retificação datada, nunca por reescrita
 de histórico; este registro é a consolidação desses episódios.
 
-\paragraph{1. H1 --- destilação pontual.}
+\subsection{H1 --- destilação pontual}
 \emph{O que era:} hipótese pré-registrada
 (\texttt{docs/desenho-experimental-destilacao.md}, §1) de que um aluno
 GBDT destilado reteria $\geq 50\%$ do gap de RMSE do professor em
@@ -140,7 +139,7 @@ se transfere é a distribuição. Registros:
 \texttt{docs/relatorio-ai2.md} (fases 1--2),
 Seções~\ref{sec:destil-ponto} e~\ref{sec:destil-e1}.
 
-\paragraph{2. Cauda pesada como moderador de falha (log-target).}
+\subsection{Cauda pesada como moderador de falha (log-target)}
 \emph{O que era:} com a extensão a $N{=}15$, três das quatro falhas de
 retenção distribucional concentravam-se em alvos de cauda
 pesada/escala de preço; a hipótese viva era que a transformação
@@ -155,7 +154,7 @@ destilar, aplique transformações baratas de alvo. Registros:
 \texttt{docs/relatorio-ai2.md} (fase 6a),
 \texttt{results/distillation/ablation\_logtarget.csv}.
 
-\paragraph{3. Roteamento por meta-características.}
+\subsection{Roteamento por meta-características}
 \emph{O que era:} a promessa, herdada da literatura de
 meta-learning, de que meta-características do conjunto de dados poderiam
 prever a família vencedora --- o arcabouço de decisão seria um
@@ -172,8 +171,8 @@ Capítulo~\ref{chap:framework},
 \texttt{results/aggregated/lodo\_validation.csv} e
 \texttt{lodo\_validation\_14.csv}, \texttt{scripts/lodo\_validation.py}.
 
-\paragraph{4. A claim retratada do OOM ``determinístico'' no
-\texttt{year\_prediction}.}
+\subsection{A claim retratada do OOM ``determinístico'' no
+\texttt{year\_prediction}}
 \emph{O que era:} durante a medição da fronteira de Pareto,
 afirmou-se que o ponto professor TabPFN com contexto de 50~mil linhas no
 \texttt{year\_prediction} era imensurável na GPU de 16~GB por OOM
@@ -192,7 +191,7 @@ commit \texttt{64b410a} (\emph{``ai2: correction --- year@50K WAS
 measurable''}), \texttt{docs/relatorio-ai2.md} (fase 3), comentário em
 \texttt{scripts/pareto\_strategies.py}.
 
-\paragraph{5. Errata \texttt{diamonds}/\texttt{kin8nm}.}
+\subsection{Errata \texttt{diamonds}/\texttt{kin8nm}}
 \emph{O que era:} a entrada \texttt{diamonds} de
 \texttt{configs/datasets.yaml} apontava, desde a criação do projeto,
 para o \texttt{openml\_id} 44980 --- que é o \texttt{kin8nm} (8.192
@@ -216,8 +215,8 @@ sinal de investigação obrigatória). Registro canônico:
 \texttt{docs/errata-diamonds-kin8nm.md}; commits \texttt{d1168fa}
 (erratum) e \texttt{c407ef6} (reexecução das análises).
 
-\paragraph{6. Troca \texttt{year\_prediction} $\to$
-\texttt{cpu\_activity} na figura de calibração.}
+\subsection{Troca \texttt{year\_prediction} $\to$
+\texttt{cpu\_activity} na figura de calibração}
 \emph{O que era:} a figura de calibração da destilação usaria
 \texttt{california\_housing} e \texttt{year\_prediction} como
 exemplos. \emph{O que aconteceu:} a passada do professor com contexto de
