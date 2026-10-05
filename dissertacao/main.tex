@@ -1,0 +1,89 @@
+%% =========================================================================
+%% Dissertação de Mestrado — PPGCC, CIn-UFPE
+%% Template: risethesis (classe do CIn; mesma base das dissertações do
+%% programa — ver blueprint em docs/blueprint-dissertacao.md)
+%% Compilar: pdflatex -> bibtex -> pdflatex x2
+%% =========================================================================
+\documentclass[pt,oneside,onehalfspacing,msc]{risethesis}
+
+\usepackage[brazilian]{babel}
+\usepackage{color}
+\usepackage[table]{xcolor}
+\usepackage{microtype}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{amsmath,amssymb}
+\usepackage{textcomp}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
+
+\newcommand{\us}{\textmu s}
+
+\address{RECIFE}
+\universitypt{Universidade Federal de Pernambuco}
+\universityen{Federal University of Pernambuco}
+\institutept{Centro de Informática}
+\instituteen{Center for Informatics}
+\programpt{Pós-graduação em Ciência da Computação}
+\programen{Graduate Program in Computer Science}
+\majorfieldpt{Ciência da Computação}
+\majorfielden{Computer Science}
+
+\title{Modelos para Dados Tabulares na Era dos Foundation Models:
+um Benchmark Multicritério, um Arcabouço de Decisão Validado e a
+Destilação Distribucional}
+
+\date{2026}
+\author{João Gabriel de Araújo Vasconcelos}
+\adviser{Germano Crispim Vasconcelos}
+
+\begin{document}
+
+\frontpage
+\presentationpage
+
+\begin{fichacatalografica}
+% Folha em branco: a ficha catalográfica é gerada pela biblioteca via
+% SIGAA no depósito (manual SIB/UFPE, procedimento vigente desde 08/2024).
+\end{fichacatalografica}
+
+% Folha de aprovação: elaborada pela secretaria após a defesa, sem
+% assinaturas no depósito (manual SIB/UFPE). Placeholder da banca:
+% [3-4 doutores, >= 1 externo; orientador preside — regimento PPGCC art. 37]
+
+\acknowledgements
+\input{pretext/agradecimentos}
+
+\resumo
+\input{pretext/resumo}
+
+\abstract
+\input{pretext/abstract}
+
+\listoffigures
+\listoftables
+\listofacronyms
+\tableofcontents
+
+\include{chapters/cap1-introducao}
+\include{chapters/cap2-fundamentacao}
+\include{chapters/cap3-trabalhos-relacionados}
+\include{chapters/cap4-metodologia}
+\include{chapters/cap5-benchmark}
+\include{chapters/cap6-framework}
+\include{chapters/cap7-destilacao}
+\include{chapters/cap8-conclusao}
+
+\bibliographystyle{abnt}
+\bibliography{references}
+
+\theappendix
+\include{appendix/apendice-a-tabelas}
+\include{appendix/apendice-b-espacos-busca}
+\include{appendix/apendice-c-suplementares}
+
+\end{document}
