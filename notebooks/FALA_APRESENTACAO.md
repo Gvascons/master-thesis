@@ -2,7 +2,8 @@
 
 > Pra ler falando numa conversa 1-a-1 com o orientador. As marcações
 > *(em itálico)* são dicas de quando abrir a figura — não se lê em voz alta.
-> Números conferidos contra `TABELA_RESULTADOS.md`, o deck e `paper_retention.csv` em 21/07/2026.
+> Números conferidos contra `TABELA_RESULTADOS.md`, o deck e `paper_retention.csv` em 21/07/2026;
+> claims re-alinhadas ao estado auditado dos artigos em 05/10/2026.
 
 ---
 
@@ -17,9 +18,10 @@ estatístico frequentista e bayesiano, quatorze modelos em dezoito datasets. Dos
 quatorze, sete vieram de biblioteca oficial, um da comunidade, um é backbone
 vendorizado com adaptações documentadas, e cinco eu implementei do zero a
 partir dos papers — incluindo os dois novos da família Kolmogorov-Arnold, o KAN
-e o TabKAN. E os dois foundation models: o TabPFN e o TabFM do Google, que saiu
-há três semanas — a gente deve estar entre os primeiros do mundo a medi-lo num
-protocolo neutro.
+e o TabKAN. E os dois foundation models: o TabPFN e o TabFM do Google,
+lançado no fim de junho — fomos dos primeiros do mundo a medi-lo num protocolo
+neutro, e o technical report oficial, que só saiu no fim de setembro, confirmou
+a arquitetura que a gente tinha verificado na unha.
 
 A história agora tem dois movimentos.
 
@@ -51,8 +53,10 @@ integração — sanity check contra o paper, desvios de protocolo documentados 
 no teste independente elas afundaram: meio de tabela na binária, último terço
 nas três tarefas, o TabKAN atrás até do TabNet em multiclasse e regressão. O
 paper delas comparava contra um XGBoost fraco; sob protocolo uniforme, a
-alegação não se sustenta. É resultado negativo, mas é o primeiro teste neutro
-da família que a literatura ganha — isso tem valor.
+alegação não se sustenta. É resultado negativo, mas é o primeiro teste da
+família contra o slate completo — boosting, deep learning e foundation models
+juntos — que a literatura ganha; as avaliações independentes anteriores só
+comparavam KAN com MLP. Isso tem valor.
 
 Segundo, eu validei o framework de decisão de um jeito que ele ainda não tinha
 sido: leave-one-dataset-out. A árvore de meta-features, como preditor, **não**
@@ -80,13 +84,23 @@ resultado. O que saiu: a destilação **pontual** não funciona em escala
 realista — refutei a minha própria hipótese, com dois teachers diferentes. Mas
 a **distribucional** — transferir as curvas de quantis do teacher — funciona:
 positiva em dezesseis dos vinte datasets, retenção mediana de dezenove por
-cento, chegando a um caso em que o aluno *supera* o próprio teacher. E com
-significância nos dois instrumentos: teste de sinal p=0,006, Wilcoxon p=0,045,
-mais setenta por cento de massa posterior no bayesiano. Também descobri quando
+cento, chegando a um caso em que o aluno *supera* o próprio teacher — com a
+honestidade registrada: nesse caso a vantagem absoluta do teacher era pequena,
+então a manchete se apoia no teste de sinal e na mediana, não no caso extremo.
+E com significância nos dois instrumentos: teste de sinal p=0,006, Wilcoxon
+p=0,045, mais setenta por cento de massa posterior no bayesiano. A fronteira
+de custo também ganhou uma leitura elegante: onde a vantagem do teacher é
+grande, destilar é o único jeito de levá-la pra latência de microssegundos;
+onde é pequena, reduzir o ensemble do próprio teacher já resolve — a regra de
+decisão aparece na própria fronteira. Também descobri quando
 NÃO destilar — virou uma regra de decisão prática: transforme o alvo e teste
 um aluno nativo forte primeiro; destile quando a vantagem do teacher
-sobreviver a isso. O preprint está com o draft completo, duas figuras
-validadas, e eu quero submeter até outubro, dentro do cronograma.
+sobreviver a isso. Os dois artigos estão prontos em LaTeX, auditados em
+quatro rodadas — números recomputados dos artefatos, referências todas
+verificadas em fonte primária —, e a checagem de novidade foi refeita agora em
+outubro: um grupo atacou a regressão *pontual* três dias antes da nossa
+varredura, exatamente a fatia que nós refutamos; o recorte distribucional
+segue só nosso. Preprint sai dentro do cronograma.
 
 Resumindo numa frase: a regra de que boosting sempre vence não é falsa — ela
 expirou. Valia até 2025; em 2026 o pré-treino quebrou o empate, o custo virou o

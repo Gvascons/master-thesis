@@ -2,7 +2,8 @@
 
 > **Como usar:** roteiro estruturado seguindo o `00_presentation.ipynb` de
 > cima a baixo. **[FIGURA: nome.png]** = mostrar a imagem (mesmos `show()` do
-> deck). Números em **negrito** conferidos contra os artefatos em 21/07/2026.
+> deck). Números em **negrito** conferidos contra os artefatos em 21/07/2026 e
+> re-conferidos em 05/10/2026 (pós-auditorias 2-4; claims alinhadas aos artigos).
 > Para a versão corrida/informal, ver `FALA_APRESENTACAO.md`.
 
 ---
@@ -23,8 +24,9 @@ em latência. O arcabouço multicritério ficou *mais* necessário, não menos."
 comunidade (TabNet) · 1 vendorizado com adaptações (KAN/efficient-kan) ·
 **5 implementações próprias** (MLP, FT-Transformer, SAINT, STab, TabKAN).
 Reimplementações com *sanity check* contra os papers (TabKAN: 0,91 vs ~0,90
-reportado). TabFM: lançado 30/06/2026, **sem paper peer-reviewed** — citamos
-blog + model card + versão pinada.
+reportado). TabFM: lançado 30/06/2026; **technical report oficial em
+29/09/2026** (arXiv 2609.37959, Kong et al.), ainda sem peer review — versão
+avaliada pinada (v1.0.1), e o report confirma a cabeça de regressão escalar.
 
 ## §2-3 — Protocolo e datasets
 Nested CV 5×3 · Optuna TPE (GBDT 100 / DL 25 trials) · hold-out 20% intocado ·
@@ -48,8 +50,10 @@ estratificação em tudo · 18 datasets (10 bin, 3 multi, 5 reg), 1K-581K, cap
 
 **[FIGURAS: training_time.png, pareto_binary.png, inference_time.png]**
 Treino ~300× de variação; latência ~26.000× (nos 11 originais). Fronteira de
-Pareto: {TabPFN, XGBoost, LightGBM}. A inversão do TabPFN (barato de treinar,
-caro de servir) — que o TabFM leva ao extremo (§6.2).
+Pareto **em rank médio** (instrumento primário; slate de 11): {TabPFN, XGBoost,
+LightGBM} no eixo de treino, {XGBoost, TabPFN} no de latência — @14 o TabFM
+toma a fronteira. A inversão do TabPFN (barato de treinar, caro de servir) —
+que o TabFM leva ao extremo (§6.2).
 
 ## ATO III — Reversões
 
@@ -81,7 +85,8 @@ adult inverte em n≈4000). **TabPFN rank 1,0 em TODOS os datasets em n≤4k.**
 - **KANs: teste independente desfavorável** — último terço nas 3 tarefas;
   contradiz as alegações do paper do TabKAN (baseline sub-tunado é a
   explicação provável); confirma a literatura cética (Yu et al. 2024).
-  Primeiro teste neutro da família, até onde verificamos.
+  Primeiro teste da família contra o slate completo GBDT/DL/TFM em benchmark
+  multicritério (Poeta 2024 e Yu 2024, anteriores, comparam só com MLP).
 - **LODO do framework:** árvore de meta-features NÃO generaliza (hit 0,11 vs
   baseline 0,44); política **"FM primeiro, desvie por restrição"** tem regret
   **mediano 0,000** @14 (era 0,018 @11). O flowchart (constraint-driven) sai
@@ -106,14 +111,19 @@ prediction_agreement.png]** GBDT interpretável por construção; FMs caixa-pret
 ## §10 — Honestidade + AI-2
 
 Caveats: N pequeno (poder), piso do Wilcoxon em N=5 (0,0625 — impossível
-rejeitar), helena 2× excluído, TabFM v1.0.1 sem paper, multiclasse descritivo.
+rejeitar), helena 2× excluído, TabFM v1.0.1 (TR oficial set/2026, sem peer
+review), multiclasse descritivo (ranks dos FMs sobre 2 datasets).
 **AI-2 = destilação distribucional de FMs para regressão — EXECUTADA** (6
 fases, N=20 = pool CTR23 elegível completo). Resultado: pontual refutada
-(4/20); **distribucional positiva em 16/20** (mediana +0,19; born-again no
-pumadyn32nh; sinal p=0,006, Wilcoxon p=0,045, bayesiano P=0,70); regra de
-decisão "quando destilar"; OOF protege calibração (desconfundido); fronteira
-de Pareto 3-estratégias + figura de calibração. Paper draft completo
-(`paper/draft.md`); meta de preprint out/2026 folgada.
+(4/20, dois teachers); **distribucional positiva em 16/20** (mediana +0,19;
+sinal p=0,006, Wilcoxon p=0,045, bayesiano P=0,70 — o born-again do pumadyn32nh
+tem edge absoluto ~0,001: a manchete se apoia no teste de sinal e nos sucessos
+de edge grande); regra de decisão "quando destilar"; OOF protege calibração
+(desconfundido); fronteira destilar × comprimir × **reduzir ensemble** (edge
+pequeno — kin8nm — reduzir ensemble já basta: a regra de decisão na fronteira).
+Artigos AI-1/AI-2 **prontos em LaTeX e auditados em 4 rodadas**; recorte
+distribucional re-verificado aberto em 05/10/2026 (regressão pontual coberta
+por trabalho contemporâneo de 01/10 — reconciliado no artigo).
 
 ---
 
