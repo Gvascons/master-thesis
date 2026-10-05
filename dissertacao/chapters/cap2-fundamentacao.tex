@@ -47,8 +47,7 @@ um extrato bancário, de um prontuário ou de um cadastro de clientes. A
 Tabela~\ref{tab:adult-exemplo} ilustra o formato com linhas no estilo do
 conjunto \texttt{adult}, um clássico da área em que se deseja prever, a
 partir de atributos sociodemográficos de um censo, se a renda anual de uma
-pessoa excede 50 mil dólares \textbf{[REF-NOVA: Kohavi 1996, conjunto
-Adult/Census Income do repositório UCI]}.
+pessoa excede 50 mil dólares \citep{kohavi1996}.
 
 \begin{table}[htb]
 \centering
@@ -129,8 +128,7 @@ Seção~\ref{sec:fund-distribucional} lhe dedica o ferramental próprio.
 
 Uma \emph{árvore de decisão} prediz por meio de uma sequência de perguntas
 sobre os atributos, cada uma com resposta binária, até chegar a uma folha
-que contém a predição \textbf{[REF-NOVA: Breiman, Friedman, Olshen \& Stone
-1984, CART]}. A Figura~\ref{fig:arvore-exemplo} mostra uma árvore pequena,
+que contém a predição \citep{cart1984}. A Figura~\ref{fig:arvore-exemplo} mostra uma árvore pequena,
 de profundidade dois, treinada (ilustrativamente) sobre dados como os da
 Tabela~\ref{tab:adult-exemplo}.
 
@@ -196,8 +194,7 @@ quatro grupos. Se for profunda, torna-se expressiva porém instável:
 memoriza particularidades da amostra de treino, e uma pequena perturbação
 nos dados produz uma árvore muito diferente. Na linguagem clássica da
 decomposição \emph{viés--variância}, árvores rasas sofrem de viés alto e
-árvores profundas, de variância alta \textbf{[REF-NOVA: Hastie, Tibshirani
-\& Friedman 2009, \emph{The Elements of Statistical Learning}]}. Os
+árvores profundas, de variância alta \citep{hastie2009}. Os
 \emph{ensembles} --- comitês de árvores --- atacam cada chifre do dilema
 por um caminho distinto.
 
@@ -207,7 +204,7 @@ seu refinamento mais célebre, as florestas aleatórias, treinam muitas
 reposição e sorteio de atributos por nó) e tiram a média das predições: os
 erros idiossincráticos de cada árvore, aproximadamente independentes,
 cancelam-se na média, e a variância do comitê despenca sem elevar o viés
-\textbf{[REF-NOVA: Breiman 2001, \emph{Random Forests}]}.
+\citep{breiman2001}.
 
 \paragraph{Caminho 2: reduzir o viés em sequência.} O \emph{boosting}
 inverte a lógica: parte de árvores \emph{rasas} (viés alto, variância
@@ -222,8 +219,7 @@ intuição como uma descida de gradiente no espaço de funções: a cada rodada
 $m$, ajusta-se uma árvore $h_m$ ao gradiente negativo da função de perda
 avaliada nas predições correntes (no caso do erro quadrático, aos resíduos
 $y_i - F_{m-1}(x_i)$), e atualiza-se $F_m = F_{m-1} + \nu\, h_m$ com taxa
-de aprendizado $\nu$ pequena \textbf{[REF-NOVA: Friedman 2001,
-\emph{Greedy Function Approximation: A Gradient Boosting Machine}]}. O
+de aprendizado $\nu$ pequena \citep{friedman2001}. O
 corpo do texto permanece verbal de propósito: nenhum resultado desta
 dissertação exige manipular essa formulação.}
 
@@ -299,10 +295,8 @@ $\phi(z) = \max(0, z)$), e a saída da última camada é lida como predição,
 \end{equation}
 seguida de uma \emph{softmax} em classificação. Os parâmetros são ajustados
 por descida de gradiente sobre uma função de perda, com gradientes
-computados por retropropagação \textbf{[REF-NOVA: Rumelhart, Hinton \&
-Williams 1986, retropropagação]}. Em uma frase: com largura suficiente, um
-MLP pode aproximar qualquer função contínua \textbf{[REF-NOVA: Hornik,
-Stinchcombe \& White 1989, aproximação universal]} --- a questão em dados
+computados por retropropagação \citep{rumelhart1986}. Em uma frase: com largura suficiente, um
+MLP pode aproximar qualquer função contínua \citep{hornik1989} --- a questão em dados
 tabulares nunca foi expressividade, e sim se o treinamento encontra, com
 dados finitos e heterogêneos, soluções tão boas quanto as dos GBDTs.
 
@@ -345,8 +339,7 @@ só é possível sobre redes.
 \subsection{Atenção e Transformers}
 
 A segunda linhagem importa o mecanismo que revolucionou o processamento de
-linguagem: a \emph{atenção} \textbf{[REF-NOVA: Vaswani et al. 2017,
-\emph{Attention Is All You Need}]}. Aqui a profundidade matemática se
+linguagem: a \emph{atenção} \citep{vaswani2017}. Aqui a profundidade matemática se
 justifica: metade dos modelos do benchmark e todos os \emph{foundation
 models} da Seção~\ref{sec:fund-fm} são construídos sobre essas equações.
 
@@ -413,20 +406,21 @@ acrescenta à atenção entre colunas uma atenção \emph{entre linhas}
 (\emph{intersample}): ao classificar uma linha, o modelo pode consultar
 outras linhas do lote --- um antecipo, em miniatura, da ideia de usar
 exemplos como contexto que a Seção~\ref{sec:fund-fm} leva ao extremo. O
-\textbf{STab} \citep{stab-ref} completa a linhagem no benchmark
-[VERIFICAR: descrição do STab --- o rascunho-fonte (\texttt{dissertation/}\allowbreak\texttt{cap2-fundamentacao.md}) o descreve como competição estocástica local
-(LWTA) de Voskou et al., mas a entrada \texttt{stab-ref} do
-\texttt{references.bib} aponta para Hajiramezanali et al. 2022,
-aprendizado autossupervisionado para tabelas; conferir qual STab foi
-implementado e alinhar descrição e referência].
+\textbf{STab} \citep{stab-ref} completa a linhagem com um mecanismo
+distinto: em vez de ativações determinísticas, suas camadas usam
+unidades de \emph{competição estocástica local} (LWTA, \emph{local
+winner-takes-all}), em que blocos de neurônios competem e um vencedor é
+sorteado por amostragem Gumbel-softmax diferenciável; na inferência, a
+predição é a média bayesiana de 64 passadas estocásticas. O custo dessa
+inferência por amostragem aparece com destaque no eixo de latência do
+Capítulo~\ref{chap:benchmark}.
 
 \subsection{Redes de Kolmogorov--Arnold}
 
 A terceira linhagem, mais recente, muda o lugar da não-linearidade. O
 teorema da representação de Kolmogorov--Arnold garante que toda função
 contínua de várias variáveis pode ser escrita como composição de somas de
-funções contínuas de \emph{uma} variável \textbf{[REF-NOVA: Kolmogorov 1957
-e Arnold, teorema da representação]}. As \emph{Kolmogorov--Arnold Networks}
+funções contínuas de \emph{uma} variável \citep{kolmogorov1957,arnold1957}. As \emph{Kolmogorov--Arnold Networks}
 (KANs) \citep{kan2024} tomam o teorema como inspiração arquitetural e
 invertem o desenho do MLP: em vez de ativações fixas nos nós e pesos
 escalares nas arestas (Eq.~\ref{eq:mlp-camada}), colocam \emph{funções
@@ -525,13 +519,11 @@ pré-treinamento. As \emph{prior-fitted networks} (PFNs) são pré-treinadas
 em milhões de pequenos conjuntos de dados \emph{sintéticos}, amostrados de
 um prior sobre mecanismos geradores --- tipicamente modelos causais
 estruturais (SCMs): grafos causais aleatórios cujas variáveis se relacionam
-por funções e ruídos sorteados \textbf{[REF-NOVA: Müller et al. 2022,
-\emph{Transformers Can Do Bayesian Inference} / PFNs]}. Em cada tarefa
+por funções e ruídos sorteados \citep{muller2022pfn}. Em cada tarefa
 sintética, a rede vê um contexto rotulado e é treinada a prever os rótulos
 retidos; ao fazê-lo em escala, aprende um algoritmo genérico de inferência:
 a saída do passe direto aproxima a \emph{distribuição preditiva posterior}
-sob o prior sintético, dado o contexto \textbf{[REF-NOVA: Nagler 2023,
-fundamentos estatísticos das PFNs]}. O \textbf{TabPFN} \citep{hollmann2025}
+sob o prior sintético, dado o contexto \citep{nagler2023}. O \textbf{TabPFN} \citep{hollmann2025}
 e suas versões v2/v2.5 \citep{priorlabs2025} estabeleceram o paradigma na
 prática, com um limite nativo de contexto (50 mil linhas na v2.5) herdado
 do custo quadrático da atenção.
@@ -605,8 +597,7 @@ comitê, com perda de fidelidade surpreendentemente pequena;
 moderno. Na direção inversa, \citet{frosst2017} destilam uma rede profunda
 numa árvore de decisão suave em busca de interpretabilidade, e a destilação
 de redes em redes de mesma capacidade (\emph{born-again networks}) revelou
-que até a auto-imitação pode melhorar o aluno \textbf{[REF-NOVA:
-Furlanello et al. 2018, \emph{Born-Again Neural Networks}]}. A lição
+que até a auto-imitação pode melhorar o aluno \citep{furlanello2018}. A lição
 transversal: a destilação é agnóstica ao par professor--aluno; o que se
 transfere é a \emph{função} aprendida, exposta pelas saídas.
 
@@ -764,8 +755,7 @@ condição necessária e não suficiente: um intervalo absurdamente largo cobre
 sempre e não informa nada. Por isso a cobertura é lida junto com a
 \emph{afiação} (\emph{sharpness}) --- a largura média dos intervalos: entre
 modelos igualmente calibrados, o de intervalos mais estreitos é o mais
-informativo \textbf{[REF-NOVA: Gneiting, Balabdaoui \& Raftery 2007,
-paradigma calibração--afiação]}.
+informativo \citep{gneiting2007calib}.
 
 \subsection{Dois \emph{baselines} distribucionais nativos}
 
@@ -776,12 +766,11 @@ forests} (QRF) estendem as florestas aleatórias guardando, em cada folha,
 não a média mas \emph{todos} os valores de treino que ali caem; a
 distribuição preditiva de uma linha nova é a distribuição empírica
 ponderada desses valores, da qual se lê qualquer quantil
-\textbf{[REF-NOVA: Meinshausen 2006, \emph{Quantile Regression Forests}]}.
+\citep{meinshausen2006}.
 O \emph{NGBoost} segue a rota paramétrica: um \emph{gradient boosting} cujas
 saídas são os \emph{parâmetros} de uma distribuição (por exemplo, média e
 variância de uma gaussiana), treinado por gradientes naturais sobre uma
-regra de pontuação própria \textbf{[REF-NOVA: Duan et al. 2020,
-\emph{NGBoost}]}. QRF representa a via não-paramétrica; NGBoost, a
+regra de pontuação própria \citep{duan2020}. QRF representa a via não-paramétrica; NGBoost, a
 paramétrica --- e ambos aparecem como competidores no Capítulo~7.
 
 \section{Comparação estatística de algoritmos}
@@ -817,8 +806,7 @@ escolha.
 
 \paragraph{Friedman: o teste \emph{omnibus}.} O teste de Friedman pergunta
 se as diferenças entre os ranks médios $R_j$ dos $k$ modelos sobre os $N$
-conjuntos são explicáveis pelo acaso \textbf{[REF-NOVA: Friedman 1937,
-teste de ranks de medidas repetidas]}. Sob a hipótese nula de equivalência
+conjuntos são explicáveis pelo acaso \citep{friedman1937}. Sob a hipótese nula de equivalência
 entre todos os modelos, a estatística
 \begin{equation}
   \chi^2_F \;=\; \frac{12N}{k(k+1)}
@@ -833,15 +821,13 @@ Iman--Davenport,
   F_F \;=\; \frac{(N-1)\,\chi^2_F}{N(k-1) - \chi^2_F},
   \label{eq:iman-davenport}
 \end{equation}
-que segue uma distribuição $F$ e rejeita com mais poder \textbf{[REF-NOVA:
-Iman \& Davenport 1980, correção do teste de Friedman]}. Um Friedman
+que segue uma distribuição $F$ e rejeita com mais poder \citep{imandavenport1980}. Um Friedman
 significativo diz apenas que \emph{alguma} diferença existe; localizá-la é
 tarefa dos testes \emph{post-hoc}.
 
 \paragraph{Nemenyi e o diagrama de diferença crítica.} O \emph{post-hoc} de
 Nemenyi compara todos os pares de modelos pelos ranks médios, com controle
-embutido do erro de família \textbf{[REF-NOVA: Nemenyi 1963, comparações
-múltiplas por ranks]}: dois modelos diferem significativamente se seus
+embutido do erro de família \citep{nemenyi1963}: dois modelos diferem significativamente se seus
 ranks médios distam mais que a \emph{diferença crítica}
 \begin{equation}
   \mathrm{CD} \;=\; q_\alpha \sqrt{\frac{k(k+1)}{6N}},
@@ -865,12 +851,11 @@ consequência aritmética esperada, não uma anomalia.
 \paragraph{Wilcoxon pareado com correção de Holm.} Para pares específicos
 de modelos, o teste de postos sinalizados de Wilcoxon é mais poderoso que o
 Nemenyi, porque usa as \emph{magnitudes} das diferenças por conjunto de
-dados, não apenas os ranks globais \textbf{[REF-NOVA: Wilcoxon 1945, teste
-de postos sinalizados]}. Ao testar muitos pares, porém, multiplica-se a
+dados, não apenas os ranks globais \citep{wilcoxon1945}. Ao testar muitos pares, porém, multiplica-se a
 chance de falsos positivos; o procedimento de Holm corrige isso ordenando
 os p-valores e exigindo limiares progressivamente mais frouxos ---
 controle do erro de família menos conservador que a correção de Bonferroni
-simples \textbf{[REF-NOVA: Holm 1979, procedimento sequencial de rejeição]}.
+simples \citep{holm1979}.
 Uma limitação aritmética importa no regime desta dissertação: com $N$
 conjuntos de dados, o menor p-valor bilateral que o Wilcoxon pode produzir
 é $2 \cdot (1/2^N)$ --- com $N = 5$, o piso é $0{,}0625$, e rejeitar a

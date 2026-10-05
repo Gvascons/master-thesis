@@ -401,12 +401,18 @@
 }
 
 @inproceedings{stab-ref,
-  author = {Hajiramezanali, Ehsan and Diamant, Nathaniel and Scalia,
-            Gabriele and Shen, Max W.},
-  title  = {{STab}: Self-supervised Learning for Tabular Data},
-  booktitle = {NeurIPS 2022 Workshop on Table Representation Learning},
-  year   = {2022},
-  note   = {OpenReview: EfR55bFcrcI; workshop paper, non-archival}
+  author = {Voskou, Andreas and Christoforou, Charalambos and Chatzis,
+            Sotirios},
+  title  = {Transformers with Stochastic Competition for Tabular Data
+            Modelling},
+  booktitle = {ICML 2024 Workshop on Structured Probabilistic Inference
+               \& Generative Modeling (SPIGM)},
+  year   = {2024},
+  note   = {arXiv:2407.13238; workshop attribution per OpenReview
+            TfGUqFlhiU. Corrige a citacao anterior (Hajiramezanali et
+            al. 2022, STab homonimo autossupervisionado) — o metodo
+            implementado (LWTA, Gumbel-softmax, media bayesiana N=64)
+            corresponde a este paper (verificado 06/10/2026)}
 }
 
 @inproceedings{tabflex2025,
@@ -514,4 +520,228 @@
                (FMSD)},
   year   = {2026},
   note   = {arXiv:2607.27546}
+}
+
+@inproceedings{kohavi1996,
+  author    = {Kohavi, Ron},
+  title     = {Scaling Up the Accuracy of Naive-{B}ayes Classifiers: A
+               Decision-Tree Hybrid},
+  booktitle = {Proceedings of the Second International Conference on
+               Knowledge Discovery and Data Mining (KDD)},
+  pages     = {202--207},
+  publisher = {AAAI Press},
+  year      = {1996}
+}
+
+@book{cart1984,
+  author    = {Breiman, Leo and Friedman, Jerome H. and Olshen, Richard A.
+               and Stone, Charles J.},
+  title     = {Classification and Regression Trees},
+  publisher = {Wadsworth},
+  address   = {Belmont, CA},
+  year      = {1984}
+}
+
+@book{hastie2009,
+  author    = {Hastie, Trevor and Tibshirani, Robert and Friedman, Jerome},
+  title     = {The Elements of Statistical Learning: Data Mining,
+               Inference, and Prediction},
+  edition   = {2},
+  publisher = {Springer},
+  address   = {New York},
+  year      = {2009}
+}
+
+@article{breiman2001,
+  author  = {Breiman, Leo},
+  title   = {Random Forests},
+  journal = {Machine Learning},
+  volume  = {45},
+  number  = {1},
+  pages   = {5--32},
+  year    = {2001}
+}
+
+@article{friedman2001,
+  author  = {Friedman, Jerome H.},
+  title   = {Greedy Function Approximation: A Gradient Boosting Machine},
+  journal = {The Annals of Statistics},
+  volume  = {29},
+  number  = {5},
+  pages   = {1189--1232},
+  year    = {2001}
+}
+
+@article{rumelhart1986,
+  author  = {Rumelhart, David E. and Hinton, Geoffrey E. and Williams,
+             Ronald J.},
+  title   = {Learning Representations by Back-Propagating Errors},
+  journal = {Nature},
+  volume  = {323},
+  number  = {6088},
+  pages   = {533--536},
+  year    = {1986}
+}
+
+@article{hornik1989,
+  author  = {Hornik, Kurt and Stinchcombe, Maxwell and White, Halbert},
+  title   = {Multilayer Feedforward Networks Are Universal Approximators},
+  journal = {Neural Networks},
+  volume  = {2},
+  number  = {5},
+  pages   = {359--366},
+  year    = {1989}
+}
+
+@inproceedings{vaswani2017,
+  author    = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and
+               Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N. and
+               Kaiser, {\L}ukasz and Polosukhin, Illia},
+  title     = {Attention Is All You Need},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2017}
+}
+
+@article{kolmogorov1957,
+  author  = {Kolmogorov, Andrey N.},
+  title   = {On the Representation of Continuous Functions of Many
+             Variables by Superposition of Continuous Functions of One
+             Variable and Addition},
+  journal = {Doklady Akademii Nauk SSSR},
+  volume  = {114},
+  number  = {5},
+  pages   = {953--956},
+  year    = {1957},
+  note    = {Em russo; tradu{\c{c}}{\~a}o: Amer. Math. Soc. Transl. (2)
+             28 (1963)}
+}
+
+@article{arnold1957,
+  author  = {Arnold, Vladimir I.},
+  title   = {On the Representation of Continuous Functions of Three
+             Variables as Superpositions of Continuous Functions of Two
+             Variables},
+  journal = {Doklady Akademii Nauk SSSR},
+  volume  = {114},
+  number  = {4},
+  pages   = {679--681},
+  year    = {1957},
+  note    = {Em russo; tradu{\c{c}}{\~a}o: Amer. Math. Soc. Transl. (2)
+             28 (1963), 51--54}
+}
+
+@inproceedings{muller2022pfn,
+  author    = {M{\"u}ller, Samuel and Hollmann, Noah and Pineda Arango,
+               Sebastian and Grabocka, Josif and Hutter, Frank},
+  title     = {Transformers Can Do {B}ayesian Inference},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2022},
+  note      = {arXiv:2112.10510}
+}
+
+@inproceedings{nagler2023,
+  author    = {Nagler, Thomas},
+  title     = {Statistical Foundations of Prior-Data Fitted Networks},
+  booktitle = {Proceedings of the 40th International Conference on Machine
+               Learning},
+  volume    = {202},
+  pages     = {25660--25676},
+  publisher = {PMLR},
+  year      = {2023}
+}
+
+@inproceedings{furlanello2018,
+  author    = {Furlanello, Tommaso and Lipton, Zachary and Tschannen,
+               Michael and Itti, Laurent and Anandkumar, Anima},
+  title     = {Born Again Neural Networks},
+  booktitle = {Proceedings of the 35th International Conference on Machine
+               Learning},
+  volume    = {80},
+  pages     = {1607--1616},
+  publisher = {PMLR},
+  year      = {2018}
+}
+
+@article{gneiting2007calib,
+  author  = {Gneiting, Tilmann and Balabdaoui, Fadoua and Raftery,
+             Adrian E.},
+  title   = {Probabilistic Forecasts, Calibration and Sharpness},
+  journal = {Journal of the Royal Statistical Society: Series B
+             (Statistical Methodology)},
+  volume  = {69},
+  number  = {2},
+  pages   = {243--268},
+  year    = {2007}
+}
+
+@article{meinshausen2006,
+  author  = {Meinshausen, Nicolai},
+  title   = {Quantile Regression Forests},
+  journal = {Journal of Machine Learning Research},
+  volume  = {7},
+  pages   = {983--999},
+  year    = {2006}
+}
+
+@inproceedings{duan2020,
+  author    = {Duan, Tony and Avati, Anand and Ding, Daisy Yi and Thai,
+               Khanh K. and Basu, Sanjay and Ng, Andrew Y. and Schuler,
+               Alejandro},
+  title     = {{NGBoost}: Natural Gradient Boosting for Probabilistic
+               Prediction},
+  booktitle = {Proceedings of the 37th International Conference on Machine
+               Learning},
+  volume    = {119},
+  pages     = {2690--2700},
+  publisher = {PMLR},
+  year      = {2020}
+}
+
+@article{friedman1937,
+  author  = {Friedman, Milton},
+  title   = {The Use of Ranks to Avoid the Assumption of Normality
+             Implicit in the Analysis of Variance},
+  journal = {Journal of the American Statistical Association},
+  volume  = {32},
+  number  = {200},
+  pages   = {675--701},
+  year    = {1937}
+}
+
+@article{imandavenport1980,
+  author  = {Iman, Ronald L. and Davenport, James M.},
+  title   = {Approximations of the Critical Region of the {F}riedman
+             Statistic},
+  journal = {Communications in Statistics --- Theory and Methods},
+  volume  = {9},
+  number  = {6},
+  pages   = {571--595},
+  year    = {1980}
+}
+
+@phdthesis{nemenyi1963,
+  author = {Nemenyi, Peter Bj{\o}rn},
+  title  = {Distribution-Free Multiple Comparisons},
+  school = {Princeton University},
+  year   = {1963}
+}
+
+@article{wilcoxon1945,
+  author  = {Wilcoxon, Frank},
+  title   = {Individual Comparisons by Ranking Methods},
+  journal = {Biometrics Bulletin},
+  volume  = {1},
+  number  = {6},
+  pages   = {80--83},
+  year    = {1945}
+}
+
+@article{holm1979,
+  author  = {Holm, Sture},
+  title   = {A Simple Sequentially Rejective Multiple Test Procedure},
+  journal = {Scandinavian Journal of Statistics},
+  volume  = {6},
+  number  = {2},
+  pages   = {65--70},
+  year    = {1979}
 }
