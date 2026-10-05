@@ -284,7 +284,8 @@ def plot_cd_diagram(
     min_rank = 1
     max_rank = n_models
     ax.set_xlim(min_rank - 0.5, max_rank + 0.5)
-    ax.set_ylim(-0.5, n_models + len(groups) * 0.3)
+    # bottom must clear every group bar (drawn at -0.3 - gi*0.25)
+    ax.set_ylim(-0.5 - 0.25 * max(len(groups), 1), n_models + len(groups) * 0.3)
 
     # Draw rank axis at top
     ax.hlines(n_models + 0.2, min_rank, max_rank, colors="black", linewidth=1)
