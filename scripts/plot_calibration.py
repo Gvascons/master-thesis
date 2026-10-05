@@ -37,10 +37,28 @@ from src.utils.reproducibility import set_seed
 # +0.50) a 1/50 do custo — a passada do teacher@50k no year excedeu o
 # time-box (>2h). Decisao documentada.
 DATASETS = ["california_housing", "cpu_activity"]
+LABELS = {
+    "pt": {"teacher": "TabPFN (teacher)",
+           "distilled": "Aluno-quantil destilado",
+           "control": "Aluno-quantil (controle)",
+           "xlabel": "quantil nominal \u03c4",
+           "ylabel": "cobertura emp\u00edrica P(y \u2264 q_\u03c4)",
+           "suptitle": ("Calibra\u00e7\u00e3o no hold-out: o aluno destilado \u00e9 o mais "
+                        "pr\u00f3ximo da diagonal \u2014 melhor que o controle e, no "
+                        "california, que o pr\u00f3prio teacher"),
+           "suffix": ""},
+    "en": {"teacher": "TabPFN (teacher)",
+           "distilled": "Distilled quantile student",
+           "control": "Quantile student (control)",
+           "xlabel": "nominal quantile \u03c4",
+           "ylabel": "empirical coverage P(y \u2264 q_\u03c4)",
+           "suptitle": None,  # the LaTeX caption carries the title
+           "suffix": "_en"},
+}
 STYLE = {  # same identity colors as the Pareto figure
-    "teacher":   ("#2a78d6", "o", "TabPFN (teacher)"),
-    "distilled": ("#e87ba4", "*", "Aluno-quantil destilado"),
-    "control":   ("#1baf7a", "D", "Aluno-quantil (controle)"),
+    "teacher":   ("#2a78d6", "o"),
+    "distilled": ("#e87ba4", "*"),
+    "control":   ("#1baf7a", "D"),
 }
 
 
@@ -49,6 +67,11 @@ def coverage_curve(Q, y):
 
 
 def main():
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--lang", default="pt", choices=["pt", "en"])
+    args = ap.parse_args()
+    L = LABELS[args.lang]
     exp_cfg = load_experiment_config()
     fig, axes = plt.subplots(1, len(DATASETS), figsize=(5.2 * len(DATASETS), 4.6))
     qcols = [f"q{int(t*100):02d}" for t in QUANTILES]
@@ -81,25 +104,25 @@ def main():
         curves["control"] = coverage_curve(sort_quantiles(np.asarray(m.predict(Xt))), y_test)
 
         ax.plot([0, 1], [0, 1], "--", color="#9a9a92", lw=1.2, zorder=1)
-        for key, (color, marker, label) in STYLE.items():
+        for key, (color, marker) in STYLE.items():
             ms = 11 if marker == "*" else 6
             ax.plot(QUANTILES, curves[key], "-", color=color, lw=2,
-                    marker=marker, ms=ms, label=label, zorder=3,
+                    marker=marker, ms=ms, label=L[key], zorder=3,
                     markeredgecolor="white", markeredgewidth=0.8)
         ax.set_title(ds, fontsize=11)
-        ax.set_xlabel("quantil nominal τ", fontsize=9)
+        ax.set_xlabel(L["xlabel"], fontsize=9)
         ax.grid(alpha=0.25, lw=0.5)
         ax.set_xlim(0, 1); ax.set_ylim(0, 1)
         ax.tick_params(labelsize=8)
-    np.atleast_1d(axes)[0].set_ylabel("cobertura empírica P(y ≤ q_τ)", fontsize=10)
+    np.atleast_1d(axes)[0].set_ylabel(L["ylabel"], fontsize=10)
     np.atleast_1d(axes)[0].legend(fontsize=9, frameon=False, loc="upper left")
-    fig.suptitle("Calibração no hold-out: o aluno destilado é o mais próximo da diagonal — melhor que o controle e, no california, que o próprio teacher",
-                 fontsize=12)
+    if L["suptitle"]:
+        fig.suptitle(L["suptitle"], fontsize=12)
     plt.tight_layout()
     for ext in ("png", "pdf"):
-        fig.savefig(REPO / f"results/figures/calibration_distill.{ext}",
+        fig.savefig(REPO / f"results/figures/calibration_distill{L['suffix']}.{ext}",
                     dpi=150, bbox_inches="tight")
-    print("figura salva: results/figures/calibration_distill.png|pdf")
+    print(f"figura salva: results/figures/calibration_distill{L['suffix']}.png|pdf")
 
 
 if __name__ == "__main__":

@@ -81,3 +81,36 @@ justificamos v2.5 por pinagem/hardware). Pocket FM segue v1
 (classificação apenas); Prior Labs adquirida pela SAP (17/07, sem anúncio
 técnico novo). Buscas dirigidas por distillation+quantile/CRPS tabular:
 zero colisões.
+
+---
+
+## Adendo datado — re-varredura de 04/10/2026 (pré-entrega AI-1/AI-2)
+
+Varredura online completa (arXiv, OpenReview, Scholar) antes da entrega dos
+trabalhos intermediários. Veredito executivo: **o recorte distribucional
+segue aberto; a moldura "prior work = só classificação" precisou de ajuste.**
+
+1. **Colisão parcial (01/10/2026):** *Distillation of Tabular Foundation
+   Models into Efficient Predictors* (Jeong, Lee, Lee & Yoo, arXiv
+   2610.01435) destila TabICLv2/TabPFN-v3 em alunos neurais/árvore
+   **incluindo regressão** — porém só alvos pontuais (MSE sobre médias do
+   teacher) e avaliação RMSE; zero CRPS/quantis/calibração/fronteira.
+   Reportam ganhos pontuais em regressão: reconciliação com o nosso
+   negativo via moderador de small-data (nosso sweep 800/2k/8k) + teacher
+   e protocolo distintos — incorporada ao §5.1 do artigo AI-2. O pilar
+   distribucional e a fronteira 3-estratégias permanecem inéditos.
+2. **TabFM ganhou technical report oficial (29/09/2026):** arXiv
+   2609.37959 (Kong et al.). Não revisado por pares; **confirma a cabeça
+   escalar de regressão** — a verificação arquitetural do AI-2 agora tem
+   fonte primária. Citações atualizadas nos dois artigos.
+3. **Correção de claim no AI-1:** benchmark independente de KANs tabulares
+   já existia desde jun/2024 (Poeta et al., arXiv 2406.14529) — anterior às
+   checagens de julho (lapso de verificação registrado). Claim reescopada
+   para "primeiro teste contra o slate completo GBDT/DL/TFM em benchmark
+   multicritério", com hedge datado no abstract e contribuições.
+4. **Braço "comprimir" mais povoado** (TACTICL 2608.10837; Memory-Efficient
+   TFMs 2607.27546; GEAR 2608.18849 — classificação only), e avaliação
+   distribucional de TFMs virou eixo ativo (CDE benchmark, Izbicki &
+   Rodrigues 2603.26611) — nenhum mede destilar×comprimir×reduzir nos
+   mesmos hold-outs. Claim da fronteira mantida com hedge.
+5. TabPFN-3.5 existe (2609.17895); menção "TabPFN-3/3.5" atualizada no AI-2.

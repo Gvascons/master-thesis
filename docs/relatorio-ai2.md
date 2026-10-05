@@ -18,7 +18,9 @@ desvie por restrição" tem regret mediano zero com os 14 modelos. O **Pilar A
 **pontual** não retém ganho em escala de pool completo (H1 refutada — com
 qualquer teacher); a destilação **distribucional** retém de 13% a 64% da
 vantagem de CRPS do teacher (H2 confirmada em 4/5), a latências 3–4 ordens
-de magnitude menores. O recorte inédito (regressão distribucional) é
+de magnitude menores. O recorte inédito (regressão distribucional;
+re-verificado em 04/10/2026 — ver adendo do memo de novidade: colisão
+parcial pontual de 01/10 reconciliada, pilar distribucional segue aberto) é
 exatamente o que carrega o sinal positivo.
 
 ## Pilar B — Framework de decisão validado (concluído)

@@ -11,6 +11,8 @@ Usage: uv run python scripts/plot_pareto.py
 import sys
 from pathlib import Path
 
+import argparse
+
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -19,18 +21,48 @@ CSV = REPO / "results" / "distillation" / "pareto.csv"
 FIGDIR = REPO / "results" / "figures"
 
 # fixed identity order (never re-sorted): color + marker per strategy
+LABELS = {
+    "pt": {
+        "teacher_ctx": "TabPFN (contexto reduzido)",
+        "teacher_ens": "TabPFN (ensemble reduzido)",
+        "student_quant_soft": "Aluno-quantil DESTILADO",
+        "student_point_hard": "Aluno ponto (controle)",
+        "student_quant_hard": "Aluno-quantil (controle)",
+        "tabfm_full": "TabFM (contexto cheio)",
+        "annot": "destilado",
+        "xlabel": "lat\u00eancia de infer\u00eancia (\u00b5s/linha, log)",
+        "rmse": "RMSE \u2193", "crps": "CRPS \u2193 (sistemas distribucionais)",
+        "suptitle": ("Destilar \u00d7 comprimir contexto \u00d7 reduzir ensemble \u2014 "
+                     "a fronteira acur\u00e1cia \u00d7 lat\u00eancia (hold-out do benchmark)"),
+        "suffix": "",
+    },
+    "en": {
+        "teacher_ctx": "TabPFN (reduced context)",
+        "teacher_ens": "TabPFN (reduced ensemble)",
+        "student_quant_soft": "DISTILLED quantile student",
+        "student_point_hard": "Point student (control)",
+        "student_quant_hard": "Quantile student (control)",
+        "tabfm_full": "TabFM (full context)",
+        "annot": "distilled",
+        "xlabel": "inference latency (\u00b5s/row, log)",
+        "rmse": "RMSE \u2193", "crps": "CRPS \u2193 (distributional systems)",
+        "suptitle": None,  # the LaTeX caption carries the title
+        "suffix": "_en",
+    },
+}
 STYLE = {
-    "teacher_ctx":        ("#2a78d6", "o", "-",  "TabPFN (contexto reduzido)"),
-    "teacher_ens":        ("#008300", "^", "",   "TabPFN (ensemble reduzido)"),
-    "student_quant_soft": ("#e87ba4", "*", "",   "Aluno-quantil DESTILADO"),
-    "student_point_hard": ("#eda100", "s", "",   "Aluno ponto (controle)"),
-    "student_quant_hard": ("#1baf7a", "D", "",   "Aluno-quantil (controle)"),
-    "tabfm_full":         ("#eb6834", "P", "",   "TabFM (contexto cheio)"),
+    "teacher_ctx":        ("#2a78d6", "o", "-"),
+    "teacher_ens":        ("#008300", "^", ""),
+    "student_quant_soft": ("#e87ba4", "*", ""),
+    "student_point_hard": ("#eda100", "s", ""),
+    "student_quant_hard": ("#1baf7a", "D", ""),
+    "tabfm_full":         ("#eb6834", "P", ""),
 }
 
 
-def facet(ax, sub, metric):
-    for system, (color, marker, ls, label) in STYLE.items():
+def facet(ax, sub, metric, L):
+    for system, (color, marker, ls) in STYLE.items():
+        label = L[system]
         s = sub[(sub.system == system) & sub[metric].notna()]
         if s.empty:
             continue
@@ -45,7 +77,7 @@ def facet(ax, sub, metric):
                        edgecolors="white", linewidths=1.5)
         if system == "student_quant_soft":
             for _, r in s.iterrows():
-                ax.annotate("destilado", (r.us_per_row, r[metric]),
+                ax.annotate(L["annot"], (r.us_per_row, r[metric]),
                             textcoords="offset points", xytext=(8, -12),
                             fontsize=8, color=color, fontweight="bold")
     ax.set_xscale("log")
@@ -54,6 +86,10 @@ def facet(ax, sub, metric):
 
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--lang", default="pt", choices=["pt", "en"])
+    args = ap.parse_args()
+    L = LABELS[args.lang]
     df = pd.read_csv(CSV)
     df["crps"] = pd.to_numeric(df["crps"], errors="coerce")
     datasets = [d for d in ("california_housing", "kin8nm", "year_prediction")
@@ -65,23 +101,23 @@ def main():
 
     for j, ds in enumerate(datasets):
         sub = df[df.dataset == ds]
-        facet(axes[0, j], sub, "rmse")
+        facet(axes[0, j], sub, "rmse", L)
         axes[0, j].set_title(ds, fontsize=11)
-        facet(axes[1, j], sub, "crps")
-        axes[1, j].set_xlabel("latência de inferência (µs/linha, log)", fontsize=9)
-    axes[0, 0].set_ylabel("RMSE ↓", fontsize=10)
-    axes[1, 0].set_ylabel("CRPS ↓ (sistemas distribucionais)", fontsize=10)
+        facet(axes[1, j], sub, "crps", L)
+        axes[1, j].set_xlabel(L["xlabel"], fontsize=9)
+    axes[0, 0].set_ylabel(L["rmse"], fontsize=10)
+    axes[1, 0].set_ylabel(L["crps"], fontsize=10)
 
     handles, labels = axes[0, 0].get_legend_handles_labels()
+    legend_y = 1.0 if L["suptitle"] else 1.07
     fig.legend(handles, labels, loc="upper center", ncol=3, fontsize=9,
-               frameon=False, bbox_to_anchor=(0.5, 1.0))
-    fig.suptitle("Destilar × comprimir contexto × reduzir ensemble — "
-                 "a fronteira acurácia × latência (hold-out do benchmark)",
-                 fontsize=12, y=1.05)
+               frameon=False, bbox_to_anchor=(0.5, legend_y))
+    if L["suptitle"]:
+        fig.suptitle(L["suptitle"], fontsize=12, y=1.05)
     plt.tight_layout()
     FIGDIR.mkdir(parents=True, exist_ok=True)
     for ext in ("png", "pdf"):
-        fig.savefig(FIGDIR / f"pareto_distill.{ext}", dpi=150,
+        fig.savefig(FIGDIR / f"pareto_distill{L['suffix']}.{ext}", dpi=150,
                     bbox_inches="tight")
     print(f"figura salva: {FIGDIR}/pareto_distill.png|pdf "
           f"({n} datasets, {len(df)} pontos)")

@@ -182,3 +182,20 @@ tunado) confirmou com ressalvas. Parquets brutos no repo merecem inspeção.
 4. Benchmark completo dos 3 × 18 datasets sob protocolo idêntico (runner
    resumível existente). [tempo de máquina, estimar após pilotos]
 5. Reagregação + notebooks + apresentação com 14 modelos.
+
+---
+
+## Adendo datado — 04/10/2026
+
+- **TabFM:** technical report oficial publicado em 29/09/2026 (arXiv
+  2609.37959, Kong et al., Google Research). Segue sem peer review. O
+  report confirma a cabeça de regressão escalar ("two-layer MLP head maps
+  to logits or a scalar") — fonte primária para o negativo arquitetural
+  medido na AI-2. Reproduções independentes (repo devYRPauli, benchmark
+  AIMultiple) corroboram liderança de acurácia e custo de inferência alto;
+  magnitudes de fator dependem do regime de medição (declarado no AI-1).
+- **KANs:** registrado lapso das checagens de julho — Poeta et al. (arXiv
+  2406.14529, jun/2024) é benchmark independente KAN-vs-MLP anterior ao
+  nosso. Nossa prioridade correta: primeiro teste da família contra o
+  slate completo (GBDT/DL/TFM) em protocolo multicritério uniforme. Claims
+  dos artigos corrigidas em 04/10/2026.
