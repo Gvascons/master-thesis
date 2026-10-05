@@ -18,8 +18,9 @@
 \usepackage{subcaption}
 \usepackage{amsmath,amssymb}
 \usepackage{textcomp}
-\usepackage{tikz}
-\usetikzlibrary{positioning,arrows.meta}
+% tikz removido do preâmbulo: os 6 diagramas são pré-compilados em
+% images/tikz-*.pdf (fontes editáveis em tikz-src/) — corta o tempo de
+% compilação p/ caber no limite do plano grátis do Overleaf.
 \usepackage{thesisextras}
 % paragraphs sem numeração (a classe numera até nível 5 por default)
 \setcounter{secnumdepth}{3}
@@ -44,6 +45,11 @@ Destilação Distribucional}
 \date{2026}
 \author{João Gabriel de Araújo Vasconcelos}
 \adviser{Germano Crispim Vasconcelos}
+
+% DICA (plano grátis do Overleaf): se a compilação completa estourar o
+% tempo, edite por capítulo descomentando a linha abaixo (compila só o
+% capítulo listado, mantendo numeração/refs do .aux da última completa):
+% \includeonly{chapters/cap7-destilacao}
 
 \begin{document}
 

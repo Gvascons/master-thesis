@@ -1,0 +1,43 @@
+\documentclass[tikz,border=3pt]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazilian]{babel}
+\usepackage{mathptmx}
+\usepackage[scaled=0.92]{helvet}
+\usepackage{amsmath,amssymb,textcomp}
+\usetikzlibrary{positioning,arrows.meta}
+\newcommand{\us}{\textmu s}
+\begin{document}
+\begin{tikzpicture}[
+  caixa/.style={draw=black!70, rounded corners=2pt, align=center,
+    font=\small, inner sep=5pt, minimum height=9mm, fill=black!3},
+  destaque/.style={caixa, fill=black!12},
+  seta/.style={-{Stealth[length=2.5mm]}, thick, draw=black!70},
+  rotulo/.style={font=\footnotesize\itshape, text=black!60, align=center},
+  node distance=9mm and 8mm
+]
+\node[caixa] (dados) {Conjunto de dados\\(teto de 100\,mil amostras; \emph{hash} SHA-256)};
+\node[caixa, below left=9mm and -14mm of dados] (dev)
+  {Partição de desenvolvimento\\(80\%)};
+\node[destaque, below right=9mm and -14mm of dados] (hold)
+  {\emph{Hold-out} final (20\%)\\intocado por toda a seleção};
+\node[caixa, below=of dev] (nested)
+  {Validação cruzada aninhada\\laço externo: 5 \emph{folds} (medição)\\
+   laço interno: 3 \emph{folds} (seleção)};
+\node[caixa, below=of nested] (optuna)
+  {Optuna TPE + MedianPruner\\100 \emph{trials} (GBDT) / 25 (DL)\\
+   \emph{foundation models}: \emph{zero-shot}};
+\node[caixa, right=14mm of optuna] (fit)
+  {Ajuste final na partição de\\desenvolvimento (90/10 treino/val.)\\
+   com a configuração selecionada};
+\node[destaque, above=of fit] (aval)
+  {Avaliação única\\no \emph{hold-out}};
+\draw[seta] (dados) -- node[rotulo, left=2pt, xshift=2mm] {divisão estratificada,\\semente 42} (dev);
+\draw[seta] (dados) -- (hold);
+\draw[seta] (dev) -- (nested);
+\draw[seta] (nested) -- node[rotulo, right=2pt] {hiperparâmetros} (optuna);
+\draw[seta] (optuna) -- (fit);
+\draw[seta] (fit) -- (aval);
+\draw[seta] (hold) -- (aval);
+\end{tikzpicture}
+\end{document}

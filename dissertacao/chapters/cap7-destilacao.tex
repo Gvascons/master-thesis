@@ -288,29 +288,9 @@ variante.
 
 \begin{figure}[htb]
 \centering
-\begin{tikzpicture}[
-  font=\small,
-  box/.style={draw, rounded corners=2pt, align=center, inner sep=5pt,
-              minimum height=9mm},
-  lab/.style={font=\footnotesize\itshape, midway, fill=white, inner sep=1pt},
-  arr/.style={-{Stealth[length=2.2mm]}, semithick},
-  node distance=8mm and 13mm]
-
-\node[box] (pool) {Pool de treino\\(80\% dos dados)};
-\node[box, right=of pool] (professor) {Teacher\\TabPFN v2.5};
-\node[box, right=of professor] (oof) {Alvos OOF em cache\\média $+$ 19 curvas de\\quantis ($\tau{=}0{,}05\,{\ldots}\,0{,}95$)};
-
-\node[box, below=11mm of professor] (hard) {Alunos hard\\(controle)\\XGB ponto $\cdot$ XGB quantil\\$\cdot$ MLP quantil\\rótulos verdadeiros};
-\node[box, right=of hard] (soft) {Alunos destilados\\XGB ponto (média) $\cdot$\\XGB/MLP quantil (curvas,\\reparo por ordenação)};
-\node[box, below=11mm of hard, xshift=24mm] (eval) {Hold-out intocado de 20\%\\RMSE $\cdot$ CRPS $\cdot$ PICP80/90 $\cdot$ retenção};
-
-\draw[arr] (pool) -- (professor);
-\draw[arr] (professor) -- node[lab, above=2pt]{OOF $K{=}5$} (oof);
-\draw[arr] (pool.south) |- node[lab, near end, above]{rótulos} (hard.west);
-\draw[arr] (oof.south) -- node[lab, right]{alvos} (soft.north);
-\draw[arr] (hard.south) |- ([yshift=2mm]eval.north west) -- (eval.north west);
-\draw[arr] (soft.south) |- ([yshift=2mm]eval.north east) -- (eval.north east);
-\end{tikzpicture}
+% Diagrama pré-compilado (fonte editável: tikz-src/tikz-cap7-1.tex;
+% recompilar com: tectonic tikz-src/tikz-cap7-1.tex && mv tikz-cap7-1.pdf images/)
+\includegraphics{images/tikz-cap7-1.pdf}
 \caption[Pipeline de destilação distribucional]{\textbf{O \emph{pipeline} de
 destilação: o professor rotula o \emph{pool} fora de dobra, e alunos de
 capacidade idêntica diferem apenas no alvo de treino.} O professor

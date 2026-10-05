@@ -198,31 +198,9 @@ esbarra num único obstáculo, cuja remoção é o objeto da QP3.
 
 \begin{figure}[htb]
 \centering
-\begin{tikzpicture}[
-  font=\small,
-  qp/.style={draw, rounded corners=2pt, align=center, inner sep=5pt,
-             minimum width=33mm, minimum height=14mm, fill=black!4},
-  capbox/.style={draw, rounded corners=2pt, align=center, inner sep=5pt,
-              minimum width=33mm, minimum height=12mm, fill=black!10},
-  lig/.style={-{Stealth[length=2.2mm]}, semithick},
-  enc/.style={-{Stealth[length=2.2mm]}, semithick, dashed},
-  rot/.style={font=\footnotesize\itshape, midway, above=8.5mm},
-  node distance=6mm and 11mm]
-
-\node[qp] (qp1) {\textbf{QP1}\\o empate sobrevive?};
-\node[qp, right=of qp1] (qp2) {\textbf{QP2}\\que artefato de\\decisão se sustenta?};
-\node[qp, right=of qp2] (qp3) {\textbf{QP3}\\o que a destilação\\transfere, a que custo?};
-
-\node[capbox, below=of qp1] (c5) {Capítulo~\ref{chap:benchmark}\\Benchmark\\multicritério};
-\node[capbox, below=of qp2] (c6) {Capítulo~\ref{chap:framework}\\Arcabouço de\\decisão validado};
-\node[capbox, below=of qp3] (c7) {Capítulo~\ref{chap:destilacao}\\Destilação\\distribucional};
-
-\draw[lig] (qp1) -- (c5);
-\draw[lig] (qp2) -- (c6);
-\draw[lig] (qp3) -- (c7);
-\draw[enc] (qp1.east) -- node[rot] {empate $+$ quebra} (qp2.west);
-\draw[enc] (qp2.east) -- node[rot] {obstáculo: latência} (qp3.west);
-\end{tikzpicture}
+% Diagrama pré-compilado (fonte editável: tikz-src/tikz-cap1-1.tex;
+% recompilar com: tectonic tikz-src/tikz-cap1-1.tex && mv tikz-cap1-1.pdf images/)
+\includegraphics{images/tikz-cap1-1.pdf}
 \caption[Perguntas de pesquisa e capítulos que as respondem]{\textbf{Cada
 pergunta de pesquisa é respondida por um capítulo, e a resposta de cada
 uma cria a seguinte.} As setas sólidas ligam cada pergunta ao capítulo que

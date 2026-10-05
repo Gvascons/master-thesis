@@ -134,30 +134,9 @@ Tabela~\ref{tab:adult-exemplo}.
 
 \begin{figure}[htb]
 \centering
-\begin{tikzpicture}[
-  level distance=17mm,
-  level 1/.style={sibling distance=62mm},
-  level 2/.style={sibling distance=31mm},
-  interno/.style={draw, rounded corners=2pt, align=center, font=\small,
-                  inner sep=4pt},
-  folha/.style={draw, rounded corners=2pt, align=center, font=\small,
-                fill=black!6, inner sep=4pt},
-  rotulo/.style={font=\footnotesize\itshape, midway},
-  edge from parent/.style={draw, -{Stealth[length=2mm]}}]
-\node[interno] {escolaridade $\geq$ superior?}
-  child { node[interno] {horas/semana $>$ 45?}
-    child { node[folha] {$\hat{p} = 0{,}06$}
-      edge from parent node[rotulo, left=1pt] {não} }
-    child { node[folha] {$\hat{p} = 0{,}22$}
-      edge from parent node[rotulo, right=1pt] {sim} }
-    edge from parent node[rotulo, left=3pt] {não} }
-  child { node[interno] {idade $>$ 30?}
-    child { node[folha] {$\hat{p} = 0{,}29$}
-      edge from parent node[rotulo, left=1pt] {não} }
-    child { node[folha] {$\hat{p} = 0{,}61$}
-      edge from parent node[rotulo, right=1pt] {sim} }
-    edge from parent node[rotulo, right=3pt] {sim} };
-\end{tikzpicture}
+% Diagrama pré-compilado (fonte editável: tikz-src/tikz-cap2-1.tex;
+% recompilar com: tectonic tikz-src/tikz-cap2-1.tex && mv tikz-cap2-1.pdf images/)
+\includegraphics{images/tikz-cap2-1.pdf}
 \caption[Árvore de decisão ilustrativa sobre o exemplo do \texttt{adult}]{\textbf{Uma árvore de decisão responde por partições sucessivas do
 espaço de atributos.} Árvore ilustrativa de profundidade 2 sobre o exemplo
 da Tabela~\ref{tab:adult-exemplo}; em cada folha, $\hat{p}$ é a fração de
@@ -465,45 +444,9 @@ Figura~\ref{fig:icl-mecanismo} esquematiza as duas fases.
 
 \begin{figure}[htb]
 \centering
-\begin{tikzpicture}[
-  font=\small,
-  caixa/.style={draw, rounded corners=2pt, align=center, inner sep=5pt,
-                minimum height=9mm},
-  destaque/.style={caixa, fill=black!6},
-  rotulo/.style={font=\footnotesize\itshape, midway, fill=white,
-                 inner sep=1pt},
-  fase/.style={font=\footnotesize\scshape},
-  seta/.style={-{Stealth[length=2.2mm]}, semithick},
-  node distance=7mm and 11mm]
-
-% Fase 1: pré-treinamento
-\node[caixa] (prior) {Prior sintético\\(modelos causais\\estruturais)};
-\node[caixa, right=of prior] (tarefas) {Milhões de tarefas\\sintéticas\\
-  $(X, y)$ amostradas};
-\node[destaque, right=of tarefas] (modelo) {Transformer\\(pesos $\theta$)};
-\node[fase, above=2mm of prior.north west, anchor=south west]
-  {Fase 1 --- pré-treinamento (uma única vez, \emph{offline})};
-
-% Fase 2: inferência
-\node[caixa, below=14mm of prior] (contexto)
-  {Contexto:\\treino $(X_{\text{tr}}, y_{\text{tr}})$};
-\node[caixa, right=of contexto] (consulta)
-  {Consulta:\\$x_{\text{novo}}$};
-\node[destaque, right=of consulta] (forward)
-  {Um passe direto\\($\theta$ congelado)};
-\node[caixa, right=of forward] (pred)
-  {Distribuição\\preditiva\\$p(y \mid x_{\text{novo}}, D)$};
-\node[fase, above=2mm of contexto.north west, anchor=south west]
-  {Fase 2 --- inferência em cada tarefa nova (sem gradiente)};
-
-\draw[seta] (prior) -- (tarefas);
-\draw[seta] (tarefas) -- node[rotulo, above=2pt] {treino} (modelo);
-\draw[seta] (modelo.south) -- ++(0,-4mm) -| node[rotulo, near start, above]
-  {$\theta$ fixado} (forward.north);
-\draw[seta] (contexto) -- (consulta);
-\draw[seta] (consulta) -- (forward);
-\draw[seta] (forward) -- (pred);
-\end{tikzpicture}
+% Diagrama pré-compilado (fonte editável: tikz-src/tikz-cap2-2.tex;
+% recompilar com: tectonic tikz-src/tikz-cap2-2.tex && mv tikz-cap2-2.pdf images/)
+\includegraphics{images/tikz-cap2-2.pdf}
 \caption[O mecanismo de aprendizado em contexto (ICL)]{\textbf{No aprendizado em contexto, o conjunto de treino entra
 como entrada do modelo, não como alvo de otimização.} Na fase 1, o
 Transformer é pré-treinado uma única vez sobre milhões de tarefas
@@ -663,23 +606,9 @@ uma discretização da distribuição preditiva inteira.
 
 \begin{figure}[htb]
 \centering
-\begin{tikzpicture}[font=\small, line cap=round]
-  % eixos
-  \draw[-{Stealth[length=2mm]}] (-2.6,0) -- (2.9,0)
-    node[below right=0pt] {$u = y - \hat{q}_\tau$};
-  \draw[-{Stealth[length=2mm]}] (0,-0.25) -- (0,2.1)
-    node[above] {$\rho_\tau(u)$};
-  \node[below, font=\footnotesize] at (-1.3,0) {superestimação};
-  \node[below, font=\footnotesize] at (1.45,0) {subestimação};
-  % tau = 0.5 (simétrica, tracejada)
-  \draw[dashed, gray, thick] (-2.3,1.15) -- (0,0) -- (2.3,1.15);
-  \node[gray, font=\footnotesize, anchor=south east] at (-1.6,0.9)
-    {$\tau = 0{,}5$};
-  % tau = 0.9 (assimétrica, sólida)
-  \draw[very thick] (-2.3,0.23) -- (0,0) -- (2.3,2.07);
-  \node[font=\footnotesize, anchor=south east] at (2.35,1.5)
-    {$\tau = 0{,}9$};
-\end{tikzpicture}
+% Diagrama pré-compilado (fonte editável: tikz-src/tikz-cap2-3.tex;
+% recompilar com: tectonic tikz-src/tikz-cap2-3.tex && mv tikz-cap2-3.pdf images/)
+\includegraphics{images/tikz-cap2-3.pdf}
 \caption[A perda \emph{pinball} e sua assimetria]{\textbf{A perda \emph{pinball} penaliza os dois lados do erro com
 inclinações diferentes, e é essa assimetria que aponta o minimizador para o
 quantil~$\tau$.} Para $\tau = 0{,}9$ (linha sólida), subestimar o alvo

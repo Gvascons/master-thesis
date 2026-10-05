@@ -1,0 +1,50 @@
+\documentclass[tikz,border=3pt]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazilian]{babel}
+\usepackage{mathptmx}
+\usepackage[scaled=0.92]{helvet}
+\usepackage{amsmath,amssymb,textcomp}
+\usetikzlibrary{positioning,arrows.meta}
+\newcommand{\us}{\textmu s}
+\begin{document}
+\begin{tikzpicture}[
+  font=\small,
+  caixa/.style={draw, rounded corners=2pt, align=center, inner sep=5pt,
+                minimum height=9mm},
+  destaque/.style={caixa, fill=black!6},
+  rotulo/.style={font=\footnotesize\itshape, midway, fill=white,
+                 inner sep=1pt},
+  fase/.style={font=\footnotesize\scshape},
+  seta/.style={-{Stealth[length=2.2mm]}, semithick},
+  node distance=7mm and 11mm]
+
+% Fase 1: pré-treinamento
+\node[caixa] (prior) {Prior sintético\\(modelos causais\\estruturais)};
+\node[caixa, right=of prior] (tarefas) {Milhões de tarefas\\sintéticas\\
+  $(X, y)$ amostradas};
+\node[destaque, right=of tarefas] (modelo) {Transformer\\(pesos $\theta$)};
+\node[fase, above=2mm of prior.north west, anchor=south west]
+  {Fase 1 --- pré-treinamento (uma única vez, \emph{offline})};
+
+% Fase 2: inferência
+\node[caixa, below=14mm of prior] (contexto)
+  {Contexto:\\treino $(X_{\text{tr}}, y_{\text{tr}})$};
+\node[caixa, right=of contexto] (consulta)
+  {Consulta:\\$x_{\text{novo}}$};
+\node[destaque, right=of consulta] (forward)
+  {Um passe direto\\($\theta$ congelado)};
+\node[caixa, right=of forward] (pred)
+  {Distribuição\\preditiva\\$p(y \mid x_{\text{novo}}, D)$};
+\node[fase, above=2mm of contexto.north west, anchor=south west]
+  {Fase 2 --- inferência em cada tarefa nova (sem gradiente)};
+
+\draw[seta] (prior) -- (tarefas);
+\draw[seta] (tarefas) -- node[rotulo, above=2pt] {treino} (modelo);
+\draw[seta] (modelo.south) -- ++(0,-4mm) -| node[rotulo, near start, above]
+  {$\theta$ fixado} (forward.north);
+\draw[seta] (contexto) -- (consulta);
+\draw[seta] (consulta) -- (forward);
+\draw[seta] (forward) -- (pred);
+\end{tikzpicture}
+\end{document}
