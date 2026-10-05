@@ -78,3 +78,34 @@ Decisão: imputação por mediana ajustada no pool e aplicada ao teste,
 somente no caminho do QRF — política simples, sem vazamento, declarada.
 Nenhum resultado já gravado foi alterado; a grade foi retomada do ponto
 de falha (runner resumível).
+
+---
+
+## Execução e vereditos (adendo datado, 05/10/2026 — pós-execução)
+
+**E1 — EXECUTADO (120/120 células; `classical_baselines.csv` +
+`baselines_analysis.csv`; análise em `scripts/analyze_baselines.py`):**
+- **H-B1 CONFIRMADA:** aluno destilado ≤ melhor baseline clássico em
+  **17/20** datasets (sinal unilateral p=0,0013; Wilcoxon p=0,0008).
+  A vantagem da destilação não é redundante com nativos fortes default.
+- **H-B2 CONFIRMADA:** latências dos clássicos em 4-31 µs/linha (tier dos
+  students) — competem em acurácia, não em custo.
+- Leitura honesta dos 3 reveses (gate pré-fixado): QRF vence o destilado
+  em california_housing, physiochemical_protein e wine_quality; no wine
+  o QRF bate inclusive o teacher (0,279 vs 0,289) — o passo "teste um
+  aluno nativo forte" da regra de decisão ganha instância concreta (QRF),
+  e o clássico só bate o CONTROLE hard em 5/20 (o pinball do XGBoost
+  segue um controle representativo). Nota adicionada à regra: um nativo
+  clássico forte não substitui a destilação onde o edge do teacher é
+  grande, mas deve ser tentado antes (custa segundos).
+
+**E2 — EXECUTADO (com as 4 políticas do pré-registro; a árvore-LODO é
+avaliada pela recomendação por dataset armazenada em
+`lodo_validation_14.csv`, sem refit — a árvore foi treinada para prever o
+vencedor de acurácia e é avaliada sob o score ponderado):**
+- **H-W1 CONFIRMADA:** sempre-FM só é regret-ótima (mediana 0,000) em
+  w ∈ {0,9; 1,0}; em w=0,8 GBDT (0,067) e DL (0,035) já a batem; para
+  w ≤ 0,6, sempre-GBDT tem mediana 0,000. Cruzamento entre w=0,9 e 0,8
+  (mediana) e entre 0,8 e 0,7 (média).
+- Árvore-LODO nunca supera a melhor política fixa em nenhum w (colapsa
+  na política FM em w alto — consistente com a explicação do artigo).

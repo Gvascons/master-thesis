@@ -32,12 +32,17 @@ FAMILIES = {
     "tabpfn": "FM", "tabfm": "FM",
 }
 POLICIES = {"Always-GBDT": "GBDT", "Always-DL": "DL", "Always-FM": "FM"}
+# Arvore-LODO: a familia PREDITA por dataset vem do artefato do estudo
+# original (sem refit — a arvore foi treinada para prever o vencedor de
+# acuracia; avaliamos essa mesma recomendacao sob o score ponderado).
 WEIGHTS = np.round(np.arange(0.0, 1.0001, 0.1), 2)
 
 
 def main():
     tr = pd.read_csv(REPO / "results/aggregated/test_results.csv")
     lat = pd.read_csv(REPO / "results/latency/latency_adult.csv")
+    tree_pred = (pd.read_csv(REPO / "results/aggregated/lodo_validation_14.csv")
+                 .set_index("dataset")["pred"])
     lat_rank = lat.set_index("model")["us_per_row"].rank()  # 1 = mais rapido
     lat_norm = (lat_rank - 1) / (len(lat_rank) - 1)         # [0,1]
 
@@ -56,7 +61,10 @@ def main():
             fam = pd.Series({m: FAMILIES[m] for m in score.index})
             best, worst = score.min(), score.max()
             denom = (worst - best) or 1.0
-            for pol, family in POLICIES.items():
+            pol_fam = dict(POLICIES)
+            if ds in tree_pred.index:
+                pol_fam["Tree (LODO)"] = tree_pred.loc[ds]
+            for pol, family in pol_fam.items():
                 in_fam = score[fam == family]
                 if in_fam.empty:
                     continue
@@ -74,11 +82,12 @@ def main():
 
     # figura: mediana do regret vs peso da acuracia (validated palette)
     COLORS = {"Always-GBDT": "#2a78d6", "Always-DL": "#eda100",
-              "Always-FM": "#008300"}
-    MARKERS = {"Always-GBDT": "o", "Always-DL": "s", "Always-FM": "^"}
+              "Always-FM": "#008300", "Tree (LODO)": "#e87ba4"}
+    MARKERS = {"Always-GBDT": "o", "Always-DL": "s", "Always-FM": "^",
+               "Tree (LODO)": "D"}
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.4), sharex=True)
     for ax, stat in zip(axes, ("median", "mean")):
-        for pol in POLICIES:
+        for pol in list(POLICIES) + ["Tree (LODO)"]:
             a = agg[agg.policy == pol].sort_values("w_acc")
             ax.plot(a.w_acc, a[stat], "-", color=COLORS[pol], lw=2,
                     marker=MARKERS[pol], ms=6, label=pol,

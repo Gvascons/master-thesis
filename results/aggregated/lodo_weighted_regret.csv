@@ -2,267 +2,355 @@ dataset,task,w_acc,policy,regret
 adult,binary,0.0,Always-GBDT,0.0
 adult,binary,0.0,Always-DL,0.153846
 adult,binary,0.0,Always-FM,0.846154
+adult,binary,0.0,Tree (LODO),0.846154
 adult,binary,0.1,Always-GBDT,0.0
 adult,binary,0.1,Always-DL,0.198276
 adult,binary,0.1,Always-FM,0.87931
+adult,binary,0.1,Tree (LODO),0.87931
 adult,binary,0.2,Always-GBDT,0.0
 adult,binary,0.2,Always-DL,0.240741
 adult,binary,0.2,Always-FM,0.87037
+adult,binary,0.2,Tree (LODO),0.87037
 adult,binary,0.3,Always-GBDT,0.0
 adult,binary,0.3,Always-DL,0.284314
 adult,binary,0.3,Always-FM,0.843137
+adult,binary,0.3,Tree (LODO),0.843137
 adult,binary,0.4,Always-GBDT,0.0
 adult,binary,0.4,Always-DL,0.333333
 adult,binary,0.4,Always-FM,0.770833
+adult,binary,0.4,Tree (LODO),0.770833
 adult,binary,0.5,Always-GBDT,0.0
 adult,binary,0.5,Always-DL,0.35
 adult,binary,0.5,Always-FM,0.6
+adult,binary,0.5,Tree (LODO),0.6
 adult,binary,0.6,Always-GBDT,0.0
 adult,binary,0.6,Always-DL,0.365385
 adult,binary,0.6,Always-FM,0.442308
+adult,binary,0.6,Tree (LODO),0.442308
 adult,binary,0.7,Always-GBDT,0.0
 adult,binary,0.7,Always-DL,0.37963
 adult,binary,0.7,Always-FM,0.296296
+adult,binary,0.7,Tree (LODO),0.296296
 adult,binary,0.8,Always-GBDT,0.0
 adult,binary,0.8,Always-DL,0.392857
 adult,binary,0.8,Always-FM,0.160714
+adult,binary,0.8,Tree (LODO),0.160714
 adult,binary,0.9,Always-GBDT,0.0
 adult,binary,0.9,Always-DL,0.396552
 adult,binary,0.9,Always-FM,0.034483
+adult,binary,0.9,Tree (LODO),0.034483
 adult,binary,1.0,Always-GBDT,0.076923
 adult,binary,1.0,Always-DL,0.384615
 adult,binary,1.0,Always-FM,0.0
+adult,binary,1.0,Tree (LODO),0.0
 amazon_employee,binary,0.0,Always-GBDT,0.0
 amazon_employee,binary,0.0,Always-DL,0.153846
 amazon_employee,binary,0.0,Always-FM,0.846154
+amazon_employee,binary,0.0,Tree (LODO),0.846154
 amazon_employee,binary,0.1,Always-GBDT,0.0
 amazon_employee,binary,0.1,Always-DL,0.20339
 amazon_employee,binary,0.1,Always-FM,0.847458
+amazon_employee,binary,0.1,Tree (LODO),0.847458
 amazon_employee,binary,0.2,Always-GBDT,0.0
 amazon_employee,binary,0.2,Always-DL,0.241379
 amazon_employee,binary,0.2,Always-FM,0.775862
+amazon_employee,binary,0.2,Tree (LODO),0.775862
 amazon_employee,binary,0.3,Always-GBDT,0.0
 amazon_employee,binary,0.3,Always-DL,0.293103
 amazon_employee,binary,0.3,Always-FM,0.706897
+amazon_employee,binary,0.3,Tree (LODO),0.706897
 amazon_employee,binary,0.4,Always-GBDT,0.0
 amazon_employee,binary,0.4,Always-DL,0.355932
 amazon_employee,binary,0.4,Always-FM,0.644068
+amazon_employee,binary,0.4,Tree (LODO),0.644068
 amazon_employee,binary,0.5,Always-GBDT,0.0
 amazon_employee,binary,0.5,Always-DL,0.375
 amazon_employee,binary,0.5,Always-FM,0.541667
+amazon_employee,binary,0.5,Tree (LODO),0.541667
 amazon_employee,binary,0.6,Always-GBDT,0.0
 amazon_employee,binary,0.6,Always-DL,0.377049
 amazon_employee,binary,0.6,Always-FM,0.442623
+amazon_employee,binary,0.6,Tree (LODO),0.442623
 amazon_employee,binary,0.7,Always-GBDT,0.0
 amazon_employee,binary,0.7,Always-DL,0.379032
 amazon_employee,binary,0.7,Always-FM,0.346774
+amazon_employee,binary,0.7,Tree (LODO),0.346774
 amazon_employee,binary,0.8,Always-GBDT,0.0
 amazon_employee,binary,0.8,Always-DL,0.380952
 amazon_employee,binary,0.8,Always-FM,0.253968
+amazon_employee,binary,0.8,Tree (LODO),0.253968
 amazon_employee,binary,0.9,Always-GBDT,0.0
 amazon_employee,binary,0.9,Always-DL,0.382813
 amazon_employee,binary,0.9,Always-FM,0.164062
+amazon_employee,binary,0.9,Tree (LODO),0.164062
 amazon_employee,binary,1.0,Always-GBDT,0.0
 amazon_employee,binary,1.0,Always-DL,0.384615
 amazon_employee,binary,1.0,Always-FM,0.076923
+amazon_employee,binary,1.0,Tree (LODO),0.076923
 bank_marketing,binary,0.0,Always-GBDT,0.0
 bank_marketing,binary,0.0,Always-DL,0.153846
 bank_marketing,binary,0.0,Always-FM,0.846154
+bank_marketing,binary,0.0,Tree (LODO),0.846154
 bank_marketing,binary,0.1,Always-GBDT,0.0
 bank_marketing,binary,0.1,Always-DL,0.1875
 bank_marketing,binary,0.1,Always-FM,0.848214
+bank_marketing,binary,0.1,Tree (LODO),0.848214
 bank_marketing,binary,0.2,Always-GBDT,0.0
 bank_marketing,binary,0.2,Always-DL,0.234043
 bank_marketing,binary,0.2,Always-FM,0.851064
+bank_marketing,binary,0.2,Tree (LODO),0.851064
 bank_marketing,binary,0.3,Always-GBDT,0.0
 bank_marketing,binary,0.3,Always-DL,0.283951
 bank_marketing,binary,0.3,Always-FM,0.802469
+bank_marketing,binary,0.3,Tree (LODO),0.802469
 bank_marketing,binary,0.4,Always-GBDT,0.0
 bank_marketing,binary,0.4,Always-DL,0.315789
 bank_marketing,binary,0.4,Always-FM,0.657895
+bank_marketing,binary,0.4,Tree (LODO),0.657895
 bank_marketing,binary,0.5,Always-GBDT,0.0
 bank_marketing,binary,0.5,Always-DL,0.266667
 bank_marketing,binary,0.5,Always-FM,0.466667
+bank_marketing,binary,0.5,Tree (LODO),0.466667
 bank_marketing,binary,0.6,Always-GBDT,0.0
 bank_marketing,binary,0.6,Always-DL,0.135135
 bank_marketing,binary,0.6,Always-FM,0.27027
+bank_marketing,binary,0.6,Tree (LODO),0.27027
 bank_marketing,binary,0.7,Always-GBDT,0.0
 bank_marketing,binary,0.7,Always-DL,0.0
 bank_marketing,binary,0.7,Always-FM,0.054795
+bank_marketing,binary,0.7,Tree (LODO),0.054795
 bank_marketing,binary,0.8,Always-GBDT,0.162791
 bank_marketing,binary,0.8,Always-DL,0.046512
 bank_marketing,binary,0.8,Always-FM,0.0
+bank_marketing,binary,0.8,Tree (LODO),0.0
 bank_marketing,binary,0.9,Always-GBDT,0.296296
 bank_marketing,binary,0.9,Always-DL,0.111111
 bank_marketing,binary,0.9,Always-FM,0.0
+bank_marketing,binary,0.9,Tree (LODO),0.0
 bank_marketing,binary,1.0,Always-GBDT,0.384615
 bank_marketing,binary,1.0,Always-DL,0.153846
 bank_marketing,binary,1.0,Always-FM,0.0
+bank_marketing,binary,1.0,Tree (LODO),0.0
 california_housing,regression,0.0,Always-GBDT,0.0
 california_housing,regression,0.0,Always-DL,0.153846
 california_housing,regression,0.0,Always-FM,0.846154
+california_housing,regression,0.0,Tree (LODO),0.846154
 california_housing,regression,0.1,Always-GBDT,0.0
 california_housing,regression,0.1,Always-DL,0.191304
 california_housing,regression,0.1,Always-FM,0.852174
+california_housing,regression,0.1,Tree (LODO),0.852174
 california_housing,regression,0.2,Always-GBDT,0.0
 california_housing,regression,0.2,Always-DL,0.218182
 california_housing,regression,0.2,Always-FM,0.781818
+california_housing,regression,0.2,Tree (LODO),0.781818
 california_housing,regression,0.3,Always-GBDT,0.0
 california_housing,regression,0.3,Always-DL,0.247619
 california_housing,regression,0.3,Always-FM,0.704762
+california_housing,regression,0.3,Tree (LODO),0.704762
 california_housing,regression,0.4,Always-GBDT,0.0
 california_housing,regression,0.4,Always-DL,0.28
 california_housing,regression,0.4,Always-FM,0.62
+california_housing,regression,0.4,Tree (LODO),0.62
 california_housing,regression,0.5,Always-GBDT,0.0
 california_housing,regression,0.5,Always-DL,0.315789
 california_housing,regression,0.5,Always-FM,0.526316
+california_housing,regression,0.5,Tree (LODO),0.526316
 california_housing,regression,0.6,Always-GBDT,0.0
 california_housing,regression,0.6,Always-DL,0.347826
 california_housing,regression,0.6,Always-FM,0.413043
+california_housing,regression,0.6,Tree (LODO),0.413043
 california_housing,regression,0.7,Always-GBDT,0.0
 california_housing,regression,0.7,Always-DL,0.357895
 california_housing,regression,0.7,Always-FM,0.263158
+california_housing,regression,0.7,Tree (LODO),0.263158
 california_housing,regression,0.8,Always-GBDT,0.0
 california_housing,regression,0.8,Always-DL,0.36
 california_housing,regression,0.8,Always-FM,0.1
+california_housing,regression,0.8,Tree (LODO),0.1
 california_housing,regression,0.9,Always-GBDT,0.045455
 california_housing,regression,0.9,Always-DL,0.354545
 california_housing,regression,0.9,Always-FM,0.0
+california_housing,regression,0.9,Tree (LODO),0.0
 california_housing,regression,1.0,Always-GBDT,0.153846
 california_housing,regression,1.0,Always-DL,0.384615
 california_housing,regression,1.0,Always-FM,0.0
+california_housing,regression,1.0,Tree (LODO),0.0
 cardiovascular_disease,binary,0.0,Always-GBDT,0.0
 cardiovascular_disease,binary,0.0,Always-DL,0.153846
 cardiovascular_disease,binary,0.0,Always-FM,0.846154
+cardiovascular_disease,binary,0.0,Tree (LODO),0.846154
 cardiovascular_disease,binary,0.1,Always-GBDT,0.0
 cardiovascular_disease,binary,0.1,Always-DL,0.232759
 cardiovascular_disease,binary,0.1,Always-FM,0.887931
+cardiovascular_disease,binary,0.1,Tree (LODO),0.887931
 cardiovascular_disease,binary,0.2,Always-GBDT,0.0
 cardiovascular_disease,binary,0.2,Always-DL,0.314815
 cardiovascular_disease,binary,0.2,Always-FM,0.888889
+cardiovascular_disease,binary,0.2,Tree (LODO),0.888889
 cardiovascular_disease,binary,0.3,Always-GBDT,0.0
 cardiovascular_disease,binary,0.3,Always-DL,0.401961
 cardiovascular_disease,binary,0.3,Always-FM,0.862745
+cardiovascular_disease,binary,0.3,Tree (LODO),0.862745
 cardiovascular_disease,binary,0.4,Always-GBDT,0.0
 cardiovascular_disease,binary,0.4,Always-DL,0.5
 cardiovascular_disease,binary,0.4,Always-FM,0.770833
+cardiovascular_disease,binary,0.4,Tree (LODO),0.770833
 cardiovascular_disease,binary,0.5,Always-GBDT,0.0
 cardiovascular_disease,binary,0.5,Always-DL,0.55
 cardiovascular_disease,binary,0.5,Always-FM,0.6
+cardiovascular_disease,binary,0.5,Tree (LODO),0.6
 cardiovascular_disease,binary,0.6,Always-GBDT,0.0
 cardiovascular_disease,binary,0.6,Always-DL,0.557692
 cardiovascular_disease,binary,0.6,Always-FM,0.442308
+cardiovascular_disease,binary,0.6,Tree (LODO),0.442308
 cardiovascular_disease,binary,0.7,Always-GBDT,0.0
 cardiovascular_disease,binary,0.7,Always-DL,0.472222
 cardiovascular_disease,binary,0.7,Always-FM,0.296296
+cardiovascular_disease,binary,0.7,Tree (LODO),0.296296
 cardiovascular_disease,binary,0.8,Always-GBDT,0.0
 cardiovascular_disease,binary,0.8,Always-DL,0.392857
 cardiovascular_disease,binary,0.8,Always-FM,0.160714
+cardiovascular_disease,binary,0.8,Tree (LODO),0.160714
 cardiovascular_disease,binary,0.9,Always-GBDT,0.0
 cardiovascular_disease,binary,0.9,Always-DL,0.318966
 cardiovascular_disease,binary,0.9,Always-FM,0.034483
+cardiovascular_disease,binary,0.9,Tree (LODO),0.034483
 cardiovascular_disease,binary,1.0,Always-GBDT,0.076923
 cardiovascular_disease,binary,1.0,Always-DL,0.307692
 cardiovascular_disease,binary,1.0,Always-FM,0.0
+cardiovascular_disease,binary,1.0,Tree (LODO),0.0
 covertype,multiclass,0.0,Always-GBDT,0.0
 covertype,multiclass,0.0,Always-DL,0.153846
 covertype,multiclass,0.0,Always-FM,0.846154
+covertype,multiclass,0.0,Tree (LODO),0.153846
 covertype,multiclass,0.1,Always-GBDT,0.0
 covertype,multiclass,0.1,Always-DL,0.150442
 covertype,multiclass,0.1,Always-FM,0.849558
+covertype,multiclass,0.1,Tree (LODO),0.150442
 covertype,multiclass,0.2,Always-GBDT,0.0
 covertype,multiclass,0.2,Always-DL,0.145833
 covertype,multiclass,0.2,Always-FM,0.854167
+covertype,multiclass,0.2,Tree (LODO),0.145833
 covertype,multiclass,0.3,Always-GBDT,0.0
 covertype,multiclass,0.3,Always-DL,0.125
 covertype,multiclass,0.3,Always-FM,0.772727
+covertype,multiclass,0.3,Tree (LODO),0.125
 covertype,multiclass,0.4,Always-GBDT,0.0
 covertype,multiclass,0.4,Always-DL,0.095238
 covertype,multiclass,0.4,Always-FM,0.642857
+covertype,multiclass,0.4,Tree (LODO),0.095238
 covertype,multiclass,0.5,Always-GBDT,0.0
 covertype,multiclass,0.5,Always-DL,0.0625
 covertype,multiclass,0.5,Always-FM,0.5
+covertype,multiclass,0.5,Tree (LODO),0.0625
 covertype,multiclass,0.6,Always-GBDT,0.0
 covertype,multiclass,0.6,Always-DL,0.026316
 covertype,multiclass,0.6,Always-FM,0.342105
+covertype,multiclass,0.6,Tree (LODO),0.026316
 covertype,multiclass,0.7,Always-GBDT,0.013158
 covertype,multiclass,0.7,Always-DL,0.0
 covertype,multiclass,0.7,Always-FM,0.157895
+covertype,multiclass,0.7,Tree (LODO),0.0
 covertype,multiclass,0.8,Always-GBDT,0.069767
 covertype,multiclass,0.8,Always-DL,0.023256
 covertype,multiclass,0.8,Always-FM,0.0
+covertype,multiclass,0.8,Tree (LODO),0.023256
 covertype,multiclass,0.9,Always-GBDT,0.212963
 covertype,multiclass,0.9,Always-DL,0.148148
 covertype,multiclass,0.9,Always-FM,0.0
+covertype,multiclass,0.9,Tree (LODO),0.148148
 covertype,multiclass,1.0,Always-GBDT,0.307692
 covertype,multiclass,1.0,Always-DL,0.153846
 covertype,multiclass,1.0,Always-FM,0.0
+covertype,multiclass,1.0,Tree (LODO),0.153846
 credit_g,binary,0.0,Always-GBDT,0.0
 credit_g,binary,0.0,Always-DL,0.153846
 credit_g,binary,0.0,Always-FM,0.846154
+credit_g,binary,0.0,Tree (LODO),0.846154
 credit_g,binary,0.1,Always-GBDT,0.0
 credit_g,binary,0.1,Always-DL,0.205357
 credit_g,binary,0.1,Always-FM,0.848214
+credit_g,binary,0.1,Tree (LODO),0.848214
 credit_g,binary,0.2,Always-GBDT,0.0
 credit_g,binary,0.2,Always-DL,0.212766
 credit_g,binary,0.2,Always-FM,0.851064
+credit_g,binary,0.2,Tree (LODO),0.851064
 credit_g,binary,0.3,Always-GBDT,0.0
 credit_g,binary,0.3,Always-DL,0.123457
 credit_g,binary,0.3,Always-FM,0.802469
+credit_g,binary,0.3,Tree (LODO),0.802469
 credit_g,binary,0.4,Always-GBDT,0.0
 credit_g,binary,0.4,Always-DL,0.028571
 credit_g,binary,0.4,Always-FM,0.742857
+credit_g,binary,0.4,Tree (LODO),0.742857
 credit_g,binary,0.5,Always-GBDT,0.071429
 credit_g,binary,0.5,Always-DL,0.0
 credit_g,binary,0.5,Always-FM,0.642857
+credit_g,binary,0.5,Tree (LODO),0.642857
 credit_g,binary,0.6,Always-GBDT,0.157895
 credit_g,binary,0.6,Always-DL,0.0
 credit_g,binary,0.6,Always-FM,0.526316
+credit_g,binary,0.6,Tree (LODO),0.526316
 credit_g,binary,0.7,Always-GBDT,0.231707
 credit_g,binary,0.7,Always-DL,0.0
 credit_g,binary,0.7,Always-FM,0.414634
+credit_g,binary,0.7,Tree (LODO),0.414634
 credit_g,binary,0.8,Always-GBDT,0.340426
 credit_g,binary,0.8,Always-DL,0.0
 credit_g,binary,0.8,Always-FM,0.340426
+credit_g,binary,0.8,Tree (LODO),0.340426
 credit_g,binary,0.9,Always-GBDT,0.418182
 credit_g,binary,0.9,Always-DL,0.0
 credit_g,binary,0.9,Always-FM,0.281818
+credit_g,binary,0.9,Tree (LODO),0.281818
 credit_g,binary,1.0,Always-GBDT,0.461538
 credit_g,binary,1.0,Always-DL,0.0
 credit_g,binary,1.0,Always-FM,0.230769
+credit_g,binary,1.0,Tree (LODO),0.230769
 give_me_some_credit,binary,0.0,Always-GBDT,0.0
 give_me_some_credit,binary,0.0,Always-DL,0.153846
 give_me_some_credit,binary,0.0,Always-FM,0.846154
+give_me_some_credit,binary,0.0,Tree (LODO),0.846154
 give_me_some_credit,binary,0.1,Always-GBDT,0.0
 give_me_some_credit,binary,0.1,Always-DL,0.175439
 give_me_some_credit,binary,0.1,Always-FM,0.877193
+give_me_some_credit,binary,0.1,Tree (LODO),0.877193
 give_me_some_credit,binary,0.2,Always-GBDT,0.0
 give_me_some_credit,binary,0.2,Always-DL,0.196078
 give_me_some_credit,binary,0.2,Always-FM,0.882353
+give_me_some_credit,binary,0.2,Tree (LODO),0.882353
 give_me_some_credit,binary,0.3,Always-GBDT,0.0
 give_me_some_credit,binary,0.3,Always-DL,0.215054
 give_me_some_credit,binary,0.3,Always-FM,0.860215
+give_me_some_credit,binary,0.3,Tree (LODO),0.860215
 give_me_some_credit,binary,0.4,Always-GBDT,0.0
 give_me_some_credit,binary,0.4,Always-DL,0.244444
 give_me_some_credit,binary,0.4,Always-FM,0.755556
+give_me_some_credit,binary,0.4,Tree (LODO),0.755556
 give_me_some_credit,binary,0.5,Always-GBDT,0.0
 give_me_some_credit,binary,0.5,Always-DL,0.263158
 give_me_some_credit,binary,0.5,Always-FM,0.578947
+give_me_some_credit,binary,0.5,Tree (LODO),0.578947
 give_me_some_credit,binary,0.6,Always-GBDT,0.0
 give_me_some_credit,binary,0.6,Always-DL,0.28
 give_me_some_credit,binary,0.6,Always-FM,0.42
+give_me_some_credit,binary,0.6,Tree (LODO),0.42
 give_me_some_credit,binary,0.7,Always-GBDT,0.0
 give_me_some_credit,binary,0.7,Always-DL,0.295238
 give_me_some_credit,binary,0.7,Always-FM,0.27619
+give_me_some_credit,binary,0.7,Tree (LODO),0.27619
 give_me_some_credit,binary,0.8,Always-GBDT,0.0
 give_me_some_credit,binary,0.8,Always-DL,0.309091
 give_me_some_credit,binary,0.8,Always-FM,0.145455
+give_me_some_credit,binary,0.8,Tree (LODO),0.145455
 give_me_some_credit,binary,0.9,Always-GBDT,0.0
 give_me_some_credit,binary,0.9,Always-DL,0.321739
 give_me_some_credit,binary,0.9,Always-FM,0.026087
+give_me_some_credit,binary,0.9,Tree (LODO),0.026087
 give_me_some_credit,binary,1.0,Always-GBDT,0.076923
 give_me_some_credit,binary,1.0,Always-DL,0.384615
 give_me_some_credit,binary,1.0,Always-FM,0.0
+give_me_some_credit,binary,1.0,Tree (LODO),0.0
 helena,multiclass,0.0,Always-GBDT,0.0
 helena,multiclass,0.0,Always-DL,0.166667
 helena,multiclass,0.1,Always-GBDT,0.0
@@ -288,69 +376,91 @@ helena,multiclass,1.0,Always-DL,0.0
 higgs,binary,0.0,Always-GBDT,0.0
 higgs,binary,0.0,Always-DL,0.153846
 higgs,binary,0.0,Always-FM,0.846154
+higgs,binary,0.0,Tree (LODO),0.846154
 higgs,binary,0.1,Always-GBDT,0.0
 higgs,binary,0.1,Always-DL,0.135135
 higgs,binary,0.1,Always-FM,0.90991
+higgs,binary,0.1,Tree (LODO),0.90991
 higgs,binary,0.2,Always-GBDT,0.0
 higgs,binary,0.2,Always-DL,0.108696
 higgs,binary,0.2,Always-FM,1.0
+higgs,binary,0.2,Tree (LODO),1.0
 higgs,binary,0.3,Always-GBDT,0.0
 higgs,binary,0.3,Always-DL,0.060241
 higgs,binary,0.3,Always-FM,0.879518
+higgs,binary,0.3,Tree (LODO),0.879518
 higgs,binary,0.4,Always-GBDT,0.0
 higgs,binary,0.4,Always-DL,0.0
 higgs,binary,0.4,Always-FM,0.72973
+higgs,binary,0.4,Tree (LODO),0.72973
 higgs,binary,0.5,Always-GBDT,0.071429
 higgs,binary,0.5,Always-DL,0.0
 higgs,binary,0.5,Always-FM,0.571429
+higgs,binary,0.5,Tree (LODO),0.571429
 higgs,binary,0.6,Always-GBDT,0.138889
 higgs,binary,0.6,Always-DL,0.0
 higgs,binary,0.6,Always-FM,0.361111
+higgs,binary,0.6,Tree (LODO),0.361111
 higgs,binary,0.7,Always-GBDT,0.197368
 higgs,binary,0.7,Always-DL,0.0
 higgs,binary,0.7,Always-FM,0.157895
+higgs,binary,0.7,Tree (LODO),0.157895
 higgs,binary,0.8,Always-GBDT,0.288889
 higgs,binary,0.8,Always-DL,0.0
 higgs,binary,0.8,Always-FM,0.044444
+higgs,binary,0.8,Tree (LODO),0.044444
 higgs,binary,0.9,Always-GBDT,0.37963
 higgs,binary,0.9,Always-DL,0.027778
 higgs,binary,0.9,Always-FM,0.0
+higgs,binary,0.9,Tree (LODO),0.0
 higgs,binary,1.0,Always-GBDT,0.461538
 higgs,binary,1.0,Always-DL,0.076923
 higgs,binary,1.0,Always-FM,0.0
+higgs,binary,1.0,Tree (LODO),0.0
 jannis,multiclass,0.0,Always-GBDT,0.0
 jannis,multiclass,0.0,Always-DL,0.153846
 jannis,multiclass,0.0,Always-FM,0.846154
+jannis,multiclass,0.0,Tree (LODO),0.846154
 jannis,multiclass,0.1,Always-GBDT,0.0
 jannis,multiclass,0.1,Always-DL,0.169643
 jannis,multiclass,0.1,Always-FM,0.857143
+jannis,multiclass,0.1,Tree (LODO),0.857143
 jannis,multiclass,0.2,Always-GBDT,0.0
 jannis,multiclass,0.2,Always-DL,0.191489
 jannis,multiclass,0.2,Always-FM,0.87234
+jannis,multiclass,0.2,Tree (LODO),0.87234
 jannis,multiclass,0.3,Always-GBDT,0.0
 jannis,multiclass,0.3,Always-DL,0.2
 jannis,multiclass,0.3,Always-FM,0.8
+jannis,multiclass,0.3,Tree (LODO),0.8
 jannis,multiclass,0.4,Always-GBDT,0.0
 jannis,multiclass,0.4,Always-DL,0.2
 jannis,multiclass,0.4,Always-FM,0.675
+jannis,multiclass,0.4,Tree (LODO),0.675
 jannis,multiclass,0.5,Always-GBDT,0.0
 jannis,multiclass,0.5,Always-DL,0.2
 jannis,multiclass,0.5,Always-FM,0.533333
+jannis,multiclass,0.5,Tree (LODO),0.533333
 jannis,multiclass,0.6,Always-GBDT,0.0
 jannis,multiclass,0.6,Always-DL,0.057143
 jannis,multiclass,0.6,Always-FM,0.314286
+jannis,multiclass,0.6,Tree (LODO),0.314286
 jannis,multiclass,0.7,Always-GBDT,0.093333
 jannis,multiclass,0.7,Always-DL,0.0
 jannis,multiclass,0.7,Always-FM,0.146667
+jannis,multiclass,0.7,Tree (LODO),0.146667
 jannis,multiclass,0.8,Always-GBDT,0.2
 jannis,multiclass,0.8,Always-DL,0.0
 jannis,multiclass,0.8,Always-FM,0.044444
+jannis,multiclass,0.8,Tree (LODO),0.044444
 jannis,multiclass,0.9,Always-GBDT,0.296296
 jannis,multiclass,0.9,Always-DL,0.027778
 jannis,multiclass,0.9,Always-FM,0.0
+jannis,multiclass,0.9,Tree (LODO),0.0
 jannis,multiclass,1.0,Always-GBDT,0.384615
 jannis,multiclass,1.0,Always-DL,0.076923
 jannis,multiclass,1.0,Always-FM,0.0
+jannis,multiclass,1.0,Tree (LODO),0.0
 kin8nm,regression,0.0,Always-GBDT,0.0
 kin8nm,regression,0.0,Always-DL,0.153846
 kin8nm,regression,0.0,Always-FM,0.846154
@@ -387,198 +497,264 @@ kin8nm,regression,1.0,Always-FM,0.076923
 magictelescope,binary,0.0,Always-GBDT,0.0
 magictelescope,binary,0.0,Always-DL,0.153846
 magictelescope,binary,0.0,Always-FM,0.846154
+magictelescope,binary,0.0,Tree (LODO),0.846154
 magictelescope,binary,0.1,Always-GBDT,0.0
 magictelescope,binary,0.1,Always-DL,0.116071
 magictelescope,binary,0.1,Always-FM,0.830357
+magictelescope,binary,0.1,Tree (LODO),0.830357
 magictelescope,binary,0.2,Always-GBDT,0.0
 magictelescope,binary,0.2,Always-DL,0.057692
 magictelescope,binary,0.2,Always-FM,0.730769
+magictelescope,binary,0.2,Tree (LODO),0.730769
 magictelescope,binary,0.3,Always-GBDT,0.010309
 magictelescope,binary,0.3,Always-DL,0.0
 magictelescope,binary,0.3,Always-FM,0.618557
+magictelescope,binary,0.3,Tree (LODO),0.618557
 magictelescope,binary,0.4,Always-GBDT,0.083333
 magictelescope,binary,0.4,Always-DL,0.0
 magictelescope,binary,0.4,Always-FM,0.520833
+magictelescope,binary,0.4,Tree (LODO),0.520833
 magictelescope,binary,0.5,Always-GBDT,0.157895
 magictelescope,binary,0.5,Always-DL,0.0
 magictelescope,binary,0.5,Always-FM,0.421053
+magictelescope,binary,0.5,Tree (LODO),0.421053
 magictelescope,binary,0.6,Always-GBDT,0.212766
 magictelescope,binary,0.6,Always-DL,0.0
 magictelescope,binary,0.6,Always-FM,0.319149
+magictelescope,binary,0.6,Tree (LODO),0.319149
 magictelescope,binary,0.7,Always-GBDT,0.268817
 magictelescope,binary,0.7,Always-DL,0.0
 magictelescope,binary,0.7,Always-FM,0.204301
+magictelescope,binary,0.7,Tree (LODO),0.204301
 magictelescope,binary,0.8,Always-GBDT,0.326087
 magictelescope,binary,0.8,Always-DL,0.0
 magictelescope,binary,0.8,Always-FM,0.065217
+magictelescope,binary,0.8,Tree (LODO),0.065217
 magictelescope,binary,0.9,Always-GBDT,0.388889
 magictelescope,binary,0.9,Always-DL,0.064815
 magictelescope,binary,0.9,Always-FM,0.0
+magictelescope,binary,0.9,Tree (LODO),0.0
 magictelescope,binary,1.0,Always-GBDT,0.461538
 magictelescope,binary,1.0,Always-DL,0.153846
 magictelescope,binary,1.0,Always-FM,0.0
+magictelescope,binary,1.0,Tree (LODO),0.0
 phoneme,binary,0.0,Always-GBDT,0.0
 phoneme,binary,0.0,Always-DL,0.153846
 phoneme,binary,0.0,Always-FM,0.846154
+phoneme,binary,0.0,Tree (LODO),0.846154
 phoneme,binary,0.1,Always-GBDT,0.0
 phoneme,binary,0.1,Always-DL,0.13913
 phoneme,binary,0.1,Always-FM,0.834783
+phoneme,binary,0.1,Tree (LODO),0.834783
 phoneme,binary,0.2,Always-GBDT,0.0
 phoneme,binary,0.2,Always-DL,0.109091
 phoneme,binary,0.2,Always-FM,0.745455
+phoneme,binary,0.2,Tree (LODO),0.745455
 phoneme,binary,0.3,Always-GBDT,0.0
 phoneme,binary,0.3,Always-DL,0.07619
 phoneme,binary,0.3,Always-FM,0.647619
+phoneme,binary,0.3,Tree (LODO),0.647619
 phoneme,binary,0.4,Always-GBDT,0.0
 phoneme,binary,0.4,Always-DL,0.04
 phoneme,binary,0.4,Always-FM,0.54
+phoneme,binary,0.4,Tree (LODO),0.54
 phoneme,binary,0.5,Always-GBDT,0.0
 phoneme,binary,0.5,Always-DL,0.0
 phoneme,binary,0.5,Always-FM,0.421053
+phoneme,binary,0.5,Tree (LODO),0.421053
 phoneme,binary,0.6,Always-GBDT,0.021277
 phoneme,binary,0.6,Always-DL,0.0
 phoneme,binary,0.6,Always-FM,0.319149
+phoneme,binary,0.6,Tree (LODO),0.319149
 phoneme,binary,0.7,Always-GBDT,0.043011
 phoneme,binary,0.7,Always-DL,0.0
 phoneme,binary,0.7,Always-FM,0.204301
+phoneme,binary,0.7,Tree (LODO),0.204301
 phoneme,binary,0.8,Always-GBDT,0.065217
 phoneme,binary,0.8,Always-DL,0.0
 phoneme,binary,0.8,Always-FM,0.065217
+phoneme,binary,0.8,Tree (LODO),0.065217
 phoneme,binary,0.9,Always-GBDT,0.138889
 phoneme,binary,0.9,Always-DL,0.064815
 phoneme,binary,0.9,Always-FM,0.0
+phoneme,binary,0.9,Tree (LODO),0.0
 phoneme,binary,1.0,Always-GBDT,0.230769
 phoneme,binary,1.0,Always-DL,0.153846
 phoneme,binary,1.0,Always-FM,0.0
+phoneme,binary,1.0,Tree (LODO),0.0
 superconduct,regression,0.0,Always-GBDT,0.0
 superconduct,regression,0.0,Always-DL,0.153846
 superconduct,regression,0.0,Always-FM,0.846154
+superconduct,regression,0.0,Tree (LODO),0.846154
 superconduct,regression,0.1,Always-GBDT,0.0
 superconduct,regression,0.1,Always-DL,0.182609
 superconduct,regression,0.1,Always-FM,0.852174
+superconduct,regression,0.1,Tree (LODO),0.852174
 superconduct,regression,0.2,Always-GBDT,0.0
 superconduct,regression,0.2,Always-DL,0.211538
 superconduct,regression,0.2,Always-FM,0.826923
+superconduct,regression,0.2,Tree (LODO),0.826923
 superconduct,regression,0.3,Always-GBDT,0.0
 superconduct,regression,0.3,Always-DL,0.239583
 superconduct,regression,0.3,Always-FM,0.770833
+superconduct,regression,0.3,Tree (LODO),0.770833
 superconduct,regression,0.4,Always-GBDT,0.0
 superconduct,regression,0.4,Always-DL,0.26087
 superconduct,regression,0.4,Always-FM,0.673913
+superconduct,regression,0.4,Tree (LODO),0.673913
 superconduct,regression,0.5,Always-GBDT,0.0
 superconduct,regression,0.5,Always-DL,0.263158
 superconduct,regression,0.5,Always-FM,0.526316
+superconduct,regression,0.5,Tree (LODO),0.526316
 superconduct,regression,0.6,Always-GBDT,0.0
 superconduct,regression,0.6,Always-DL,0.265306
 superconduct,regression,0.6,Always-FM,0.387755
+superconduct,regression,0.6,Tree (LODO),0.387755
 superconduct,regression,0.7,Always-GBDT,0.0
 superconduct,regression,0.7,Always-DL,0.267327
 superconduct,regression,0.7,Always-FM,0.247525
+superconduct,regression,0.7,Tree (LODO),0.247525
 superconduct,regression,0.8,Always-GBDT,0.0
 superconduct,regression,0.8,Always-DL,0.269231
 superconduct,regression,0.8,Always-FM,0.096154
+superconduct,regression,0.8,Tree (LODO),0.096154
 superconduct,regression,0.9,Always-GBDT,0.044643
 superconduct,regression,0.9,Always-DL,0.303571
 superconduct,regression,0.9,Always-FM,0.0
+superconduct,regression,0.9,Tree (LODO),0.0
 superconduct,regression,1.0,Always-GBDT,0.153846
 superconduct,regression,1.0,Always-DL,0.384615
 superconduct,regression,1.0,Always-FM,0.0
+superconduct,regression,1.0,Tree (LODO),0.0
 telco_customer_churn,binary,0.0,Always-GBDT,0.0
 telco_customer_churn,binary,0.0,Always-DL,0.153846
 telco_customer_churn,binary,0.0,Always-FM,0.846154
+telco_customer_churn,binary,0.0,Tree (LODO),0.846154
 telco_customer_churn,binary,0.1,Always-GBDT,0.0
 telco_customer_churn,binary,0.1,Always-DL,0.195312
 telco_customer_churn,binary,0.1,Always-FM,0.757812
+telco_customer_churn,binary,0.1,Tree (LODO),0.757812
 telco_customer_churn,binary,0.2,Always-GBDT,0.0
 telco_customer_churn,binary,0.2,Always-DL,0.238095
 telco_customer_churn,binary,0.2,Always-FM,0.666667
+telco_customer_churn,binary,0.2,Tree (LODO),0.666667
 telco_customer_churn,binary,0.3,Always-GBDT,0.0
 telco_customer_churn,binary,0.3,Always-DL,0.282258
 telco_customer_churn,binary,0.3,Always-FM,0.572581
+telco_customer_churn,binary,0.3,Tree (LODO),0.572581
 telco_customer_churn,binary,0.4,Always-GBDT,0.0
 telco_customer_churn,binary,0.4,Always-DL,0.327869
 telco_customer_churn,binary,0.4,Always-FM,0.47541
+telco_customer_churn,binary,0.4,Tree (LODO),0.47541
 telco_customer_churn,binary,0.5,Always-GBDT,0.0
 telco_customer_churn,binary,0.5,Always-DL,0.333333
 telco_customer_churn,binary,0.5,Always-FM,0.375
+telco_customer_churn,binary,0.5,Tree (LODO),0.375
 telco_customer_churn,binary,0.6,Always-GBDT,0.0
 telco_customer_churn,binary,0.6,Always-DL,0.254237
 telco_customer_churn,binary,0.6,Always-FM,0.271186
+telco_customer_churn,binary,0.6,Tree (LODO),0.271186
 telco_customer_churn,binary,0.7,Always-GBDT,0.0
 telco_customer_churn,binary,0.7,Always-DL,0.172414
 telco_customer_churn,binary,0.7,Always-FM,0.163793
+telco_customer_churn,binary,0.7,Tree (LODO),0.163793
 telco_customer_churn,binary,0.8,Always-GBDT,0.0
 telco_customer_churn,binary,0.8,Always-DL,0.087719
 telco_customer_churn,binary,0.8,Always-FM,0.052632
+telco_customer_churn,binary,0.8,Tree (LODO),0.052632
 telco_customer_churn,binary,0.9,Always-GBDT,0.058824
 telco_customer_churn,binary,0.9,Always-DL,0.058824
 telco_customer_churn,binary,0.9,Always-FM,0.0
+telco_customer_churn,binary,0.9,Tree (LODO),0.0
 telco_customer_churn,binary,1.0,Always-GBDT,0.153846
 telco_customer_churn,binary,1.0,Always-DL,0.076923
 telco_customer_churn,binary,1.0,Always-FM,0.0
+telco_customer_churn,binary,1.0,Tree (LODO),0.0
 wine_quality,regression,0.0,Always-GBDT,0.0
 wine_quality,regression,0.0,Always-DL,0.153846
 wine_quality,regression,0.0,Always-FM,0.846154
+wine_quality,regression,0.0,Tree (LODO),0.846154
 wine_quality,regression,0.1,Always-GBDT,0.0
 wine_quality,regression,0.1,Always-DL,0.208333
 wine_quality,regression,0.1,Always-FM,0.841667
+wine_quality,regression,0.1,Tree (LODO),0.841667
 wine_quality,regression,0.2,Always-GBDT,0.0
 wine_quality,regression,0.2,Always-DL,0.25
 wine_quality,regression,0.2,Always-FM,0.766667
+wine_quality,regression,0.2,Tree (LODO),0.766667
 wine_quality,regression,0.3,Always-GBDT,0.0
 wine_quality,regression,0.3,Always-DL,0.291667
 wine_quality,regression,0.3,Always-FM,0.691667
+wine_quality,regression,0.3,Tree (LODO),0.691667
 wine_quality,regression,0.4,Always-GBDT,0.0
 wine_quality,regression,0.4,Always-DL,0.333333
 wine_quality,regression,0.4,Always-FM,0.616667
+wine_quality,regression,0.4,Tree (LODO),0.616667
 wine_quality,regression,0.5,Always-GBDT,0.0
 wine_quality,regression,0.5,Always-DL,0.375
 wine_quality,regression,0.5,Always-FM,0.5
+wine_quality,regression,0.5,Tree (LODO),0.5
 wine_quality,regression,0.6,Always-GBDT,0.0
 wine_quality,regression,0.6,Always-DL,0.4
 wine_quality,regression,0.6,Always-FM,0.383333
+wine_quality,regression,0.6,Tree (LODO),0.383333
 wine_quality,regression,0.7,Always-GBDT,0.0
 wine_quality,regression,0.7,Always-DL,0.383333
 wine_quality,regression,0.7,Always-FM,0.266667
+wine_quality,regression,0.7,Tree (LODO),0.266667
 wine_quality,regression,0.8,Always-GBDT,0.0
 wine_quality,regression,0.8,Always-DL,0.366667
 wine_quality,regression,0.8,Always-FM,0.15
+wine_quality,regression,0.8,Tree (LODO),0.15
 wine_quality,regression,0.9,Always-GBDT,0.0
 wine_quality,regression,0.9,Always-DL,0.35
 wine_quality,regression,0.9,Always-FM,0.033333
+wine_quality,regression,0.9,Tree (LODO),0.033333
 wine_quality,regression,1.0,Always-GBDT,0.076923
 wine_quality,regression,1.0,Always-DL,0.384615
 wine_quality,regression,1.0,Always-FM,0.0
+wine_quality,regression,1.0,Tree (LODO),0.0
 year_prediction,regression,0.0,Always-GBDT,0.0
 year_prediction,regression,0.0,Always-DL,0.153846
 year_prediction,regression,0.0,Always-FM,0.846154
+year_prediction,regression,0.0,Tree (LODO),0.846154
 year_prediction,regression,0.1,Always-GBDT,0.0
 year_prediction,regression,0.1,Always-DL,0.141593
 year_prediction,regression,0.1,Always-FM,0.849558
+year_prediction,regression,0.1,Tree (LODO),0.849558
 year_prediction,regression,0.2,Always-GBDT,0.0
 year_prediction,regression,0.2,Always-DL,0.115385
 year_prediction,regression,0.2,Always-FM,0.788462
+year_prediction,regression,0.2,Tree (LODO),0.788462
 year_prediction,regression,0.3,Always-GBDT,0.0
 year_prediction,regression,0.3,Always-DL,0.083333
 year_prediction,regression,0.3,Always-FM,0.708333
+year_prediction,regression,0.3,Tree (LODO),0.708333
 year_prediction,regression,0.4,Always-GBDT,0.0
 year_prediction,regression,0.4,Always-DL,0.045455
 year_prediction,regression,0.4,Always-FM,0.613636
+year_prediction,regression,0.4,Tree (LODO),0.613636
 year_prediction,regression,0.5,Always-GBDT,0.0
 year_prediction,regression,0.5,Always-DL,0.0
 year_prediction,regression,0.5,Always-FM,0.5
+year_prediction,regression,0.5,Tree (LODO),0.5
 year_prediction,regression,0.6,Always-GBDT,0.04878
 year_prediction,regression,0.6,Always-DL,0.0
 year_prediction,regression,0.6,Always-FM,0.365854
+year_prediction,regression,0.6,Tree (LODO),0.365854
 year_prediction,regression,0.7,Always-GBDT,0.093023
 year_prediction,regression,0.7,Always-DL,0.0
 year_prediction,regression,0.7,Always-FM,0.22093
+year_prediction,regression,0.7,Tree (LODO),0.22093
 year_prediction,regression,0.8,Always-GBDT,0.106383
 year_prediction,regression,0.8,Always-DL,0.0
 year_prediction,regression,0.8,Always-FM,0.06383
+year_prediction,regression,0.8,Tree (LODO),0.06383
 year_prediction,regression,0.9,Always-GBDT,0.155963
 year_prediction,regression,0.9,Always-DL,0.06422
 year_prediction,regression,0.9,Always-FM,0.0
+year_prediction,regression,0.9,Tree (LODO),0.0
 year_prediction,regression,1.0,Always-GBDT,0.230769
 year_prediction,regression,1.0,Always-DL,0.153846
 year_prediction,regression,1.0,Always-FM,0.0
+year_prediction,regression,1.0,Tree (LODO),0.0
