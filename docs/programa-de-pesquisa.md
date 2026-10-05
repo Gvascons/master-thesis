@@ -5,7 +5,10 @@
 > cada frente, os critérios de conclusão e os riscos. Versionado no
 > repositório para que nada dependa de estado local. Campos entre [ ] exigem
 > confirmação do aluno/secretaria — não foram assumidos.
-> Última revisão: 21/07/2026 (AI-1 completa; AI-2 com pacote empírico
+> Última revisão: 06/10/2026 (dissertação COMPLETA em dissertacao/ —
+> 8 capítulos + pré-textuais + apêndices, 137 pp, auditada integralmente:
+> ~130 números recomputados sem divergência; artigos AI-1/AI-2 prontos
+> em latex/; E1/E2 executados). Revisão anterior: 21/07/2026 (AI-1 completa; AI-2 com pacote empírico
 > FECHADO — 6 fases, N=20, ambos os testes significativos; paper draft v1
 > com 2 figuras; dissertação com caps. 2-7 em prosa).
 
