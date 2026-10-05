@@ -172,7 +172,8 @@ leadership and the latency inversion that motivate this paper.
 
 \paragraph{Distilling TFMs.} Pocket FM \citep{pocketfm2026} distills
 classification TFMs (TabICLv2, TabPFNv2.6, LimiX, Orion-MSP) into
-XGBoost/CatBoost/MLP students on 153 datasets, retaining 96.5\% of teacher
+XGBoost/CatBoost/LightGBM/MLP students on 153 datasets, retaining
+96.5\% of teacher
 AUC at 38--860$\times$ speedups, and establishes stratified out-of-fold
 labeling as necessary; a companion paper extends the analysis to clinical
 data \citep{pocketfmhealth2026}. Prior Labs ships a closed-source
