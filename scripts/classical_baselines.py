@@ -82,16 +82,40 @@ def quantiles_ngboost(model, Xt):
     return Q
 
 
+class _ImputedQRF:
+    """QRF nao aceita NaN (adendo 05/10/2026 ao pre-registro): imputacao
+    por mediana ajustada no POOL e aplicada ao teste — a mesma politica
+    simples e sem vazamento usada para modelos sem suporte nativo."""
+
+    def __init__(self, model, medians):
+        self.model = model
+        self.medians = medians
+
+    def _fill(self, X):
+        X = np.asarray(X, dtype=float).copy()
+        for j in range(X.shape[1]):
+            mask = np.isnan(X[:, j])
+            if mask.any():
+                X[mask, j] = self.medians[j]
+        return X
+
+
 def fit_qrf(Xp, yp, seed):
     from quantile_forest import RandomForestQuantileRegressor
+    Xp = np.asarray(Xp, dtype=float)
+    medians = np.nanmedian(Xp, axis=0)
+    medians = np.where(np.isnan(medians), 0.0, medians)
+    wrapper = _ImputedQRF(None, medians)
     m = RandomForestQuantileRegressor(n_estimators=100, random_state=seed,
                                       n_jobs=-1)
-    m.fit(Xp, yp)
-    return m
+    m.fit(wrapper._fill(Xp), yp)
+    wrapper.model = m
+    return wrapper
 
 
-def quantiles_qrf(model, Xt):
-    return np.asarray(model.predict(Xt, quantiles=list(QUANTILES)))
+def quantiles_qrf(wrapper, Xt):
+    return np.asarray(wrapper.model.predict(wrapper._fill(Xt),
+                                            quantiles=list(QUANTILES)))
 
 
 def timed_quantiles(fn, model, Xt, repeats=5):

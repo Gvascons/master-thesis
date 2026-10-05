@@ -69,3 +69,12 @@ limitations da AI-1.)
 cap. 6 ("o peso da latência em que a recomendação vira"); não há resultado
 "ruim" — o experimento quantifica o trade-off que o framework já codifica
 qualitativamente.
+
+### Adendo datado (05/10/2026) — E1, imputação para o QRF
+
+O pacote `quantile-forest` não aceita NaN (3 datasets CTR23 têm valores
+faltantes; o NGBoost os trata nativamente via árvores do sklearn >=1.4).
+Decisão: imputação por mediana ajustada no pool e aplicada ao teste,
+somente no caminho do QRF — política simples, sem vazamento, declarada.
+Nenhum resultado já gravado foi alterado; a grade foi retomada do ponto
+de falha (runner resumível).
