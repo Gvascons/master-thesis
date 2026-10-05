@@ -1,4 +1,53 @@
 \chapter{Tabelas Completas de Resultados por Dataset}
 \label{app:tabelas}
 
-[A preencher na fase de escrita.]
+Este apêndice apresenta a tabela mestra do benchmark em forma
+desagregada: a métrica primária de cada um dos 14 modelos em cada um
+dos 18 conjuntos de dados, no \emph{hold-out} de teste (20\%, semente
+42), conforme o protocolo do Capítulo~\ref{chap:metodologia}. São as
+Tabelas~\ref{tab:app-binaria}, \ref{tab:app-multiclasse}
+e~\ref{tab:app-regressao} --- uma por tarefa, porque a métrica
+primária difere entre tarefas e valores de métricas distintas não são
+comparáveis entre si.
+
+\paragraph*{Como ler as tabelas.} Cada linha é um conjunto de dados;
+cada coluna, um modelo, na ordem canônica do benchmark (os três GBDTs,
+os modelos profundos, as redes KAN e os dois \emph{foundation
+models}). A métrica primária segue a definição do protocolo:
+\begin{itemize}
+  \item \textbf{classificação binária} (10 conjuntos): AUC-ROC ---
+    maior é melhor (Tabela~\ref{tab:app-binaria});
+  \item \textbf{classificação multiclasse} (3 conjuntos):
+    \emph{log-loss} --- menor é melhor
+    (Tabela~\ref{tab:app-multiclasse});
+  \item \textbf{regressão} (5 conjuntos): RMSE sobre o alvo
+    padronizado --- menor é melhor (Tabela~\ref{tab:app-regressao}).
+\end{itemize}
+O melhor valor de cada linha está em \textbf{negrito}. Os valores têm
+quatro casas decimais, com vírgula como separador decimal. As duas
+células marcadas ``---'' (\texttt{helena} $\times$
+TabPFN/TabFM) são as exclusões estruturais do estudo: o conjunto tem
+100 classes, acima do limite arquitetural de ambos os
+\emph{foundation models}. O estado completo é, portanto, de 250
+células medidas em $14 \times 18 = 252$ possíveis.
+
+\paragraph*{Proveniência e reprodutibilidade.} Todos os números
+provêm de
+\texttt{results/aggregated/test\_results.csv}, o agregado versionado
+do benchmark; as tabelas em si são geradas automaticamente por
+\texttt{scripts/gen\_appendix\_tables.py} a partir desse artefato
+(nenhum valor é transcrito à mão). Os resultados por \emph{fold} da
+validação cruzada interna, que fundamentam as análises estatísticas
+do Capítulo~5, estão em \texttt{results/aggregated/fold\_results.csv}
+--- arquivo de $\sim$300~MB que permanece no repositório local (fora
+do controle de versão remoto por tamanho), reproduzível a partir de
+\texttt{results/raw} e das sementes registradas.
+
+\paragraph*{Nota de layout.} Com 15 colunas (o conjunto de dados mais
+os 14 modelos), as tabelas não cabem na orientação de retrato; optou-se
+por páginas rotacionadas (\texttt{sidewaystable}, pacote
+\texttt{rotating}) com os nomes dos modelos rotacionados no cabeçalho,
+mantendo os 14 modelos lado a lado --- a comparação por linha, que é a
+leitura principal, fica íntegra numa única tabela por tarefa.
+
+\input{appendix/tabelas-geradas}

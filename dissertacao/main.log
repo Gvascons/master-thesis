@@ -1,0 +1,1955 @@
+**
+(main.tex
+LaTeX2e <2021-11-15> patch level 1
+L3 programming layer <2022-02-24> (risethesis.cls
+Document Class: risethesis 2008/05/06
+(book.cls
+Document Class: book 2021/10/04 v1.4n Standard LaTeX document class
+(bk12.clo
+File: bk12.clo 2021/10/04 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count181
+\c@chapter=\count182
+\c@section=\count183
+\c@subsection=\count184
+\c@subsubsection=\count185
+\c@paragraph=\count186
+\c@subparagraph=\count187
+\c@figure=\count188
+\c@table=\count189
+\abovecaptionskip=\skip47
+\belowcaptionskip=\skip48
+\bibindent=\dimen138
+) (amsmath.sty
+Package: amsmath 2021/10/15 v2.17l AMS math features
+\@mathmargin=\skip49
+
+For additional information on amsmath, use the `?' option.
+(amstext.sty
+Package: amstext 2021/08/26 v2.01 AMS text
+ (amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks16
+\ex@=\dimen139
+)) (amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen140
+) (amsopn.sty
+Package: amsopn 2021/08/26 v2.02 operator names
+)
+\inf@bad=\count190
+LaTeX Info: Redefining \frac on input line 234.
+\uproot@=\count191
+\leftroot@=\count192
+LaTeX Info: Redefining \overline on input line 399.
+\classnum@=\count193
+\DOTSCASE@=\count194
+LaTeX Info: Redefining \ldots on input line 496.
+LaTeX Info: Redefining \dots on input line 499.
+LaTeX Info: Redefining \cdots on input line 620.
+\Mathstrutbox@=\box50
+\strutbox@=\box51
+\big@size=\dimen141
+LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
+\macc@depth=\count195
+\c@MaxMatrixCols=\count196
+\dotsspace@=\muskip16
+\c@parentequation=\count197
+\dspbrk@lvl=\count198
+\tag@help=\toks17
+\row@=\count199
+\column@=\count266
+\maxfields@=\count267
+\andhelp@=\toks18
+\eqnshift@=\dimen142
+\alignsep@=\dimen143
+\tagshift@=\dimen144
+\tagwidth@=\dimen145
+\totwidth@=\dimen146
+\lineht@=\dimen147
+\@envbody=\toks19
+\multlinegap=\skip50
+\multlinetaggap=\skip51
+\mathdisplay@stack=\toks20
+LaTeX Info: Redefining \[ on input line 2938.
+LaTeX Info: Redefining \] on input line 2939.
+) (amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+)
+(amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+) (amsthm.sty
+Package: amsthm 2020/05/29 v2.20.6
+\thm@style=\toks21
+\thm@bodyfont=\toks22
+\thm@headfont=\toks23
+\thm@notefont=\toks24
+\thm@headpunct=\toks25
+\thm@preskip=\skip52
+\thm@postskip=\skip53
+\thm@headsep=\skip54
+\dth@everypar=\toks26
+) (calc.sty
+Package: calc 2017/05/25 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count268
+\calc@Bcount=\count269
+\calc@Adimen=\dimen148
+\calc@Bdimen=\dimen149
+\calc@Askip=\skip55
+\calc@Bskip=\skip56
+LaTeX Info: Redefining \setlength on input line 80.
+LaTeX Info: Redefining \addtolength on input line 81.
+\calc@Ccount=\count270
+\calc@Cskip=\skip57
+) (ifthen.sty
+Package: ifthen 2020/11/24 v1.1c Standard LaTeX ifthen package (DPC)
+) (inputenc.sty
+Package: inputenc 2021/02/14 v1.3d Input encoding file
+\inpenc@prehook=\toks27
+\inpenc@posthook=\toks28
+
+
+Package inputenc Warning: inputenc package ignored with utf8 based engines.
+
+) (textcase.sty
+Package: textcase 2019/09/14 v1.00 Text only upper/lower case changing (DPC)
+) (textcomp.sty
+Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
+) (url.sty
+\Urlmuskip=\muskip17
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+) (colortbl.sty
+Package: colortbl 2020/01/04 v1.0e Color table columns (DPC)
+ (array.sty
+Package: array 2021/10/04 v2.5f Tabular extension package (FMi)
+\col@sep=\dimen150
+\ar@mcellbox=\box52
+\extrarowheight=\dimen151
+\NC@list=\toks29
+\extratabsurround=\skip58
+\backup@length=\skip59
+\ar@cellbox=\box53
+) (color.sty
+Package: color 2021/12/07 v1.3c Standard LaTeX Color (DPC)
+
+(color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package color Info: Driver file: xetex.def on input line 149.
+ (xetex.def
+File: xetex.def 2021/03/18 v5.0k Graphics/color driver for xetex
+))
+\everycr=\toks30
+\minrowclearance=\skip60
+) (xspace.sty
+Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
+) (fontenc.sty
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 11
+2.
+ (t1lmr.fd
+File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)) (mathptmx.sty
+Package: mathptmx 2020/03/25 PSNFSS-v9.3 Times w/ Math, improved (SPQR, WaS) 
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 28.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> OT1/ztmcm/m/n on input line 28.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/ztmcm/m/n on input line 28.
+LaTeX Font Info:    Redeclaring symbol font `letters' on input line 29.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> OML/ztmcm/m/it on input line 29.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> OML/ztmcm/m/it on input line 29.
+LaTeX Font Info:    Redeclaring symbol font `symbols' on input line 30.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> OMS/ztmcm/m/n on input line 30.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> OMS/ztmcm/m/n on input line 30.
+LaTeX Font Info:    Redeclaring symbol font `largesymbols' on input line 31.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> OMX/ztmcm/m/n on input line 31.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> OMX/ztmcm/m/n on input line 31.
+\symbold=\mathgroup6
+\symitalic=\mathgroup7
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 34.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> OT1/ptm/bx/n on input line 34.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/ptm/bx/n on input line 34.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 35.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> OT1/ptm/m/it on input line 35.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> OT1/ptm/m/it on input line 35.
+LaTeX Info: Redefining \hbar on input line 50.
+)
+(helvet.sty
+Package: helvet 2020/03/25 PSNFSS-v9.3 (WaS) 
+ (keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks31
+)) (courier.sty
+Package: courier 2020/03/25 PSNFSS-v9.3 (WaS) 
+) (appendix.sty
+Package: appendix 2020/02/08 v1.2c extra appendix facilities
+\c@@pps=\count271
+\c@@ppsavesec=\count272
+\c@@ppsaveapp=\count273
+) (acronym.sty
+Package: acronym 2020/04/17 v1.47 Support for acronyms (Tobias Oetiker)
+ (suffix.sty
+Package: suffix 2006/07/15 1.5a Variant command support
+) (xstring.sty (xstring.tex
+\integerpart=\count274
+\decimalpart=\count275
+)
+Package: xstring 2021/07/21 v1.84 String manipulations (CT)
+)
+\AC@clearlist=\toks32
+) (fancybox.sty
+Package: fancybox 2010/05/15 1.4
+
+Style option: `fancybox' v1.4 <2010/05/15> (tvz)
+\@fancybox=\box54
+\shadowsize=\dimen152
+\@Sbox=\box55
+\do@VerbBox=\toks33
+\the@fancyput=\toks34
+\this@fancyput=\toks35
+\EndVerbatimTokens=\toks36
+\Verbatim@Outfile=\write3
+\Verbatim@Infile=\read2
+) (fancyhdr.sty
+Package: fancyhdr 2021/01/28 v4.0.1 Extensive control of page headers and foote
+rs
+\f@nch@headwidth=\skip61
+\f@nch@O@elh=\skip62
+\f@nch@O@erh=\skip63
+\f@nch@O@olh=\skip64
+\f@nch@O@orh=\skip65
+\f@nch@O@elf=\skip66
+\f@nch@O@erf=\skip67
+\f@nch@O@olf=\skip68
+\f@nch@O@orf=\skip69
+) (setspace.sty
+Package: setspace 2011/12/19 v6.7a set line spacing
+) (geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+ (ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+ (iftex.sty
+Package: iftex 2022/02/03 v1.0f TeX engine tests
+))
+\Gm@cnth=\count276
+\Gm@cntv=\count277
+\c@Gm@tempcnt=\count278
+\Gm@bindingoffset=\dimen153
+\Gm@wd@mp=\dimen154
+\Gm@odd@mp=\dimen155
+\Gm@even@mp=\dimen156
+\Gm@layoutwidth=\dimen157
+\Gm@layoutheight=\dimen158
+\Gm@layouthoffset=\dimen159
+\Gm@layoutvoffset=\dimen160
+\Gm@dimlist=\toks37
+)
+(titlesec.sty
+Package: titlesec 2021/07/05 v2.14 Sectioning titles
+\ttl@box=\box56
+\beforetitleunit=\skip70
+\aftertitleunit=\skip71
+\ttl@plus=\dimen161
+\ttl@minus=\dimen162
+\ttl@toksa=\toks38
+\titlewidth=\dimen163
+\titlewidthlast=\dimen164
+\titlewidthfirst=\dimen165
+) (psboxit.sty
+\gray@box=\box57
+\gray@space=\dimen166
+) (quotchap.sty
+Package: quotchap 2020/11/13 v1.3 Decorative Chapter Headings with Quotes
+\@quotebox=\box58
+) (tocbibind.sty
+Package: tocbibind 2010/10/13 v1.5k extra ToC listings
+Package tocbibind Info: The document has chapter divisions on input line 50.
+
+
+Package tocbibind Note: Using chapter style headings, unless overridden.
+
+) (indentfirst.sty
+Package: indentfirst 1995/11/23 v1.03 Indent first paragraph (DPC)
+) (enumitem.sty
+Package: enumitem 2019/06/20 v3.9 Customized lists
+\labelindent=\skip72
+\enit@outerparindent=\dimen167
+\enit@toks=\toks39
+\enit@inbox=\box59
+\enit@count@id=\count279
+\enitdp@description=\count280
+) (natbib.sty
+Package: natbib 1998/07/14 6.8c (PWD)
+\bibhang=\skip73
+\bibsep=\skip74
+LaTeX Info: Redefining \cite on input line 467.
+\c@NAT@ctr=\count281
+) (lastpage.sty
+Package: lastpage 2021/09/03 v1.2n Refers to last page's name (HMM; JPG)
+) (graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+
+(graphics.sty
+Package: graphics 2021/03/04 v1.4d Standard LaTeX Graphics (DPC,SPQR)
+ (trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+) (graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: xetex.def on input line 107.
+)
+\Gin@req@height=\dimen168
+\Gin@req@width=\dimen169
+)
+
+Package fancyhdr Warning: \fancyhead's `E' option without twoside option is use
+less on input line 852.
+
+\c@Def=\count282
+\c@Axi=\count283
+\c@Conj=\count284
+\c@Lem=\count285
+\c@Theo=\count286
+\c@Prop=\count287
+\c@Cor=\count288
+) (babel.sty
+Package: babel 2022/02/26 3.73 The Babel package
+\babel@savecnt=\count289
+\U@D=\dimen170
+\l@unhyphenated=\language87
+ (xebabel.def (txtbabel.def))
+\bbl@readstream=\read3
+\bbl@dirlevel=\count290
+ (brazil.ldf
+Language: portuges 2021/07/09 v1.2t Portuguese support from the babel system
+Package babel Info: Hyphen rules for 'brazil' set to \l@portuguese
+(babel)             (\language70). Reported on input line 111.
+Package babel Info: Making " an active character on input line 143.
+) (brazil.ldf
+Language: portuges 2021/07/09 v1.2t Portuguese support from the babel system
+)
+(brazilian.ldf
+Language: portuges 2021/07/09 v1.2t Portuguese support from the babel system
+Package babel Info: Hyphen rules for 'brazilian' set to \l@portuguese
+(babel)             (\language70). Reported on input line 111.
+)) (xcolor.sty
+Package: xcolor 2021/10/31 v2.13 LaTeX color extensions (UK)
+ (color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: xetex.def on input line 227.
+LaTeX Info: Redefining \color on input line 711.
+\rownum=\count291
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1352.
+Package xcolor Info: Model `RGB' extended on input line 1368.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1370.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1371.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1372.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1373.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1374.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1375.
+) (microtype.sty
+Package: microtype 2022/03/14 v3.0d Micro-typographical refinements (RS)
+ (etoolbox.sty
+Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count292
+)
+\MT@toks=\toks40
+\MT@tempbox=\box60
+\MT@count=\count293
+LaTeX Info: Redefining \noprotrusionifhmode on input line 1027.
+LaTeX Info: Redefining \leftprotrusion on input line 1028.
+LaTeX Info: Redefining \rightprotrusion on input line 1036.
+LaTeX Info: Redefining \textls on input line 1195.
+\MT@outer@kern=\dimen171
+LaTeX Info: Redefining \textmicrotypecontext on input line 1781.
+\MT@listname@count=\count294
+
+(microtype-xetex.def
+File: microtype-xetex.def 2022/03/14 v3.0d Definitions specific to xetex (RS)
+LaTeX Info: Redefining \lsstyle on input line 236.
+)
+Package microtype Info: Loading configuration file microtype.cfg.
+ (microtype.cfg
+File: microtype.cfg 2022/03/14 v3.0d microtype main configuration file (RS)
+)) (multirow.sty
+Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
+\multirow@colwidth=\skip75
+\multirow@cntb=\count295
+\multirow@dima=\skip76
+\bigstrutjot=\dimen172
+) (rotating.sty
+Package: rotating 2016/08/11 v2.16d rotated objects in LaTeX
+\c@r@tfl@t=\count296
+\rotFPtop=\skip77
+\rotFPbot=\skip78
+\rot@float@box=\box61
+\rot@mess@toks=\toks41
+)
+(booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen173
+\lightrulewidth=\dimen174
+\cmidrulewidth=\dimen175
+\belowrulesep=\dimen176
+\belowbottomsep=\dimen177
+\aboverulesep=\dimen178
+\abovetopsep=\dimen179
+\cmidrulesep=\dimen180
+\cmidrulekern=\dimen181
+\defaultaddspace=\dimen182
+\@cmidla=\count297
+\@cmidlb=\count298
+\@aboverulesep=\dimen183
+\@belowrulesep=\dimen184
+\@thisruleclass=\count299
+\@lastruleclass=\count300
+\@thisrulewidth=\dimen185
+) (caption.sty
+Package: caption 2022/03/01 v3.6b Customizing captions (AR)
+ (caption3.sty
+Package: caption3 2022/03/17 v2.3b caption3 kernel (AR)
+\caption@tempdima=\dimen186
+\captionmargin=\dimen187
+\caption@leftmargin=\dimen188
+\caption@rightmargin=\dimen189
+\caption@width=\dimen190
+\caption@indent=\dimen191
+\caption@parindent=\dimen192
+\caption@hangindent=\dimen193
+Package caption Info: Unknown document class (or package),
+(caption)             standard defaults will be used.
+Package caption Info: \@makecaption = \long macro:#1#2->\vskip \abovecaptionski
+p \sbox \@tempboxa {\small \bf #1\rm \enskip #2}\ifdim \wd \@tempboxa >\hsize {
+\small \bf #1\rm \enskip #2\par } \else \global \@minipagefalse \hb@xt@ \hsize 
+{\hfil \box \@tempboxa \hfil }\fi \vskip \belowcaptionskip  on input line 1176.
+
+)
+
+Package caption Warning: Unknown document class (or package),
+(caption)                standard defaults will be used.
+See the caption package documentation for explanation.
+
+\c@caption@flags=\count301
+\c@continuedfloat=\count302
+Package caption Info: rotating package is loaded.
+) (float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count303
+\float@exts=\toks42
+\float@box=\box62
+\@float@everytoks=\toks43
+\@floatcapt=\box63
+) (subcaption.sty
+Package: subcaption 2022/01/07 v1.5 Sub-captions (AR)
+\c@subfigure=\count304
+\c@subtable=\count305
+) (tikz.sty (pgf.sty (pgfrcs.sty
+(pgfutil-common.tex
+\pgfutil@everybye=\toks44
+\pgfutil@tempdima=\dimen194
+\pgfutil@tempdimb=\dimen195
+ (pgfutil-common-lists.tex)) (pgfutil-latex.def
+\pgfutil@abb=\box64
+)
+(pgfrcs.code.tex (pgf.revision.tex)
+Package: pgfrcs 2021/05/15 v3.1.9a (3.1.9a)
+))
+Package: pgf 2021/05/15 v3.1.9a (3.1.9a)
+ (pgfcore.sty (pgfsys.sty (pgfsys.code.tex
+Package: pgfsys 2021/05/15 v3.1.9a (3.1.9a)
+(pgfkeys.code.tex
+\pgfkeys@pathtoks=\toks45
+\pgfkeys@temptoks=\toks46
+ (pgfkeysfiltered.code.tex
+\pgfkeys@tmptoks=\toks47
+))
+\pgf@x=\dimen196
+\pgf@y=\dimen197
+\pgf@xa=\dimen198
+\pgf@ya=\dimen199
+\pgf@xb=\dimen256
+\pgf@yb=\dimen257
+\pgf@xc=\dimen258
+\pgf@yc=\dimen259
+\pgf@xd=\dimen260
+\pgf@yd=\dimen261
+\w@pgf@writea=\write4
+\r@pgf@reada=\read4
+\c@pgf@counta=\count306
+\c@pgf@countb=\count307
+\c@pgf@countc=\count308
+\c@pgf@countd=\count309
+\t@pgf@toka=\toks48
+\t@pgf@tokb=\toks49
+\t@pgf@tokc=\toks50
+\pgf@sys@id@count=\count310
+ (pgf.cfg
+File: pgf.cfg 2021/05/15 v3.1.9a (3.1.9a)
+)
+Driver file for pgf: pgfsys-xetex.def
+ (pgfsys-xetex.def
+File: pgfsys-xetex.def 2021/05/15 v3.1.9a (3.1.9a)
+
+(pgfsys-dvipdfmx.def
+File: pgfsys-dvipdfmx.def 2021/05/15 v3.1.9a (3.1.9a)
+ (pgfsys-common-pdf.def
+File: pgfsys-common-pdf.def 2021/05/15 v3.1.9a (3.1.9a)
+)
+\pgfsys@objnum=\count311
+))) (pgfsyssoftpath.code.tex
+File: pgfsyssoftpath.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfsyssoftpath@smallbuffer@items=\count312
+\pgfsyssoftpath@bigbuffer@items=\count313
+)
+(pgfsysprotocol.code.tex
+File: pgfsysprotocol.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)) (pgfcore.code.tex
+Package: pgfcore 2021/05/15 v3.1.9a (3.1.9a)
+ (pgfmath.code.tex
+(pgfmathcalc.code.tex (pgfmathutil.code.tex) (pgfmathparser.code.tex
+\pgfmath@dimen=\dimen262
+\pgfmath@count=\count314
+\pgfmath@box=\box65
+\pgfmath@toks=\toks51
+\pgfmath@stack@operand=\toks52
+\pgfmath@stack@operation=\toks53
+)
+(pgfmathfunctions.code.tex (pgfmathfunctions.basic.code.tex)
+(pgfmathfunctions.trigonometric.code.tex) (pgfmathfunctions.random.code.tex)
+(pgfmathfunctions.comparison.code.tex) (pgfmathfunctions.base.code.tex)
+(pgfmathfunctions.round.code.tex) (pgfmathfunctions.misc.code.tex)
+(pgfmathfunctions.integerarithmetics.code.tex))) (pgfmathfloat.code.tex
+\c@pgfmathroundto@lastzeros=\count315
+))
+(pgfint.code.tex) (pgfcorepoints.code.tex
+File: pgfcorepoints.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@picminx=\dimen263
+\pgf@picmaxx=\dimen264
+\pgf@picminy=\dimen265
+\pgf@picmaxy=\dimen266
+\pgf@pathminx=\dimen267
+\pgf@pathmaxx=\dimen268
+\pgf@pathminy=\dimen269
+\pgf@pathmaxy=\dimen270
+\pgf@xx=\dimen271
+\pgf@xy=\dimen272
+\pgf@yx=\dimen273
+\pgf@yy=\dimen274
+\pgf@zx=\dimen275
+\pgf@zy=\dimen276
+) (pgfcorepathconstruct.code.tex
+File: pgfcorepathconstruct.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@path@lastx=\dimen277
+\pgf@path@lasty=\dimen278
+)
+(pgfcorepathusage.code.tex
+File: pgfcorepathusage.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@shorten@end@additional=\dimen279
+\pgf@shorten@start@additional=\dimen280
+) (pgfcorescopes.code.tex
+File: pgfcorescopes.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfpic=\box66
+\pgf@hbox=\box67
+\pgf@layerbox@main=\box68
+\pgf@picture@serial@count=\count316
+)
+(pgfcoregraphicstate.code.tex
+File: pgfcoregraphicstate.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgflinewidth=\dimen281
+) (pgfcoretransformations.code.tex
+File: pgfcoretransformations.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@pt@x=\dimen282
+\pgf@pt@y=\dimen283
+\pgf@pt@temp=\dimen284
+)
+(pgfcorequick.code.tex
+File: pgfcorequick.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+) (pgfcoreobjects.code.tex
+File: pgfcoreobjects.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)
+(pgfcorepathprocessing.code.tex
+File: pgfcorepathprocessing.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+) (pgfcorearrows.code.tex
+File: pgfcorearrows.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfarrowsep=\dimen285
+)
+(pgfcoreshade.code.tex
+File: pgfcoreshade.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@max=\dimen286
+\pgf@sys@shading@range@num=\count317
+\pgf@shadingcount=\count318
+) (pgfcoreimage.code.tex
+File: pgfcoreimage.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+ (pgfcoreexternal.code.tex
+File: pgfcoreexternal.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfexternal@startupbox=\box69
+))
+(pgfcorelayers.code.tex
+File: pgfcorelayers.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+) (pgfcoretransparency.code.tex
+File: pgfcoretransparency.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)
+(pgfcorepatterns.code.tex
+File: pgfcorepatterns.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+) (pgfcorerdf.code.tex
+File: pgfcorerdf.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+))) (pgfmoduleshapes.code.tex
+File: pgfmoduleshapes.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfnodeparttextbox=\box70
+)
+(pgfmoduleplot.code.tex
+File: pgfmoduleplot.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+) (pgfcomp-version-0-65.sty
+Package: pgfcomp-version-0-65 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@nodesepstart=\dimen287
+\pgf@nodesepend=\dimen288
+) (pgfcomp-version-1-18.sty
+Package: pgfcomp-version-1-18 2021/05/15 v3.1.9a (3.1.9a)
+)) (pgffor.sty (pgfkeys.sty (pgfkeys.code.tex)) (pgfmath.sty (pgfmath.code.tex)
+)
+(pgffor.code.tex
+Package: pgffor 2021/05/15 v3.1.9a (3.1.9a)
+ (pgfmath.code.tex)
+\pgffor@iter=\dimen289
+\pgffor@skip=\dimen290
+\pgffor@stack=\toks54
+\pgffor@toks=\toks55
+)) (tikz.code.tex
+Package: tikz 2021/05/15 v3.1.9a (3.1.9a)
+
+(pgflibraryplothandlers.code.tex
+File: pgflibraryplothandlers.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@plot@mark@count=\count319
+\pgfplotmarksize=\dimen291
+)
+\tikz@lastx=\dimen292
+\tikz@lasty=\dimen293
+\tikz@lastxsaved=\dimen294
+\tikz@lastysaved=\dimen295
+\tikz@lastmovetox=\dimen296
+\tikz@lastmovetoy=\dimen297
+\tikzleveldistance=\dimen298
+\tikzsiblingdistance=\dimen299
+\tikz@figbox=\box71
+\tikz@figbox@bg=\box72
+\tikz@tempbox=\box73
+\tikz@tempbox@bg=\box74
+\tikztreelevel=\count320
+\tikznumberofchildren=\count321
+\tikznumberofcurrentchild=\count322
+\tikz@fig@count=\count323
+ (pgfmodulematrix.code.tex
+File: pgfmodulematrix.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfmatrixcurrentrow=\count324
+\pgfmatrixcurrentcolumn=\count325
+\pgf@matrix@numberofcolumns=\count326
+)
+\tikz@expandcount=\count327
+
+(tikzlibrarytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+))) (tikzlibrarypositioning.code.tex
+File: tikzlibrarypositioning.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)
+(pgflibraryarrows.meta.code.tex
+File: pgflibraryarrows.meta.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfarrowinset=\dimen300
+\pgfarrowlength=\dimen301
+\pgfarrowwidth=\dimen302
+\pgfarrowlinewidth=\dimen303
+) (thesisextras.sty
+Package: thesisextras 2026/10/05 Didactic boxes for the thesis
+ (framed.sty
+Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
+\OuterFrameSep=\skip79
+\fb@frw=\dimen304
+\fb@frh=\dimen305
+\FrameRule=\dimen306
+\FrameSep=\dimen307
+))
+LaTeX Font Info:    Trying to load font information for T1+ptm on input line 45
+.
+ (t1ptm.fd
+File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
+)
+(l3backend-xetex.def
+File: l3backend-xetex.def 2022-02-07 L3 backend support: XeTeX
+\c__kernel_sys_dvipdfmx_version_int=\count328
+\l__color_backend_stack_int=\count329
+\g__color_backend_stack_int=\count330
+\g__graphics_track_int=\count331
+\l__pdf_internal_box=\box75
+\g__pdf_backend_object_int=\count332
+\g__pdf_backend_annotation_int=\count333
+\g__pdf_backend_link_int=\count334
+) (main.aux (chapters/cap1-introducao.aux)
+(chapters/cap2-fundamentacao.aux) (chapters/cap3-trabalhos-relacionados.aux)
+(chapters/cap4-metodologia.aux) (chapters/cap5-benchmark.aux)
+(chapters/cap6-framework.aux) (chapters/cap7-destilacao.aux)
+(chapters/cap8-conclusao.aux) (appendix/apendice-a-tabelas.aux)
+(appendix/apendice-b-espacos-busca.aux) (appendix/apendice-c-suplementares.aux)
+)
+\openout1 = `main.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 45.
+LaTeX Font Info:    ... okay on input line 45.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 45.
+LaTeX Font Info:    ... okay on input line 45.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 45.
+LaTeX Font Info:    ... okay on input line 45.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 45.
+LaTeX Font Info:    ... okay on input line 45.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 45.
+LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 4
+5.
+ (ts1cmr.fd
+File: ts1cmr.fd 2019/12/16 v2.5j Standard LaTeX font definitions
+)
+LaTeX Font Info:    ... okay on input line 45.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 45.
+LaTeX Font Info:    ... okay on input line 45.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 45.
+LaTeX Font Info:    ... okay on input line 45.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 45.
+LaTeX Font Info:    ... okay on input line 45.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: xetex
+*geometry* verbose mode - [ preamble ] result:
+* driver: xetex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(85.35826pt, 455.24411pt, 56.9055pt)
+* v-part:(T,H,B)=(85.35826pt, 702.78308pt, 56.9055pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=455.24411pt
+* \textheight=702.78308pt
+* \oddsidemargin=13.08827pt
+* \evensidemargin=13.08827pt
+* \topmargin=-18.78552pt
+* \headheight=12.0pt
+* \headsep=19.8738pt
+* \topskip=12.0pt
+* \footskip=30.0pt
+* \marginparwidth=38.0pt
+* \marginparsep=7.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.8pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+Package lastpage Info: Please have a look at the pageslts package at
+(lastpage)             https://www.ctan.org/pkg/pageslts
+(lastpage)             ! on input line 45.
+LaTeX Info: Redefining \microtypecontext on input line 45.
+Package microtype Info: Applying patch `item' on input line 45.
+Package microtype Info: Applying patch `toc' on input line 45.
+
+Package microtype Warning: Unable to apply patch `eqnum' on input line 45.
+
+Package microtype Info: Applying patch `footnote' on input line 45.
+Package microtype Info: Character protrusion enabled (level 2).
+Package microtype Info: Using default protrusion set `alltext'.
+Package microtype Info: No adjustment of tracking.
+Package microtype Info: No adjustment of spacing.
+Package microtype Info: No adjustment of kerning.
+(mt-ptm.cfg
+File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
+)
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: float package is loaded.
+Package caption Info: End \AtBeginDocument code.
+File: cinlogo.png Graphic file (type bmp)
+<cinlogo.png>
+File: ufpelogo.png Graphic file (type bmp)
+<ufpelogo.png>
+LaTeX Font Info:    Trying to load font information for T1+times on input line 
+47.
+LaTeX Font Info:    No file T1times.fd. on input line 47.
+
+
+LaTeX Font Warning: Font shape `T1/times/m/n' undefined
+(Font)              using `T1/cmr/m/n' instead on input line 47.
+
+(mt-cmr.cfg
+File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
+(RS)
+)
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `times' (encoding: T1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+LaTeX Font Info:    Trying to load font information for T1+pcr on input line 47
+.
+ (t1pcr.fd
+File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
+)
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `pcr' (encoding: T1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+LaTeX Font Info:    Trying to load font information for OT1+ztmcm on input line
+ 47.
+ (ot1ztmcm.fd
+File: ot1ztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OT1/ztmcm.
+)
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `ztmcm' (encoding: OT1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+LaTeX Font Info:    Trying to load font information for OML+ztmcm on input line
+ 47.
+ (omlztmcm.fd
+File: omlztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OML/ztmcm.
+)
+LaTeX Font Info:    Trying to load font information for OMS+ztmcm on input line
+ 47.
+ (omsztmcm.fd
+File: omsztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OMS/ztmcm.
+)
+LaTeX Font Info:    Trying to load font information for OMX+ztmcm on input line
+ 47.
+ (omxztmcm.fd
+File: omxztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OMX/ztmcm.
+) (mt-msa.cfg
+File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
+) (mt-msb.cfg
+File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
+)
+LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 4
+7.
+ (ot1ptm.fd
+File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
+)
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 47.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 47.
+ [1
+
+
+]
+File: ufpelogo.png Graphic file (type bmp)
+<ufpelogo.png>
+LaTeX Font Info:    Trying to load font information for T1+phv on input line 48
+.
+ (t1phv.fd
+File: t1phv.fd 2020/03/25 scalable font definitions for T1/phv.
+)
+LaTeX Font Info:    Font shape `T1/phv/m/n' will be
+(Font)              scaled to size 11.03998pt on input line 48.
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `phv' (encoding: T1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+LaTeX Font Info:    Font shape `T1/phv/m/n' will be
+(Font)              scaled to size 15.89755pt on input line 48.
+
+Overfull \hbox (52.92961pt too wide) in paragraph at lines 48--48
+[][]   [] 
+ []
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 48.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 48.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 48.
+[1
+
+]
+LaTeX Font Info:    Trying to load font information for T1+pag on input line 59
+.
+ (t1pag.fd
+File: t1pag.fd 2001/06/04 font definitions for T1/pag.
+)
+LaTeX Font Info:    Font shape `T1/pag/b/n' in size <24.88> not available
+(Font)              Font shape `T1/pag/db/n' tried instead on input line 59.
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `pag' (encoding: T1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+LaTeX Font Info:    Font shape `T1/pag/b/n' in size <100> not available
+(Font)              Font shape `T1/pag/db/n' tried instead on input line 59.
+
+
+Package xcolor Warning: Incompatible color definition on input line 59.
+
+(pretext/agradecimentos) [2
+
+
+]
+
+Package xcolor Warning: Incompatible color definition on input line 62.
+
+(pretext/resumo)
+Overfull \hbox (0.64333pt too wide) in paragraph at lines 49--64
+\T1/ptm/b/n/12 Palavras-chaves: \T1/ptm/m/n/12 da-dos ta-bu-la-res; foun-da-tio
+n mo-dels; ben-ch-mark; des-ti-la-ção de co-nhe-ci-mento;
+ []
+
+[3
+
+]
+
+Package xcolor Warning: Incompatible color definition on input line 65.
+
+(pretext/abstract) [4
+
+]
+
+Package xcolor Warning: Incompatible color definition on input line 68.
+
+(main.lof
+Overfull \hbox (103.48582pt too wide) in paragraph at lines 10--10
+ \T1/ptm/m/n/12 ral para a aná-lise con-di-ci-o-nal da QP2. Fonte: \T1/pcr/m/n/
+12 results/figures/dataset_landscape.pdf\T1/ptm/m/n/12 , 
+ []
+
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 1
+6.
+(ts1ptm.fd
+File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
+) [5
+
+])
+\tf@lof=\write5
+\openout5 = `main.lof'.
+
+ [6]
+
+Package xcolor Warning: Incompatible color definition on input line 69.
+
+(main.lot)
+\tf@lot=\write6
+\openout6 = `main.lot'.
+
+ [7
+
+]
+
+Package xcolor Warning: Incompatible color definition on input line 70.
+
+[8
+
+]
+
+Package xcolor Warning: Incompatible color definition on input line 71.
+
+(main.toc [9
+
+]
+Overfull \hbox (1.26964pt too wide) in paragraph at lines 50--50
+ [][] []\T1/ptm/m/n/12 Um efeito co-la-te-ral da grade: o cru-za-mento de quan-
+ 
+ []
+
+
+Overfull \hbox (0.23555pt too wide) in paragraph at lines 61--61
+ [][] []\T1/ptm/m/n/12 O que sig-ni-fica ``pra-ti-ca-mente equi-va-lente''? O t
+este 
+ []
+
+[10] [11]
+Overfull \hbox (6.60963pt too wide) in paragraph at lines 134--134
+ [][] []\T1/ptm/m/n/12 O re-sul-tado ne-ga-tivo das re-des de Kolmogorov--Arnol
+d. [][]  
+ []
+
+[12] [13])
+\tf@toc=\write7
+\openout7 = `main.toc'.
+
+ [14]
+\openout2 = `chapters/cap1-introducao.aux'.
+
+ (chapters/cap1-introducao.tex
+Cap\'{\i }tulo 1.
+
+Package xcolor Warning: Incompatible color definition on input line 26.
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[15
+
+
+] [16] [17]
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 230.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 230.
+ [18] [19] [20] [21]) [22]
+\openout2 = `chapters/cap2-fundamentacao.aux'.
+
+ (chapters/cap2-fundamentacao.tex
+Cap\'{\i }tulo 2.
+
+Package xcolor Warning: Incompatible color definition on input line 1.
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[23
+
+
+
+
+] [24]
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 147.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 147.
+ [25]
+Overfull \hbox (2.60493pt too wide) in paragraph at lines 228--244
+[]\T1/ptm/m/n/12 Três im-ple-men-ta-ções mo-der-nas de \T1/ptm/m/it/12 gra-di-e
+nt bo-os-ting \T1/ptm/m/n/12 so-bre ár-vo-res (GBDTs, de \T1/ptm/m/it/12 gradie
+nt-
+ []
+
+[26] [27] [28]
+Missing character: There is no ç ("E7) in font zptmcm7t!
+Missing character: There is no ã ("E3) in font zptmcm7t!
+[29] [30]
+
+LaTeX Font Warning: Font shape `T1/ptm/m/scit' undefined
+(Font)              using `T1/ptm/m/it' instead on input line 485.
+
+[31] [32] [33] [34] [35] [36] [37] [38]) [39]
+\openout2 = `chapters/cap3-trabalhos-relacionados.aux'.
+
+
+(chapters/cap3-trabalhos-relacionados.tex
+Cap\'{\i }tulo 3.
+
+Package xcolor Warning: Incompatible color definition on input line 1.
+
+
+Overfull \hbox (71.0681pt too wide) in paragraph at lines 28--28
+[]\T1/ptm/b/n/10.95 Material as-so-ci-ado. \T1/ptm/m/n/10.95 As se-ções de \T1/
+ptm/m/it/10.95 Re-la-ted Work \T1/ptm/m/n/10.95 dos dois ar-ti-gos in-ter-me-di
+á-rios (\T1/pcr/m/n/10.95 latex/ai1/main.tex
+ []
+
+
+Overfull \hbox (16.9675pt too wide) in paragraph at lines 28--28
+\T1/ptm/m/n/10.95 (15/07, 20/07 e 04/10/2026) e \T1/pcr/m/n/10.95 docs/memo-nov
+os-modelos-kan-tabkan-tabfm.md
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[40
+
+
+
+
+] [41] [42] [43]
+Overfull \hbox (0.69215pt too wide) in paragraph at lines 221--235
+\T1/ptm/m/n/12 ba-lho --- é o teste da fa-mí-lia Kolmogorov--Arnold con-tra o \
+T1/ptm/m/it/12 slate \T1/ptm/m/n/12 com-pleto GBDT/DL/\T1/ptm/m/it/12 foundatio
+n
+ []
+
+[44]
+Overfull \hbox (7.7855pt too wide) in paragraph at lines 255--262
+[] []|\T1/ptm/b/n/12 3.4.0.0.2 Amor-ti-za-ção e trans-fe-rên-cia.[] \T1/ptm/m/n
+/12 O Mother-Net (MÜL-LER; CU-RINO; RA-MA-KRISH-
+ []
+
+[45] [46] [47]
+Underfull \hbox (badness 10000) in paragraph at lines 428--428
+[]|\T1/ptm/m/n/10.95 Benchmarks GBDT
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 429--430
+[]|\T1/ptm/m/n/10.95 Protocolos con-so-li-da-dos
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 429--430
+\T1/ptm/m/n/10.95 (GRINSZ-TAJN; OYAL-
+ []
+
+
+Underfull \hbox (badness 4403) in paragraph at lines 429--430
+\T1/ptm/m/n/10.95 LON; VA-RO-QUAUX, 2022;
+ []
+
+
+Underfull \hbox (badness 5726) in paragraph at lines 429--430
+\T1/ptm/m/n/10.95 MCEL-FRESH et al., 2023;
+ []
+
+
+Underfull \hbox (badness 6268) in paragraph at lines 429--430
+\T1/ptm/m/n/10.95 GO-RISH-NIY et al., 2021);
+ []
+
+
+Underfull \hbox (badness 7256) in paragraph at lines 431--432
+[]|\T1/ptm/m/n/10.95 Geração 2026 e fa-mí-lia
+ []
+
+
+Underfull \hbox (badness 1248) in paragraph at lines 431--432
+\T1/ptm/m/n/10.95 KAN au-sen-tes; mul-ti-cri-té-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 436--437
+[]|\T1/ptm/m/n/10.95 Números do pro-po-nente
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 436--437
+\T1/ptm/m/n/10.95 (IZ-BICKI; RO-DRI-GUES,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 436--437
+\T1/ptm/m/n/10.95 2026; LANDS-GE-SELL;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 438--438
+[]|\T1/ptm/m/n/10.95 Comparação neu-tra
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 438--438
+\T1/ptm/m/n/10.95 TabPFN $\OMS/ztmcm/m/n/10.95 ^^B$ \T1/ptm/m/n/10.95 TabFM sob
+
+ []
+
+
+Underfull \hbox (badness 2762) in paragraph at lines 442--443
+[]|\T1/ptm/m/n/10.95 Avaliações in-de-pen-den-tes es-
+ []
+
+
+Underfull \hbox (badness 1342) in paragraph at lines 442--443
+\T1/ptm/m/n/10.95 trei-tas (PO-ETA et al., 2024;
+ []
+
+
+Underfull \hbox (badness 7832) in paragraph at lines 442--443
+\T1/ptm/m/n/10.95 GBDT/TFM nem ei-xos de
+ []
+
+
+Underfull \hbox (badness 1142) in paragraph at lines 444--445
+[]|\T1/ptm/m/n/10.95 Teste con-tra o \T1/ptm/m/it/10.95 slate \T1/ptm/m/n/10.95
+ com-
+ []
+
+
+Underfull \hbox (badness 2165) in paragraph at lines 444--445
+\T1/ptm/m/n/10.95 pleto GBDT/DL/TFM em
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 448--448
+[]|\T1/ptm/m/n/10.95 Aceleração/\T1/ptm/m/it/10.95 serving
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 449--450
+[]|\T1/ptm/m/n/10.95 Estratégias ava-li-a-das iso-la-
+ []
+
+
+Underfull \hbox (badness 5490) in paragraph at lines 449--450
+\T1/ptm/m/n/10.95 da-mente: TACO, CRUMB,
+ []
+
+
+Underfull \hbox (badness 2512) in paragraph at lines 449--450
+\T1/ptm/m/n/10.95 Mother-Net, quan-ti-za-ção FP8
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 449--450
+\T1/ptm/m/n/10.95 (ZABËRGJA et al., 2026;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 449--450
+\T1/ptm/m/n/10.95 HE-REDGE et al., 2026;
+ []
+
+
+Underfull \hbox (badness 2591) in paragraph at lines 456--458
+\T1/ptm/m/n/10.95 2026a,b; QIN et al., 2026);
+ []
+
+
+Underfull \hbox (badness 4927) in paragraph at lines 456--458
+\T1/ptm/m/n/10.95 re-gres-são pon-tual con-tem-po-
+ []
+
+
+Underfull \hbox (badness 1102) in paragraph at lines 456--458
+\T1/ptm/m/n/10.95 râ-nea (JE-ONG et al., 2026);
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 456--458
+\T1/ptm/m/n/10.95 mo-tor co-mer-cial fe-chado
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 459--460
+[]|\T1/ptm/m/n/10.95 Regressão \T1/ptm/m/it/10.95 dis-tri-bu-ci-o-nal\T1/ptm/m/
+n/10.95 :
+ []
+
+
+Underfull \hbox (badness 1629) in paragraph at lines 459--460
+\T1/ptm/m/n/10.95 cur-vas de quan-tis, CRPS,
+ []
+
+
+Underfull \hbox (badness 3250) in paragraph at lines 459--460
+\T1/ptm/m/n/10.95 ca-li-bra-ção; TabFM como
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 464--465
+[]|\T1/ptm/m/n/10.95 Meta-características desde
+ []
+
+
+Underfull \hbox (badness 1365) in paragraph at lines 464--465
+\T1/ptm/m/n/10.95 RICE (1976); fra-gi-li-dade na
+ []
+
+
+Underfull \hbox (badness 3179) in paragraph at lines 466--467
+[]|\T1/ptm/m/n/10.95 Validação LODO ho-nesta
+ []
+
+
+Underfull \hbox (badness 1043) in paragraph at lines 466--467
+\T1/ptm/m/n/10.95 res-tri-ções va-li-dada por \T1/ptm/m/it/10.95 re-
+ []
+
+[48] [49]) [50]
+\openout2 = `chapters/cap4-metodologia.aux'.
+
+ (chapters/cap4-metodologia.tex
+Cap\'{\i }tulo 4.
+
+Package xcolor Warning: Incompatible color definition on input line 1.
+
+
+Overfull \hbox (41.99847pt too wide) in paragraph at lines 26--26
+\T1/ptm/m/n/10.95 pro-to-colo es-tão ver-si-o-na-dos em \T1/pcr/m/n/10.95 confi
+gs/experiment.yaml \T1/ptm/m/n/10.95 e \T1/pcr/m/n/10.95 configs/datasets.yaml\
+T1/ptm/m/n/10.95 . 
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[51
+
+
+
+
+]
+Underfull \hbox (badness 1552) in paragraph at lines 97--97
+[]\T1/ptm/m/n/12 Tabela 4.1: |Os 18 con-jun-tos de da-dos OpenML do ben-ch-mark
+ (ta-ma-nhos apro-xi-ma-
+ []
+
+
+Underfull \hbox (badness 1137) in paragraph at lines 97--97
+\T1/ptm/m/n/12 dos an-tes do teto; as exe-cu-ções li-mi-tam cada con-junto a 10
+0 mil amos-tras). Fonte:
+ []
+
+[52]
+Overfull \hbox (57.30115pt too wide) in paragraph at lines 142--147
+\T1/ptm/m/n/12 e um caso ex-tremo pre-do-mi-nan-te-mente ca-te-gó-rico de alta 
+car-di-na-li-dade (\T1/pcr/m/n/12 amazon_employee\T1/ptm/m/n/12 ),
+ []
+
+[53]
+File: images/dataset_landscape.pdf Graphic file (type pdf)
+<use images/dataset_landscape.pdf>
+
+Overfull \hbox (5.09877pt too wide) in paragraph at lines 170--183
+[] []|\T1/ptm/b/n/12 4.2.0.0.1 Teto de 100 mil amos-tras.[] \T1/ptm/m/n/12 Con-
+jun-tos com mais de 100 mil amos-tras (\T1/pcr/m/n/12 covertype\T1/ptm/m/n/12 ,
+
+ []
+
+
+Overfull \hbox (12.13074pt too wide) in paragraph at lines 184--195
+[] []|\T1/ptm/b/n/12 4.2.0.0.2 De-cla-ra-ção so-bre os da-dos.[] \T1/ptm/m/n/12
+ To-dos os con-jun-tos são pú-bli-cos e ob-ti-dos pelo OpenML
+ []
+
+[54]
+Overfull \hbox (105.48524pt too wide) in paragraph at lines 210--235
+ [][] 
+ []
+
+[55] [56] [57]
+Overfull \hbox (12.24525pt too wide) in paragraph at lines 429--447
+ [][] 
+ []
+
+[58]
+Overfull \hbox (25.07712pt too wide) in paragraph at lines 463--476
+\T1/ptm/m/n/12 for-mu-la-ção de re-fe-rên-cia; o re-gis-tro com-pleto está em \
+T1/pcr/m/n/12 docs/metodologia-estatistica.md\T1/ptm/m/n/12 . 
+ []
+
+[59] [60]
+Overfull \hbox (21.92403pt too wide) in paragraph at lines 576--582
+[]\T1/ptm/b/n/12 Validação do ar-ca-bouço de de-ci-são (LODO). \T1/ptm/m/n/12 O
+ re-co-men-da-dor meta-atributos$\OMS/ztmcm/m/n/12 !$\T1/ptm/m/n/12 família
+ []
+
+[61]
+Overfull \hbox (17.79759pt too wide) in paragraph at lines 610--613
+[]\T1/ptm/b/n/12 Configurações ver-si-o-na-das \T1/ptm/m/n/12 (\T1/pcr/m/n/12 c
+onfigs/*.yaml\T1/ptm/m/n/12 ): iden-ti-fi-ca-do-res e ver-sões OpenML,
+ []
+
+
+Overfull \hbox (0.60083pt too wide) in paragraph at lines 618--621
+\T1/ptm/m/n/12 com-mits de re-ti-fi-ca-ção que pre-ser-vam o his-tó-rico --- nu
+nca por re-es-crita (Se-ção 4.10[]). 
+ []
+
+[62] [63] [64]) [65]
+\openout2 = `chapters/cap5-benchmark.aux'.
+
+ (chapters/cap5-benchmark.tex
+Cap\'{\i }tulo 5.
+
+Package xcolor Warning: Incompatible color definition on input line 19.
+
+
+Overfull \hbox (93.44853pt too wide) in paragraph at lines 49--49
+\T1/ptm/m/n/10.95 tra-dos em co-men-tá-rios na fonte L[]T[]X do ar-tigo e na ta
+-bela mes-tra (\T1/pcr/m/n/10.95 notebooks/TABELA_RESULTADOS.md\T1/ptm/m/n/10.9
+5 ). 
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[66
+
+
+
+
+]
+File: images/dataset_landscape.pdf Graphic file (type pdf)
+<use images/dataset_landscape.pdf>
+ [67] [68]
+File: images/cd_diagram_binary.pdf Graphic file (type pdf)
+<use images/cd_diagram_binary.pdf>
+ [69] [70]
+File: images/heatmap_classification.pdf Graphic file (type pdf)
+<use images/heatmap_classification.pdf>
+ [71] [72]
+File: images/inference_time.pdf Graphic file (type pdf)
+<use images/inference_time.pdf>
+ [73] [74]
+File: images/pareto_binary.pdf Graphic file (type pdf)
+<use images/pareto_binary.pdf>
+ [75]
+File: images/imbalance_robustness.png Graphic file (type bmp)
+<images/imbalance_robustness.png>
+
+Underfull \hbox (badness 1237) in paragraph at lines 448--448
+\T1/ptm/b/n/12 re-la-tivo e o apren-di-zado pro-fundo clás-sico pi-ora; os foun
+-da-tion mo-dels per-ma-ne-
+ []
+
+
+Underfull \hbox (badness 1072) in paragraph at lines 448--448
+\T1/ptm/b/n/12 cem à frente em to-das as fai-xas. \T1/ptm/m/n/12 Rank mé-dio ag
+re-gado por fa-mí-lia (me-nor é me-
+ []
+
+[76]
+File: images/learning_curves.pdf Graphic file (type pdf)
+<use images/learning_curves.pdf>
+
+Underfull \hbox (badness 1755) in paragraph at lines 484--484
+\T1/ptm/b/n/12 junto --- e o TabPFN li-dera o re-gime de pou-cos da-dos em to-d
+os os cinco pai-
+ []
+
+
+Underfull \hbox (badness 1365) in paragraph at lines 484--484
+\T1/ptm/m/n/12 tras ao pool com-pleto). Cada pai-nel no-meia sua mé-trica e di-
+re-ção ($\OMS/ztmcm/m/n/12 "$ \T1/ptm/m/n/12 maior é me-
+ []
+
+
+Underfull \hbox (badness 3168) in paragraph at lines 484--484
+\T1/ptm/m/n/12 lhor; $\OMS/ztmcm/m/n/12 #$ \T1/ptm/m/n/12 me-nor, es-cala lo-ga
+-rít-mica); as ban-das são $\OMS/ztmcm/m/n/12 ^^F$\T1/ptm/m/n/12 1 desvio-padrã
+o so-bre as se-
+ []
+
+
+Underfull \hbox (badness 1789) in paragraph at lines 484--484
+\T1/ptm/m/n/12 men-tes. Um cru-za-mento é o ponto em que a curva de uma fa-mí-l
+ia cruza per-ma-
+ []
+
+
+Underfull \hbox (badness 2521) in paragraph at lines 484--484
+\T1/ptm/m/n/12 nen-te-mente a da ou-tra. Fonte: \T1/pcr/m/n/12 latex/ai1/figure
+s/learning_curves.pdf
+ []
+
+[77]
+File: images/average_ranks.pdf Graphic file (type pdf)
+<use images/average_ranks.pdf>
+ [78] [79] [80]) [81]
+\openout2 = `chapters/cap6-framework.aux'.
+
+ (chapters/cap6-framework.tex
+Cap\'{\i }tulo 6.
+
+Package xcolor Warning: Incompatible color definition on input line 24.
+
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+
+Overfull \hbox (57.83096pt too wide) in paragraph at lines 54--54
+\T1/ptm/m/n/10.95 é con-tri-bui-ção nova desta dis-ser-ta-ção, pré-registrada e
+m \T1/pcr/m/n/10.95 docs/desenho-melhorias-finais.md
+ []
+
+
+Overfull \hbox (88.21669pt too wide) in paragraph at lines 54--54
+\T1/ptm/m/n/10.95 (ex-pe-ri-mento E2, 05/10/2026) e iné-dita em re-la-ção ao ar
+-tigo. Ar-te-fa-tos: \T1/pcr/m/n/10.95 scripts/lodo_validation.py\T1/ptm/m/n/10
+.95 ,
+ []
+
+
+Overfull \hbox (186.18918pt too wide) in paragraph at lines 54--54
+\T1/pcr/m/n/10.95 results/aggregated/lodo_validation{,_14}.csv \T1/ptm/m/n/10.9
+5 e \T1/pcr/m/n/10.95 results/aggregated/lodo_weighted_regret.csv\T1/ptm/m/n/10
+.95 . 
+ []
+
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[82
+
+
+
+
+]
+File: images/decision_matrix.png Graphic file (type bmp)
+<images/decision_matrix.png>
+
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+[83]
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+[84]
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+[85]
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+
+Overfull \hbox (31.6836pt too wide) in paragraph at lines 274--274
+[][]\T1/ptm/m/n/10 As qua-tro po-lí-ti-cas do pré-registro es-tão no ar-te-fato
+ (\T1/pcr/m/n/10 results/aggregated/lodo_weighted_regret.csv\T1/ptm/m/n/10 ):
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 274--274
+\T1/ptm/m/n/10 a árvore-LODO é ava-li-ada pela re-co-men-da-ção por con-junto a
+r-ma-ze-nada no es-tudo ori-gi-nal
+ []
+
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+[86]
+File: images/lodo_weighted_regret.pdf Graphic file (type pdf)
+<use images/lodo_weighted_regret.pdf>
+
+Underfull \hbox (badness 1009) in paragraph at lines 334--334
+\T1/ptm/m/n/12 acu-rá-cia $\OML/ztmcm/m/it/12 w$ \T1/ptm/m/n/12 (es-tudo com 14
+ mo-de-los; va-lo-res se-le-ci-o-na-dos da var-re-dura com-pleta $\OML/ztmcm/m/
+it/12 w \OMS/ztmcm/m/n/12 2
+ []
+
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+[87]
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+[88]
+File: images/decision_flowchart_14.pdf Graphic file (type pdf)
+<use images/decision_flowchart_14.pdf>
+
+Missing character: There is no — ("2014) in font ptmb8t!
+Missing character: There is no — ("2014) in font ptmb8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+[89]
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+[90]
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+Missing character: There is no — ("2014) in font ptmr8t!
+) [91]
+\openout2 = `chapters/cap7-destilacao.aux'.
+
+ (chapters/cap7-destilacao.tex
+Cap\'{\i }tulo 7.
+
+Package xcolor Warning: Incompatible color definition on input line 27.
+
+
+Underfull \hbox (badness 1616) in paragraph at lines 68--68
+[]\T1/ptm/b/n/10.95 Material as-so-ci-ado. \T1/ptm/m/n/10.95 Este ca-pí-tulo co
+r-res-ponde ao se-gundo tra-ba-lho in-di-vi-dual do
+ []
+
+
+Underfull \hbox (badness 2608) in paragraph at lines 68--68
+\T1/ptm/m/n/10.95 pro-grama (AI-2), cuja ver-são em for-mato de ar-tigo está em
+ \T1/pcr/m/n/10.95 latex/ai2/ \T1/ptm/m/n/10.95 no
+ []
+
+
+Underfull \hbox (badness 3861) in paragraph at lines 68--68
+\T1/ptm/m/n/10.95 re-po-si-tó-rio do es-tudo. O de-se-nho ex-pe-ri-men-tal foi 
+pré-registrado em \T1/pcr/m/n/10.95 docs/
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[92
+
+
+
+
+] [93]
+Overfull \hbox (1.99423pt too wide) in paragraph at lines 185--191
+[]\T1/ptm/m/n/12 Todo o de-se-nho ex-pe-ri-men-tal foi re-gis-trado \T1/ptm/m/i
+t/12 an-tes \T1/ptm/m/n/12 da exe-cu-ção, em ju-lho de 2026 (\T1/pcr/m/n/12 doc
+s/
+ []
+
+[94] [95] [96] [97] [98] [99]
+Overfull \hbox (0.2012pt too wide) in paragraph at lines 506--530
+\T1/ptm/m/n/12 de CRPS ($\OT1/ztmcm/m/n/12 +0[]04$\T1/ptm/m/n/12 ) in-verte na 
+trans-fe-rên-cia; \T1/pcr/m/n/12 fifa\T1/ptm/m/n/12 , \T1/pcr/m/n/12 diamonds_r
+eal \T1/ptm/m/n/12 e \T1/pcr/m/n/12 health_insurance
+ []
+
+[100]
+File: images/pareto_distill_en.pdf Graphic file (type pdf)
+<use images/pareto_distill_en.pdf>
+ [101]
+Overfull \hbox (6.82848pt too wide) in paragraph at lines 615--625
+[]\T1/ptm/m/n/12 Dois acha-dos co-la-te-rais têm va-lor in-de-pen-dente. Pri-me
+iro, re-du-zir o en-sem-ble do TabPFN
+ []
+
+[102]
+File: images/calibration_distill_en.pdf Graphic file (type pdf)
+<use images/calibration_distill_en.pdf>
+
+Overfull \hbox (7.17407pt too wide) in paragraph at lines 705--717
+\T1/ptm/m/n/12 la-cuna com o ex-pe-ri-mento E1, pré-registrado em \T1/pcr/m/n/1
+2 docs/desenho-melhorias-finais.md
+ []
+
+[103]
+Underfull \hbox (badness 10000) in paragraph at lines 758--773
+[]\T1/ptm/m/n/12 Todos os nú-me-ros a se-guir fo-ram re-com-pu-ta-dos do ar-te-
+fato de aná-lise
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 758--773
+\T1/pcr/m/n/12 baselines_analysis.csv \T1/ptm/m/n/12 (em \T1/pcr/m/n/12 results
+/distillation/\T1/ptm/m/n/12 ), que o script
+ []
+
+
+Underfull \hbox (badness 1924) in paragraph at lines 758--773
+\T1/pcr/m/n/12 analyze_baselines.py \T1/ptm/m/n/12 agrega do ar-te-fato bruto \
+T1/pcr/m/n/12 classical_baselines.csv\T1/ptm/m/n/12 .
+ []
+
+[104] [105] [106] [107] [108]) [109]
+\openout2 = `chapters/cap8-conclusao.aux'.
+
+ (chapters/cap8-conclusao.tex
+Cap\'{\i }tulo 8.
+
+Package xcolor Warning: Incompatible color definition on input line 12.
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[110
+
+
+
+
+] [111] [112] [113]
+Overfull \hbox (4.18912pt too wide) in paragraph at lines 225--230
+[]\T1/ptm/b/n/12 Ablação des-con-fun-dida da ro-tu-la-gem \T1/ptm/b/it/12 out-o
+f-fold \T1/ptm/b/n/12 (evi-dên-cia $\OT1/ztmcm/m/n/12 +$ \T1/ptm/b/n/12 re-gra;
+ Ca-pí-tulo 7[]).
+ []
+
+[114]
+Overfull \hbox (3.4342pt too wide) in paragraph at lines 300--307
+\T1/ptm/m/n/12 pro-blema an-tes que qual-quer pro-fes-sor pre-cise ser car-re-g
+ado --- no \T1/pcr/m/n/12 wine_quality\T1/ptm/m/n/12 ,
+ []
+
+
+Overfull \hbox (3.0135pt too wide) in paragraph at lines 319--323
+[]\T1/ptm/b/n/12 Antes de pa-gar o pro-fes-sor com-pleto, re-duza o \T1/ptm/b/i
+t/12 en-sem-ble\T1/ptm/b/n/12 . \T1/ptm/m/n/12 Um mem-bro do TabPFN
+ []
+
+[115] [116] [117] [118]) [119] (main.bbl
+
+Package xcolor Warning: Incompatible color definition on input line 1.
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[120
+
+
+
+] [121] [122]
+Underfull \hbox (badness 1742) in paragraph at lines 249--253
+[]\T1/ptm/m/n/12 LIU, Z. et al. KAN: Kolmogorov--Arnold networks. In: IN-TER-NA
+-TI-O-NAL CON-FE-
+ []
+
+[123] [124]
+Missing character: There is no — ("2014) in font ptmr8t!
+[125])
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 15.73112pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.73112pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-3.73112pt}.
+
+[126] [127
+
+
+]
+\openout2 = `appendix/apendice-a-tabelas.aux'.
+
+ (appendix/apendice-a-tabelas.tex
+Ap\^endice A.
+LaTeX Font Info:    Trying to load font information for T1+pnc on input line 1.
+
+(t1pnc.fd
+File: t1pnc.fd 2001/06/04 font definitions for T1/pnc.
+)
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `pnc' (encoding: T1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+
+Overfull \hbox (119.59123pt too wide) in paragraph at lines 34--45
+[] []\T1/ptm/b/n/12 Pro-ve-ni-ên-cia e re-pro-du-ti-bi-li-dade.[] \T1/ptm/m/n/1
+2 To-dos os nú-me-ros pro-vêm de \T1/pcr/m/n/12 results/aggregated/test_results
+.csv\T1/ptm/m/n/12 ,
+ []
+
+
+Overfull \hbox (177.75223pt too wide) in paragraph at lines 34--45
+\T1/ptm/m/n/12 o agre-gado ver-si-o-nado do ben-ch-mark; as ta-be-las em si são
+ ge-ra-das au-to-ma-ti-ca-mente por \T1/pcr/m/n/12 scripts/gen_appendix_tables.
+py
+ []
+
+
+Overfull \hbox (167.31145pt too wide) in paragraph at lines 34--45
+\T1/ptm/m/n/12 zada in-terna, que fun-da-men-tam as aná-li-ses es-ta-tís-ti-cas
+ do Ca-pí-tulo 5, es-tão em \T1/pcr/m/n/12 results/aggregated/fold_results.csv
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[128
+
+
+] (appendix/tabelas-geradas))
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 15.73112pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.73112pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-3.73112pt}.
+
+[129]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 15.73112pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.73112pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-3.73112pt}.
+
+[130]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 15.73112pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.73112pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-3.73112pt}.
+
+[131]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 15.73112pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.73112pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-3.73112pt}.
+
+[132]
+\openout2 = `appendix/apendice-b-espacos-busca.aux'.
+
+ (appendix/apendice-b-espacos-busca.tex
+Ap\^endice B.
+
+Overfull \hbox (10.56912pt too wide) in paragraph at lines 4--14
+\T1/ptm/m/n/12 de hi-per-pa-râ-me-tros exa-ta-mente como de-fi-nido no ar-te-fa
+to ver-si-o-nado \T1/pcr/m/n/12 configs/models.yaml
+ []
+
+
+Underfull \hbox (badness 4108) in paragraph at lines 77--77
+[]\T1/ptm/m/n/12 Tabela B.2: |Es-pa-ços de busca de MLP, Re-alMLP e TabM (25 \T
+1/ptm/m/it/12 tri-als\T1/ptm/m/n/12 ). Fonte:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 171--171
+[]\T1/ptm/m/n/12 Tabela B.4: |Es-pa-ços de busca de KAN e Tab-KAN (25 \T1/ptm/m
+/it/12 tri-als\T1/ptm/m/n/12 ). Fonte:
+ []
+
+)
+Overfull \hbox (22.96988pt too wide) in paragraph at lines 195--87
+[]\T1/ptm/m/n/12 Duas no-tas de es-copo, re-gis-tra-das como co-men-tá-rios no 
+pró-prio \T1/pcr/m/n/12 configs/models.yaml\T1/ptm/m/n/12 :
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[133
+
+
+
+
+]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 15.73112pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.73112pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-3.73112pt}.
+
+[134]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 15.73112pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.73112pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-3.73112pt}.
+
+[135]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 15.73112pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.73112pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-3.73112pt}.
+
+[136]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 15.73112pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.73112pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-3.73112pt}.
+
+[137]
+\openout2 = `appendix/apendice-c-suplementares.aux'.
+
+ (appendix/apendice-c-suplementares.tex
+Ap\^endice C.
+)
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[138
+
+
+
+
+] 
+AED: lastpage setting LastPage
+(main.aux (chapters/cap1-introducao.aux) (chapters/cap2-fundamentacao.aux)
+(chapters/cap3-trabalhos-relacionados.aux) (chapters/cap4-metodologia.aux)
+(chapters/cap5-benchmark.aux) (chapters/cap6-framework.aux)
+(chapters/cap7-destilacao.aux) (chapters/cap8-conclusao.aux)
+(appendix/apendice-a-tabelas.aux) (appendix/apendice-b-espacos-busca.aux)
+(appendix/apendice-c-suplementares.aux))
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+ )
+Output written on main.xdv (139 pages, 573268 bytes).

@@ -1,4 +1,202 @@
 \chapter{Espaços de Busca de Hiperparâmetros}
 \label{app:espacos-busca}
 
-[A preencher na fase de escrita.]
+Este apêndice transcreve, para cada modelo ajustado do benchmark, o
+espaço de busca de hiperparâmetros exatamente como definido no
+artefato versionado \texttt{configs/models.yaml} --- a fonte única que
+o \emph{runner} (\texttt{scripts/run\_all.py}) consome. A otimização
+segue o protocolo do Capítulo~\ref{chap:metodologia}: Optuna com amostrador TPE e
+\emph{MedianPruner}, com orçamento assimétrico de \textbf{100
+\emph{trials}} para os GBDTs e \textbf{25 \emph{trials}} para os
+modelos de aprendizado profundo, sobre a validação cruzada interna de
+3 \emph{folds} (a justificativa da assimetria está na Seção
+correspondente do Capítulo~\ref{chap:metodologia}, junto à discussão do protocolo).
+
+Convenções das tabelas: ``int'' e ``float'' denotam amostragem
+uniforme no intervalo fechado indicado (na escala logarítmica quando
+marcado ``log''); ``cat.'' denota escolha categórica no conjunto
+listado. Os nomes dos parâmetros são os literais do arquivo de
+configuração, para rastreabilidade direta.
+
+Os dois \emph{foundation models} --- \textbf{TabPFN} e \textbf{TabFM}
+--- são aplicados em regime \emph{zero-shot} e, por definição do
+protocolo, \textbf{não têm espaço de busca}: nenhum hiperparâmetro é
+otimizado por conjunto de dados. Para o TabPFN, as configurações de
+ensemble por subamostragem estão em \texttt{configs/experiment.yaml};
+para o TabFM, o teto de 50~mil linhas de contexto e o tamanho do
+ensemble são fixos no \emph{wrapper} (\texttt{src/models/tabfm\_model.py}),
+espelhando a política do TabPFN. Essa assimetria de orçamento
+(busca completa para os demais, nenhuma para os FMs) é parte do
+desenho experimental e é discutida no Capítulo~\ref{chap:metodologia}.
+
+\begin{table}[htbp]
+\centering\small
+\caption[Espaços de busca --- GBDTs]{Espaços de busca dos GBDTs
+(100 \emph{trials}). Fonte: \texttt{configs/models.yaml}.}
+\label{tab:app-busca-gbdt}
+\begin{tabular}{lll}
+\toprule
+Parâmetro & Tipo & Faixa / valores \\
+\midrule
+\multicolumn{3}{l}{\textbf{XGBoost}} \\
+\texttt{n\_estimators}      & int   & $[100,\ 2000]$ \\
+\texttt{max\_depth}         & int   & $[3,\ 12]$ \\
+\texttt{learning\_rate}     & float (log) & $[0{,}005;\ 0{,}3]$ \\
+\texttt{subsample}          & float & $[0{,}5;\ 1{,}0]$ \\
+\texttt{colsample\_bytree}  & float & $[0{,}5;\ 1{,}0]$ \\
+\texttt{min\_child\_weight} & float & $[1{,}0;\ 10{,}0]$ \\
+\texttt{reg\_alpha}         & float (log) & $[10^{-8},\ 10]$ \\
+\texttt{reg\_lambda}        & float (log) & $[10^{-8},\ 10]$ \\
+\midrule
+\multicolumn{3}{l}{\textbf{LightGBM}} \\
+\texttt{n\_estimators}       & int   & $[100,\ 2000]$ \\
+\texttt{max\_depth}          & int   & $[3,\ 12]$ \\
+\texttt{learning\_rate}      & float (log) & $[0{,}005;\ 0{,}3]$ \\
+\texttt{num\_leaves}         & int   & $[16,\ 256]$ \\
+\texttt{subsample}           & float & $[0{,}5;\ 1{,}0]$ \\
+\texttt{colsample\_bytree}   & float & $[0{,}5;\ 1{,}0]$ \\
+\texttt{min\_child\_samples} & int   & $[5,\ 100]$ \\
+\texttt{reg\_alpha}          & float (log) & $[10^{-8},\ 10]$ \\
+\texttt{reg\_lambda}         & float (log) & $[10^{-8},\ 10]$ \\
+\midrule
+\multicolumn{3}{l}{\textbf{CatBoost}} \\
+\texttt{iterations}           & int   & $[100,\ 2000]$ \\
+\texttt{depth}                & int   & $[3,\ 10]$ \\
+\texttt{learning\_rate}       & float (log) & $[0{,}005;\ 0{,}3]$ \\
+\texttt{l2\_leaf\_reg}        & float & $[1{,}0;\ 10{,}0]$ \\
+\texttt{bagging\_temperature} & float & $[0{,}0;\ 1{,}0]$ \\
+\texttt{random\_strength}     & float & $[0{,}0;\ 10{,}0]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering\small
+\caption[Espaços de busca --- MLPs e \emph{ensembles}
+paramétricos]{Espaços de busca de MLP, RealMLP e TabM
+(25 \emph{trials}). Fonte: \texttt{configs/models.yaml}.}
+\label{tab:app-busca-mlp}
+\begin{tabular}{lll}
+\toprule
+Parâmetro & Tipo & Faixa / valores \\
+\midrule
+\multicolumn{3}{l}{\textbf{MLP}} \\
+\texttt{n\_blocks}      & int   & $[1,\ 4]$ \\
+\texttt{d\_hidden}      & cat.  & $\{64,\ 128,\ 256,\ 512\}$ \\
+\texttt{dropout}        & float & $[0{,}0;\ 0{,}5]$ \\
+\texttt{learning\_rate} & float (log) & $[10^{-5},\ 10^{-3}]$ \\
+\texttt{weight\_decay}  & float (log) & $[10^{-6},\ 10^{-3}]$ \\
+\midrule
+\multicolumn{3}{l}{\textbf{RealMLP}} \\
+\texttt{learning\_rate}    & float (log) & $[0{,}02;\ 0{,}3]$ \\
+\texttt{hidden\_width}     & cat. & $\{64,\ 256,\ 512\}$ \\
+\texttt{n\_hidden\_layers} & int  & $[1,\ 5]$ \\
+\texttt{dropout}           & cat. & $\{0{,}0;\ 0{,}15;\ 0{,}3\}$ \\
+\texttt{weight\_decay}     & cat. & $\{0{,}0;\ 0{,}02\}$ \\
+\texttt{activation}        & cat. & \{\texttt{selu}, \texttt{mish},
+  \texttt{relu}\} \\
+\texttt{num\_emb\_type}    & cat. & \{\texttt{none}, \texttt{pbld},
+  \texttt{pl}, \texttt{plr}\} \\
+\texttt{add\_front\_scale} & cat. & \{\texttt{true}, \texttt{false}\} \\
+\texttt{ls\_eps}           & cat. & $\{0{,}0;\ 0{,}1\}$ \\
+\midrule
+\multicolumn{3}{l}{\textbf{TabM}} \\
+\texttt{arch\_type}     & cat.  & \{\texttt{tabm}, \texttt{tabm-mini}\} \\
+\texttt{k}              & int   & $[8,\ 64]$ \\
+\texttt{d\_block}       & cat.  & $\{128,\ 256,\ 512\}$ \\
+\texttt{n\_blocks}      & int   & $[1,\ 4]$ \\
+\texttt{dropout}        & float & $[0{,}0;\ 0{,}5]$ \\
+\texttt{learning\_rate} & float (log) & $[10^{-5},\ 10^{-3}]$ \\
+\texttt{weight\_decay}  & float (log) & $[10^{-6},\ 10^{-3}]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering\small
+\caption[Espaços de busca --- arquiteturas de atenção]{Espaços de
+busca de FT-Transformer, SAINT, STab e TabNet (25 \emph{trials}).
+Fonte: \texttt{configs/models.yaml}.}
+\label{tab:app-busca-atencao}
+\begin{tabular}{lll}
+\toprule
+Parâmetro & Tipo & Faixa / valores \\
+\midrule
+\multicolumn{3}{l}{\textbf{FT-Transformer}} \\
+\texttt{n\_blocks}                  & int   & $[1,\ 6]$ \\
+\texttt{d\_block}                   & cat.  & $\{64,\ 128,\ 192,\ 256\}$ \\
+\texttt{attention\_n\_heads}        & cat.  & $\{4,\ 8\}$ \\
+\texttt{attention\_dropout}         & float & $[0{,}0;\ 0{,}5]$ \\
+\texttt{ffn\_d\_hidden\_multiplier} & float & $[1{,}333;\ 2{,}666]$ \\
+\texttt{ffn\_dropout}               & float & $[0{,}0;\ 0{,}5]$ \\
+\texttt{residual\_dropout}          & float & $[0{,}0;\ 0{,}2]$ \\
+\texttt{learning\_rate}             & float (log) & $[10^{-5},\ 10^{-3}]$ \\
+\texttt{weight\_decay}              & float (log) & $[10^{-6},\ 10^{-3}]$ \\
+\midrule
+\multicolumn{3}{l}{\textbf{SAINT}} \\
+\texttt{depth}          & int   & $[1,\ 6]$ \\
+\texttt{heads}          & cat.  & $\{4,\ 8\}$ \\
+\texttt{dim}            & cat.  & $\{32,\ 64,\ 128,\ 256\}$ \\
+\texttt{attn\_dropout}  & float & $[0{,}0;\ 0{,}4]$ \\
+\texttt{ff\_dropout}    & float & $[0{,}0;\ 0{,}4]$ \\
+\texttt{learning\_rate} & float (log) & $[10^{-5},\ 10^{-3}]$ \\
+\texttt{weight\_decay}  & float (log) & $[10^{-6},\ 10^{-3}]$ \\
+\midrule
+\multicolumn{3}{l}{\textbf{STab}} \\
+\texttt{depth}          & int   & $[2,\ 7]$ \\
+\texttt{dim}            & cat.  & $\{64,\ 96,\ 128,\ 192,\ 256\}$ \\
+\texttt{heads}          & cat.  & $\{4,\ 8\}$ \\
+\texttt{attn\_dropout}  & float & $[0{,}0;\ 0{,}3]$ \\
+\texttt{ff\_dropout}    & float & $[0{,}0;\ 0{,}3]$ \\
+\texttt{cases}          & cat.  & $\{4,\ 8,\ 16\}$ \\
+\texttt{learning\_rate} & float (log) & $[10^{-5},\ 10^{-3}]$ \\
+\texttt{weight\_decay}  & float (log) & $[10^{-5},\ 10^{-3}]$ \\
+\midrule
+\multicolumn{3}{l}{\textbf{TabNet}} \\
+\texttt{n\_d}           & cat.  & $\{8,\ 16,\ 32,\ 64\}$ \\
+\texttt{n\_a}           & cat.  & $\{8,\ 16,\ 32,\ 64\}$ \\
+\texttt{n\_steps}       & int   & $[3,\ 10]$ \\
+\texttt{gamma}          & float & $[1{,}0;\ 2{,}0]$ \\
+\texttt{lambda\_sparse} & float (log) & $[10^{-6},\ 10^{-3}]$ \\
+\texttt{learning\_rate} & float (log) & $[0{,}005;\ 0{,}05]$ \\
+\texttt{mask\_type}     & cat.  & \{\texttt{sparsemax},
+  \texttt{entmax}\} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering\small
+\caption[Espaços de busca --- redes KAN]{Espaços de busca de KAN e
+TabKAN (25 \emph{trials}). Fonte: \texttt{configs/models.yaml}.}
+\label{tab:app-busca-kan}
+\begin{tabular}{lll}
+\toprule
+Parâmetro & Tipo & Faixa / valores \\
+\midrule
+\multicolumn{3}{l}{\textbf{KAN}} \\
+\texttt{n\_layers}      & int   & $[1,\ 3]$ \\
+\texttt{d\_hidden}      & cat.  & $\{32,\ 64,\ 128,\ 256\}$ \\
+\texttt{grid\_size}     & cat.  & $\{3,\ 5,\ 10,\ 20\}$ \\
+\texttt{learning\_rate} & float (log) & $[10^{-4},\ 10^{-2}]$ \\
+\texttt{weight\_decay}  & float (log) & $[10^{-6},\ 10^{-3}]$ \\
+\texttt{reg\_lambda}    & float (log) & $[10^{-8},\ 10^{-2}]$ \\
+\midrule
+\multicolumn{3}{l}{\textbf{TabKAN}} \\
+\texttt{n\_layers}      & int   & $[1,\ 4]$ \\
+\texttt{d\_hidden}      & cat.  & $\{16,\ 32,\ 64,\ 128\}$ \\
+\texttt{degree}         & int   & $[2,\ 5]$ \\
+\texttt{learning\_rate} & float (log) & $[10^{-4},\ 10^{-2}]$ \\
+\texttt{weight\_decay}  & cat.  & $\{0;\ 10^{-6};\ 10^{-5};\ 10^{-4}\}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Duas notas de escopo, registradas como comentários no próprio
+\texttt{configs/models.yaml}: no \textbf{KAN}, ficam \emph{fixos}
+(fora da busca) a ordem do \emph{spline} ($3$), a função-base SiLU e o
+\emph{grid range} $[-2,\ 2]$ após \emph{LayerNorm} por camada (ver
+\texttt{src/models/kan\_model.py}); no \textbf{TabKAN}, a variante
+ChebyKAN é fixa e as faixas seguem a seção de NAS do artigo original,
+aparadas para o orçamento de 25 \emph{trials} (ver
+\texttt{src/models/tabkan\_model.py}).

@@ -53,9 +53,11 @@ hiperparâmetros.
 A metodologia foi construída para responder às três perguntas de pesquisa
 enunciadas no Capítulo~\ref{chap:introducao}: se as famílias modernas de
 modelos tabulares diferem de forma praticamente relevante sob um protocolo
-uniforme (QP1); como a vantagem relativa varia com a estrutura do problema
-(QP2); e que arcabouço de decisão multicritério pode orientar a escolha
-quando o desempenho empata ou o líder é operacionalmente caro (QP3). Quatro
+uniforme, inclusive quando a vantagem relativa varia com a estrutura do
+problema (QP1); que arcabouço de decisão multicritério pode orientar a
+escolha quando o desempenho empata ou o líder é operacionalmente caro
+(QP2); e o que a destilação transfere em regressão, a que custo e sob que
+condições verificáveis (QP3). Quatro
 princípios atravessam todas as decisões deste capítulo:
 
 \begin{itemize}
@@ -133,10 +135,10 @@ investigação:
     de benchmark tabular restringe-se à classificação; incluir regressão (5
     conjuntos, com \texttt{kin8nm} e outros provenientes de suítes curadas
     como a OpenML-CTR23 \citep{fischer2023}) é condição para que o arcabouço
-    de decisão da QP3 não seja um artefato de um único tipo de tarefa.
+    de decisão da QP2 não seja um artefato de um único tipo de tarefa.
   \item \textbf{Três ordens de grandeza em tamanho amostral.} Os conjuntos
     variam de cerca de mil (\texttt{credit\_g}) a 581~mil amostras
-    (\texttt{covertype}). A QP2 pergunta onde a liderança troca de mãos ao
+    (\texttt{covertype}). A QP1 pergunta, entre outras coisas, onde a liderança troca de mãos ao
     longo do eixo de tamanho; sem variação ampla nesse eixo, a pergunta seria
     irrespondível por construção.
   \item \textbf{Diversidade de composição de atributos.} Conjuntos puramente

@@ -1,5 +1,49 @@
-[Resumo em um parágrafo, 150--500 palavras, sem fórmulas (NBR 6028) ---
-escrito por último, quando os capítulos fecharem.]
+% Resumo (NBR 6028: um parágrafo, 150-500 palavras, sem fórmulas).
+% Todo número rastreia aos capítulos 4-7 (ver comentários de proveniência
+% nas fontes dos capítulos).
+A escolha de modelos para dados tabulares foi guiada, por uma década, pela
+máxima de que o \emph{gradient boosting} sempre vence; a chegada dos
+\emph{foundation models} tabulares --- redes pré-treinadas que predizem
+sem treinamento na tarefa --- tornou essa orientação obsoleta sem lhe dar
+um substituto apoiado em evidência neutra. Esta dissertação ataca o
+problema em três frentes encadeadas. Primeiro, um benchmark multicritério
+avalia 14 modelos de três famílias (\emph{gradient boosting}, aprendizado
+profundo e \emph{foundation models}) em 18 conjuntos de dados públicos do
+OpenML (250 das 252 células possíveis; duas exclusões estruturais
+declaradas), sob validação cruzada aninhada com \emph{hold-out} intocado e
+inferência estatística frequentista e bayesiana. Na geração anterior a
+2026, o topo da acurácia é um empate estatístico --- 8 dos 10 modelos não
+líderes são praticamente equivalentes ao líder sob região de equivalência
+prática de um ponto percentual de AUC ---, e a geração 2026 o quebra: o
+TabFM, avaliado \emph{zero-shot}, lidera o rank médio nas três tarefas
+(2,7 na classificação binária, 1,0 na multiclasse e 1,2 na regressão) e é
+o melhor modelo em 13 dos 18 conjuntos, ao custo de quatro a cinco ordens
+de magnitude em latência de inferência; as redes de Kolmogorov--Arnold,
+testadas de forma independente, terminam no último terço nas três
+tarefas. Segundo, um arcabouço de decisão é validado por
+\emph{leave-one-dataset-out}: o roteamento por meta-características não
+generaliza (taxa de acerto de 0,11 contra 0,44 do \emph{baseline}
+trivial), a política fixa ``\emph{foundation model} primeiro'' é ótima em
+\emph{regret} na métrica primária (\emph{regret} mediano de 0,000 na
+geração 2026) e um experimento pré-registrado de \emph{regret}
+multicritério mostra que basta deslocar 10 a 20 por cento do peso da
+acurácia para a latência (cruzamento entre os pesos 0,9 e 0,8) para a
+recomendação se inverter em favor do \emph{gradient boosting} ---
+justificando o fluxograma de quatro restrições verificáveis a priori que
+consolida o arcabouço. Terceiro, a destilação distribucional de
+\emph{foundation models} --- recorte verificado como inédito ---
+transfere as curvas de quantis do professor TabPFN para alunos que servem
+em microssegundos: a destilação pontual falha de forma robusta em escala
+realista de dados, mas a distribucional retém mediana de 19 por cento da
+vantagem distribucional do professor, positiva em 16 de 20 conjuntos
+(teste de sinal com valor-p de 0,006), vence \emph{baselines}
+distribucionais clássicos em 17 de 20 conjuntos no experimento
+pré-registrado E1 e se condensa numa regra de decisão prática cujas
+pré-condições se verificam em minutos. O conjunto --- evidência sob
+protocolo único, arcabouço validado e destilação seletiva --- substitui a
+máxima por um procedimento; e o que o \emph{foundation model} sabe e os
+dados brutos não ensinam ao aluno é a distribuição preditiva --- é isso
+que se destila.
 
 \vspace{1cm}
 \noindent\textbf{Palavras-chaves:} dados tabulares; foundation models;

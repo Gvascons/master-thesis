@@ -1,5 +1,47 @@
-[Abstract --- mirror of the resumo, written last.]
+% Abstract — faithful mirror of pretext/resumo.tex (NBR 6028: one
+% paragraph, 150-500 words, no formulas).
+For a decade, model choice for tabular data was guided by the maxim that
+gradient boosting always wins; the arrival of tabular foundation models
+--- pre-trained networks that predict with no task-specific training ---
+made that guidance obsolete without replacing it with neutral evidence.
+This dissertation attacks the problem on three chained fronts. First, a
+multi-criteria benchmark evaluates 14 models from three families
+(gradient boosting, deep learning, and foundation models) on 18 public
+OpenML datasets (250 of the 252 possible cells; two declared structural
+exclusions), under nested cross-validation with an untouched hold-out and
+both frequentist and Bayesian statistical inference. In the pre-2026
+generation, the top of the accuracy ranking is a statistical tie --- 8 of
+the 10 non-leading models are practically equivalent to the leader under
+a region of practical equivalence of one percentage point of AUC --- and
+the 2026 generation breaks it: TabFM, evaluated zero-shot, leads the
+average rank in all three tasks (2.7 in binary classification, 1.0 in
+multiclass, and 1.2 in regression) and is the best model on 13 of the 18
+datasets, at the cost of four to five orders of magnitude in inference
+latency; Kolmogorov--Arnold networks, independently tested, finish in the
+bottom third across all three tasks. Second, a decision framework is
+validated by leave-one-dataset-out: meta-feature routing does not
+generalize (hit rate of 0.11 against 0.44 for the trivial baseline), the
+fixed ``foundation model first'' policy is regret-optimal on the primary
+metric (median regret of 0.000 in the 2026 generation), and a
+pre-registered multi-criteria regret experiment shows that shifting just
+10 to 20 percent of the weight from accuracy to latency (crossover
+between weights 0.9 and 0.8) flips the recommendation in favor of
+gradient boosting --- quantitatively justifying the flowchart of four
+a priori verifiable constraints that consolidates the framework. Third,
+the distributional distillation of foundation models --- a scope verified
+as novel --- transfers the quantile curves of the TabPFN teacher to
+students that serve in microseconds: point distillation fails robustly at
+realistic data scales, but distributional distillation retains a median
+of 19 percent of the teacher's distributional advantage, positive on 16
+of 20 datasets (sign test with a p-value of 0.006), beats classical
+distributional baselines on 17 of 20 datasets in the pre-registered
+experiment E1, and condenses into a practical decision rule whose
+preconditions can be verified in minutes. Together --- evidence under a
+single protocol, a validated framework, and selective distillation ---
+these results replace the maxim with a procedure; and what the foundation
+model knows that raw data cannot teach the student is the predictive
+distribution --- that is what gets distilled.
 
 \vspace{1cm}
-\noindent\textbf{Keywords:} tabular data; foundation models; benchmarking;
-knowledge distillation; distributional regression.
+\noindent\textbf{Keywords:} tabular data; foundation models;
+benchmarking; knowledge distillation; distributional regression.

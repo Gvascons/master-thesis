@@ -1,3 +1,233 @@
-\chapter{Resultados Suplementares e Ablações}
+\chapter{Resultados Suplementares e Registro de Processo}
+\label{app:suplementares}
 
-[A preencher na fase de escrita.]
+Este apêndice reúne dois tipos de material: as tabelas desagregadas
+das duas ablações da destilação discutidas no
+Capítulo~\ref{chap:destilacao} (Seção~\ref{sec:suple-ablacoes}) e o
+registro de processo do trabalho --- hipóteses que não sobreviveram
+ao contato com os dados e desvios operacionais documentados
+(Seção~\ref{sec:suple-cemiterio}).
+
+\section{Ablações da destilação: tabelas desagregadas}
+\label{sec:suple-ablacoes}
+
+Os valores a seguir são médias sobre as 3 sementes (0, 1, 2) do
+protocolo de destilação, agregadas com \texttt{pandas} diretamente dos
+artefatos versionados citados em cada tabela.
+
+\subsection{Rotulagem OOF \emph{vs.} \emph{in-sample}}
+
+A Tabela~\ref{tab:app-abl-oof} desagrega a ablação da
+Seção~\ref{sec:destil-oof}: o aluno XGBoost-quantil treinado com alvos
+do teacher TabPFN rotulados em três regimes --- \emph{out-of-fold}
+(OOF), \emph{in-sample} com contexto fixado em 80\% do pool
+(\emph{ctx-80}, que isola o efeito do vazamento mantendo o tamanho de
+contexto do OOF) e \emph{in-sample} pleno. O padrão documentado no
+capítulo é legível nas colunas: RMSE e CRPS \emph{não} degradam com o
+vazamento (chegam a melhorar levemente), mas a cobertura dos
+intervalos (PICP~80\%, nominal $0{,}80$) cai de forma consistente nos
+quatro conjuntos quando se passa de OOF para \emph{ctx-80} --- o
+efeito puro do vazamento sobre a calibração do aluno.
+
+\begin{table}[htbp]
+\centering\small
+\caption[Ablação OOF \emph{vs.} \emph{in-sample} ---
+desagregada]{Ablação OOF \emph{vs.} \emph{in-sample} --- aluno
+XGBoost-quantil, teacher TabPFN; média de 3 sementes. PICP~80\%
+nominal $= 0{,}80$. Fonte:
+\texttt{results/distillation/ablation\_insample.csv}.}
+\label{tab:app-abl-oof}
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{lccccccccc}
+\toprule
+ & \multicolumn{3}{c}{OOF} & \multicolumn{3}{c}{\emph{In-sample}
+ ctx-80} & \multicolumn{3}{c}{\emph{In-sample}} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}
+\emph{Dataset} & RMSE & CRPS & PICP & RMSE & CRPS & PICP
+               & RMSE & CRPS & PICP \\
+\midrule
+\texttt{california\_housing} & 0{,}277 & 0{,}109 & 0{,}596
+  & 0{,}270 & 0{,}111 & 0{,}545 & 0{,}268 & 0{,}111 & 0{,}532 \\
+\texttt{kin8nm}              & 0{,}110 & 0{,}064 & 0{,}617
+  & 0{,}108 & 0{,}064 & 0{,}571 & 0{,}107 & 0{,}064 & 0{,}574 \\
+\texttt{superconduct}        & 0{,}860 & 0{,}454 & 0{,}770
+  & 0{,}858 & 0{,}453 & 0{,}765 & 0{,}857 & 0{,}453 & 0{,}767 \\
+\texttt{wine\_quality}       & 0{,}683 & 0{,}365 & 0{,}707
+  & 0{,}629 & 0{,}338 & 0{,}661 & 0{,}615 & 0{,}336 & 0{,}602 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Para o aluno XGBoost-ponto (sem componente distribucional), o mesmo
+artefato mostra o mesmo não-dano em RMSE: \emph{in-sample} fica igual
+ou levemente melhor que OOF nos quatro conjuntos
+(\texttt{california\_housing} $0{,}262$ \emph{vs.} $0{,}268$;
+\texttt{kin8nm} $0{,}109$ \emph{vs.} $0{,}111$; \texttt{superconduct}
+$0{,}833$ \emph{vs.} $0{,}835$; \texttt{wine\_quality} $0{,}617$
+\emph{vs.} $0{,}667$) --- o custo do vazamento em regressão está na
+calibração, não na acurácia.
+
+\subsection{Transformação logarítmica do alvo}
+
+A Tabela~\ref{tab:app-abl-log} desagrega a ablação da
+Seção~\ref{sec:destil-regra}: teacher TabPFN e alunos XGBoost-quantil
+re-executados sob $y' = \log(1+y)$ nos três conjuntos de falha da
+extensão (alvos em escala de preço) e em dois controles positivos. As
+métricas são medidas no espaço logarítmico. A coluna de retenção usa a
+definição do Capítulo~\ref{chap:destilacao},
+$(\mathrm{CRPS}_{\text{hard}} - \mathrm{CRPS}_{\text{soft}}) /
+(\mathrm{CRPS}_{\text{hard}} - \mathrm{CRPS}_{\text{teacher}})$,
+calculada sobre as médias exibidas. A leitura documentada: o log
+\emph{não} recupera as falhas (\texttt{fifa} segue fortemente
+negativo) e os gaps teacher--aluno colapsam para a casa de
+$0{,}004$--$0{,}025$ --- boa parte da vantagem distribucional do
+\emph{foundation model} nesses alvos é tratamento de escala.
+
+\begin{table}[htbp]
+\centering\small
+\caption[Ablação log-target --- desagregada]{Ablação da transformação
+logarítmica do alvo --- CRPS em espaço log, média de 3 sementes
+(teacher determinístico, 1 execução). ``Hard'' = aluno de rótulos
+verdadeiros; ``soft'' = aluno destilado. Fonte:
+\texttt{results/distillation/ablation\_logtarget.csv}.}
+\label{tab:app-abl-log}
+\begin{tabular}{llcccc}
+\toprule
+Grupo & \emph{Dataset} & Teacher & Aluno hard & Aluno soft &
+Retenção \\
+\midrule
+\multirow{3}{*}{Falha}
+ & \texttt{fifa}              & 0{,}3405 & 0{,}3499 & 0{,}3656 & $-1{,}69$ \\
+ & \texttt{diamonds\_real}    & 0{,}0411 & 0{,}0449 & 0{,}0451 & $-0{,}03$ \\
+ & \texttt{health\_insurance} & 0{,}5713 & 0{,}5961 & 0{,}5951 & $+0{,}04$ \\
+\midrule
+\multirow{2}{*}{Controle}
+ & \texttt{kings\_county}     & 0{,}0783 & 0{,}0862 & 0{,}0859 & $+0{,}04$ \\
+ & \texttt{miami\_housing}    & 0{,}0654 & 0{,}0736 & 0{,}0724 & $+0{,}15$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Cemitério de hipóteses e desvios}
+\label{sec:suple-cemiterio}
+
+Na tradição do apêndice de transparência de \citet{grinsztajn2022},
+registramos aqui as hipóteses que foram testadas e não sobreviveram, e
+os desvios de processo que afetaram artefatos do trabalho --- cada um
+com a rubrica \emph{o que era / o que aconteceu / por que está aqui} e
+o ponteiro para o registro primário. O contrato de conduta do
+programa de pesquisa exige que resultados negativos sejam reportados e
+que correções sejam feitas por retificação datada, nunca por reescrita
+de histórico; este registro é a consolidação desses episódios.
+
+\paragraph{1. H1 --- destilação pontual.}
+\emph{O que era:} hipótese pré-registrada
+(\texttt{docs/desenho-experimental-destilacao.md}, §1) de que um aluno
+GBDT destilado reteria $\geq 50\%$ do gap de RMSE do teacher em
+$\geq 3$ dos 5 conjuntos de regressão. \emph{O que aconteceu:}
+refutada nos cinco conjuntos centrais com o teacher TabPFN; a
+refutação replicou com o teacher TabFM, de gaps pontuais maiores, e
+no experimento confirmatório E1 em escala $N{=}20$, no qual o aluno
+pontual destilado supera o controle de rótulos verdadeiros em apenas
+4 de 20 conjuntos.
+\emph{Por que está aqui:} é o resultado negativo mais importante do
+Capítulo~\ref{chap:destilacao} (Seção~\ref{sec:destil-ponto}) --- em
+pool completo, o aluno não absorve a vantagem \emph{pontual} do
+\emph{foundation model}, independentemente do tamanho do gap; o que
+se transfere é a distribuição. Registros:
+\texttt{docs/desenho-experimental-destilacao.md} (pré-registro),
+\texttt{docs/relatorio-ai2.md} (fases 1--2),
+Seções~\ref{sec:destil-ponto} e~\ref{sec:destil-e1}.
+
+\paragraph{2. Cauda pesada como moderador de falha (log-target).}
+\emph{O que era:} com a extensão a $N{=}15$, três das quatro falhas de
+retenção distribucional concentravam-se em alvos de cauda
+pesada/escala de preço; a hipótese viva era que a transformação
+$\log(1+y)$ recuperaria a retenção. \emph{O que aconteceu:} a ablação
+dedicada refutou a hipótese --- o log não resgata as falhas
+(\texttt{fifa} $-1{,}69$) e ainda encolhe os sucessos, porque colapsa
+a própria vantagem do teacher no espaço logarítmico
+(Tabela~\ref{tab:app-abl-log}). \emph{Por que está aqui:} a refutação
+é mais útil que a hipótese --- virou a cláusula (i) da regra de
+decisão ``quando destilar'' (Seção~\ref{sec:destil-regra}): antes de
+destilar, aplique transformações baratas de alvo. Registros:
+\texttt{docs/relatorio-ai2.md} (fase 6a),
+\texttt{results/distillation/ablation\_logtarget.csv}.
+
+\paragraph{3. Roteamento por meta-features.}
+\emph{O que era:} a promessa, herdada da literatura de
+meta-learning, de que meta-features do conjunto de dados poderiam
+prever a família vencedora --- o arcabouço de decisão seria um
+preditor, não um fluxograma. \emph{O que aconteceu:} sob validação
+\emph{leave-one-dataset-out}, a árvore de profundidade 2 não supera o
+baseline de classe majoritária em nenhuma das duas gerações de
+modelos (hit-rate $0{,}11$ \emph{vs.} $0{,}44$ com 11 modelos;
+$0{,}72$ \emph{vs.} $0{,}78$ com 14). \emph{Por que está aqui:} o
+resultado negativo é o que justifica a forma final do arcabouço
+(decisão por restrições, não por predição); a árvore permanece no
+trabalho apenas como ilustração descritiva. Registros:
+Seção~\ref{sec:resultado-negativo} do
+Capítulo~\ref{chap:framework},
+\texttt{results/aggregated/lodo\_validation.csv} e
+\texttt{lodo\_validation\_14.csv}, \texttt{scripts/lodo\_validation.py}.
+
+\paragraph{4. A claim retratada do OOM ``determinístico'' no
+\texttt{year\_prediction}.}
+\emph{O que era:} durante a medição da fronteira de Pareto,
+afirmou-se que o ponto teacher TabPFN com contexto de 50~mil linhas no
+\texttt{year\_prediction} era imensurável na GPU de 16~GB por OOM
+determinístico. \emph{O que aconteceu:} a análise forense da sessão
+mostrou que a claim estava errada --- o culpado era a estimativa do
+modo automático de memória; com \texttt{memory\_saving\_mode} forçado,
+o ponto foi medido ($148{,}6$~ms/linha, $\sim$3,3$\times$ a latência
+do ponto de 25~mil, por um ganho de RMSE de apenas
+$8{,}661 \to 8{,}610$). A claim foi retratada conforme a política de
+correção, e a medição virou argumento adicional \emph{contra} o
+teacher de contexto completo em GPUs de 16~GB. \emph{Por que está
+aqui:} retratações públicas fazem parte do contrato de conduta; o
+episódio também ilustra que ``imensurável'' exige verificação
+exaustiva dos modos de operação antes de ser afirmado. Registros:
+commit \texttt{64b410a} (\emph{``ai2: correction --- year@50K WAS
+measurable''}), \texttt{docs/relatorio-ai2.md} (fase 3), comentário em
+\texttt{scripts/pareto\_strategies.py}.
+
+\paragraph{5. Errata \texttt{diamonds}/\texttt{kin8nm}.}
+\emph{O que era:} a entrada \texttt{diamonds} de
+\texttt{configs/datasets.yaml} apontava, desde a criação do projeto,
+para o \texttt{openml\_id} 44980 --- que é o \texttt{kin8nm} (8.192
+amostras), não o \texttt{diamonds} (44979; 53.940 amostras).
+\emph{O que aconteceu:} o erro foi descoberto em 20/07/2026, quando a
+análise consolidada da extensão CTR23 acusou métricas idênticas até a
+4ª casa entre ``\texttt{kin8nm} (extensão)'' e ``\texttt{diamonds}
+(núcleo)''; um indício anterior (pool de 6.553 linhas, incompatível
+com $\sim$43~mil) havia sido incorretamente aceito como aproximação de
+configuração --- lapso registrado. A validade experimental não foi
+afetada (apenas o rótulo estava errado); os rótulos foram corrigidos
+por commit de retificação com histórico preservado, a duplicata
+involuntária virou teste de reprodutibilidade ponta-a-ponta
+(\texttt{extension\_kin8nm\_repro\_check.csv}: números reproduzidos
+exatamente sob as mesmas sementes) e o \texttt{diamonds} verdadeiro
+entrou na extensão como \texttt{diamonds\_real}. \emph{Por que está
+aqui:} é o desvio de registro mais sério do trabalho e a origem de
+duas salvaguardas (verificação nome$\leftrightarrow$ID$\leftrightarrow$%
+dimensões no download; divergência de \texttt{approx\_samples} como
+sinal de investigação obrigatória). Registro canônico:
+\texttt{docs/errata-diamonds-kin8nm.md}; commits \texttt{d1168fa}
+(erratum) e \texttt{c407ef6} (reexecução das análises).
+
+\paragraph{6. Troca \texttt{year\_prediction} $\to$
+\texttt{cpu\_activity} na figura de calibração.}
+\emph{O que era:} a figura de calibração da destilação usaria
+\texttt{california\_housing} e \texttt{year\_prediction} como
+exemplos. \emph{O que aconteceu:} a passada do teacher com contexto de
+50~mil linhas no \texttt{year\_prediction} excedeu o orçamento de
+tempo da sessão de geração de figuras
+(\emph{time-box}); o conjunto foi substituído por
+\texttt{cpu\_activity}, que carrega a mesma mensagem --- retenção
+distribucional forte ($+0{,}50$) --- a cerca de 1/50 do custo
+computacional. \emph{Por que está aqui:} é um desvio operacional, não
+científico, mas altera um artefato apresentado; a decisão e sua
+justificativa estão comentadas no próprio script gerador. Registro:
+comentário em \texttt{scripts/plot\_calibration.py} (definição de
+\texttt{DATASETS}); retenção do \texttt{cpu\_activity} em
+\texttt{docs/relatorio-ai2.md} (fase 6a).
