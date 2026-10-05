@@ -19,6 +19,7 @@
 \usepackage{amsmath,amssymb}
 \usepackage{textcomp}
 \usepackage{microtype}
+\usepackage{xcolor}
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
 
@@ -48,8 +49,8 @@ foundation models. We re-test it in a neutral, uniform-protocol benchmark:
 exclusions), with nested cross-validation, Bayesian tuning under an
 equalized per-family budget, a fixed untouched hold-out, and both
 frequentist and Bayesian statistical inference. The answer has two
-movements. \textbf{(1)} Restricted to the generation up to 2025, top-end
-accuracy is a statistical tie --- 8 of the 10 non-leader models practically
+movements. \textbf{(1)} Restricted to the study's 11-model core slate (the models predating the
+2026 benchmark extension), top-end accuracy is a statistical tie --- 8 of the 10 non-leader models practically
 equivalent to the leader under a region of practical equivalence (ROPE) of
 $\pm$0.01 AUC, with the threshold sensitivity reported (2/8/10 equivalents
 at 0.005/0.01/0.02) --- and 80\% of rank variance is intra-family
@@ -69,7 +70,7 @@ in a multi-criteria benchmark --- as far as our dated verification reaches
 tasks); and the decision framework
 derived from the benchmark is validated by leave-one-dataset-out ---
 meta-feature routing does \emph{not} generalize (hit rate 0.11 vs.\ a 0.44
-baseline), while the policy ``foundation model first, deviate on
+baseline in the 11-model study), while the policy ``foundation model first, deviate on
 constraints'' achieves median normalized regret 0.000 with 14 models. The
 tie did not make the multi-criteria framework obsolete; the break made it
 more necessary.
@@ -83,8 +84,8 @@ gradient-boosted decision trees (GBDTs) win more often than not
 developments: the 2024--2026 generation of tabular deep learning (DL)
 \citep{realmlp2024,tabm2025} and tabular foundation models with in-context
 learning --- TabPFN \citep{hollmann2025,priorlabs2025} and, in June 2026,
-Google's TabFM \citep{tabfm2026}, released with weights in June 2026 and,
-since late September 2026, described in an official technical report
+Google's TabFM \citep{tabfm2026}, released with weights and, since late
+September 2026, described in an official technical report
 \citep{kong2026} --- still without peer review at the time of writing
 (October 2026).
 
@@ -104,7 +105,7 @@ benchmark support --- and which one can it \emph{not} support?
     (signed-rank with ROPE), including ROPE sensitivity analysis and
     per-family variance decomposition.
   \item The two-movement reading: the \textbf{statistical tie} of the
-    $\leq$2025 generation (and its anatomy: 80\% of variance is
+    11-model core slate (and its anatomy: 80\% of variance is
     intra-family) and the \textbf{break of the tie} by the 2026
     generation, with the cost inversion quantified (4--5 orders of
     magnitude in serving latency).
@@ -139,12 +140,12 @@ FT-Transformer \citep{gorishniy2021}, SAINT \citep{somepalli2021}, TabNet
 \citep{tabm2025}, and the Kolmogorov--Arnold family: KAN \citep{kan2024}
 and TabKAN \citep{tabkan2025}); and in-context-learning foundation models --- pre-trained networks that
 condition on the training set as a prompt at prediction time, with no
-gradient updates on the target task --- (TabPFN v2.5
-\citep{hollmann2025,priorlabs2025} and TabFM \citep{tabfm2026}). For the
+gradient updates on the target task --- TabPFN v2.5
+\citep{hollmann2025,priorlabs2025} and TabFM \citep{tabfm2026}. For the
 Kolmogorov--Arnold family, two independent evaluations predate ours --- a
 KAN-vs-MLP tabular benchmark \citep{poeta2024} and a parameter/FLOP-fair
-comparison \citep{kancritical2024}; neither includes GBDT or
-foundation-model slates, nor cost axes.
+comparison \citep{kancritical2024}; neither includes a GBDT or
+foundation-model slate, and neither measures cost axes.
 
 \paragraph{Provenance and implementation honesty.} Seven models come from
 official libraries (3 GBDTs, TabPFN, TabFM, RealMLP, TabM); one from the
@@ -207,7 +208,7 @@ folds: hyperparameters are selected only on the inner folds, so outer-fold
 estimates are untouched by tuning), stratified in all classification
 splits; Bayesian Optuna/TPE
 tuning \citep{akiba2019} with an equalized per-family budget (100 trials
-for GBDTs, 25 for DL --- ratio calibrated by epoch cost); a fixed 20\%
+for GBDTs, 25 for DL); a fixed 20\%
 hold-out (seed 42) that no selection step ever observes; per-family
 preprocessing (one-hot for attention, ordinal for trees, embeddings where
 the model defines them). Foundation models enter zero-shot (no tuning),
@@ -227,8 +228,8 @@ and paired Wilcoxon with Holm correction \citep{demsar2006}; Bayesian
 signed-rank test with a ROPE (region of practical equivalence) of
 $\pm$0.01 AUC \citep{benavoli2017}, with sensitivity reported at
 $\{0.005,\,0.01,\,0.02\}$; per-family rank-variance decomposition
-($\eta^2$: the between-family share of total rank variance --- with
-unbalanced families (3 GBDTs, 9 DL, 2 FMs) the between-family share is
+($\eta^2$: the between-family share of total rank variance --- with the
+Act~I slate's unbalanced families (3 GBDTs, 7 DL, 1 FM) this share is
 mechanically conservative). Power limitations are stated wherever binding: with $N{=}5$
 regression datasets, the minimum Wilcoxon p-value is 0.0625 (combinatorial
 floor); multiclass ($N{=}3$) is treated as descriptive.
@@ -247,7 +248,7 @@ not single-row online latency, whose gaps are smaller). Hardware: RTX 5080
 
 \subsection{Act I --- the tie of the generation up to 2025}
 
-Restricted to the 11 models available up to 2025, binary classification
+Restricted to the 11-model core slate, binary classification
 exhibits a statistically indistinguishable top. The omnibus rejects global
 equality (Friedman $\chi^2 = 31.3$, $p = 5.2\times10^{-4}$;
 Iman--Davenport $F = 4.1$, $p = 1.1\times10^{-4}$), but the post-hoc does
@@ -277,7 +278,7 @@ better; models closer than the CD bar are not statistically separable,
 and each horizontal bar at the bottom connects one statistically
 inseparable group --- their width is the visual form of the wide-CD
 caution stated in \S\ref{sec:act4}. Act~I statistics in the text
-restrict to the 11 pre-2026 models.}
+restrict to the 11-model core slate.}
 \label{fig:cd}
 \end{figure}
 
@@ -293,34 +294,36 @@ tens of \us{} (TabNet 17; FT-Transformer 29; SAINT 45); and the extreme
 belongs to the heavy-inference paradigms --- TabPFN 7,416, STab 8,645 and
 TabFM 43,262~\us/row (STab's cost comes from Bayesian inference averaging
 over 64 stochastic forward passes; the foundation models' from carrying
-the training set as context). On the training-cost axis, the $\leq$2025
-generation resolves to a Pareto frontier of \{TabPFN, XGBoost,
-LightGBM\}; on the latency axis it narrows to \{XGBoost, TabPFN\}. All
-classical deep learning is dominated on both measured axes.
-Fig.~\ref{fig:pareto} shows the full 14-model picture on the
-training-cost axis, where the 2026 TabFM takes over the frontier
-outright.
+the training set as context). On mean rank $\times$ cost --- rank being the paper's primary comparison
+instrument --- the 11-model core slate resolves to a Pareto frontier of
+\{TabPFN, XGBoost, LightGBM\} on the training-cost axis, narrowing to
+\{XGBoost, TabPFN\} on the latency axis (on mean AUC instead of rank,
+CatBoost also becomes non-dominated); all classical deep learning is
+dominated throughout. Fig.~\ref{fig:pareto} shows the full 14-model
+picture, where the 2026 TabFM takes over the frontier outright.
 % results/latency/latency_adult.csv; notebooks/05_cost_analysis.ipynb
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.9\linewidth]{figures/pareto_binary.pdf}
-\caption{Binary AUC $\times$ median training time (log scale; up-left is
-better), all 14 models. The starred point is Pareto-optimal over the full
-slate (TabFM); the \{TabPFN, XGBoost, LightGBM\} frontier quoted in the
-text is the restriction to the $\leq$2025 generation. Inference-latency
-comparisons are reported in the text.}
+\caption{Mean binary rank $\times$ median training time over the binary
+datasets (log scale; the rank axis is inverted so up-left is better), all
+14 models. The starred point is Pareto-optimal over the full slate
+(TabFM --- simultaneously the cheapest fit and the best rank); the
+\{TabPFN, XGBoost, LightGBM\} frontier quoted in the text is the
+restriction to the 11-model core slate. Inference-latency comparisons are
+reported in the text.}
 \label{fig:pareto}
 \end{figure}
 
 \subsection{Act III --- conditional reversals and the size axis}
 
 The best family depends on problem structure: in multiclass ($N{=}3$,
-descriptive) the recent DL generation (STab/TabM) takes the classical
+descriptive) the newer DL models (STab/TabM) take the classical
 top; under severe
 imbalance GBDTs gain relative advantage; at the categorical extreme
 one-hot encoding penalizes attention; and TabPFN combines the best mean
-rank with the best worst-case. Learning curves (6 models $\times$ 5
+rank with the best worst-case within the core slate. Learning curves (6 models $\times$ 5
 datasets $\times$ 3 seeds, from 500 samples to the full pool;
 Fig.~\ref{fig:curves}) give the size axis its shape: the
 GBDT$\leftrightarrow$DL leadership crossover is real and
@@ -407,11 +410,13 @@ in multiclass and regression --- under a uniform protocol, the original
 paper's claims \citep{tabkan2025} do not hold (the likely explanation is
 an under-tuned baseline), consistent with the skeptical literature
 \citep{kancritical2024}. As far as our dated verification reaches, this is
-the family's first neutral test in a multi-criteria tabular benchmark. The
+the family's first test against the full GBDT/DL/foundation-model slate in
+a multi-criteria tabular benchmark; the earlier independent evaluations
+\citep{poeta2024,kancritical2024} compare KANs against MLPs only. The
 engineering counterpart deserves record: both live in the fast latency
-tier (2--3~\us/row) --- the problem is performance, not cost.
+tier (2.3--3.1~\us/row) --- the problem is performance, not cost.
 
-\section{The validated decision framework}
+\section{The Validated Decision Framework}
 
 \subsection{Negative result: meta-feature routing does not generalize}
 
@@ -428,6 +433,9 @@ this under an explicit protocol shields the framework from the
 overclaiming critique that reaches part of the algorithm-recommendation
 literature. The tree remains
 in the work as a descriptive illustration, never as a predictor.
+Independent contemporaneous evidence agrees: global meta-feature
+approaches are not robust enough to explain or select among TFM-era
+models \citep{herre2026}.
 % scripts/lodo_validation.py; results/aggregated/lodo_validation{,_14}.csv
 
 \subsection{Positive result: the ``FM first'' policy}
@@ -521,8 +529,8 @@ The rule ``boosting always wins'' is not false --- it expired. It held as
 a portrait of the generation up to 2025, where the top ties and 80\% of
 variance is intra-family; in 2026, pre-training broke the accuracy tie and
 inverted the cost axis: the best model in accuracy is the worst in
-latency, by 4--5 orders of magnitude. The multi-criteria framework leaves
-the LODO validation with a clearer role --- not predicting the winner
+latency, by 4--5 orders of magnitude. The multi-criteria framework emerges
+from the LODO validation with a clearer role --- not predicting the winner
 (infeasible), but encoding the constraints that actually decide --- and
 the policy ``FM first, deviate on constraints'' has median regret zero.
 The only obstacle to the optimal policy is serving cost; removing it by

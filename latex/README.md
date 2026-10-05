@@ -23,6 +23,19 @@ caminho do artefato de origem.
    de disciplina (verificado 04/10/2026); formato de artigo com `abbrvnat`
    é defensável, mas confirme. (E-mails dos dois autores: preenchidos.)
 
+**Auditoria round 4 (05/10/2026, final pré-entrega):** 3 releitores
+integrais + verificador web + compilação local determinística (tectonic)
+com inspeção página a página dos PDFs. Correções: 2 edits perdidos por
+scripts abortados restaurados (reconciliação §5.1 AI-2; claim full-slate
+§4.4 AI-1); claim "sub-ms ⇒ só students" reescopada em 6 pontos (kin8nm é
+contraexemplo na própria figura — virou ilustração da regra de decisão);
+figura de Pareto do AI-1 refeita em rank médio × tempo mediano (a versão
+AUC contradizia as fronteiras do texto); terminologia "11-model core
+slate"; xcolor adicionado (erro engolido pelo Overleaf); ~30 polimentos de
+costura/gramática/dêixis; 6 citações novas verificadas (conformal,
+quantização FP8, GEAR, 2º benchmark CDE, meta-features, Poeta/Rice no
+AI-1); claims datadas 100% validadas contra fontes primárias em 05/10.
+
 **Auditoria round 3 (04/10/2026):** 5 agentes (números AI-1, números AI-2,
 referências, concorrência/banca, estrutura/didática). Resultado: espinha
 numérica íntegra (AI-1 ~60 números recomputados; AI-2 Tabela 2 rederivada
