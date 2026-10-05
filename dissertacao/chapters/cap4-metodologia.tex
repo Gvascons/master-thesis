@@ -1,4 +1,745 @@
 \chapter{Metodologia Experimental}
 \label{chap:metodologia}
 
-[Conteúdo portado de \texttt{dissertation/cap4-metodologia.md} na fase de escrita.]
+\begin{resumocapitulo}
+Este capítulo especifica o protocolo experimental que sustenta todos os
+resultados empíricos da dissertação: 14 modelos de três famílias (gradient
+boosting, aprendizado profundo e \emph{foundation models}) avaliados em 18
+conjuntos de dados públicos do OpenML sob validação cruzada aninhada
+(5~\emph{folds} externos $\times$ 3 internos), com \emph{hold-out} de 20\%
+separado antes de qualquer seleção e jamais observado pelo \emph{tuning}. O
+capítulo justifica cada decisão de desenho --- orçamentos de otimização de
+100/25 \emph{trials}, assimetria \emph{zero-shot} dos \emph{foundation
+models}, pré-processamento por família, métricas primárias
+\emph{threshold-free} --- e declara o protocolo de inferência estatística, a
+política para células faltantes (250 de 252 células; duas exclusões
+estruturais), o protocolo de medição de custo, o contrato de conduta
+científica e, antes de qualquer resultado, as limitações do próprio desenho.
+\end{resumocapitulo}
+
+\publicacaoassociada{A formulação condensada desta metodologia corresponde à
+seção \emph{Methodology} do artigo individual AI-1
+(\texttt{latex/ai1/main.tex} no repositório do projeto). A especificação
+estatística completa, com o registro da auditoria de corretude de julho de
+2026, está em \texttt{docs/metodologia-estatistica.md}; os parâmetros exatos
+do protocolo estão versionados em \texttt{configs/experiment.yaml} e
+\texttt{configs/datasets.yaml}.}
+
+Este capítulo descreve o desenho experimental comum a toda a parte empírica
+da dissertação. A Seção~\ref{sec:met-visao} enuncia os princípios que
+organizam o protocolo; as Seções~\ref{sec:met-datasets}
+e~\ref{sec:met-modelos} apresentam os conjuntos de dados e os modelos, com
+os critérios de seleção e a proveniência de cada implementação; as
+Seções~\ref{sec:met-protocolo} a~\ref{sec:met-metricas} detalham o protocolo
+de avaliação, o pré-processamento por família e as métricas; a
+Seção~\ref{sec:met-estatistica} declara o protocolo de aplicação dos testes
+estatísticos --- cuja fundamentação foi apresentada no
+Capítulo~\ref{chap:fundamentacao} --- incluindo a política para células
+faltantes; a Seção~\ref{sec:met-custo} especifica como custo de treinamento,
+custo de \emph{tuning} e latência de inferência são medidos, além dos
+experimentos complementares; as Seções~\ref{sec:met-reprodutibilidade}
+e~\ref{sec:met-conduta} documentam a infraestrutura de reprodutibilidade e o
+contrato de conduta científica; e a Seção~\ref{sec:met-limitacoes} fecha o
+capítulo com as limitações do desenho, declaradas \emph{antes} de qualquer
+resultado. O desenho experimental específico da destilação distribucional
+(AI-2) --- pré-registrado em documento próprio, com hipóteses falsificáveis
+--- é apresentado no Capítulo~\ref{chap:destilacao}; aqui descrevemos apenas
+a infraestrutura compartilhada da qual ele herda dados, partições e
+hiperparâmetros.
+
+\section{Visão geral e princípios de desenho}
+\label{sec:met-visao}
+
+A metodologia foi construída para responder às três perguntas de pesquisa
+enunciadas no Capítulo~\ref{chap:introducao}: se as famílias modernas de
+modelos tabulares diferem de forma praticamente relevante sob um protocolo
+uniforme (QP1); como a vantagem relativa varia com a estrutura do problema
+(QP2); e que arcabouço de decisão multicritério pode orientar a escolha
+quando o desempenho empata ou o líder é operacionalmente caro (QP3). Quatro
+princípios atravessam todas as decisões deste capítulo:
+
+\begin{itemize}
+  \item \textbf{Separação estrita entre seleção e medição.} Nenhum dado
+    usado para escolher hiperparâmetros, arquiteturas ou pré-processadores
+    participa da estimativa final de desempenho. Este princípio materializa-se
+    no \emph{hold-out} prévio e na validação cruzada aninhada
+    (Seção~\ref{sec:met-protocolo}).
+  \item \textbf{Paridade de condições entre modelos.} Todos os modelos veem
+    as mesmas partições, as mesmas sementes e orçamentos de otimização
+    equalizados em custo computacional --- as assimetrias inevitáveis (regime
+    \emph{zero-shot} dos \emph{foundation models}) são declaradas e
+    justificadas, não escondidas.
+  \item \textbf{Unidade de análise correta.} A inferência estatística opera
+    sobre conjuntos de dados, nunca sobre \emph{folds} --- \emph{folds} do
+    mesmo conjunto não são independentes, e tratá-los como réplicas inflaria
+    artificialmente o poder dos testes (pseudo-replicação;
+    Seção~\ref{sec:met-estatistica}).
+  \item \textbf{Proveniência rastreável.} Todo número reportado na
+    dissertação origina-se de um artefato versionado (CSV, JSON ou notebook
+    executado) no repositório público do projeto
+    (Seção~\ref{sec:met-reprodutibilidade}).
+\end{itemize}
+
+\section{Conjuntos de dados}
+\label{sec:met-datasets}
+
+O benchmark usa \textbf{18 conjuntos de dados públicos do OpenML}
+\citep{vanschoren2014}: 10 de classificação binária, 3 de classificação
+multiclasse e 5 de regressão. A Tabela~\ref{tab:datasets} lista os 18
+conjuntos com seus identificadores OpenML, tamanhos aproximados e composição
+de atributos; a fonte canônica é \texttt{configs/datasets.yaml}, versionada
+no repositório.
+
+\begin{table}[htbp]
+\centering
+\caption{Os 18 conjuntos de dados OpenML do benchmark (tamanhos aproximados
+antes do teto; as execuções limitam cada conjunto a 100~mil amostras).
+Fonte: \texttt{configs/datasets.yaml}.}
+\label{tab:datasets}
+\small
+\begin{tabular}{llrrrrl}
+\toprule
+Conjunto & Tarefa & ID OpenML & $n$ & $d$ & Classes & Atributos \\
+\midrule
+adult                   & binária & 1590  & 49\,000  & 14 & 2 & mistos \\
+amazon\_employee        & binária & 4135  & 33\,000  & 9  & 2 & categóricos \\
+bank\_marketing         & binária & 1461  & 45\,000  & 16 & 2 & mistos \\
+cardiovascular\_disease & binária & 45547 & 70\,000  & 11 & 2 & mistos \\
+credit\_g               & binária & 31    & 1\,000   & 20 & 2 & mistos \\
+give\_me\_some\_credit  & binária & 46929 & 150\,000 & 10 & 2 & numéricos \\
+higgs                   & binária & 23512 & 98\,000  & 28 & 2 & numéricos \\
+magictelescope          & binária & 44125 & 19\,000  & 10 & 2 & numéricos \\
+phoneme                 & binária & 1489  & 5\,400   & 5  & 2 & numéricos \\
+telco\_customer\_churn  & binária & 42178 & 7\,000   & 19 & 2 & mistos \\
+\midrule
+covertype               & multiclasse & 1596  & 581\,000 & 54 & 7   & numéricos \\
+helena                  & multiclasse & 41169 & 65\,000  & 27 & 100 & numéricos \\
+jannis                  & multiclasse & 41168 & 84\,000  & 54 & 4   & numéricos \\
+\midrule
+california\_housing     & regressão & 44090 & 21\,000  & 8  & -- & numéricos \\
+kin8nm                  & regressão & 44980 & 8\,192   & 8  & -- & numéricos \\
+superconduct            & regressão & 44064 & 21\,000  & 81 & -- & numéricos \\
+wine\_quality           & regressão & 287   & 6\,500   & 11 & -- & numéricos \\
+year\_prediction        & regressão & 44027 & 515\,000 & 90 & -- & numéricos \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A seleção obedeceu a quatro critérios, cada um ligado a uma necessidade da
+investigação:
+
+\begin{itemize}
+  \item \textbf{Cobertura dos três tipos de tarefa.} Boa parte da literatura
+    de benchmark tabular restringe-se à classificação; incluir regressão (5
+    conjuntos, com \texttt{kin8nm} e outros provenientes de suítes curadas
+    como a OpenML-CTR23 \citep{fischer2023}) é condição para que o arcabouço
+    de decisão da QP3 não seja um artefato de um único tipo de tarefa.
+  \item \textbf{Três ordens de grandeza em tamanho amostral.} Os conjuntos
+    variam de cerca de mil (\texttt{credit\_g}) a 581~mil amostras
+    (\texttt{covertype}). A QP2 pergunta onde a liderança troca de mãos ao
+    longo do eixo de tamanho; sem variação ampla nesse eixo, a pergunta seria
+    irrespondível por construção.
+  \item \textbf{Diversidade de composição de atributos.} Conjuntos puramente
+    numéricos, mistos e um caso extremo predominantemente categórico de alta
+    cardinalidade (\texttt{amazon\_employee}), porque o tratamento de
+    categóricas é um dos eixos que historicamente separa as famílias
+    \citep{grinsztajn2022, mcelfresh2023}.
+  \item \textbf{Desbalanceamento realista.} Razões de desbalanceamento de
+    1:1 a cerca de 16:1 na classificação, o que condiciona a escolha das
+    métricas primárias (Seção~\ref{sec:met-metricas}) e aproxima o benchmark
+    de aplicações de crédito e risco.
+\end{itemize}
+
+A Figura~\ref{fig:dataset-landscape} situa os 18 conjuntos no plano
+tamanho~$\times$~dimensionalidade, evidenciando a cobertura obtida.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{images/dataset_landscape.pdf}
+  \caption{\textbf{O benchmark cobre três ordens de grandeza em amostras e
+  mais de uma ordem em atributos.} Cada ponto é um conjunto de dados,
+  posicionado pelo número de amostras (eixo vertical, escala logarítmica) e
+  de atributos (eixo horizontal, escala logarítmica), colorido pelo tipo de
+  tarefa (binária, multiclasse, regressão). A dispersão sem aglomeração em
+  um único quadrante é a condição estrutural para a análise condicional da
+  QP2. Fonte: \texttt{results/figures/dataset\_landscape.pdf}, gerado a
+  partir de \texttt{configs/datasets.yaml}.}
+  \label{fig:dataset-landscape}
+\end{figure}
+
+\paragraph{Teto de 100~mil amostras.} Conjuntos com mais de 100~mil amostras
+(\texttt{covertype}, \texttt{year\_prediction},
+\texttt{give\_me\_some\_credit}) são subamostrados de forma estratificada
+para 100~mil amostras \emph{antes de qualquer particionamento}. A prática é
+padrão em benchmarks tabulares por viabilidade computacional
+\citep{gorishniy2021, mcelfresh2023} e, no nosso caso, é também uma
+delimitação honesta de escopo: com 14 modelos $\times$ 18 conjuntos sob
+validação cruzada aninhada em uma única GPU
+(Seção~\ref{sec:met-reprodutibilidade}), o regime estudado é o de dados
+tabulares de pequeno a médio porte --- exatamente o regime em que a disputa
+entre famílias permanece aberta. A integridade de cada conjunto é registrada
+por \emph{hash} SHA-256 em cada experimento, o que permite detectar qualquer
+alteração silenciosa dos dados entre execuções.
+
+\paragraph{Declaração sobre os dados.} Todos os conjuntos são públicos e
+obtidos pelo OpenML por identificador numérico e versão fixados em
+configuração; nenhum dado pessoal ou sensível é processado além de sua forma
+pública. Um erro de rotulagem descoberto durante o estudo --- a chave de
+configuração \texttt{diamonds} apontava, desde a origem, para o identificador
+OpenML do conjunto \texttt{kin8nm} --- foi retificado com trilha pública
+completa, e todo número desta dissertação é posterior à
+retificação.\footnote{O registro canônico da errata está em
+\texttt{docs/errata-diamonds-kin8nm.md}; o episódio é retomado como lição de
+conduta científica na Seção~\ref{sec:met-conduta} e nas limitações do
+Capítulo~\ref{chap:conclusao}.}
+
+\section{Modelos avaliados}
+\label{sec:met-modelos}
+
+O benchmark compara \textbf{14 modelos em três famílias}. A
+Tabela~\ref{tab:modelos} lista os modelos com suas referências e a
+proveniência de cada implementação.
+
+\begin{table}[htbp]
+\centering
+\caption{Os 14 modelos do benchmark, por família, com a proveniência de cada
+implementação. ``Própria'' indica reimplementação a partir do artigo
+original, motivada pela ausência de pacote maduro.}
+\label{tab:modelos}
+\small
+\begin{tabular}{llll}
+\toprule
+Família & Modelo & Referência & Implementação \\
+\midrule
+\multirow{3}{*}{Gradient boosting}
+ & XGBoost        & \citet{chen2016}          & biblioteca oficial \\
+ & LightGBM       & \citet{ke2017}            & biblioteca oficial \\
+ & CatBoost       & \citet{prokhorenkova2018} & biblioteca oficial \\
+\midrule
+\multirow{9}{*}{Aprendizado profundo}
+ & MLP            & \citet{gorishniy2021}     & própria (modelo-base) \\
+ & RealMLP        & \citet{realmlp2024}       & pacote oficial \\
+ & TabM           & \citet{tabm2025}          & pacote oficial \\
+ & TabNet         & \citet{arik2021}          & pacote da comunidade \\
+ & FT-Transformer & \citet{gorishniy2021}     & própria \\
+ & SAINT          & \citet{somepalli2021}     & própria \\
+ & STab           & \citet{stab-ref}          & própria \\
+ & KAN            & \citet{kan2024}           & \emph{efficient-kan} adaptado \\
+ & TabKAN         & \citet{tabkan2025}        & própria \\
+\midrule
+\multirow{2}{*}{Foundation models}
+ & TabPFN v2.5    & \citet{hollmann2025, priorlabs2025} & pacote oficial \\
+ & TabFM          & \citet{tabfm2026}         & pacote oficial \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Três decisões de composição merecem justificativa explícita:
+
+\begin{itemize}
+  \item \textbf{Por que estas três famílias.} Gradient boosting é o estado
+    da prática consolidado para dados tabulares; o aprendizado profundo
+    tabular é a família com maior volume de propostas recentes e maior
+    heterogeneidade interna (do MLP regularizado aos modelos de atenção e às
+    redes de Kolmogorov--Arnold); e os \emph{foundation models} são a aposta
+    paradigmática da geração 2025--2026. A comparação entre famílias ---
+    e não apenas entre modelos --- é o que permite a decomposição de
+    variância da Seção~\ref{sec:met-estatistica}.
+  \item \textbf{Por que declarar a proveniência das implementações.} Cinco
+    modelos (MLP, FT-Transformer, SAINT, STab, TabKAN) usam implementações
+    próprias --- os três últimos reimplementados dos artigos originais por
+    ausência de pacote maduro; o KAN usa o \emph{backbone}
+    \emph{efficient-kan} (licença MIT) vendorizado com adaptações
+    documentadas. Isso afeta a interpretação: um desempenho fraco de modelo
+    reimplementado confunde a qualidade do método com a da implementação.
+    Mitigamos o risco com verificações de sanidade contra resultados
+    publicados --- por exemplo, a reimplementação do TabKAN atinge ROC-AUC
+    de 0,914--0,915 no conjunto \texttt{adult}, compatível com o valor de
+    aproximadamente 0,90 reportado pelos autores \citep{tabkan2025} --- e
+    com a declaração de todo desvio de protocolo (por exemplo, o TabKAN é
+    treinado com AdamW e mini-lotes, em lugar do L-BFGS \emph{full-batch}
+    original, por uniformidade com os demais modelos profundos).
+  \item \textbf{Por que os \emph{foundation models} entram
+    \emph{zero-shot}.} TabPFN v2.5 e TabFM operam sem qualquer ajuste de
+    hiperparâmetros: o ``treinamento'' consiste em condicionar o modelo
+    pré-treinado ao conjunto de treino via aprendizado em contexto
+    (Capítulo~\ref{chap:fundamentacao}). Essa assimetria é deliberada ---
+    o regime \emph{zero-shot} é precisamente a alegação paradigmática sob
+    teste, e seus parâmetros de inferência (conjunto de 8 membros de
+    \emph{ensemble}; teto de contexto de 50~mil amostras, com política de
+    subamostragem idêntica entre os dois modelos para comparabilidade) são
+    políticas fixas das bibliotecas, não quantidades ajustadas aos nossos
+    dados.
+\end{itemize}
+
+Ambos os \emph{foundation models} têm limites arquiteturais declarados, dos
+quais decorre a única lacuna da matriz experimental: o conjunto
+\texttt{helena} (100 classes) excede o limite de classes de ambos. As duas
+células TabPFN$\times$\texttt{helena} e TabFM$\times$\texttt{helena} são,
+portanto, \emph{exclusões estruturais} --- impossibilidades arquiteturais,
+não falhas de execução --- e a matriz final tem 250 das 252 células
+possíveis. A política estatística para essas células é definida na
+Seção~\ref{sec:met-estatistica}.
+
+\section{Protocolo experimental}
+\label{sec:met-protocolo}
+
+A Figura~\ref{fig:protocolo} resume o protocolo de avaliação, cujos
+componentes são justificados a seguir.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  caixa/.style={draw=black!70, rounded corners=2pt, align=center,
+    font=\small, inner sep=5pt, minimum height=9mm, fill=black!3},
+  destaque/.style={caixa, fill=black!12},
+  seta/.style={-{Stealth[length=2.5mm]}, thick, draw=black!70},
+  rotulo/.style={font=\footnotesize\itshape, text=black!60, align=center},
+  node distance=9mm and 8mm
+]
+\node[caixa] (dados) {Conjunto de dados\\(teto de 100\,mil amostras; \emph{hash} SHA-256)};
+\node[caixa, below left=9mm and -14mm of dados] (dev)
+  {Partição de desenvolvimento\\(80\%)};
+\node[destaque, below right=9mm and -14mm of dados] (hold)
+  {\emph{Hold-out} final (20\%)\\intocado por toda a seleção};
+\node[caixa, below=of dev] (nested)
+  {Validação cruzada aninhada\\laço externo: 5 \emph{folds} (medição)\\
+   laço interno: 3 \emph{folds} (seleção)};
+\node[caixa, below=of nested] (optuna)
+  {Optuna TPE + MedianPruner\\100 \emph{trials} (GBDT) / 25 (DL)\\
+   \emph{foundation models}: \emph{zero-shot}};
+\node[caixa, right=14mm of optuna] (fit)
+  {Ajuste final na partição de\\desenvolvimento (90/10 treino/val.)\\
+   com a configuração selecionada};
+\node[destaque, above=of fit] (aval)
+  {Avaliação única\\no \emph{hold-out}};
+\draw[seta] (dados) -- node[rotulo, left=2pt] {divisão estratificada,\\semente 42} (dev);
+\draw[seta] (dados) -- (hold);
+\draw[seta] (dev) -- (nested);
+\draw[seta] (nested) -- node[rotulo, right=2pt] {hiperparâmetros} (optuna);
+\draw[seta] (optuna) -- (fit);
+\draw[seta] (fit) -- (aval);
+\draw[seta] (hold) -- (aval);
+\end{tikzpicture}
+\caption{\textbf{Separação estrita entre seleção e medição.} O
+\emph{hold-out} de 20\% é separado antes de qualquer validação cruzada e só
+é tocado uma única vez, na avaliação final; a seleção de hiperparâmetros
+ocorre exclusivamente no laço interno da validação cruzada aninhada, sobre a
+partição de desenvolvimento. Caixas sombreadas marcam os dados e a etapa que
+nenhum estágio de seleção observa.}
+\label{fig:protocolo}
+\end{figure}
+
+\begin{itemize}
+  \item \textbf{\emph{Hold-out} final intocado --- por quê.} 20\% de cada
+    conjunto é separado \emph{antes} de qualquer validação cruzada
+    (estratificado em classificação; semente fixa 42). Todo resultado final
+    reportado provém exclusivamente desse conjunto. A alternativa comum ---
+    reportar a média dos \emph{folds} externos --- é defensável, mas o
+    \emph{hold-out} prévio oferece uma garantia mais forte: mesmo um erro
+    sutil de vazamento no laço de seleção não contamina o número final,
+    porque nenhum estágio de seleção jamais observa esses dados.
+  \item \textbf{Validação cruzada aninhada --- por quê.} O laço externo
+    (5 \emph{folds}) mede o modelo; o laço interno (3 \emph{folds})
+    seleciona hiperparâmetros. Selecionar e medir nos mesmos \emph{folds}
+    produz estimativas otimistas --- o viés clássico de seleção; o
+    aninhamento elimina esse viés por construção, ao custo computacional de
+    multiplicar o número de ajustes. Pagamos esse custo deliberadamente: o
+    benchmark prioriza profundidade de protocolo sobre largura de $N$
+    (discussão na Seção~\ref{sec:met-limitacoes}).
+  \item \textbf{Estratificação em todas as partições de classificação.}
+    \emph{Hold-out}, \emph{folds} externos, \emph{folds} internos e a
+    divisão 90/10 treino/validação do ajuste final; em regressão, K-Fold
+    com embaralhamento. Sob desbalanceamento de até 16:1, partições não
+    estratificadas podem deixar \emph{folds} quase sem a classe minoritária.
+  \item \textbf{Orçamentos de otimização 100/25 --- por quê a assimetria.}
+    A busca usa Optuna com amostrador TPE e MedianPruner \citep{akiba2019}:
+    100 \emph{trials} para gradient boosting e 25 para aprendizado profundo.
+    A assimetria nominal \emph{equaliza o custo}: um \emph{trial} de
+    aprendizado profundo custa cerca de 4$\times$ um \emph{trial} de GBDT,
+    e 25 \emph{trials} de TPE capturam a maior parte do \emph{landscape} de
+    otimização \citep{akiba2019}. Orçamentos iguais em número de
+    \emph{trials} dariam aos GBDTs menos tempo de busca por unidade de
+    custo --- a paridade relevante é a de recursos, não a de contagem. Os
+    espaços de busca por modelo estão no Apêndice~\ref{app:espacos-busca}.
+    A direção de otimização segue a métrica primária de cada tarefa
+    (maximização de ROC-AUC; minimização de \emph{log-loss} e RMSE),
+    verificada em auditoria de código
+    (Seção~\ref{sec:met-estatistica}).
+  \item \textbf{Regime de treinamento dos modelos profundos.} Máximo de 200
+    épocas com parada antecipada (paciência 20, monitorando a perda de
+    validação), lote de 256, otimizador AdamW e restauração do melhor
+    estado --- um regime único para toda a família, que evita que
+    diferenças de agenda de treinamento se confundam com diferenças de
+    arquitetura.
+  \item \textbf{Isolamento e robustez operacional.} Cada experimento executa
+    em subprocesso isolado; erros de memória disparam redução automática do
+    lote e, no limite, poda do \emph{trial} --- uma configuração
+    excessivamente custosa não derruba a fila de execução. O executor é
+    resumível: resultados existentes são detectados e pulados, o que torna
+    as longas execuções tolerantes a interrupções.
+  \item \textbf{Sementes.} Semente global 42; cada \emph{trial} recebe
+    semente derivada determinística, de modo que qualquer célula da matriz é
+    reproduzível isoladamente.
+\end{itemize}
+
+\section{Pré-processamento por família}
+\label{sec:met-preproc}
+
+Cada família recebe a entrada no formato que sua literatura prescreve ---
+impor um pré-processamento único seria penalizar artificialmente alguma
+delas. O ajuste de todo pré-processador ocorre \emph{exclusivamente no
+treino de cada fold}, nunca na validação ou no teste, eliminando essa via
+clássica de vazamento:
+
+\begin{itemize}
+  \item \textbf{Gradient boosting:} codificação ordinal de categóricas e
+    imputação por mediana; o CatBoost recebe os índices das colunas
+    categóricas e aplica seu tratamento nativo
+    \citep{prokhorenkova2018}.
+  \item \textbf{Aprendizado profundo:} padronização das numéricas e
+    \emph{one-hot} das categóricas com teto de 50 categorias por coluna. O
+    teto é necessário para evitar explosão dimensional: sem ele, o conjunto
+    \texttt{amazon\_employee} atingiria cerca de 6\,900 colunas, excedendo a
+    memória da GPU nos modelos de atenção.
+  \item \textbf{\emph{Foundation models}:} codificação ordinal; a
+    normalização interna é dos próprios modelos, por desenho.
+\end{itemize}
+
+Duas adaptações específicas do KAN são registradas como decisões
+metodológicas: normalização de camada antes de cada camada KAN e faixa de
+\emph{grid} $[-2, 2]$. Ambas decorrem de uma incompatibilidade concreta:
+B-splines só são definidas dentro do \emph{grid}, e entradas padronizadas
+caem majoritariamente fora da faixa original $[-1, 1]$ proposta em
+\citet{kan2024}.
+
+\section{Métricas por tipo de tarefa}
+\label{sec:met-metricas}
+
+A regra geral: a métrica primária de cada tarefa é \emph{threshold-free} e
+sensível à qualidade probabilística do modelo; as secundárias cobrem os
+ângulos que a primária não vê. A Tabela~\ref{tab:metricas} resume o esquema.
+
+\begin{table}[htbp]
+\centering
+\caption{Métricas por tipo de tarefa. Setas indicam a direção de otimização.
+A acurácia é reportada por convenção, mas nunca fundamenta conclusões.}
+\label{tab:metricas}
+\small
+\begin{tabular}{llll}
+\toprule
+Tarefa & Primária & Secundárias & Justificativa da primária \\
+\midrule
+Binária (10) & ROC-AUC ($\uparrow$) & KS, \emph{log-loss}, F1, acurácia &
+  \begin{tabular}[t]{@{}l@{}}independente de limiar e de prevalência;\\
+  robusta ao desbalanceamento (até 16:1)\end{tabular} \\
+\addlinespace
+Multiclasse (3) & \emph{log-loss} ($\downarrow$) &
+  \begin{tabular}[t]{@{}l@{}}F1-macro, F1-ponderado,\\AUC-OvR, acurácia\end{tabular} &
+  \begin{tabular}[t]{@{}l@{}}única \emph{proper scoring rule} que escala\\
+  a $K$ classes sem agregação arbitrária\end{tabular} \\
+\addlinespace
+Regressão (5) & RMSE ($\downarrow$) & MAE, $R^2$ &
+  \begin{tabular}[t]{@{}l@{}}na unidade do alvo; penalização\\
+  quadrática de erros grandes\end{tabular} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Três observações completam o quadro. Primeiro, a acurácia é enganosa sob
+desbalanceamento --- um classificador trivial ``acerta'' 94\% em um conjunto
+16:1 --- e descarta toda a informação probabilística, que é precisamente um
+dos eixos que distinguem as famílias; por isso é reportada, mas nunca usada
+em conclusões. Segundo, o KS (estatística de Kolmogorov--Smirnov sobre os
+escores) conecta o benchmark à prática de crédito e risco, onde é a métrica
+padrão da indústria; e a comparação RMSE$\times$MAE expõe quando o erro é
+dominado por caudas. Terceiro, comparações de RMSE \emph{entre} conjuntos
+são evitadas por não serem comensuráveis --- o $R^2$ cumpre o papel de
+leitura livre de escala.
+
+\section{Protocolo de inferência estatística}
+\label{sec:met-estatistica}
+
+Os testes empregados --- Friedman, Nemenyi, Wilcoxon, a análise bayesiana
+com ROPE --- foram apresentados em profundidade no
+Capítulo~\ref{chap:fundamentacao}; esta seção declara \emph{o protocolo de
+aplicação}: quais testes, em que ordem, com que correções e com que análises
+de sensibilidade. A cadeia segue a prática canônica para comparação de
+múltiplos classificadores em múltiplos conjuntos \citep{demsar2006,
+benavoli2017}, acrescida de uma camada bayesiana e de uma decomposição de
+variância. Toda a cadeia foi submetida a auditoria de corretude (julho de
+2026), que incluiu a recomputação manual da estatística de Friedman
+(idêntica à da implementação: $\chi^2 = 31{,}309$ nos dados binários) e o
+cotejo linha a linha da implementação bayesiana com a formulação de
+referência; o registro completo está em
+\texttt{docs/metodologia-estatistica.md}.
+
+\begin{enumerate}
+  \item \textbf{Unidade de análise: o conjunto de dados.} Os testes operam
+    sobre $N=10$ (binária), $N=3$ (multiclasse) e $N=5$ (regressão)
+    conjuntos --- nunca sobre \emph{folds}, que não são independentes entre
+    si (pseudo-replicação). Os \emph{folds} alimentam apenas a variância
+    intra-conjunto (bandas de incerteza e análise de robustez).
+  \item \textbf{Teste omnibus de Friedman} sobre os \emph{ranks} por
+    conjunto, que não assume normalidade nem comensurabilidade das métricas
+    entre conjuntos. Reportamos o qui-quadrado clássico \emph{e} a correção
+    de Iman--Davenport, menos conservadora para $N$ pequeno.
+  \item \textbf{Post-hoc de Nemenyi} com diagramas de diferença crítica,
+    $\mathrm{CD} = q_\alpha \sqrt{k(k+1)/6N}$ \citep{demsar2006}; a lógica
+    de agrupamento dos diagramas foi verificada formalmente na auditoria
+    (grupos são intervalos contíguos na ordem de \emph{ranks}, com todo par
+    interno distando menos que o CD).
+  \item \textbf{Wilcoxon signed-rank par a par com correção de Holm}
+    (método exato para $N \le 25$ sem empates), complementando o Nemenyi
+    com as \emph{magnitudes} das diferenças. \textbf{Limitação declarada:}
+    com $N=5$ conjuntos de regressão, o menor p-valor bilateral atingível é
+    $2 \cdot (1/2^5) = 0{,}0625$ --- rejeição a $\alpha = 0{,}05$ é
+    matematicamente impossível, e após Holm todos os p-valores saturam em
+    1,0 (verificado empiricamente). Conclusões de regressão apoiam-se,
+    portanto, em \emph{ranks}, tamanhos de efeito e análise bayesiana.
+  \item \textbf{Tamanho de efeito:} $d$ de Cohen na variante pareada
+    ($d_z$), a forma correta para o desenho de medidas repetidas (os mesmos
+    conjuntos avaliam todos os modelos).
+  \item \textbf{Intervalos de confiança:} \emph{bootstrap} percentil com
+    10\,000 reamostragens e semente fixa --- coerente com o restante do
+    arcabouço não paramétrico.
+  \item \textbf{Análise bayesiana com ROPE} (\emph{signed-rank} de
+    \citealp{benavoli2017}): o arcabouço frequentista não autoriza afirmar
+    equivalência (não rejeição $\neq$ igualdade); a posterior bayesiana com
+    região de equivalência prática autoriza. O ROPE primário é de
+    $\pm 0{,}01$ de AUC --- um ponto percentual como limiar de irrelevância
+    prática, alinhado à granularidade típica de decisões de modelo na
+    indústria --- \emph{com análise de sensibilidade pré-definida} em
+    $\{0{,}005;\, 0{,}01;\, 0{,}02\}$, reportada integralmente no
+    Capítulo~\ref{chap:benchmark}.
+  \item \textbf{Decomposição de variância ($\eta^2$):} parcela da variância
+    dos \emph{ranks} explicada pela família, via razão de somas de
+    quadrados entre-famílias e total. Uma ressalva de interpretação é
+    declarada de antemão: no recorte da geração até 2025 (Ato~I do
+    Capítulo~\ref{chap:benchmark}), as famílias são desbalanceadas --- 3
+    GBDTs, 7 de aprendizado profundo e 1 \emph{foundation model} --- e,
+    com famílias desbalanceadas, a parcela entre-famílias é mecanicamente
+    conservadora.
+\end{enumerate}
+
+\paragraph{Política para células faltantes.} As duas exclusões estruturais
+(\emph{foundation models} $\times$ \texttt{helena};
+Seção~\ref{sec:met-modelos}) exigem uma política explícita, no espírito da
+prática de benchmarks abertos de declarar falhas em vez de omiti-las:
+
+\begin{itemize}
+  \item \textbf{Exclusões são declaradas, nunca imputadas.} Imputar o pior
+    \emph{rank} puniria os \emph{foundation models} por uma limitação
+    arquitetural conhecida; imputar a média fabricaria dados. A célula
+    inexistente permanece inexistente e visível.
+  \item \textbf{Análises que exigem matriz completa} (Friedman, Nemenyi,
+    diagramas CD na multiclasse) usam apenas os modelos com cobertura total
+    \emph{ou} excluem o \texttt{helena} --- a escolha é explicitada caso a
+    caso na análise, e a seção multiclasse é tratada como descritiva
+    ($N=3$) de qualquer forma.
+  \item \textbf{A contabilidade é pública:} 250 das 252 células possíveis
+    estão preenchidas, e os \emph{ranks} multiclasse dos \emph{foundation
+    models} são médias sobre 2 conjuntos --- fato repetido em toda tabela
+    afetada.
+\end{itemize}
+
+\section{Eixos de custo e experimentos complementares}
+\label{sec:met-custo}
+
+A QP3 exige medir mais que desempenho preditivo. Três eixos de custo e dois
+experimentos complementares completam o protocolo:
+
+\begin{itemize}
+  \item \textbf{Custo de treinamento e de \emph{tuning}.} Tempo de parede
+    registrado por experimento, decomposto em busca de hiperparâmetros e
+    ajuste final, nas condições de hardware declaradas na
+    Seção~\ref{sec:met-reprodutibilidade}.
+  \item \textbf{Latência de inferência --- protocolo com dispositivo e
+    regime declarados.} Medida em microssegundos por linha (\us/linha)
+    sobre o \emph{hold-out} completo do conjunto \texttt{adult}: mediana de
+    5 passadas após aquecimento, com sincronização CUDA, sob protocolo de
+    lote idêntico para os 14 modelos. Cada modelo executa em seu
+    dispositivo natural --- GBDTs em CPU; modelos profundos e
+    \emph{foundation models} em GPU. As razões resultantes descrevem,
+    portanto, o \emph{regime amortizado de serviço em lote} em uma máquina
+    declarada, e não a latência \emph{online} de linha única, cujas
+    diferenças são menores --- a distinção é repetida sempre que o eixo de
+    latência fundamenta uma conclusão.
+  \item \textbf{Curvas de aprendizado (QP2).} Seis modelos representativos
+    re-treinados em fatias crescentes da partição de desenvolvimento (de
+    500 amostras ao total disponível; 3 sementes; 5 conjuntos), com os
+    hiperparâmetros fixados nos valores selecionados para o conjunto
+    completo e o mesmo \emph{hold-out} do benchmark --- isolando o efeito
+    do tamanho amostral a capacidade fixa. O re-uso de hiperparâmetros é
+    declarado como limitação: re-otimizar por tamanho deslocaria níveis
+    absolutos, não a direção dos cruzamentos.
+  \item \textbf{Validação do arcabouço de decisão (LODO).} O recomendador
+    meta-atributos$\to$família é avaliado por
+    \emph{leave-one-dataset-out}, com métrica de \emph{regret} normalizado
+    contra políticas fixas --- o desenho impede que uma árvore descritiva
+    seja lida como preditor validado. O protocolo e os resultados estão no
+    Capítulo~\ref{chap:framework}.
+  \item \textbf{Destilação distribucional (QP3/contribuição).} Desenho
+    pré-registrado em documento próprio
+    (\texttt{docs/desenho-experimental-destilacao.md}), com hipóteses
+    falsificáveis, controles de capacidade (hiperparâmetros dos alunos
+    fixados nos valores otimizados do benchmark), rotulagem
+    \emph{out-of-fold} e métricas distribucionais. O desenho completo é
+    apresentado no Capítulo~\ref{chap:destilacao}.
+\end{itemize}
+
+\section{Infraestrutura computacional e reprodutibilidade}
+\label{sec:met-reprodutibilidade}
+
+Todos os experimentos executam em uma única máquina: GPU NVIDIA RTX 5080
+(16~GB de VRAM) e 32~GB de RAM. O TabFM opera com \emph{backend} PyTorch em
+precisão bf16, com pesos fixados na versão v1.0.1 \citep{tabfm2026}; o
+hardware é declarado porque delimita o regime estudado (o teto de 100~mil
+amostras e o teto de 50 categorias no \emph{one-hot} decorrem, em parte,
+dele) e porque medições de custo só são interpretáveis com a máquina
+explícita.
+
+A reprodutibilidade apoia-se em seis mecanismos:
+
+\begin{itemize}
+  \item \textbf{Sementes fixas} em todos os níveis (global 42; derivadas
+    determinísticas por \emph{trial}), com reprodutibilidade bit a bit onde
+    o hardware permite.
+  \item \textbf{\emph{Hash} SHA-256 dos dados} registrado por experimento,
+    contra alterações silenciosas dos conjuntos.
+  \item \textbf{Configurações versionadas} (\texttt{configs/*.yaml}):
+    identificadores e versões OpenML, orçamentos, partições e métricas são
+    artefatos de configuração, não constantes no código.
+  \item \textbf{Dependências com versões fixadas}, incluindo o commit exato
+    de pacotes de pesquisa instalados diretamente de repositório.
+  \item \textbf{Resultados brutos, agregados e notebooks executados
+    versionados} em repositório público, de modo que cada número do texto é
+    rastreável a um artefato.
+  \item \textbf{Correções por retificação:} erros descobertos após o
+    registro são corrigidos por commits de retificação que preservam o
+    histórico --- nunca por reescrita (Seção~\ref{sec:met-conduta}).
+\end{itemize}
+
+\section{Contrato de conduta científica}
+\label{sec:met-conduta}
+
+O trabalho adota um contrato de conduta explícito, firmado no documento-mestre
+do programa de pesquisa antes da fase experimental e vinculante para todas as
+atividades:
+
+\begin{itemize}
+  \item \textbf{Nenhuma afirmação de novidade sem verificação online
+    datada.} Toda alegação de prioridade é precedida de busca registrada com
+    data --- precedente concreto: uma checagem de julho de 2026 evitou
+    reivindicar como inédito um resultado já publicado por trabalho
+    contemporâneo.
+  \item \textbf{Pré-registro de hipóteses e critérios de decisão} antes dos
+    experimentos confirmatórios (o desenho da destilação,
+    Capítulo~\ref{chap:destilacao}, é o caso central); mudanças de desenho
+    viram adendos datados com motivo, nunca substituições silenciosas.
+  \item \textbf{Resultados negativos são reportados} com a mesma
+    proeminência dos positivos --- o Capítulo~\ref{chap:framework} abre com
+    um resultado negativo.
+  \item \textbf{Distinção explícita entre \emph{smoke test}, piloto e
+    resultado:} execuções qualitativas e pilotos decisórios não entram no
+    texto como evidência.
+  \item \textbf{Todo número citado tem origem rastreável} em artefato
+    versionado (CSV, JSON ou notebook executado).
+  \item \textbf{Erratas públicas e retificação sem reescrita.} O caso
+    diamonds/kin8nm (Seção~\ref{sec:met-datasets}) seguiu esse rito: registro
+    canônico da errata, commit de retificação preservando o histórico e
+    re-derivação de todos os números afetados; o episódio é discutido entre
+    as limitações no Capítulo~\ref{chap:conclusao}.
+\end{itemize}
+
+Esse contrato não é ornamento: ele determinou decisões concretas de escopo e
+de texto ao longo da dissertação, e os capítulos de resultados o referenciam
+sempre que uma decisão editorial (um recorte de modelos, uma exclusão, uma
+correção) precisa de lastro.
+
+\section{Limitações do desenho experimental}
+\label{sec:met-limitacoes}
+
+Seguindo a boa prática de declarar as fragilidades do desenho \emph{antes}
+de apresentar qualquer resultado, esta seção enumera as limitações
+conhecidas e as decisões tomadas diante delas.
+
+\begin{itemize}
+  \item \textbf{Poder estatístico limitado por $N$ pequeno.} Com 10/3/5
+    conjuntos por tarefa, o poder dos testes é baixo: o piso combinatório do
+    Wilcoxon em regressão ($p \ge 0{,}0625$) e o caráter descritivo da
+    multiclasse ($N=3$) já foram declarados. A mitigação é tripla: não
+    afirmar vencedor único, sustentar \emph{equivalências} pela análise
+    bayesiana com ROPE e explicitar o limite sempre que ele morde. A escolha
+    de desenho subjacente é deliberada: profundidade de protocolo (validação
+    cruzada aninhada honesta, \emph{hold-out} intocado) sobre largura de
+    $N$.
+  \item \textbf{Potencial contaminação do pré-treino dos \emph{foundation
+    models}.} Os 18 conjuntos são públicos e amplamente usados --- e
+    \emph{foundation models} são pré-treinados antes e fora do nosso
+    protocolo, de modo que o \emph{hold-out} intocado protege contra o nosso
+    vazamento, não contra o deles. O risco é heterogêneo entre os dois
+    modelos: o TabPFN é pré-treinado exclusivamente em dados sintéticos
+    amostrados de um \emph{prior} \citep{hollmann2025}, o que exclui a
+    memorização direta dos conjuntos, mas não o ajuste iterativo do
+    \emph{prior} e das políticas de inferência ao desempenho em benchmarks
+    públicos ao longo das versões --- uma forma branda de
+    sobreajuste da comunidade ao OpenML da qual nenhum benchmark público
+    escapa. Para o TabFM, o relatório técnico declara pré-treino
+    \emph{exclusivamente sintético} --- tabelas amostradas de modelos
+    causais estruturais com dependências funcionais aleatorizadas
+    \citep{kong2026} ---, o que, como no TabPFN, exclui por construção a
+    contaminação direta por conjuntos do OpenML (verificação na fonte
+    primária em 05/10/2026). Permanece o risco mais fraco e não
+    endereçável: \emph{priors} desenhados por equipes que conhecem os
+    benchmarks públicos. Tratamos esse risco residual com três cuidados: ele é
+    declarado aqui e retomado na interpretação dos resultados; as
+    conclusões sobre \emph{foundation models} são enunciadas no nível de
+    regime (consistência entre conjuntos), não de célula individual; e o
+    eixo de custo --- imune a contaminação --- participa de toda conclusão
+    prática.
+  \item \textbf{Versão fixada e não revisada do TabFM.} O TabFM é avaliado
+    na versão v1.0.1 fixada por commit \citep{tabfm2026}; seu relatório
+    técnico oficial \citep{kong2026} apareceu apenas no fim de setembro de
+    2026 e não passou por revisão por pares. Os resultados referem-se a essa
+    versão, e isso é declarado onde quer que o modelo apareça.
+  \item \textbf{Exclusão dupla do \texttt{helena}.} O limite arquitetural de
+    classes de ambos os \emph{foundation models} faz com que seus
+    \emph{ranks} multiclasse sejam médias sobre 2 conjuntos
+    (Seção~\ref{sec:met-estatistica}). A alternativa --- remover o
+    \texttt{helena} do benchmark --- esconderia precisamente o tipo de
+    restrição arquitetural que um estudo de decisão prática deve expor.
+  \item \textbf{Latência medida em um único conjunto e um único regime.} O
+    protocolo de latência (Seção~\ref{sec:met-custo}) usa o \texttt{adult} e
+    o regime amortizado em lote, com cada modelo em seu dispositivo natural.
+    Os números não se transferem para serviço \emph{online} de linha única
+    nem para outro hardware; o que se transfere --- e é o que as conclusões
+    usam --- são as ordens de grandeza entre famílias.
+  \item \textbf{Curvas de aprendizado com hiperparâmetros fixos.} O re-uso
+    dos hiperparâmetros do conjunto completo em todas as fatias isola o
+    efeito do tamanho a capacidade fixa, mas pode desfavorecer modelos cuja
+    configuração ótima varia fortemente com $n$; a limitação é declarada
+    junto aos resultados.
+  \item \textbf{Validade externa delimitada.} Dezoito conjuntos OpenML não
+    esgotam o espaço de problemas tabulares; o teto de 100~mil amostras e a
+    GPU única de 16~GB delimitam o regime estudado a dados de pequeno e
+    médio porte. Conclusões são enunciadas dentro desses limites --- e o
+    Capítulo~\ref{chap:destilacao} estende a validação de regressão a
+    conjuntos adicionais da suíte OpenML-CTR23 \citep{fischer2023}
+    precisamente para testar a sensibilidade a essa delimitação.
+  \item \textbf{Validade de construto.} Métricas primárias
+    \emph{threshold-free} e um arcabouço multicritério explícito reduzem o
+    risco de otimizar um \emph{proxy} inadequado, mas qualquer métrica
+    escalar comprime o que um operador real pondera; o arcabouço do
+    Capítulo~\ref{chap:framework} trata custo e desempenho como eixos
+    separados em vez de agregá-los prematuramente.
+\end{itemize}
+
+\begin{transicao}
+Com o protocolo fixado --- dados, modelos, partições, métricas, testes e
+limitações declaradas ---, o Capítulo~\ref{chap:benchmark} executa-o: 250
+células experimentais organizadas em quatro atos, do empate estatístico da
+geração até 2025 à quebra desse empate pela geração 2026, passando pelos
+eixos de custo e pelas reversões condicionais que motivam o arcabouço de
+decisão do Capítulo~\ref{chap:framework}.
+\end{transicao}
