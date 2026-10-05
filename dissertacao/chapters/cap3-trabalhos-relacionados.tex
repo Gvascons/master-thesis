@@ -131,7 +131,7 @@ sem atualização de gradientes na tarefa-alvo. A linha evoluiu rapidamente
 inspirou variantes que exploram escala e velocidade: o TabICL
 \citep{tabicl2025} estende o paradigma a conjuntos grandes; o TabFlex
 \citep{tabflex2025} usa atenção linear para escalar a milhões de linhas; o
-MotherNet \citep{mothernet2023} amortiza o ajuste num hiperrede
+MotherNet \citep{mothernet2023} amortiza o ajuste numa hiper-rede
 (\emph{hypernetwork}) que emite os pesos de um MLP em um único
 \emph{forward}.
 
@@ -158,7 +158,7 @@ tomadas. Em paralelo, uma linha recente avalia \emph{foundation models}
 tabulares diretamente como estimadores de densidade condicional em
 regressão, com regras de pontuação próprias
 \citep{izbicki2026,landsgesell2026} --- avaliação distribucional do
-\emph{teacher}, sem qualquer componente de destilação ou de \emph{serving}.
+\emph{professor}, sem qualquer componente de destilação ou de \emph{serving}.
 
 \paragraph{Lacuna.} Até onde verificamos (13/07/2026, reconfirmado em
 04/10/2026), não havia comparação neutra TabPFN~$\times$~TabFM sob
@@ -170,7 +170,7 @@ versões pinadas e políticas espelhadas (no nosso caso, o mesmo teto de 50
 mil linhas de contexto e a mesma exclusão estrutural do conjunto de 100
 classes para ambos os modelos). O Capítulo~\ref{chap:benchmark}
 fornece essa comparação, enquadrada como replicação inter-laboratórios do
-paradigma; e a avaliação distribucional dos \emph{teachers} ---
+paradigma; e a avaliação distribucional dos \emph{professores} ---
 complementar aos benchmarks de densidade condicional citados --- reaparece
 no Capítulo~\ref{chap:destilacao} como insumo da destilação, eixo que
 nenhum dos trabalhos de avaliação cobre.
@@ -253,7 +253,7 @@ subamostragem). Na mesma direção geral, há propostas de \emph{foundation
 models} tabulares eficientes em memória \citep{memeff2026}.
 
 \paragraph{Amortização e transferência.} O MotherNet
-\citep{mothernet2023} amortiza o ajuste num hiperrede que emite os pesos de
+\citep{mothernet2023} amortiza o ajuste numa hiper-rede que emite os pesos de
 um MLP em um único \emph{forward} --- elimina o custo de recondicionamento
 trocando-o por uma rede geradora. O TL-ANDI \citep{tlandi2026} combina
 rótulos destilados e ancoragem para transferência a tarefas com contexto
@@ -263,7 +263,7 @@ trata o eixo distribucional), citado por completude do mapa.
 \paragraph{Quantização e calibração pós-hoc.} A quantização FP8 da atenção
 \citep{kubler2026} é uma quarta alavanca emergente de \emph{serving}, que
 não medimos neste trabalho. E a calibração conformal pós-hoc do próprio
-\emph{teacher} \citep{park2026} é a rota complementar para obter intervalos
+\emph{professor} \citep{park2026} é a rota complementar para obter intervalos
 calibrados sem nenhum aluno rápido --- paga-se a latência do \emph{foundation
 model} em troca de garantias de cobertura.
 
@@ -274,7 +274,7 @@ trabalhos acima raramente comparam suas propostas contra essas alavancas
 baratas, e as alavancas baratas quase nunca são medidas entre si.
 
 \paragraph{Lacuna.} Cada trabalho citado avalia a própria estratégia contra
-o \emph{teacher} cheio; nenhum mede as estratégias \emph{entre si} ---
+o \emph{professor} cheio; nenhum mede as estratégias \emph{entre si} ---
 destilar vs.\ comprimir contexto vs.\ reduzir ensemble --- nos mesmos
 conjuntos de \emph{hold-out}, sob o mesmo protocolo e com os mesmos eixos
 de custo. Essa fronteira cruzada é uma das contribuições do
@@ -294,24 +294,24 @@ modelos via rótulos suaves e conjuntos de transferência remonta a
 \citet{breiman1996}, as \emph{born-again trees} de \citet{vidal2020} e a
 destilação para árvores de decisão suaves de \citet{frosst2017}. É dessa
 mecânica que partimos; o que muda com os \emph{foundation models} é o
-\emph{teacher} (um modelo de aprendizado em contexto, cujo custo é na
+\emph{professor} (um modelo de aprendizado em contexto, cujo custo é na
 inferência) e, no nosso caso, o alvo (curvas de quantis, não rótulos).
 
 \paragraph{Pocket FM: a formulação para classificação.} O trabalho que
 estabelece a destilação de \emph{foundation models} tabulares é o Pocket FM
 \citep{pocketfm2026}: alunos XGBoost/CatBoost/LightGBM/MLP treinados em
-rótulos suaves de múltiplos \emph{teachers} (TabICLv2, TabPFNv2.6, LimiX,
-Orion-MSP) sobre 153 conjuntos, retendo 96,5\% do AUC do \emph{teacher}
+rótulos suaves de múltiplos \emph{professores} (TabICLv2, TabPFNv2.6, LimiX,
+Orion-MSP) sobre 153 conjuntos, retendo 96,5\% do AUC do professor (\emph{teacher})
 com acelerações de 38--860$\times$. Duas contribuições metodológicas do
 Pocket FM importam diretamente a esta dissertação: a demonstração de que a
 rotulagem \emph{out-of-fold} (OOF) estratificada é necessária --- um
-\emph{teacher} de aprendizado em contexto que pontua o próprio treino
+\emph{professor} de aprendizado em contexto que pontua o próprio treino
 produz rótulos quase determinísticos, colapsando os alvos suaves --- e a
 análise de quando a destilação funciona ou falha (ganhos concentrados em
 baixa dimensionalidade). O artigo-irmão clínico \citep{pocketfmhealth2026}
 estende a análise a 19 conjuntos de saúde, adicionando calibração e
-\emph{fairness}, e reporta que múltiplos \emph{teachers} não superam o
-melhor \emph{teacher} único. Ambos os trabalhos são \textbf{exclusivamente
+\emph{fairness}, e reporta que múltiplos \emph{professores} não superam o
+melhor \emph{professor} único. Ambos os trabalhos são \textbf{exclusivamente
 de classificação}. Adotamos a rotulagem OOF do Pocket FM como base ---
 reinventá-la seria pior, ignorá-la seria vazamento --- e delimitamos nossa
 contribuição nesse eixo específico ao que o OOF protege \emph{em regressão
@@ -340,7 +340,7 @@ própria e seu estimador padrão em grade de quantis são padrão em
 previsão probabilística \citep{gneiting2007,gneiting2011}; e o XGBoost
 \citep{chen2016} suporta, desde a versão 2.0, objetivos multi-quantil
 nativos --- o que faz de um GBDT quantílico um corpo de aluno natural
-para receber curvas de quantis. Do lado do \emph{teacher}, o TabPFN v2.5
+para receber curvas de quantis. Do lado do \emph{professor}, o TabPFN v2.5
 expõe quantis arbitrários da distribuição preditiva pela API nativa.
 As peças estavam todas sobre a mesa; nenhum trabalho público as havia
 conectado num protocolo de destilação avaliado por CRPS e cobertura.
@@ -348,13 +348,13 @@ conectado num protocolo de destilação avaliado por CRPS e cobertura.
 \paragraph{Trabalho contemporâneo.} Contemporâneo a este trabalho
 (01/10/2026, quando nossos experimentos já estavam concluídos),
 \citet{jeong2026} estendem a destilação a \textbf{alvos pontuais} de
-regressão: transferência por erro quadrático das médias do \emph{teacher},
-avaliada apenas em RMSE, com \emph{teachers} mais fortes (TabPFN~v3 e
+regressão: transferência por erro quadrático das médias do \emph{professor},
+avaliada apenas em RMSE, com \emph{professores} mais fortes (TabPFN~v3 e
 TabICLv2) e protocolo distinto, reportando ganhos pontuais. O
 Capítulo~\ref{chap:destilacao} discute a reconciliação entre esses ganhos
 e o nosso resultado negativo de escopo delimitado --- o moderador
 plausível é o regime de poucos dados, que nosso \emph{sweep} de tamanho de
-treino varre diretamente, somado à diferença de \emph{teacher} e
+treino varre diretamente, somado à diferença de \emph{professor} e
 protocolo. O ponto de posicionamento permanece: \citet{jeong2026} não
 tocam quantis, CRPS, calibração nem fronteira de estratégias.
 
@@ -364,7 +364,7 @@ quantis/CRPS), nenhum trabalho público cobria: (i) destilação
 \emph{distribucional} em regressão --- transferência de curvas de quantis,
 avaliada por CRPS e cobertura de intervalos; (ii) uma fronteira entre
 estratégias de \emph{serving} medidas nos mesmos \emph{hold-outs}; (iii) o
-TabFM como \emph{teacher} de destilação. As três permaneciam abertas; o
+TabFM como \emph{professor} de destilação. As três permaneciam abertas; o
 Capítulo~\ref{chap:destilacao} ataca as três --- a última fechando com um
 negativo arquitetural: a cabeça de regressão do TabFM é pontual (confirmado
 pelo relatório técnico oficial, \citealp{kong2026}), e o espalhamento do
@@ -416,7 +416,7 @@ partir da linha correspondente.
 
 \begin{table}[htbp]
 \centering
-\caption{Mapa de lacunas por eixo da literatura. Caracterizações conforme
+\caption[Mapa de lacunas por eixo da literatura]{Mapa de lacunas por eixo da literatura. Caracterizações conforme
 verificações online datadas (13--20/07/2026; re-varredura em 04/10/2026),
 registradas nos memorandos citados na abertura do capítulo.}
 \label{tab:lacunas}
@@ -434,7 +434,7 @@ Cap.~\ref{chap:benchmark} \\
 \addlinespace
 Avaliação de TFMs &
 Números do proponente (TabFM); avaliação distribucional dos
-\emph{teachers} sem destilação \citep{izbicki2026,landsgesell2026} &
+\emph{professores} sem destilação \citep{izbicki2026,landsgesell2026} &
 Comparação neutra TabPFN $\times$ TabFM sob protocolo idêntico &
 Cap.~\ref{chap:benchmark} \\
 \addlinespace
@@ -457,7 +457,7 @@ Classificação \citep{pocketfm2026,pocketfmhealth2026,gear2026}; regressão
 pontual contemporânea \citep{jeong2026}; motor comercial fechado
 \citep{priorlabs2025} &
 Regressão \emph{distribucional}: curvas de quantis, CRPS, cobertura; papel
-do OOF na calibração; TabFM como \emph{teacher} &
+do OOF na calibração; TabFM como \emph{professor} &
 Cap.~\ref{chap:destilacao} \\
 \addlinespace
 Seleção de algoritmos &

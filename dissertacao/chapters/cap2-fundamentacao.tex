@@ -14,8 +14,8 @@ de aprendizado em contexto que dispensa treinamento na tarefa
 (\S\ref{sec:fund-fm}); a destilação de conhecimento
 (\S\ref{sec:fund-destilacao}); o ferramental da regressão distribucional
 --- perda \emph{pinball}, CRPS, calibração --- que sustenta a contribuição
-do Capítulo~7 (\S\ref{sec:fund-distribucional}); e os testes estatísticos
-com que o Capítulo~5 compara os modelos (\S\ref{sec:fund-estatistica}). A
+do Capítulo~\ref{chap:destilacao} (\S\ref{sec:fund-distribucional}); e os testes estatísticos
+com que o Capítulo~\ref{chap:benchmark} compara os modelos (\S\ref{sec:fund-estatistica}). A
 profundidade matemática cresce com a proximidade das contribuições: o
 \emph{boosting} é apresentado verbalmente, a atenção com suas equações
 completas, e a regressão distribucional e a inferência estatística com o
@@ -34,7 +34,7 @@ Seção~\ref{sec:fund-fm}, onde começa o material menos difundido
 (aprendizado em contexto e cabeças distribucionais); quem conhece os
 \emph{foundation models} tabulares, para as
 Seções~\ref{sec:fund-distribucional} e~\ref{sec:fund-estatistica}, que são
-pré-requisito direto dos Capítulos~5 e~7. As demais seções foram escritas
+pré-requisito direto dos Capítulos~\ref{chap:benchmark} e~\ref{chap:destilacao}. As demais seções foram escritas
 para que um leitor com formação geral em computação acompanhe toda a
 dissertação sem fontes externas.
 
@@ -51,7 +51,7 @@ pessoa excede 50 mil dólares \citep{kohavi1996}.
 
 \begin{table}[htb]
 \centering
-\caption{Fragmento \emph{ilustrativo} de um conjunto tabular no estilo do
+\caption[Fragmento ilustrativo de um conjunto tabular]{Fragmento \emph{ilustrativo} de um conjunto tabular no estilo do
 \texttt{adult}. As linhas são fictícias, porém plausíveis; servem apenas
 para fixar o formato: atributos numéricos e categóricos convivem na mesma
 tabela, há valores ausentes (``?'') e a última coluna é o alvo a prever.}
@@ -104,7 +104,7 @@ do problema: um modelo suficientemente flexível pode zerar o erro de treino
 simplesmente memorizando $D$ (\emph{sobreajuste}), sem generalizar. Por
 isso toda avaliação honesta mede o desempenho em dados que o modelo --- e,
 igualmente importante, o processo de \emph{escolha} do modelo --- jamais
-viu; o Capítulo~4 traduz esse princípio em protocolo (conjunto de teste
+viu; o Capítulo~\ref{chap:metodologia} traduz esse princípio em protocolo (conjunto de teste
 separado antes de tudo, validação cruzada aninhada para a seleção de
 hiperparâmetros).
 
@@ -118,7 +118,7 @@ a leitura \emph{pontual}, em que o modelo devolve um único número (uma
 estimativa da média condicional), e a leitura \emph{distribucional}, em que
 o modelo devolve uma distribuição preditiva completa --- quantis,
 intervalos, densidades --- da qual se exige calibração. A distinção parece
-sutil agora, mas é o eixo da contribuição do Capítulo~7, e a
+sutil agora, mas é o eixo da contribuição do Capítulo~\ref{chap:destilacao}, e a
 Seção~\ref{sec:fund-distribucional} lhe dedica o ferramental próprio.
 
 \section{Das árvores de decisão ao \emph{gradient boosting}}
@@ -158,7 +158,7 @@ Tabela~\ref{tab:adult-exemplo}.
       edge from parent node[rotulo, right=1pt] {sim} }
     edge from parent node[rotulo, right=3pt] {sim} };
 \end{tikzpicture}
-\caption{\textbf{Uma árvore de decisão responde por partições sucessivas do
+\caption[Árvore de decisão ilustrativa sobre o exemplo do \texttt{adult}]{\textbf{Uma árvore de decisão responde por partições sucessivas do
 espaço de atributos.} Árvore ilustrativa de profundidade 2 sobre o exemplo
 da Tabela~\ref{tab:adult-exemplo}; em cada folha, $\hat{p}$ é a fração de
 exemplos de treino daquela região com renda $>$ 50K (valores fictícios,
@@ -212,7 +212,7 @@ baixa) e as treina em sequência, cada nova árvore concentrada em corrigir
 os erros que o comitê acumulado ainda comete. A predição final é a soma
 ponderada de todas as correções. A cada rodada, os exemplos mal preditos
 ganham protagonismo, e o comitê refina exatamente as regiões em que ainda
-erra --- o viés cai passo a passo, enquanto a rasura de cada árvore e um
+erra --- o viés cai passo a passo, enquanto o caráter raso de cada árvore e um
 passo de aprendizado pequeno seguram a
 variância.\footnote{Tecnicamente, o \emph{gradient boosting} formaliza essa
 intuição como uma descida de gradiente no espaço de funções: a cada rodada
@@ -227,7 +227,7 @@ dissertação exige manipular essa formulação.}
 
 Três implementações modernas de \emph{gradient boosting} sobre árvores
 (GBDTs, de \emph{gradient-boosted decision trees}) dominam a prática, e o
-benchmark do Capítulo~5 avalia as três. Para os fins desta dissertação,
+benchmark do Capítulo~\ref{chap:benchmark} avalia as três. Para os fins desta dissertação,
 basta reter uma diferença concreta de cada uma. O \textbf{XGBoost}
 \citep{chen2016} consolidou o paradigma com uma formulação regularizada do
 objetivo --- penalidades explícitas sobre o número de folhas e a magnitude
@@ -252,7 +252,7 @@ menores exigem mais passos, mas regularizam); e as frações de
 descorrelação que o \emph{bagging} ensinou. Nenhuma configuração domina
 todos os conjuntos de dados --- razão pela qual qualquer comparação justa
 entre modelos precisa otimizar os hiperparâmetros de cada um sob o mesmo
-orçamento, como especifica o Capítulo~4.
+orçamento, como especifica o Capítulo~\ref{chap:metodologia}.
 
 \paragraph{Por que o \emph{boosting} domina dados tabulares?} Reunindo os
 fios: as partições alinhadas aos eixos capturam não-linearidades e
@@ -331,7 +331,7 @@ porta de entrada para transferência entre tarefas e para dados mistos
 gradiente de \emph{qualquer} perda diferenciável, o que permite cabeças de
 saída flexíveis --- multi-alvo, multi-quantil, distribucionais --- com
 mudança mínima de arquitetura; essa plasticidade é explorada diretamente
-pelos alunos de destilação do Capítulo~7. Terceiro, e decisivo para esta
+pelos alunos de destilação do Capítulo~\ref{chap:destilacao}. Terceiro, e decisivo para esta
 dissertação: toda a família de \emph{foundation models} da
 Seção~\ref{sec:fund-fm}, que redefine o custo de entrada em novas tarefas,
 só é possível sobre redes.
@@ -404,7 +404,7 @@ um token-\emph{embedding} e um Transformer padrão processa a linha; é a
 referência arquitetural da linhagem. O \textbf{SAINT} \citep{somepalli2021}
 acrescenta à atenção entre colunas uma atenção \emph{entre linhas}
 (\emph{intersample}): ao classificar uma linha, o modelo pode consultar
-outras linhas do lote --- um antecipo, em miniatura, da ideia de usar
+outras linhas do lote --- uma antecipação, em miniatura,, em miniatura, da ideia de usar
 exemplos como contexto que a Seção~\ref{sec:fund-fm} leva ao extremo. O
 \textbf{STab} \citep{stab-ref} completa a linhagem com um mecanismo
 distinto: em vez de ativações determinísticas, suas camadas usam
@@ -438,7 +438,7 @@ de FLOPs, o MLP vence as KANs na maioria das tarefas de aprendizado de
 máquina \citep{kancritical2024}, e avaliações independentes em tabelas
 chegaram a quadro semelhante \citep{poeta2024}. Nenhuma dessas avaliações,
 porém, inclui GBDTs e \emph{foundation models} no mesmo protocolo --- a
-lacuna que o Capítulo~5 preenche, adjudicando a controvérsia sob protocolo
+lacuna que o Capítulo~\ref{chap:benchmark} preenche, adjudicando a controvérsia sob protocolo
 neutro.
 
 \section{\emph{Foundation models} tabulares e aprendizado em contexto}
@@ -448,7 +448,7 @@ Tudo o que foi visto até aqui compartilha uma premissa tão básica que passa
 despercebida: para cada novo conjunto de dados, treina-se um modelo novo.
 Os \emph{foundation models} tabulares abandonam essa premissa, e é
 essencial entender o mecanismo --- não apenas o efeito --- porque tanto o
-custo de inferência medido no Capítulo~5 quanto a destilação do Capítulo~7
+custo de inferência medido no Capítulo~\ref{chap:benchmark} quanto a destilação do Capítulo~\ref{chap:destilacao}
 decorrem diretamente dele.
 
 \paragraph{O mecanismo: treinar virou condicionar.} Um modelo de
@@ -504,7 +504,7 @@ Figura~\ref{fig:icl-mecanismo} esquematiza as duas fases.
 \draw[seta] (consulta) -- (forward);
 \draw[seta] (forward) -- (pred);
 \end{tikzpicture}
-\caption{\textbf{No aprendizado em contexto, o conjunto de treino entra
+\caption[O mecanismo de aprendizado em contexto (ICL)]{\textbf{No aprendizado em contexto, o conjunto de treino entra
 como entrada do modelo, não como alvo de otimização.} Na fase 1, o
 Transformer é pré-treinado uma única vez sobre milhões de tarefas
 sintéticas amostradas de um prior. Na fase 2, diante de uma tarefa real, o
@@ -529,7 +529,7 @@ prática, com um limite nativo de contexto (50 mil linhas na v2.5) herdado
 do custo quadrático da atenção.
 
 \paragraph{Cabeça distribucional vs.\ cabeça escalar.} Um detalhe
-arquitetural do TabPFN é central ao Capítulo~7: em regressão, sua camada de
+arquitetural do TabPFN é central ao Capítulo~\ref{chap:destilacao}: em regressão, sua camada de
 saída não devolve um número, mas uma \emph{bar distribution} --- um
 histograma discretizado sobre o intervalo do alvo, do qual se leem quantis
 arbitrários da distribuição preditiva. O modelo entrega, nativamente,
@@ -541,12 +541,12 @@ e \emph{checkpoints} separados por tarefa --- decodifica em regressão um
 único escalar: é um professor exclusivamente \emph{pontual}. Essa
 assimetria de cabeças de saída, e não qualquer diferença de acurácia média,
 é o que tornará o TabPFN o professor natural da destilação distribucional
-do Capítulo~7. Registre-se ainda que ambos os modelos carregam limites
+do Capítulo~\ref{chap:destilacao}. Registre-se ainda que ambos os modelos carregam limites
 arquiteturais herdados do pré-treinamento --- o TabFM, por exemplo, admite
 no máximo 10 classes em classificação, e até a escrita desta dissertação
 está documentado em relatório técnico, sem artigo revisado por pares
 \citep{tabfm2026,kong2026} --- limites que se tornam células ausentes do
-benchmark e exigem a política estatística declarada no Capítulo~4.
+benchmark e exigem a política estatística declarada no Capítulo~\ref{chap:metodologia}.
 
 \paragraph{O \emph{trade-off} constitutivo.} O mecanismo da
 Figura~\ref{fig:icl-mecanismo} tem um preço estrutural: \emph{o conjunto de
@@ -555,7 +555,7 @@ próximo de zero --- montar o contexto ---, mas cada passe de inferência
 reprocessa o contexto inteiro, o que coloca o custo por predição ordens de
 magnitude acima do de um GBDT, cuja inferência percorre algumas árvores. Em
 cenários de inferência intensiva, essa conta domina qualquer vantagem de
-acurácia --- o Capítulo~5 a quantifica e o Capítulo~7 propõe uma saída.
+acurácia --- o Capítulo~\ref{chap:benchmark} a quantifica e o Capítulo~\ref{chap:destilacao} propõe uma saída.
 
 \section{Destilação de conhecimento}
 \label{sec:fund-destilacao}
@@ -586,7 +586,7 @@ deixam de ser esmagadas. O aluno é treinado numa combinação de duas perdas:
 a entropia cruzada usual contra os rótulos verdadeiros e uma perda de
 imitação contra os \emph{soft targets} do professor na mesma temperatura.
 Em regressão, a receita análoga substitui o rótulo pelo valor predito pelo
-professor --- e, na extensão distribucional do Capítulo~7, pela \emph{curva
+professor --- e, na extensão distribucional do Capítulo~\ref{chap:destilacao}, pela \emph{curva
 de quantis} inteira do professor.
 
 \paragraph{Destilar para árvores.} A linhagem \emph{born-again} mostrou
@@ -607,13 +607,13 @@ gargalo constitutivo da família (o contexto que viaja a cada predição),
 convertendo um professor de inferência cara num aluno de inferência
 barata. O \emph{Pocket FM} \citep{pocketfm2026} estabelece essa agenda para
 \emph{classificação}, em escala, com uma salvaguarda metodológica que o
-Capítulo~7 herda: a rotulagem \emph{out-of-fold} --- o professor rotula
+Capítulo~\ref{chap:destilacao} herda: a rotulagem \emph{out-of-fold} --- o professor rotula
 cada exemplo condicionado apenas nas demais partições, nunca nele próprio
 --- para que o aluno não aprenda dos vazamentos do professor. O que
 permanece em aberto nessa linha, e constitui a contribuição desta
 dissertação, é a extensão à \emph{regressão distribucional}: destilar não a
 média, mas a distribuição preditiva --- o que exige o ferramental da
-próxima seção. O Capítulo~3 situa esse recorte no estado da arte.
+próxima seção. O Capítulo~\ref{chap:related} situa esse recorte no estado da arte.
 
 \section{Regressão distribucional: quantis, CRPS e calibração}
 \label{sec:fund-distribucional}
@@ -627,7 +627,7 @@ incerteza é grande demais. Dois modelos com o mesmo erro pontual médio
 podem diferir radicalmente na qualidade dessa segunda resposta, e as
 métricas pontuais (RMSE, MAE) são cegas à diferença. Esta seção apresenta
 o instrumental que a enxerga --- quantis e perda \emph{pinball}, CRPS,
-calibração e afiação --- na profundidade que o Capítulo~7 pressupõe: aqui
+calibração e afiação --- na profundidade que o Capítulo~\ref{chap:destilacao} pressupõe: aqui
 a matemática é detalhada de propósito, pois estas são as grandezas da
 contribuição.
 
@@ -680,7 +680,7 @@ uma discretização da distribuição preditiva inteira.
   \node[font=\footnotesize, anchor=south east] at (2.35,1.5)
     {$\tau = 0{,}9$};
 \end{tikzpicture}
-\caption{\textbf{A perda \emph{pinball} penaliza os dois lados do erro com
+\caption[A perda \emph{pinball} e sua assimetria]{\textbf{A perda \emph{pinball} penaliza os dois lados do erro com
 inclinações diferentes, e é essa assimetria que aponta o minimizador para o
 quantil~$\tau$.} Para $\tau = 0{,}9$ (linha sólida), subestimar o alvo
 custa nove vezes mais que superestimar, de modo que a predição ótima se
@@ -698,7 +698,7 @@ $\hat{q}_{0{,}8} < \hat{q}_{0{,}7}$ para alguma linha, o chamado
 inconsistente. O reparo pragmático padrão é reordenar os quantis preditos
 de cada linha em ordem crescente, operação que nunca piora a perda
 \emph{pinball} total e restaura a validade da curva; é o reparo adotado
-nos alunos multi-quantil do Capítulo~7.
+nos alunos multi-quantil do Capítulo~\ref{chap:destilacao}.
 
 \subsection{CRPS: uma régua para distribuições}
 
@@ -737,7 +737,7 @@ o estimador padrão da prática de previsão probabilística --- e o elo formal
 entre as duas grandezas desta seção: minimizar a perda \emph{pinball} em
 toda a grade é, a uma constante, otimizar o CRPS discretizado. Por ser uma
 discretização, o estimador carrega um viés dependente da grade; o
-Capítulo~7 reporta a validação desse viés no protocolo desta dissertação e
+Capítulo~\ref{chap:destilacao} reporta a validação desse viés no protocolo desta dissertação e
 a regra de leitura que dele decorre (comparações internas, nunca valores
 absolutos entre trabalhos).
 
@@ -771,7 +771,7 @@ O \emph{NGBoost} segue a rota paramétrica: um \emph{gradient boosting} cujas
 saídas são os \emph{parâmetros} de uma distribuição (por exemplo, média e
 variância de uma gaussiana), treinado por gradientes naturais sobre uma
 regra de pontuação própria \citep{duan2020}. QRF representa a via não-paramétrica; NGBoost, a
-paramétrica --- e ambos aparecem como competidores no Capítulo~7.
+paramétrica --- e ambos aparecem como competidores no Capítulo~\ref{chap:destilacao}.
 
 \section{Comparação estatística de algoritmos}
 \label{sec:fund-estatistica}
@@ -779,7 +779,7 @@ paramétrica --- e ambos aparecem como competidores no Capítulo~7.
 Resta o último instrumento: como afirmar, com honestidade estatística, que
 um modelo é melhor que outro --- ou que dois modelos empatam --- a partir
 de resultados em uma coleção de conjuntos de dados? Esta seção apresenta a
-teoria dos testes que o Capítulo~4 adota como protocolo e o Capítulo~5
+teoria dos testes que o Capítulo~\ref{chap:metodologia} adota como protocolo e o Capítulo~\ref{chap:benchmark}
 aplica; a exposição segue o arcabouço canônico da área
 \citep{demsar2006,benavoli2017}.
 
@@ -836,7 +836,7 @@ ranks médios distam mais que a \emph{diferença crítica}
 em que $q_\alpha$ vem da distribuição da amplitude studentizada
 \citep{demsar2006}. O resultado é usualmente apresentado num \emph{diagrama
 de diferença crítica} (diagrama CD), e vale a pena aprender a lê-lo, pois o
-Capítulo~5 o utiliza repetidamente: os modelos são dispostos sobre um eixo
+Capítulo~\ref{chap:benchmark} o utiliza repetidamente: os modelos são dispostos sobre um eixo
 horizontal na posição de seu rank médio (melhores de um lado, piores do
 outro); uma régua indica o comprimento do CD; e barras horizontais espessas
 conectam grupos de modelos cujos ranks médios distam menos que o CD ---
@@ -860,7 +860,7 @@ Uma limitação aritmética importa no regime desta dissertação: com $N$
 conjuntos de dados, o menor p-valor bilateral que o Wilcoxon pode produzir
 é $2 \cdot (1/2^N)$ --- com $N = 5$, o piso é $0{,}0625$, e rejeitar a
 $0{,}05$ é \emph{matematicamente impossível}, antes de qualquer correção. O
-Capítulo~4 declara as consequências protocolares desse piso.
+Capítulo~\ref{chap:metodologia} declara as consequências protocolares desse piso.
 
 \paragraph{O que significa ``praticamente equivalente''? O teste bayesiano
 com ROPE.} O arcabouço frequentista tem uma assimetria incômoda: ele pode
@@ -879,8 +879,8 @@ Dizer que dois modelos são praticamente equivalentes é, portanto, uma
 afirmação positiva e quantificada --- ``com probabilidade $p$, a diferença
 entre eles é menor do que o que declaramos irrelevante'' --- e não um
 não-resultado. É esse instrumento que autoriza as conclusões de empate do
-Capítulo~5; a escolha do raio da ROPE e sua análise de sensibilidade são
-decisões de protocolo, especificadas no Capítulo~4.
+Capítulo~\ref{chap:benchmark}; a escolha do raio da ROPE e sua análise de sensibilidade são
+decisões de protocolo, especificadas no Capítulo~\ref{chap:metodologia}.
 
 \paragraph{Tamanho de efeito e decomposição de variância.} Significância
 não mede relevância, e dois complementos fecham o arcabouço. O tamanho de
@@ -894,7 +894,7 @@ decompõe a variância total dos ranks na parcela explicada pelo
 agrupamento: $\eta^2$ alto diria que a família (GBDT, aprendizado profundo,
 \emph{foundation model}) determina o desempenho; $\eta^2$ baixo, que a
 variação dentro das famílias domina e a escolha do modelo individual
-importa mais que a do paradigma. O Capítulo~5 usa exatamente essa leitura.
+importa mais que a do paradigma. O Capítulo~\ref{chap:benchmark} usa exatamente essa leitura.
 
 \begin{transicao}
 Este capítulo montou o vocabulário: o objeto (dados tabulares), os

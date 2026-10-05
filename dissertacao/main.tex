@@ -23,6 +23,7 @@
 \usepackage{thesisextras}
 % paragraphs sem numeração (a classe numera até nível 5 por default)
 \setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
 
 \newcommand{\us}{\textmu s}
 
@@ -69,7 +70,7 @@ Destilação Distribucional}
 
 \listoffigures
 \listoftables
-\listofacronyms
+\input{pretext/acronimos}
 \tableofcontents
 
 \include{chapters/cap1-introducao}
@@ -81,6 +82,8 @@ Destilação Distribucional}
 \include{chapters/cap7-destilacao}
 \include{chapters/cap8-conclusao}
 
+\cleardoublepage
+\markboth{REFERÊNCIAS}{REFERÊNCIAS}
 \bibliographystyle{abnt}
 \bibliography{references}
 

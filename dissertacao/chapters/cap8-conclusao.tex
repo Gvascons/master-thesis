@@ -62,15 +62,15 @@ ao preço de quatro a cinco ordens de magnitude em latência de serviço
 
 Com o empate expirado, o custo virou o eixo da decisão --- e o segundo
 movimento da dissertação deu a esse deslocamento forma validada. O
-roteamento aprendido por meta-atributos, a resposta clássica da
+roteamento aprendido por meta-características, a resposta clássica da
 literatura de seleção de algoritmos, não sobrevive à validação honesta
 no regime em que benchmarks reais operam: sob
 \emph{leave-one-dataset-out} com $N{=}18$ conjuntos, a árvore de
-meta-atributos não supera o \emph{baseline} de classe majoritária em
+meta-características não supera o \emph{baseline} de classe majoritária em
 nenhuma das duas gerações (taxa de acerto 0,11 contra 0,44 no estudo com
 11 modelos; 0,72 contra 0,78 com 14). O que os dados sustentam é mais
 modesto e mais útil: uma política fixa --- \emph{foundation model}
-primeiro --- com regret mediano zero na geração 2026, cercada por
+primeiro --- com \emph{regret} mediano zero na geração 2026, cercada por
 restrições verificáveis \emph{a priori}. E o experimento E2,
 pré-registrado, quantificou a fragilidade dessa política ao custo:
 basta deslocar 10--20\% do peso da acurácia para a latência para que a
@@ -82,7 +82,7 @@ model}?'' --- não é uma heurística decorativa: é a fronteira medida.
 O terceiro movimento atacou o preço, e atacou-o seletivamente, porque a
 evidência mostrou que ele não é removível por inteiro. A destilação
 \emph{pontual} --- treinar um aluno rápido nas médias do professor ---
-falha em escala de pool realista com qualquer um dos dois professores
+falha em escala de \emph{pool} realista com qualquer um dos dois professores
 testados: o que o professor sabe sobre a média, um GBDT ajustado aprende
 sozinho dos rótulos brutos. O que o professor carrega e o aluno não
 aprende sozinho é a \emph{forma} da distribuição preditiva --- e é isso
@@ -120,7 +120,7 @@ multiclasse (descritivo, $N{=}3$), os GBDTs ganham vantagem sob
 desbalanceamento severo, o TabPFN domina o regime de poucos dados
 ($n \leq 4.000$), e o cruzamento GBDT$\leftrightarrow$DL por tamanho é
 específico por conjunto ---, mas o Capítulo~\ref{chap:framework} mostra
-que essa variação \emph{não é roteável} por meta-atributos no regime de
+que essa variação \emph{não é roteável} por meta-características no regime de
 $N$ pequeno: a forma validada de usá-la é um arcabouço de restrições
 verificáveis antes de qualquer treino (latência, limites arquiteturais,
 interpretabilidade), com a política ``\emph{foundation model} primeiro''
@@ -155,7 +155,8 @@ conforme o contrato de conduta do programa
     validação cruzada aninhada, inferência frequentista \emph{e}
     bayesiana com ROPE e análise de sensibilidade, e três eixos de custo
     sob o mesmo protocolo. Dele saem o empate positivo da geração
-    anterior, a quebra pela geração 2026 e a primeira comparação neutra
+    anterior, a quebra pela geração 2026 e --- até onde alcançam as verificações
+    datadas --- a primeira comparação neutra
     TabPFN~$\times$~TabFM sob protocolo idêntico --- enquadrada como
     replicação inter-laboratórios do paradigma, com versões fixadas e
     políticas espelhadas.
@@ -170,17 +171,17 @@ conforme o contrato de conduta do programa
     alegações dos proponentes; a contraparte registrada é que ambas são
     baratas de servir (2,3--3,1~\us/linha) --- o problema é desempenho,
     não custo.
-  \item \textbf{Resultado negativo do roteamento por meta-atributos
+  \item \textbf{Resultado negativo do roteamento por meta-características
     (evidência negativa; Capítulo~\ref{chap:framework}).} Sob LODO com
     $N{=}18$, um roteador aprendido não supera o \emph{baseline} de
     classe majoritária em nenhuma geração (0,11 vs.\ 0,44 com 11
     modelos; 0,72 vs.\ 0,78 com 14) --- corroborado por evidência
     independente contemporânea \citep{herre2026}. A consequência de
     desenho: o arcabouço não contém preditor de família vencedora.
-  \item \textbf{Arcabouço de decisão validado por regret
+  \item \textbf{Arcabouço de decisão validado por \emph{regret}
     (evidência~$+$~regra; Capítulo~\ref{chap:framework}).} A política
     fixa ``\emph{foundation model} primeiro'' é regret-ótima na métrica
-    primária (regret mediano 0,000 na geração 2026 sob LODO), e o
+    primária (\emph{regret} mediano 0,000 na geração 2026 sob LODO), e o
     arcabouço final é um fluxograma de quatro restrições verificáveis
     \emph{a priori} --- deliberadamente modesto na forma, porque é essa
     a forma que os dados sustentam.
@@ -189,23 +190,23 @@ conforme o contrato de conduta do programa
     experimento pré-registrado que localiza o ponto de inversão da
     recomendação: ``FM primeiro'' só é ótima na mediana para
     $w \geq 0{,}9$ de peso na acurácia; com $w \leq 0{,}6$,
-    ``sempre-GBDT'' tem regret mediano zero. É a justificativa
+    ``sempre-GBDT'' tem \emph{regret} mediano zero. É a justificativa
     quantitativa da arquitetura do fluxograma --- a latência é a
     primeira pergunta porque é a que mais cedo muda a resposta.
   \item \textbf{Destilação distribucional de \emph{foundation models}
     tabulares (recorte~$+$~evidência;
     Capítulo~\ref{chap:destilacao}).} O recorte --- transferir curvas de
     quantis, avaliar por CRPS e cobertura --- foi verificado como sem
-    trabalho público anterior nas varreduras datadas de 13--20/07 e
+    trabalho público anterior nas varreduras datadas de 15--20/07 e
     04/10/2026. A evidência: retenção mediana de 19\% do gap de CRPS,
     positiva em 16 de 20 conjuntos ($p=0{,}006$; massa posterior
     bayesiana de 0,70 em retenção positiva), incluindo um aluno
     \emph{born-again}, a latências de microssegundos.
-  \item \textbf{Refutação da destilação pontual em pool realista
+  \item \textbf{Refutação da destilação pontual em \emph{pool} realista
     (evidência negativa; Capítulo~\ref{chap:destilacao}).} O aluno
     pontual destilado supera o controle em apenas 4 de 20 conjuntos,
     com qualquer dos dois professores --- inclusive um com gap de âncora
-    quase $6\times$ maior ---, e a varredura de tamanho de pool isola o
+    quase $6\times$ maior ---, e a varredura de tamanho de \emph{pool} isola o
     moderador (ganho residual restrito a $n \leq 800$, dependente do
     conjunto), o que reconcilia o negativo com os ganhos pontuais
     contemporâneos de \citet{jeong2026} delimitando onde eles deixam de
@@ -275,11 +276,11 @@ e~\ref{chap:destilacao}, na ordem em que as perguntas devem ser feitas
     latência, limites arquiteturais, exigência de interpretabilidade,
     e só então o \emph{default} (fluxograma da
     Seção~\ref{sec:arcabouco-resultante}). Não tente aprender um
-    roteador por meta-atributos com poucas dezenas de conjuntos: sob
+    roteador por meta-características com poucas dezenas de conjuntos: sob
     LODO, ele não supera a regra trivial
     (Seção~\ref{sec:resultado-negativo}).
   \item \textbf{Se latência de microssegundos importa, GBDT.} Com 40\%
-    ou mais do peso da utilidade na latência, ``sempre-GBDT'' tem regret
+    ou mais do peso da utilidade na latência, ``sempre-GBDT'' tem \emph{regret}
     mediano zero; a recomendação ``FM primeiro'' já se inverte com
     10--20\% de peso na latência (E2,
     Seção~\ref{sec:regret-ponderado}).
@@ -304,7 +305,7 @@ e~\ref{chap:destilacao}, na ordem em que as perguntas devem ser feitas
     \texttt{wine\_quality}, venceu até o professor (E1,
     Seção~\ref{sec:destil-e1}); um MLP-quantil cobre os conjuntos
     pequenos e numéricos (Seção~\ref{sec:destil-regra}).
-  \item \textbf{Destile quando o \emph{edge} sobreviver às
+  \item \textbf{Destile quando o \emph{vantagem} sobreviver às
     transformações e a um nativo forte --- e meça-o antes.} Uma única
     rotulagem OOF, de custo de minutos, mede diretamente a vantagem
     genuína do professor; destile somente se ela persistir
@@ -354,7 +355,7 @@ prática (Seção~\ref{sec:met-limitacoes}).
 \textbf{Assimetrias declaradas nos experimentos complementares.} No E1,
 NGBoost e QRF rodam em configuração \emph{default} documentada, sem
 ajuste específico, e a QRF recebe imputação por mediana (ajustada no
-pool, aplicada ao teste) nos três conjuntos com valores ausentes --- a
+\emph{pool}, aplicada ao teste) nos três conjuntos com valores ausentes --- a
 interpretação autorizada é ``\emph{default} forte'', não ``clássico
 ajustado ao limite'' (Seção~\ref{sec:destil-e1}). Nos alunos de
 destilação, a capacidade é herdada do \emph{tuning} do benchmark, sem
@@ -371,7 +372,7 @@ de histórico e re-derivação de todos os números afetados --- todo número
 desta dissertação é posterior à retificação
 (Seções~\ref{sec:met-datasets} e~\ref{sec:met-conduta}). A leitura
 positiva do episódio merece registro: a execução duplicada acidental que
-ele produziu reproduziu o pipeline de ponta a ponta com resultados
+ele produziu reproduziu o \emph{pipeline} de ponta a ponta com resultados
 idênticos --- uma verificação involuntária, e por isso particularmente
 convincente, de reprodutibilidade exata
 (Seção~\ref{sec:destil-desenho}). A ameaça residual é a que erratas não

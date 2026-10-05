@@ -81,28 +81,11 @@ Capítulo~\ref{chap:metodologia} (o conjunto historicamente chamado
 ``diamonds'' é, na verdade, o \texttt{kin8nm}) precede todos os números
 reportados neste capítulo: cada valor aqui citado é posterior à errata.
 
-Antes dos resultados, convém visualizar o espaço amostral sobre o qual
-eles se apoiam. A Figura~\ref{fig:cap5-landscape} posiciona os 18
-conjuntos no plano amostras $\times$ atributos.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.92\linewidth]{images/dataset_landscape.pdf}
-\caption[Paisagem dos 18 conjuntos de dados: amostras vs.\ atributos]{%
-\textbf{Os 18 conjuntos cobrem quase três ordens de magnitude em tamanho
-amostral e uma ordem em dimensionalidade, nas três tarefas.} Cada ponto é
-um conjunto de dados, posicionado pelo número de amostras (eixo vertical,
-escala logarítmica) e de atributos (eixo horizontal, escala logarítmica),
-com a cor indicando a tarefa (binária, multiclasse, regressão). Os
-extremos vão de \texttt{credit\_g} ($10^3$ amostras) a
-\texttt{covertype} e \texttt{year\_prediction} (centenas de milhares,
-limitadas a 100 mil linhas por execução, conforme o
-Capítulo~\ref{chap:metodologia}). Fonte:
-\texttt{results/figures/dataset\_landscape.pdf}.}
-\label{fig:cap5-landscape}
-\end{figure}
-
-A figura mostra que a amostra de conjuntos não se concentra em um único
+Antes dos resultados, convém revisitar o espaço amostral sobre o qual
+eles se apoiam. A Figura~4.1, no Capítulo~\ref{chap:metodologia},
+posiciona os 18 conjuntos no plano amostras $\times$ atributos;
+retomamos aqui apenas a leitura de que este capítulo precisa. Ela mostra
+que a amostra de conjuntos não se concentra em um único
 regime: há conjuntos pequenos e grandes, estreitos e largos, nas três
 tarefas --- condição necessária para que as análises condicionais do
 Ato~III (desbalanceamento, cardinalidade categórica, tamanho) tenham
@@ -116,12 +99,12 @@ Ao longo do capítulo, duas grades de comparação coexistem e precisam ser
 distinguidas desde já. O \emph{núcleo de 11 modelos} do estudo reúne os
 modelos anteriores à extensão de 2026 do benchmark: os três GBDTs
 (XGBoost, LightGBM, CatBoost), sete modelos de aprendizado profundo (MLP,
-FT-Transformer, SAINT, TabNet, STab, RealMLP, TabM) e um foundation model
+FT-Transformer, SAINT, TabNet, STab, RealMLP, TabM) e um \emph{foundation model}
 (TabPFN). A \emph{grade completa de 14} acrescenta os três modelos
-incorporados na extensão: o foundation model TabFM
+incorporados na extensão: o \emph{foundation model} TabFM
 \citep{tabfm2026,kong2026} e as duas redes de Kolmogorov--Arnold (KAN
 \citep{kan2024} e TabKAN \citep{tabkan2025}). Os Atos~I a III leem o
-núcleo de 11 --- é sobre ele que a maxima ``\emph{boosting} sempre
+núcleo de 11 --- é sobre ele que a máxima ``\emph{boosting} sempre
 vence'' \citep{grinsztajn2022,mcelfresh2023} foi formulada e é sobre ele
 que o empate se estabelece; o Ato~IV lê a grade completa e mostra o que a
 extensão muda.
@@ -132,16 +115,16 @@ do Capítulo~\ref{chap:metodologia}: validação cruzada aninhada ($5$
 folds externos $\times$ $3$ internos, com hiperparâmetros selecionados
 apenas nos internos), ajuste bayesiano via Optuna/TPE \citep{akiba2019}
 com orçamento equalizado por família (100 tentativas para GBDTs, 25 para
-DL), hold-out fixo de 20\% (semente 42) que nenhuma etapa de seleção
+DL), \emph{hold-out} fixo de 20\% (semente 42) que nenhuma etapa de seleção
 jamais observa, e pré-processamento por família (one-hot para atenção,
 ordinal para árvores, embeddings onde o modelo os define). Duas
 assimetrias do desenho são declaradas porque afetam a leitura dos
 resultados: os orçamentos de 100/25 tentativas equalizam o custo de
 relógio do ajuste (uma tentativa de DL custa aproximadamente
-$4\times$ uma de GBDT), e os foundation models entram
+$4\times$ uma de GBDT), e os \emph{foundation models} entram
 \emph{zero-shot} --- sem ajuste algum --- porque essa entrada é a
 própria alegação de paradigma sob teste; suas configurações de
-inferência (ensemble de 8 membros, teto de contexto de 50 mil linhas)
+inferência (\emph{ensemble} de 8 membros, teto de contexto de 50 mil linhas)
 são políticas fixas de biblioteca, não quantidades ajustadas aos nossos
 dados.
 
@@ -177,7 +160,7 @@ barra CD não são estatisticamente separáveis, e cada barra horizontal na
 parte inferior conecta um grupo inseparável --- a largura dessas barras é
 a forma visual da cautela sobre o CD largo discutida na
 Seção~\ref{sec:cap5-ato4}. As estatísticas do Ato~I no texto restringem-se
-ao núcleo de 11 modelos. Fonte:
+ao núcleo de 11 modelos. Rótulos internos da figura em inglês e decimais com ponto (figura canônica do \emph{benchmark}); eixos e leitura descritos nesta legenda. Fonte:
 \texttt{latex/ai1/figures/cd\_diagram\_binary.pdf}.}
 \label{fig:cap5-cd}
 \end{figure}
@@ -207,13 +190,13 @@ estrito de 0,005, com o CatBoost no limite (0,54). O empate do topo,
 portanto, não é um artefato de baixo poder: é equivalência prática
 positivamente aferida.
 
-\achado{1}{No núcleo de 11 modelos, o topo da classificação binária é um
+\achado{5.1}{No núcleo de 11 modelos, o topo da classificação binária é um
 empate estatístico: 8 dos 10 modelos não-líderes são praticamente
 equivalentes ao líder sob ROPE de $\pm$0,01 de AUC, e a conclusão
 sobrevive à variação do limiar.}
 O omnibus rejeita a igualdade global, mas o post-hoc não separa o
 pelotão superior e o instrumento bayesiano declara equivalência prática
---- a maxima ``boosting sempre vence'' não encontra, nessa geração,
+--- a máxima ``boosting sempre vence'' não encontra, nessa geração,
 margem de acurácia que a sustente.
 
 \paragraph{O escopo do empate: onde há poder para afirmá-lo.}
@@ -231,16 +214,16 @@ capítulo depende de significância em tarefa sem poder para aferi-la.
 Se o topo empata, resta perguntar o que, afinal, explica a variação de
 desempenho que existe. A decomposição de variância de ranks por família
 responde: $\eta^2 = 0{,}20$ --- apenas 20\% da variância de rank é
-explicada pelo pertencimento à família (GBDT, DL, foundation model), e
+explicada pelo pertencimento à família (GBDT, DL, \emph{foundation model}), e
 \textbf{80\% é intrafamília}. ``GBDT vs.\ DL'', o eixo em torno do qual a
 literatura organizou a década, é uma abstração fraca para esses dados: o
 modelo específico importa mais que a família a que pertence. Uma
 ressalva de leitura acompanha o número: com as famílias desbalanceadas do
-núcleo (3 GBDTs, 7 DL, 1 foundation model), essa partição é mecanicamente
+núcleo (3 GBDTs, 7 DL, 1 \emph{foundation model}), essa partição é mecanicamente
 conservadora --- ainda assim, a ordem de grandeza da razão
 intra/entre-famílias sustenta a conclusão qualitativa.
 
-\achado{2}{Oitenta por cento da variância de rank é intrafamília
+\achado{5.2}{Oitenta por cento da variância de rank é intrafamília
 ($\eta^2 = 0{,}20$): escolher bem o modelo dentro da família importa mais
 do que escolher a família.}
 Esse achado reorienta a pergunta prática de ``qual família?'' para ``qual
@@ -266,7 +249,7 @@ log-loss nas multiclasse (menor é melhor) --- as duas métricas convivem
 na mesma grade, de modo que a comparação válida é dentro de cada linha,
 nunca entre linhas. As células vazias na linha \texttt{helena} são as
 duas exclusões estruturais (TabPFN e TabFM, 100 classes acima do limite
-arquitetural). Fonte:
+arquitetural). Rótulos internos da figura em inglês e decimais com ponto (figura canônica do \emph{benchmark}); eixos e leitura descritos nesta legenda. Fonte:
 \texttt{results/figures/heatmap\_classification.pdf}.}
 \label{fig:cap5-heatmap}
 \end{figure}
@@ -277,7 +260,7 @@ células estruturalmente vazias ficam visíveis, e os poucos conjuntos em
 que um modelo abre vantagem nítida (como o CatBoost em
 \texttt{amazon\_employee}, de alta cardinalidade categórica) antecipam as
 reversões condicionais do Ato~III. A ressalva permanece: valores de
-hold-out em uma única partição fixa não carregam, sozinhos, significância
+\emph{hold-out} em uma única partição fixa não carregam, sozinhos, significância
 --- eles ilustram; a inferência vem dos testes pareados sobre os folds.
 
 \paragraph{O único sinal robusto do desempenho bruto está no fundo.}
@@ -303,7 +286,7 @@ O tempo de treino mediano varia cerca de $300\times$ dentro da grade:
 LightGBM e XGBoost ajustam o modelo final em ${\sim}0{,}7$~s, enquanto
 SAINT e STab consomem ${\sim}200$~s por ajuste --- e a diferença se
 multiplica pelo número de tentativas de ajuste de hiperparâmetros e de
-folds da validação cruzada aninhada. Os foundation models invertem o
+folds da validação cruzada aninhada. Os \emph{foundation models} invertem o
 eixo: por serem \emph{zero-shot}, o ``treino'' do TabFM custa 0,18~s e o
 do TabPFN 1,35~s, com custo de ajuste \textbf{zero} --- não há busca de
 hiperparâmetros a pagar. Essa inversão, cujo outro lado aparece já no
@@ -316,7 +299,7 @@ GBDTs pagam de 106~s (LightGBM) a 648~s (CatBoost) pelo ciclo completo de
 busca; o DL tipo-MLP paga de 1.150~s (MLP) a 3.515~s (TabM); e a atenção
 pesada chega a 12.245~s (SAINT) e 14.956~s (STab) --- duas ordens de
 magnitude acima dos GBDTs mais baratos, para, como visto no Ato~I, não
-sair do empate. Os foundation models pagam zero. Esse eixo raramente
+sair do empate. Os \emph{foundation models} pagam zero. Esse eixo raramente
 aparece nos benchmarks da literatura, mas é o que o praticante paga a
 cada reajuste do modelo em produção.
 
@@ -324,8 +307,8 @@ cada reajuste do modelo em produção.
 A latência de inferência é o eixo mais dramático do benchmark. A
 Figura~\ref{fig:cap5-latencia} apresenta a medição completa, feita sob
 protocolo idêntico para os 14 modelos: \us{} por linha, mediana de 5
-passadas sobre o hold-out completo do \texttt{adult}, cada modelo em seu
-dispositivo natural (GBDTs em CPU; modelos profundos e foundation models
+passadas sobre o \emph{hold-out} completo do \texttt{adult}, cada modelo em seu
+dispositivo natural (GBDTs em CPU; modelos profundos e \emph{foundation models}
 em GPU).
 
 \begin{figure}[htbp]
@@ -335,12 +318,12 @@ em GPU).
 logarítmica)]{\textbf{A latência de inferência atravessa cinco ordens de
 magnitude: GBDTs e DL tipo-MLP servem em microssegundos; atenção custa
 dezenas de \us; os paradigmas de inferência pesada custam milhares.}
-Latência em \us{} por linha no hold-out do \texttt{adult} (mediana de 5
+Latência em \us{} por linha no \emph{hold-out} do \texttt{adult} (mediana de 5
 passadas, escala logarítmica, menor é melhor), com cores por família.
 Cada modelo roda em seu dispositivo natural (GBDTs em CPU; profundos e
-foundation models em GPU), de modo que as razões descrevem o regime de
+\emph{foundation models} em GPU), de modo que as razões descrevem o regime de
 serving em lote amortizado em uma máquina declarada --- não a latência
-online de linha única, cujas diferenças são menores. Fonte:
+online de linha única, cujas diferenças são menores. Rótulos internos da figura em inglês e decimais com ponto (figura canônica do \emph{benchmark}); eixos e leitura descritos nesta legenda. Fonte:
 \texttt{results/figures/inference\_time.pdf} (dados em
 \texttt{results/latency/latency\_adult.csv}).}
 \label{fig:cap5-latencia}
@@ -350,16 +333,16 @@ A estrutura da figura organiza-se em quatro camadas. Na base, o XGBoost
 serve a 0,33~\us/linha. O \emph{tier} rápido reúne os três GBDTs, os
 modelos profundos tipo-MLP e as duas KANs (CatBoost 1,4; RealMLP 1,5;
 LightGBM 1,9; TabKAN 2,3; MLP 2,4; KAN 3,1; TabM 3,5~\us/linha) --- um
-resultado em si: aprendizado profundo \emph{não} é sinônimo de serving
+resultado em si: aprendizado profundo \emph{não} é sinônimo de serviço
 caro; a arquitetura é que decide. A atenção custa dezenas de
 microssegundos (TabNet 17; FT-Transformer 29; SAINT 45). E o extremo
 pertence aos paradigmas de inferência estruturalmente pesada: TabPFN
 7.416, STab 8.645 e TabFM 43.262~\us/linha --- o custo do STab vem da
 inferência bayesiana que calcula a média de 64 passadas estocásticas; o
-dos foundation models, de carregar o conjunto de treino como contexto a
+dos \emph{foundation models}, de carregar o conjunto de treino como contexto a
 cada predição. A ressalva de regime, dita na legenda, merece repetição
-no corpo: essas razões descrevem o serving em lote amortizado no
-hardware declarado no Capítulo~\ref{chap:metodologia}; o serving online
+no corpo: essas razões descrevem o serviço em lote amortizado no
+hardware declarado no Capítulo~\ref{chap:metodologia}; o serviço online
 de linha única estreita as diferenças --- mas não as ordens de
 magnitude.
 
@@ -370,7 +353,8 @@ cruzamento desempenho $\times$ custo. Sobre rank médio $\times$ custo
 núcleo de 11 modelos resolve-se em uma fronteira de Pareto de
 \{TabPFN, XGBoost, LightGBM\} no eixo de custo de treino, que se estreita
 para \{XGBoost, TabPFN\} no eixo de latência (sobre AUC média em vez de
-rank, o CatBoost também se torna não-dominado); \textbf{todo o
+rank, o CatBoost também entra na fronteira --- e, no eixo de latência, o
+TabPFN sai dela); \textbf{todo o
 aprendizado profundo clássico é dominado} em ambos os cruzamentos. A
 Figura~\ref{fig:cap5-pareto} apresenta o retrato completo, já com os 14
 modelos.
@@ -387,22 +371,22 @@ modo que acima-à-esquerda é melhor), todos os 14 modelos. O ponto
 estrelado é Pareto-ótimo sobre a grade completa (TabFM); a fronteira
 \{TabPFN, XGBoost, LightGBM\} citada no texto é a restrição ao núcleo de
 11 modelos. As comparações sobre o eixo de latência de inferência são
-reportadas no texto. Fonte:
+reportadas no texto. Rótulos internos da figura em inglês e decimais com ponto (figura canônica do \emph{benchmark}); eixos e leitura descritos nesta legenda. Fonte:
 \texttt{latex/ai1/figures/pareto\_binary.pdf}.}
 \label{fig:cap5-pareto}
 \end{figure}
 
 A figura mostra o que a latência isolada não mostra: no plano
-treino $\times$ rank, os foundation models ocupam o canto ótimo --- e é
-só ao trocar o eixo de custo para a latência de serving que a imagem se
+treino $\times$ rank, os \emph{foundation models} ocupam o canto ótimo --- e é
+só ao trocar o eixo de custo para a latência de serviço que a imagem se
 inverte. Essa dupla leitura é o \textbf{achado-âncora do programa}: o
 paradigma de \emph{in-context learning} compra treino de segundos e
-ajuste zero ao preço de serving proibitivo. É ela que motiva tanto o
+ajuste zero ao preço de serviço proibitivo. É ela que motiva tanto o
 eixo de restrições do arcabouço de decisão
 (Capítulo~\ref{chap:framework}) quanto a pergunta da destilação
 (Capítulo~\ref{chap:destilacao}): quanto desse preço é removível?
 
-\achado{3}{Modelos praticamente equivalentes em acurácia diferem em
+\achado{5.3}{Modelos praticamente equivalentes em acurácia diferem em
 ${\sim}300\times$ no tempo de treino e em cinco ordens de magnitude na
 latência de inferência; no núcleo de 11, a fronteira de Pareto
 rank~$\times$~custo é \{TabPFN, XGBoost, LightGBM\} no eixo de treino ---
@@ -438,13 +422,13 @@ severidade.
 \caption[Robustez ao desbalanceamento: rank por família e faixa de
 severidade]{\textbf{Conforme o desbalanceamento se agrava, os GBDTs
 melhoram seu rank relativo e o aprendizado profundo clássico piora; os
-foundation models permanecem à frente em todas as faixas.} Rank médio
+\emph{foundation models} permanecem à frente em todas as faixas.} Rank médio
 agregado por família (menor é melhor; eixo invertido) nos conjuntos de
 classificação, estratificados pela razão de desbalanceamento
 majoritária/minoritária: leve ($<$2:1), moderada (2--5:1) e severa
 ($\geq$5:1). Ressalva: com poucos conjuntos por faixa, a figura é
 descritiva --- ela indica direção de tendência, não significância.
-Fonte: \texttt{results/figures/imbalance\_robustness.png}
+Rótulos internos da figura em inglês e decimais com ponto (figura canônica do \emph{benchmark}); eixos e leitura descritos nesta legenda. O subtítulo embutido na figura (``$\sim$1000x+ slower to serve'') é um arredondamento editorial conservador da geração dela; os fatores medidos são os do texto (TabPFN 22.473$\times$, TabFM 131.097$\times$). Fonte: \texttt{results/figures/imbalance\_robustness.png}
 (\texttt{notebooks/07\_segmented\_robustness.ipynb}).}
 \label{fig:cap5-imbalance}
 \end{figure}
@@ -465,7 +449,7 @@ um atributo de robustez que rank médio sozinho não captura.
 Nenhuma das análises anteriores responde à pergunta mais frequente do
 praticante: ``com \emph{meu} volume de dados, quem vence?''. As curvas
 de aprendizado --- 6 modelos $\times$ 5 conjuntos $\times$ 3 sementes,
-varrendo de 500 amostras ao pool completo --- dão forma a esse eixo. A
+varrendo de 500 amostras ao \emph{pool} completo --- dão forma a esse eixo. A
 Figura~\ref{fig:cap5-curvas} apresenta a varredura completa.
 
 \begin{figure}[htbp]
@@ -475,11 +459,11 @@ Figura~\ref{fig:cap5-curvas} apresenta a varredura completa.
 pool completo]{\textbf{O cruzamento de liderança GBDT$\leftrightarrow$DL
 é real, mas específico por conjunto --- e o TabPFN lidera o regime de
 poucos dados em todos os cinco painéis.} Curvas de aprendizado (6
-modelos $\times$ 5 conjuntos $\times$ 3 sementes, de 500 amostras ao pool
+modelos $\times$ 5 conjuntos $\times$ 3 sementes, de 500 amostras ao \emph{pool}
 completo). Cada painel nomeia sua métrica e direção ($\uparrow$ maior é
 melhor; $\downarrow$ menor, escala logarítmica); as bandas são $\pm$1
 desvio-padrão sobre as sementes. Um cruzamento é o ponto em que a curva
-de uma família cruza permanentemente a da outra. Fonte:
+de uma família cruza permanentemente a da outra. Rótulos internos da figura em inglês e decimais com ponto (figura canônica do \emph{benchmark}); eixos e leitura descritos nesta legenda. Fonte:
 \texttt{latex/ai1/figures/learning\_curves.pdf}
 (\texttt{notebooks/10\_learning\_curves.ipynb}).}
 \label{fig:cap5-curvas}
@@ -496,17 +480,17 @@ ao praticante é que o cruzamento depende do conjunto, não apenas do
 tamanho. Segunda: o TabPFN
 tem a melhor métrica média de regime nos cinco conjuntos varridos para
 $n \leq 4.000$ (rank médio 1,0 nesse regime, contra 2,8 do XGBoost) ---
-a quantificação do nicho de poucos dados do paradigma zero-shot.
+a quantificação do nicho de poucos dados do paradigma \emph{zero-shot}.
 Terceira, a ressalva: a varredura cobre 6 dos 14 modelos e 5 dos 18
 conjuntos; ela qualifica o eixo do tamanho, não o reordena.
 
-\achado{4}{A melhor família depende da estrutura do problema --- o DL
+\achado{5.4}{A melhor família depende da estrutura do problema --- o DL
 recente toma o topo multiclasse (descritivo), os GBDTs ganham vantagem
 relativa sob desbalanceamento severo, o one-hot penaliza a atenção no
 extremo categórico --- e o cruzamento GBDT$\leftrightarrow$DL por
 tamanho é real mas específico por conjunto, com o TabPFN dominando o
 regime $n \leq 4.000$ em todos os conjuntos varridos.}
-As reversões não restauram a maxima de uma família vencedora: elas
+As reversões não restauram a máxima de uma família vencedora: elas
 mostram que a resposta certa é condicional --- e condições verificáveis
 a priori são exatamente o que um arcabouço de decisão pode codificar.
 
@@ -515,7 +499,7 @@ a priori são exatamente o que um arcabouço de decisão pode codificar.
 
 \paragraph{A entrada do TabFM reorganiza a narrativa.}
 A expansão para a grade completa de 14 modelos muda o retrato. O TabFM
---- foundation model lançado em junho de 2026, avaliado aqui
+--- \emph{foundation model} lançado em junho de 2026, avaliado aqui
 \emph{zero-shot}, sem qualquer ajuste por conjunto --- lidera o rank
 médio \textbf{nas três tarefas}: 2,7 na binária, 1,0 na multiclasse
 (pontuação perfeita sobre seus dois conjuntos elegíveis;
@@ -559,7 +543,7 @@ binária e regressão cobrem os 14 modelos; o painel multiclasse mostra os
 12 modelos avaliados nos três conjuntos multiclasse, rankeados dentro
 desse subconjunto --- e por isso não é diretamente comparável aos ranks
 de 14 modelos da Tabela~\ref{tab:cap5-ranks}, em que os foundation
-models (excluídos no \texttt{helena}) são rankeados. Fonte:
+models (excluídos no \texttt{helena}) são rankeados. Rótulos internos da figura em inglês e decimais com ponto (figura canônica do \emph{benchmark}); eixos e leitura descritos nesta legenda. Fonte:
 \texttt{latex/ai1/figures/average\_ranks.pdf}.}
 \label{fig:cap5-ranks}
 \end{figure}
@@ -572,12 +556,12 @@ separam vizinhos de rank dentro do núcleo de 11 na mesma tabela
 (Apêndice~\ref{app:tabelas}). E o TabPFN, por sua vez,
 consolida-se como o vice consistente da grade (ranks médios
 4,2/2,5/3,0 nas três tarefas): a geração 2026 não é um ponto fora da
-curva, é uma família inteira --- os dois foundation models ocupam os
+curva, é uma família inteira --- os dois \emph{foundation models} ocupam os
 dois primeiros postos em todas as tarefas.
 
 A consequência interpretativa é a re-escopagem do Ato~I: o empate fica
 corretamente lido como \emph{retrato da geração anterior}. Não foi o
-aprendizado profundo tunado que alcançou os GBDTs; foi o pré-treino que
+aprendizado profundo ajustado que alcançou os GBDTs; foi o pré-treino que
 atropelou ambos. E a cautela estatística permanece dita: com $k{=}14$ e
 $N{=}10$, a distância crítica de Nemenyi é larga
 (Figura~\ref{fig:cap5-cd}) --- a separação do TabFM apoia-se na
@@ -593,15 +577,15 @@ registrado.
 
 \paragraph{O contrapeso: o líder de acurácia é o pior em latência.}
 O contrapeso é frontal, e é o achado-âncora do programa: o líder de
-acurácia é o pior modelo da grade em latência de serving ---
+acurácia é o pior modelo da grade em latência de serviço ---
 43.262~\us/linha sob o protocolo padrão, $131.097\times$ o XGBoost, e
 mais em contextos maiores, chegando a ${\sim}394$~ms/linha no maior
 conjunto de regressão. A pergunta de decisão mudou de natureza: não é
 mais ``qual família vence?'', e sim ``\emph{a latência do foundation
 model cabe no caso de uso?}''.
 
-\achado{5}{A geração 2026 quebra o empate: o TabFM lidera o rank médio
-nas três tarefas e é o melhor modelo em 13 dos 18 conjuntos, zero-shot
+\achado{5.5}{A geração 2026 quebra o empate: o TabFM lidera o rank médio
+nas três tarefas e é o melhor modelo em 13 dos 18 conjuntos, \emph{zero-shot}
 --- ao preço de quatro a cinco ordens de magnitude em latência de
 serving (43.262 vs.\ 0,33~\us/linha).}
 O empate não tornou o arcabouço multicritério obsoleto; a quebra o
@@ -624,11 +608,11 @@ completa GBDT/DL/foundation-model em um benchmark tabular multicritério;
 as avaliações independentes anteriores
 \citep{poeta2024,kancritical2024} comparam KANs apenas contra MLPs e não
 medem eixos de custo. A contraparte de engenharia merece registro
-simétrico: ambas habitam o tier rápido de latência (2,3--3,1~\us/linha)
+simétrico: ambas habitam o \emph{tier} rápido de latência (2,3--3,1~\us/linha)
 e custam VRAM desprezível --- \textbf{o problema é o desempenho, não o
 custo}.
 
-\achado{6}{Sob protocolo uniforme, KAN e TabKAN ficam no último terço
+\achado{5.6}{Sob protocolo uniforme, KAN e TabKAN ficam no último terço
 nas três tarefas --- as alegações dos artigos originais não se
 sustentam no primeiro teste independente contra a grade completa, até
 onde alcança nossa verificação datada --- embora ambas sejam baratas de
@@ -649,12 +633,12 @@ decisão racional migra, portanto, para custo, latência, robustez e
 estrutura da tarefa, exatamente os eixos em que os modelos diferem por
 ordens de magnitude. \textbf{(ii)}~A geração 2026 quebra o empate em
 acurácia: o TabFM lidera as três tarefas e vence em 13 de 18 conjuntos,
-zero-shot --- ao preço de quatro a cinco ordens de magnitude em latência
+\emph{zero-shot} --- ao preço de quatro a cinco ordens de magnitude em latência
 de serving, invertendo o eixo de custo (treino de segundos e ajuste
-zero; serving proibitivo). A quebra não aposenta a leitura
+zero; serviço proibitivo). A quebra não aposenta a leitura
 multicritério: ela a torna mais necessária, porque a escolha ótima
 passa a depender de uma única restrição dominante. \textbf{(iii)}~Essa
-restrição é atacável: a latência do foundation model não é uma lei, é um
+restrição é atacável: a latência do \emph{foundation model} não é uma lei, é um
 custo de arquitetura --- e custos de arquitetura podem ser transferidos
 para modelos pequenos. As ressalvas do capítulo acompanham os fatos:
 $N$ pequeno por tarefa (multiclasse descritiva; piso de p-valor na
@@ -666,8 +650,8 @@ versão fixada anterior à revisão por pares de seu relatório técnico.
 O Capítulo~\ref{chap:framework} converte o fato (i) e as reversões do
 Ato~III em um arcabouço de decisão por restrições --- e o valida por
 \emph{leave-one-dataset-out}, testando tanto a alternativa de roteamento
-por meta-atributos (resultado negativo) quanto a política fixa
-``foundation model primeiro, desviar por restrições'' (resultado
+por meta-características (resultado negativo) quanto a política fixa
+``\emph{foundation model} primeiro, desviar por restrições'' (resultado
 positivo). O obstáculo que resta a essa política --- as quatro a cinco
 ordens de magnitude de latência do fato (ii) --- é o objeto do
 Capítulo~\ref{chap:destilacao}: quanto dele a destilação remove, e sob

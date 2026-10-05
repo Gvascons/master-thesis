@@ -94,7 +94,7 @@ no repositório.
 
 \begin{table}[htbp]
 \centering
-\caption{Os 18 conjuntos de dados OpenML do benchmark (tamanhos aproximados
+\caption[Os 18 conjuntos de dados do benchmark]{Os 18 conjuntos de dados OpenML do benchmark (tamanhos aproximados
 antes do teto; as execuções limitam cada conjunto a 100~mil amostras).
 Fonte: \texttt{configs/datasets.yaml}.}
 \label{tab:datasets}
@@ -158,13 +158,13 @@ tamanho~$\times$~dimensionalidade, evidenciando a cobertura obtida.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.85\textwidth]{images/dataset_landscape.pdf}
-  \caption{\textbf{O benchmark cobre três ordens de grandeza em amostras e
+  \caption[Paisagem dos 18 conjuntos: amostras $\times$ atributos]{\textbf{O benchmark cobre três ordens de grandeza em amostras e
   mais de uma ordem em atributos.} Cada ponto é um conjunto de dados,
   posicionado pelo número de amostras (eixo vertical, escala logarítmica) e
   de atributos (eixo horizontal, escala logarítmica), colorido pelo tipo de
   tarefa (binária, multiclasse, regressão). A dispersão sem aglomeração em
   um único quadrante é a condição estrutural para a análise condicional da
-  QP2. Fonte: \texttt{results/figures/dataset\_landscape.pdf}, gerado a
+  QP1. Rótulos internos da figura em inglês e decimais com ponto (figura canônica do \emph{benchmark}); eixos e leitura descritos nesta legenda. Fonte: \texttt{results/figures/dataset\_landscape.pdf}, gerado a
   partir de \texttt{configs/datasets.yaml}.}
   \label{fig:dataset-landscape}
 \end{figure}
@@ -204,7 +204,7 @@ proveniência de cada implementação.
 
 \begin{table}[htbp]
 \centering
-\caption{Os 14 modelos do benchmark, por família, com a proveniência de cada
+\caption[Os 14 modelos por família e proveniência]{Os 14 modelos do benchmark, por família, com a proveniência de cada
 implementação. ``Própria'' indica reimplementação a partir do artigo
 original, motivada pela ausência de pacote maduro.}
 \label{tab:modelos}
@@ -315,7 +315,7 @@ componentes são justificados a seguir.
    com a configuração selecionada};
 \node[destaque, above=of fit] (aval)
   {Avaliação única\\no \emph{hold-out}};
-\draw[seta] (dados) -- node[rotulo, left=2pt] {divisão estratificada,\\semente 42} (dev);
+\draw[seta] (dados) -- node[rotulo, left=2pt, xshift=2mm] {divisão estratificada,\\semente 42} (dev);
 \draw[seta] (dados) -- (hold);
 \draw[seta] (dev) -- (nested);
 \draw[seta] (nested) -- node[rotulo, right=2pt] {hiperparâmetros} (optuna);
@@ -323,7 +323,7 @@ componentes são justificados a seguir.
 \draw[seta] (fit) -- (aval);
 \draw[seta] (hold) -- (aval);
 \end{tikzpicture}
-\caption{\textbf{Separação estrita entre seleção e medição.} O
+\caption[Protocolo experimental: \emph{hold-out} e validação aninhada]{\textbf{Separação estrita entre seleção e medição.} O
 \emph{hold-out} de 20\% é separado antes de qualquer validação cruzada e só
 é tocado uma única vez, na avaliação final; a seleção de hiperparâmetros
 ocorre exclusivamente no laço interno da validação cruzada aninhada, sobre a
@@ -424,7 +424,7 @@ sensível à qualidade probabilística do modelo; as secundárias cobrem os
 
 \begin{table}[htbp]
 \centering
-\caption{Métricas por tipo de tarefa. Setas indicam a direção de otimização.
+\caption[Métricas por tipo de tarefa]{Métricas por tipo de tarefa. Setas indicam a direção de otimização.
 A acurácia é reportada por convenção, mas nunca fundamenta conclusões.}
 \label{tab:metricas}
 \small
@@ -517,7 +517,7 @@ referência; o registro completo está em
   \item \textbf{Decomposição de variância ($\eta^2$):} parcela da variância
     dos \emph{ranks} explicada pela família, via razão de somas de
     quadrados entre-famílias e total. Uma ressalva de interpretação é
-    declarada de antemão: no recorte da geração até 2025 (Ato~I do
+    declarada de antemão: no recorte do núcleo de 11 modelos (Ato~I do
     Capítulo~\ref{chap:benchmark}), as famílias são desbalanceadas --- 3
     GBDTs, 7 de aprendizado profundo e 1 \emph{foundation model} --- e,
     com famílias desbalanceadas, a parcela entre-famílias é mecanicamente
@@ -548,7 +548,7 @@ prática de benchmarks abertos de declarar falhas em vez de omiti-las:
 \section{Eixos de custo e experimentos complementares}
 \label{sec:met-custo}
 
-A QP3 exige medir mais que desempenho preditivo. Três eixos de custo e dois
+As QP1 e QP2 exigem medir mais que desempenho preditivo. Três eixos de custo e dois
 experimentos complementares completam o protocolo:
 
 \begin{itemize}
@@ -567,7 +567,7 @@ experimentos complementares completam o protocolo:
     declarada, e não a latência \emph{online} de linha única, cujas
     diferenças são menores --- a distinção é repetida sempre que o eixo de
     latência fundamenta uma conclusão.
-  \item \textbf{Curvas de aprendizado (QP2).} Seis modelos representativos
+  \item \textbf{Curvas de aprendizado (QP1).} Seis modelos representativos
     re-treinados em fatias crescentes da partição de desenvolvimento (de
     500 amostras ao total disponível; 3 sementes; 5 conjuntos), com os
     hiperparâmetros fixados nos valores selecionados para o conjunto
@@ -575,8 +575,8 @@ experimentos complementares completam o protocolo:
     do tamanho amostral a capacidade fixa. O re-uso de hiperparâmetros é
     declarado como limitação: re-otimizar por tamanho deslocaria níveis
     absolutos, não a direção dos cruzamentos.
-  \item \textbf{Validação do arcabouço de decisão (LODO).} O recomendador
-    meta-atributos$\to$família é avaliado por
+  \item \textbf{Validação do arcabouço de decisão (LODO; QP2).} O recomendador
+    meta-características$\to$família é avaliado por
     \emph{leave-one-dataset-out}, com métrica de \emph{regret} normalizado
     contra políticas fixas --- o desenho impede que uma árvore descritiva
     seja lida como preditor validado. O protocolo e os resultados estão no
@@ -741,7 +741,7 @@ conhecidas e as decisões tomadas diante delas.
 Com o protocolo fixado --- dados, modelos, partições, métricas, testes e
 limitações declaradas ---, o Capítulo~\ref{chap:benchmark} executa-o: 250
 células experimentais organizadas em quatro atos, do empate estatístico da
-geração até 2025 à quebra desse empate pela geração 2026, passando pelos
+do núcleo de 11 modelos à quebra desse empate pela geração 2026, passando pelos
 eixos de custo e pelas reversões condicionais que motivam o arcabouço de
 decisão do Capítulo~\ref{chap:framework}.
 \end{transicao}

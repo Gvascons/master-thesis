@@ -19,8 +19,8 @@ artefatos versionados citados em cada tabela.
 
 A Tabela~\ref{tab:app-abl-oof} desagrega a ablação da
 Seção~\ref{sec:destil-oof}: o aluno XGBoost-quantil treinado com alvos
-do teacher TabPFN rotulados em três regimes --- \emph{out-of-fold}
-(OOF), \emph{in-sample} com contexto fixado em 80\% do pool
+do professor TabPFN rotulados em três regimes --- \emph{out-of-fold}
+(OOF), \emph{in-sample} com contexto fixado em 80\% do \emph{pool}
 (\emph{ctx-80}, que isola o efeito do vazamento mantendo o tamanho de
 contexto do OOF) e \emph{in-sample} pleno. O padrão documentado no
 capítulo é legível nas colunas: RMSE e CRPS \emph{não} degradam com o
@@ -33,7 +33,7 @@ efeito puro do vazamento sobre a calibração do aluno.
 \centering\small
 \caption[Ablação OOF \emph{vs.} \emph{in-sample} ---
 desagregada]{Ablação OOF \emph{vs.} \emph{in-sample} --- aluno
-XGBoost-quantil, teacher TabPFN; média de 3 sementes. PICP~80\%
+XGBoost-quantil, professor TabPFN; média de 3 sementes. PICP~80\%
 nominal $= 0{,}80$. Fonte:
 \texttt{results/distillation/ablation\_insample.csv}.}
 \label{tab:app-abl-oof}
@@ -43,7 +43,7 @@ nominal $= 0{,}80$. Fonte:
  & \multicolumn{3}{c}{OOF} & \multicolumn{3}{c}{\emph{In-sample}
  ctx-80} & \multicolumn{3}{c}{\emph{In-sample}} \\
 \cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}
-\emph{Dataset} & RMSE & CRPS & PICP & RMSE & CRPS & PICP
+\emph{Conjunto} & RMSE & CRPS & PICP & RMSE & CRPS & PICP
                & RMSE & CRPS & PICP \\
 \midrule
 \texttt{california\_housing} & 0{,}277 & 0{,}109 & 0{,}596
@@ -70,16 +70,16 @@ calibração, não na acurácia.
 \subsection{Transformação logarítmica do alvo}
 
 A Tabela~\ref{tab:app-abl-log} desagrega a ablação da
-Seção~\ref{sec:destil-regra}: teacher TabPFN e alunos XGBoost-quantil
+Seção~\ref{sec:destil-regra}: professor TabPFN e alunos XGBoost-quantil
 re-executados sob $y' = \log(1+y)$ nos três conjuntos de falha da
 extensão (alvos em escala de preço) e em dois controles positivos. As
 métricas são medidas no espaço logarítmico. A coluna de retenção usa a
 definição do Capítulo~\ref{chap:destilacao},
 $(\mathrm{CRPS}_{\text{hard}} - \mathrm{CRPS}_{\text{soft}}) /
-(\mathrm{CRPS}_{\text{hard}} - \mathrm{CRPS}_{\text{teacher}})$,
+(\mathrm{CRPS}_{\text{hard}} - \mathrm{CRPS}_{\text{professor}})$,
 calculada sobre as médias exibidas. A leitura documentada: o log
 \emph{não} recupera as falhas (\texttt{fifa} segue fortemente
-negativo) e os gaps teacher--aluno colapsam para a casa de
+negativo) e os gaps professor--aluno colapsam para a casa de
 $0{,}004$--$0{,}025$ --- boa parte da vantagem distribucional do
 \emph{foundation model} nesses alvos é tratamento de escala.
 
@@ -87,13 +87,13 @@ $0{,}004$--$0{,}025$ --- boa parte da vantagem distribucional do
 \centering\small
 \caption[Ablação log-target --- desagregada]{Ablação da transformação
 logarítmica do alvo --- CRPS em espaço log, média de 3 sementes
-(teacher determinístico, 1 execução). ``Hard'' = aluno de rótulos
+(professor determinístico, 1 execução). ``Hard'' = aluno de rótulos
 verdadeiros; ``soft'' = aluno destilado. Fonte:
 \texttt{results/distillation/ablation\_logtarget.csv}.}
 \label{tab:app-abl-log}
 \begin{tabular}{llcccc}
 \toprule
-Grupo & \emph{Dataset} & Teacher & Aluno hard & Aluno soft &
+Grupo & \emph{Conjunto} & Teacher & Aluno hard & Aluno soft &
 Retenção \\
 \midrule
 \multirow{3}{*}{Falha}
@@ -123,16 +123,17 @@ de histórico; este registro é a consolidação desses episódios.
 \paragraph{1. H1 --- destilação pontual.}
 \emph{O que era:} hipótese pré-registrada
 (\texttt{docs/desenho-experimental-destilacao.md}, §1) de que um aluno
-GBDT destilado reteria $\geq 50\%$ do gap de RMSE do teacher em
+GBDT destilado reteria $\geq 50\%$ do gap de RMSE do professor em
 $\geq 3$ dos 5 conjuntos de regressão. \emph{O que aconteceu:}
-refutada nos cinco conjuntos centrais com o teacher TabPFN; a
-refutação replicou com o teacher TabFM, de gaps pontuais maiores, e
-no experimento confirmatório E1 em escala $N{=}20$, no qual o aluno
+refutada nos cinco conjuntos centrais com o professor TabPFN; a
+refutação replicou com o professor TabFM, de gaps pontuais maiores, e
+na extensão confirmatória ao pool completo de 20 conjuntos (CTR23), na
+qual o aluno
 pontual destilado supera o controle de rótulos verdadeiros em apenas
 4 de 20 conjuntos.
 \emph{Por que está aqui:} é o resultado negativo mais importante do
 Capítulo~\ref{chap:destilacao} (Seção~\ref{sec:destil-ponto}) --- em
-pool completo, o aluno não absorve a vantagem \emph{pontual} do
+\emph{pool} completo, o aluno não absorve a vantagem \emph{pontual} do
 \emph{foundation model}, independentemente do tamanho do gap; o que
 se transfere é a distribuição. Registros:
 \texttt{docs/desenho-experimental-destilacao.md} (pré-registro),
@@ -146,7 +147,7 @@ pesada/escala de preço; a hipótese viva era que a transformação
 $\log(1+y)$ recuperaria a retenção. \emph{O que aconteceu:} a ablação
 dedicada refutou a hipótese --- o log não resgata as falhas
 (\texttt{fifa} $-1{,}69$) e ainda encolhe os sucessos, porque colapsa
-a própria vantagem do teacher no espaço logarítmico
+a própria vantagem do professor no espaço logarítmico
 (Tabela~\ref{tab:app-abl-log}). \emph{Por que está aqui:} a refutação
 é mais útil que a hipótese --- virou a cláusula (i) da regra de
 decisão ``quando destilar'' (Seção~\ref{sec:destil-regra}): antes de
@@ -154,14 +155,14 @@ destilar, aplique transformações baratas de alvo. Registros:
 \texttt{docs/relatorio-ai2.md} (fase 6a),
 \texttt{results/distillation/ablation\_logtarget.csv}.
 
-\paragraph{3. Roteamento por meta-features.}
+\paragraph{3. Roteamento por meta-características.}
 \emph{O que era:} a promessa, herdada da literatura de
-meta-learning, de que meta-features do conjunto de dados poderiam
+meta-learning, de que meta-características do conjunto de dados poderiam
 prever a família vencedora --- o arcabouço de decisão seria um
 preditor, não um fluxograma. \emph{O que aconteceu:} sob validação
 \emph{leave-one-dataset-out}, a árvore de profundidade 2 não supera o
-baseline de classe majoritária em nenhuma das duas gerações de
-modelos (hit-rate $0{,}11$ \emph{vs.} $0{,}44$ com 11 modelos;
+\emph{baseline} de classe majoritária em nenhuma das duas gerações de
+modelos (taxa de acerto $0{,}11$ \emph{vs.} $0{,}44$ com 11 modelos;
 $0{,}72$ \emph{vs.} $0{,}78$ com 14). \emph{Por que está aqui:} o
 resultado negativo é o que justifica a forma final do arcabouço
 (decisão por restrições, não por predição); a árvore permanece no
@@ -174,7 +175,7 @@ Capítulo~\ref{chap:framework},
 \paragraph{4. A claim retratada do OOM ``determinístico'' no
 \texttt{year\_prediction}.}
 \emph{O que era:} durante a medição da fronteira de Pareto,
-afirmou-se que o ponto teacher TabPFN com contexto de 50~mil linhas no
+afirmou-se que o ponto professor TabPFN com contexto de 50~mil linhas no
 \texttt{year\_prediction} era imensurável na GPU de 16~GB por OOM
 determinístico. \emph{O que aconteceu:} a análise forense da sessão
 mostrou que a claim estava errada --- o culpado era a estimativa do
@@ -183,7 +184,7 @@ o ponto foi medido ($148{,}6$~ms/linha, $\sim$3,3$\times$ a latência
 do ponto de 25~mil, por um ganho de RMSE de apenas
 $8{,}661 \to 8{,}610$). A claim foi retratada conforme a política de
 correção, e a medição virou argumento adicional \emph{contra} o
-teacher de contexto completo em GPUs de 16~GB. \emph{Por que está
+professor de contexto completo em GPUs de 16~GB. \emph{Por que está
 aqui:} retratações públicas fazem parte do contrato de conduta; o
 episódio também ilustra que ``imensurável'' exige verificação
 exaustiva dos modos de operação antes de ser afirmado. Registros:
@@ -199,7 +200,7 @@ amostras), não o \texttt{diamonds} (44979; 53.940 amostras).
 \emph{O que aconteceu:} o erro foi descoberto em 20/07/2026, quando a
 análise consolidada da extensão CTR23 acusou métricas idênticas até a
 4ª casa entre ``\texttt{kin8nm} (extensão)'' e ``\texttt{diamonds}
-(núcleo)''; um indício anterior (pool de 6.553 linhas, incompatível
+(núcleo)''; um indício anterior (\emph{pool} de 6.553 linhas, incompatível
 com $\sim$43~mil) havia sido incorretamente aceito como aproximação de
 configuração --- lapso registrado. A validade experimental não foi
 afetada (apenas o rótulo estava errado); os rótulos foram corrigidos
@@ -219,7 +220,7 @@ sinal de investigação obrigatória). Registro canônico:
 \texttt{cpu\_activity} na figura de calibração.}
 \emph{O que era:} a figura de calibração da destilação usaria
 \texttt{california\_housing} e \texttt{year\_prediction} como
-exemplos. \emph{O que aconteceu:} a passada do teacher com contexto de
+exemplos. \emph{O que aconteceu:} a passada do professor com contexto de
 50~mil linhas no \texttt{year\_prediction} excedeu o orçamento de
 tempo da sessão de geração de figuras
 (\emph{time-box}); o conjunto foi substituído por

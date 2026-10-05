@@ -55,3 +55,11 @@ aproximação de config — registro do lapso para o histórico.
    download; pendência registrada).
 3. A duplicação acidental foi o mecanismo de detecção — redundância entre
   fontes independentes tem valor de auditoria.
+
+## Adendo (06/10/2026) — rótulo residual nos artefatos do LODO
+
+A auditoria integral da dissertação identificou que
+`results/aggregated/lodo_validation.csv` e `lodo_validation_14.csv`
+ainda carregavam o rótulo pré-errata "diamonds" na linha que corresponde
+ao kin8nm (valores corretos; apenas o rótulo defasado). Retificado por
+relabel in-place nesta data; nenhuma estatística muda.

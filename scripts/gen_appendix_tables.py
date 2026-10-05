@@ -96,7 +96,7 @@ def build_table(df: pd.DataFrame, task: str, metric: str,
     lines.append(r"\label{tab:app-" + label + "}")
     lines.append(r"\begin{tabular}{l" + "c" * len(MODELS) + "}")
     lines.append(r"\toprule")
-    header = [r"\emph{Dataset}"] + [
+    header = [r"\emph{Conjunto}"] + [
         r"\rotatebox{90}{" + disp + "}" for _, disp in MODELS
     ]
     lines.append(" & ".join(header) + r" \\")
