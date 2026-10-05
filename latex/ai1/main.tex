@@ -298,7 +298,8 @@ the training set as context). On mean rank $\times$ cost --- rank being the pape
 instrument --- the 11-model core slate resolves to a Pareto frontier of
 \{TabPFN, XGBoost, LightGBM\} on the training-cost axis, narrowing to
 \{XGBoost, TabPFN\} on the latency axis (on mean AUC instead of rank,
-CatBoost also becomes non-dominated); all classical deep learning is
+CatBoost also joins the frontier --- and, on the latency axis, TabPFN
+drops out of it); all classical deep learning is
 dominated throughout. Fig.~\ref{fig:pareto} shows the full 14-model
 picture, where the 2026 TabFM takes over the frontier outright.
 % results/latency/latency_adult.csv; notebooks/05_cost_analysis.ipynb
