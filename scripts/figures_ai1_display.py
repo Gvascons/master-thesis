@@ -99,17 +99,25 @@ def _pareto_mask(times, perfs, higher):
 
 
 def fig_pareto(test_df):
+    # performance = mean binary RANK (the paper's primary instrument);
+    # cost = MEDIAN training time (matching the text's ~300x claim)
     sub = test_df[test_df.task_type == "binary"]
-    ms = sub.groupby("model").agg(train_time_s=("train_time_s", "mean"),
-                                  performance=("roc_auc", "mean")).reset_index()
+    ranks = (sub.pivot(index="dataset", columns="model", values="roc_auc")
+             .rank(axis=1, ascending=False))
+    ms = pd.DataFrame({"model": ranks.columns,
+                       "performance": ranks.mean().values})
+    ms["train_time_s"] = ms.model.map(
+        sub.groupby("model")["train_time_s"].median())
     ms["family"] = ms.model.map(FAMILIES)
-    ms["pareto"] = _pareto_mask(ms.train_time_s.values, ms.performance.values,
-                                higher=True)
+    ms["pareto"] = _pareto_mask(ms.train_time_s.values,
+                                ms.performance.values, higher=False)
     # manual annotation offsets/alignment where points or edges collide
-    OFF = {"kan": (6, -11), "tabkan": (6, 5), "mlp": (6, -11),
-           "realmlp": (6, 5), "lightgbm": (-8, -4), "stab": (-8, 4),
-           "saint": (-8, 6)}
-    HA = {"lightgbm": "right", "stab": "right", "saint": "right"}
+    OFF = {"kan": (8, -2), "tabkan": (-8, -2), "mlp": (6, -12),
+           "realmlp": (6, -12), "lightgbm": (-8, -4), "stab": (-8, 4),
+           "saint": (0, -16), "ft_transformer": (6, 6),
+           "tabnet": (-8, 2)}
+    HA = {"lightgbm": "right", "stab": "right", "tabkan": "right",
+          "tabnet": "right", "saint": "center"}
     fig, ax = plt.subplots(figsize=(11, 7))
     for _, r in ms.iterrows():
         ax.scatter(r.train_time_s, r.performance,
@@ -126,15 +134,18 @@ def fig_pareto(test_df):
         ax.step(pp.train_time_s, pp.performance, where="post", ls="--",
                 color="red", lw=1.5, zorder=1)
     ax.set_xscale("log")
-    ax.set_xlabel("Mean training time (s, log scale)")
-    ax.set_ylabel("Mean ROC-AUC (binary)")
+    ax.invert_yaxis()  # lower rank = better, plotted upward: up-left wins
+    ax.set_xlabel("Median training time (s, log scale)")
+    ax.set_ylabel("Mean binary rank (lower = better; axis inverted)")
     ax.grid(alpha=0.3, which="both")
-    handles = ([Line2D([0], [0], marker="o", ls="", color=c, ms=9, label=f)
-                for f, c in FAMILY_COLORS.items()]
-               + [Line2D([0], [0], marker="*", ls="", color="#555", ms=14,
-                         label="Pareto-optimal"),
-                  Line2D([0], [0], ls="--", color="red", label="Pareto front")])
-    ax.legend(handles=handles, fontsize=9, frameon=False, loc="upper right")
+    handles = [Line2D([0], [0], marker="o", ls="", color=c, ms=9, label=f)
+               for f, c in FAMILY_COLORS.items()]
+    handles.append(Line2D([0], [0], marker="*", ls="", color="#555", ms=14,
+                          label="Pareto-optimal"))
+    if len(pp) >= 2:
+        handles.append(Line2D([0], [0], ls="--", color="red",
+                              label="Pareto front"))
+    ax.legend(handles=handles, fontsize=9, frameon=False, loc="lower left")
     save(fig, "pareto_binary_display")
     plt.close(fig)
 
@@ -224,7 +235,7 @@ def fig_flowchart14():
     arrow(0.36, 0.60, 0.17, 0.50, "yes")
     box(0.5, 0.42, "3. Intrinsic interpretability required?\n(regulation)")
     arrow(0.5, 0.57, 0.5, 0.47, "no")
-    box(0.13, 0.26, "GBDT\n(+ SHAP on the side)", "#fde")
+    box(0.13, 0.26, "GBDT\n(intrinsically interpretable)", "#fde")
     arrow(0.36, 0.40, 0.17, 0.30, "yes")
     box(0.5, 0.18, "4. No active constraint → FOUNDATION MODEL FIRST\n"
                    "TabPFN (mature) · TabFM (frontier, v1.0.1 caveats)\n"
