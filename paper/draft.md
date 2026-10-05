@@ -1,5 +1,11 @@
 # Distilling Tabular Foundation Models Beyond Classification: Distributional Regression and the Distill/Compress/Cache Pareto Frontier
 
+> **NOTA (04/10/2026):** a versão mantida deste artigo é
+> `latex/ai2/main.tex` (pós-auditoria round 3: título Distill/Compress/
+> Shrink, reconciliação com arXiv 2610.01435, TR oficial do TabFM, caveat
+> de retenção com denominador pequeno, colunas n/ΔCRPS na tabela). Este
+> Markdown é o histórico do draft v1 e não recebe mais atualizações.
+
 > **Draft v1** (20/07/2026) — full prose, Markdown master; LaTeX conversion at
 > venue-formatting time. Every number is traceable to a versioned artifact in
 > the public repository (paths in comments throughout). Authors and order:

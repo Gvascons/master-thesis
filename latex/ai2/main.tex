@@ -18,13 +18,15 @@
 \usepackage{amsmath,amssymb}
 \usepackage{textcomp}
 \usepackage{microtype}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
 
 \newcommand{\us}{\textmu s}
 
 \title{\textbf{Distilling Tabular Foundation Models Beyond Classification:\\
-Distributional Regression and the Distill/Compress/Cache Pareto Frontier}}
+Distributional Regression and the Distill/Compress/Shrink Pareto Frontier}}
 
 \author{João Gabriel de Araújo Vasconcelos\\
   \small Centro de Informática, Universidade Federal de Pernambuco\\
@@ -45,18 +47,23 @@ first in binary classification, multiclass, and regression, with TabPFN v2.5
 a consistent second. This leadership carries an extreme cost: in-context
 inference runs at 7.4--43\,ms/row --- four to five orders of magnitude slower
 than gradient-boosted trees (0.33\,\us/row). Prior work distills tabular
-foundation models for \emph{classification}; we study \emph{regression},
-where the teacher's output is a predictive \textbf{distribution}. Across 20
+foundation models for \emph{classification}, with point-target regression
+appearing only in work contemporaneous with ours; we study
+\emph{distributional} regression, where the teacher's output is a full
+predictive \textbf{distribution}. Across 20
 datasets we find: (1) \textbf{point} distillation fails at realistic pool
-sizes regardless of teacher strength --- a robust negative replicated with
-two teachers; (2) \textbf{distributional} distillation --- transferring the
-teacher's quantile curves into a multi-quantile student --- retains a median
-19\% and up to 100\%+ of the teacher's CRPS advantage (positive in 16/20
+sizes --- a robust negative replicated with a second, far stronger
+teacher; (2) \textbf{distributional} distillation --- transferring the
+teacher's quantile curves into a multi-quantile student --- retains a
+median 19\%, and in one case more than the entirety, of the teacher's
+CRPS (continuous ranked probability score) advantage (positive in 16/20
 datasets, including one born-again case where the student surpasses its
 teacher; one-sided sign test $p = 0.006$, Wilcoxon $p = 0.045$, Bayesian
-$P(\mathrm{ret}>0) = 0.70$) at microsecond latency, making the distilled
-student the only sub-millisecond distributional system on our three-strategy
-Pareto frontier (distill vs.\ context compression vs.\ ensemble reduction);
+$P(\mathrm{ret}>0) = 0.70$ at a region of practical equivalence of
+$\pm$0.05) at microsecond latency, making the distilled student the
+CRPS-optimal distributional system in the sub-millisecond regime of our
+three-strategy Pareto frontier (distillation vs.\ context compression
+vs.\ ensemble shrinking), measured end-to-end on three datasets;
 (3) out-of-fold labeling matters for the student's \textbf{calibration}, not
 its accuracy --- a deconfounded refinement of prior classification findings;
 and (4) failures are diagnosable, yielding a practical decision rule: try
@@ -68,16 +75,15 @@ on a single 16\,GB GPU.
 
 \section{Introduction}
 
-For a decade, the practical advice for tabular prediction was stable:
-gradient-boosted decision trees (GBDTs) win
-\citep{grinsztajn2022,mcelfresh2023}. The 2024--2026 generation of tabular
-deep learning and, decisively, of tabular foundation models (TFMs) has
-overturned the accuracy half of that advice. In a uniform-protocol benchmark
-we ran of 14 models $\times$ 18 OpenML datasets (nested cross-validation,
-per-family preprocessing, equal tuning budgets), the zero-shot TabFM ranks
-first on all three task types and is the single best model on 13 of 18
-datasets; TabPFN v2.5 \citep{hollmann2025,priorlabs2025} is the consistent
-runner-up.
+Tabular foundation models (TFMs) have ended the decade-long accuracy
+argument for gradient-boosted decision trees (GBDTs)
+\citep{grinsztajn2022,mcelfresh2023}; what they have not ended is the
+cost argument. In a uniform-protocol benchmark we ran of 14 models
+$\times$ 18 OpenML datasets (nested cross-validation, per-family
+preprocessing, equal tuning budgets; companion report
+\citep{companion2026}), the zero-shot TabFM ranks first on all three task
+types and is the single best model on 13 of 18 datasets; TabPFN v2.5
+\citep{hollmann2025,priorlabs2025} is the consistent runner-up.
 % notebooks/TABELA_RESULTADOS.md; results/aggregated/test_results.csv
 
 The cost half of the advice, however, has inverted rather than disappeared.
@@ -93,21 +99,27 @@ A leave-one-dataset-out policy analysis over the same benchmark shows that
 
 Knowledge distillation \citep{bucila2006,hinton2015} is the natural attack
 on that obstacle, and recent work has established it for tabular
-\textbf{classification} \citep{pocketfm2026}. Regression, however, is not
-classification with a continuous label: modern TFMs output a full
-\emph{predictive distribution} (TabPFN's bar-distribution head), and the
+\textbf{classification} \citep{pocketfm2026}, with contemporaneous work
+extending point-target distillation to regression \citep{jeong2026}.
+Distributional regression, however, is not classification with a
+continuous label: modern TFMs output a full \emph{predictive
+distribution} (TabPFN's bar-distribution head: a discretized histogram
+over the target range, from which arbitrary quantiles are read), and the
 value of that distribution --- calibrated uncertainty at prediction time ---
 is precisely what a point-label student cannot learn from raw data alone.
-This paper asks what distillation can and cannot transfer in tabular
-regression, at what serving cost, and under which verifiable conditions.
+This paper asks three questions: (RQ1) what distillation can and cannot
+transfer in tabular regression; (RQ2) at what serving cost; and (RQ3)
+under which verifiable conditions. \S\ref{sec:point}--\ref{sec:dist}
+answer RQ1, \S\ref{sec:frontier} RQ2, and
+\S\ref{sec:oof}--\ref{sec:rule} RQ3.
 
 \paragraph{Contributions.}
 \begin{enumerate}
   \item \textbf{A robust negative:} point distillation of TFMs fails as a
     rule at realistic pool sizes (soft targets beat the hard-label control
-    in only 4/20 datasets), replicated with two teachers of very different
-    strength, with a pool-size sweep showing the residual gain is a
-    small-data phenomenon on some datasets only.
+    in only 4/20 datasets), replicated with a second, far stronger teacher
+    on the five core datasets, with a pool-size sweep showing the residual
+    gain is a small-data phenomenon on some datasets only.
   \item \textbf{A positive on the open axis:} distributional distillation
     via quantile-curve transfer is positive in 16/20 datasets --- the
     complete eligible CTR23 pool under a rule fixed before any results ---
@@ -117,9 +129,11 @@ regression, at what serving cost, and under which verifiable conditions.
     ROPE $\pm 0.05$), at microsecond latency.
   \item \textbf{The first three-strategy Pareto frontier} for TFM serving
     in regression --- distillation vs.\ context compression vs.\ ensemble
-    reduction --- measured end-to-end on the same hold-outs; below
-    ${\sim}250$\,\us/row (up to ${\sim}1.3$\,ms/row on our largest dataset)
-    the distilled student is the only distributional option, and
+    reduction --- measured end-to-end on the same hold-outs; on the three
+    datasets measured, below ${\sim}250$\,\us/row (up to
+    ${\sim}1.3$\,ms/row on the largest) the quantile students are the
+    only distributional options and the distilled one is CRPS-optimal
+    where the teacher has an edge, and
     side-findings show ensemble reduction is underrated (1 member $\approx$
     8 at 1/7 the latency) while the last context doubling is grossly
     overpriced on 16\,GB GPUs.
@@ -128,8 +142,8 @@ regression, at what serving cost, and under which verifiable conditions.
     or CRPS --- they erode interval \emph{coverage} ($-0.5$ to $-5.1$~p.p.\
     at fixed context size), i.e., the teacher's in-context overconfidence
     transfers to the student.
-  \item \textbf{A practical decision rule} distilled (pun intended) from
-    two refuted hypotheses: before distilling, apply cheap target
+  \item \textbf{A practical decision rule} derived from two refuted
+    hypotheses: before distilling, apply cheap target
     transforms and try a strong native quantile student; distill when a
     genuine teacher edge survives both --- verifiable with one inexpensive
     OOF pass.
@@ -142,9 +156,10 @@ regression, at what serving cost, and under which verifiable conditions.
 learning for tabular data; TabICL \citep{tabicl2025}, TabFlex
 \citep{tabflex2025} and MotherNet \citep{mothernet2023} explore faster or
 amortized variants; TabFM \citep{tabfm2026} is an independent implementation
-of the paradigm with a hybrid column-attention/row-compression architecture,
-released with weights but --- as of this writing --- no peer-reviewed
-reference (we cite the official blog and model card, and pin the version).
+of the paradigm with a hybrid column-attention/row-compression
+architecture, released with weights in June 2026 and described in an
+official technical report since late September 2026 \citep{kong2026},
+still unreviewed; we pin the evaluated version (v1.0.1).
 Our companion benchmark provides the neutral evidence of the accuracy
 leadership and the latency inversion that motivate this paper.
 
@@ -154,13 +169,20 @@ XGBoost/CatBoost/MLP students on 153 datasets, retaining 96.5\% of teacher
 AUC at 38--860$\times$ speedups, and establishes stratified out-of-fold
 labeling as necessary; a companion paper extends the analysis to clinical
 data \citep{pocketfmhealth2026}. Prior Labs ships a closed-source
-distillation engine for TabPFN-2.5 \citep{priorlabs2025}. TabDistill
+distillation engine alongside TabPFN-2.5 \citep{priorlabs2025} (product
+announcement; no public methodology or benchmark). TabDistill
 \citep{tabdistill2025} targets few-shot MLP students; another line distills
-TFMs into GAMs for interpretability \citep{tfmgam2026}. None of these
-addresses regression, distributional outputs, or a cross-strategy serving
-frontier --- the axes of this paper. The classical lineage (model
-compression via soft labels \citep{bucila2006,hinton2015}; born-again trees
-\citep{breiman1996,vidal2020,frosst2017}) supplies the mechanics we adapt
+TFMs into GAMs for interpretability \citep{tfmgam2026}. Contemporaneous
+with this work, \citet{jeong2026} extend point-target distillation to
+regression (squared-error transfer of teacher means, evaluated on RMSE
+only), reporting gains with a stronger teacher (TabPFN~v3) under a
+different protocol; \S\ref{sec:point} discusses the reconciliation with
+our scoped negative. None of these addresses distributional outputs,
+calibration, or a cross-strategy serving frontier --- the axes of this
+paper. The classical lineage (model compression via soft labels
+\citep{bucila2006,hinton2015}; born-again trees
+\citep{breiman1996,vidal2020} and tree distillation \citep{frosst2017})
+supplies the mechanics we adapt
 to quantile curves.
 
 \paragraph{Acceleration without distillation.} TACO \citep{taco2026}
@@ -173,7 +195,8 @@ context-compression arm our frontier measures; MotherNet
 weights; TL-ANDI \citep{tlandi2026} transfers to context-constrained downstream
 tasks via anchoring and data distillation (orthogonal goal, no fast
 students, no distributional axis); simple engineering
-(context truncation, ensemble reduction, KV-caching) is folklore. Our
+(context truncation, ensemble reduction, KV-caching) is standard
+practice, rarely benchmarked head-to-head. Our
 frontier measures the engineering strategies head-to-head with distillation
 on identical hold-outs. On OOF labeling specifically, the health-data
 companion of Pocket FM \citep{pocketfmhealth2026} already establishes
@@ -181,31 +204,37 @@ stratified OOF for classification soft-labels; our contribution on that
 axis is confined to what OOF protects in \emph{distributional regression}
 --- calibration, not accuracy (\S\ref{sec:oof}).
 
-\paragraph{Distributional regression.} Quantile regression with pinball
-loss \citep{koenker1978}, CRPS as a proper scoring rule
-\citep{gneiting2007}, and coverage/sharpness diagnostics are standard;
-XGBoost $\geq$2.0 \citep{chen2016} supports native multi-quantile
-objectives, which we use both as a hard-label control and as the student
-body for curve transfer.
+\paragraph{Distributional regression.} Quantile regression with the
+pinball loss \citep{koenker1978} (the asymmetric loss whose minimizer is
+the $\tau$-quantile), CRPS as a proper scoring rule \citep{gneiting2007}
+with its standard quantile-grid estimator \citep{gneiting2011}, and
+coverage/sharpness diagnostics are standard; XGBoost \citep{chen2016}
+supports, since its 2.0 release, native multi-quantile objectives, which
+we use both as a hard-label control and as the student body for curve
+transfer. Independent benchmarks now evaluate TFMs directly as
+conditional-density estimators \citep{izbicki2026} --- without
+distillation, the axis this paper adds.
 
 \section{Method}
 
-\paragraph{Teachers.} TabPFN v2.5 is our distributional teacher (v2.5
-rather than the newer TabPFN-3 \citep{tabpfn3-2026} for version-pinned
-comparability with the companion benchmark and verified 16\,GB-GPU
-operation; nothing in our method is version-specific): its native API
-returns arbitrary quantiles of the predictive distribution, from which we
-take a 19-level grid ($\tau = 0.05, \ldots, 0.95$). TabFM is a point-only
-teacher --- we verify architecturally (its regression head decodes a single
-scalar) and empirically (its 8-member ensemble spread yields CRPS 0.524
-vs.\ the TabPFN teacher's 0.069 on \texttt{california\_housing}, with
-16.3\% coverage at 80\% nominal) that no usable predictive distribution is
+\paragraph{Teachers.} TabPFN v2.5 is our distributional teacher: its
+native API returns arbitrary quantiles of the predictive distribution,
+from which we take a 19-level grid ($\tau = 0.05, \ldots, 0.95$). We use
+v2.5 rather than the newer TabPFN-3/3.5 releases \citep{tabpfn3-2026}
+for version-pinned comparability with the companion benchmark and
+verified 16\,GB-GPU operation; nothing in the method is
+version-specific. TabFM is a point-only teacher --- we verify
+architecturally (its regression head decodes a single scalar, since
+confirmed by the official technical report \citep{kong2026}) and
+empirically (its 8-member ensemble spread yields CRPS 0.524 vs.\ the
+TabPFN teacher's 0.069 on \texttt{california\_housing}, with 16.3\%
+coverage at 80\% nominal) that no usable predictive distribution is
 available from it.
 % results/distillation/tabfm_spread.csv
 Both teachers run with an 8-member inference ensemble and a 50k-row context
 cap, matching the companion benchmark's policies (for TabFM, 8 members
-measured accuracy-equivalent to the library default of 32 at $\tfrac14$ the
-cost).
+measured accuracy-equivalent to the library default of 32 at $\tfrac14$
+the cost, on our datasets).
 
 \paragraph{Out-of-fold labeling.} Teacher targets for every training row
 come from a $K{=}5$ out-of-fold scheme: the teacher conditioned on 4/5 of
@@ -228,15 +257,57 @@ distillation effect.
     symmetric with the XGBoost pair, to test whether the student family
     matters.
 \end{itemize}
+Figure~\ref{fig:pipeline} summarizes the pipeline and the role of each
+student variant.
 
-\paragraph{Metrics.} RMSE and MAE for point quality; CRPS estimated as
-twice the mean pinball loss over the 19-level grid --- the standard grid
-estimator in probabilistic-forecasting practice, which we validated against
-the Gaussian closed form: it carries a near-constant multiplicative
-overestimate of ${\sim}4$--5\%, so within-paper comparisons and retention
-ratios are unaffected but absolute CRPS values should not be compared
-across papers; PICP80/90 with interval widths for calibration; and a
-normalized retention score,
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  box/.style={draw, rounded corners=2pt, align=center, inner sep=5pt,
+              minimum height=9mm},
+  lab/.style={font=\footnotesize\itshape, midway, fill=white, inner sep=1pt},
+  arr/.style={-{Stealth[length=2.2mm]}, semithick},
+  node distance=7mm and 9mm]
+
+\node[box] (pool) {Training pool\\(80\% of data)};
+\node[box, right=of pool] (teacher) {Teacher\\TabPFN v2.5};
+\node[box, right=of teacher] (oof) {Cached OOF targets\\mean $+$ 19 quantile\\curves ($\tau{=}0.05..0.95$)};
+
+\node[box, below=11mm of teacher] (hard) {Hard students\\(control)\\XGB point $\cdot$ XGB quant\\$\cdot$ MLP quant\\\emph{true labels}};
+\node[box, right=of hard] (soft) {Distilled students\\XGB point (mean) $\cdot$\\XGB/MLP quant (curves,\\sort-repaired)};
+\node[box, below=11mm of hard, xshift=24mm] (eval) {Untouched 20\% hold-out\\RMSE $\cdot$ CRPS $\cdot$ PICP80/90 $\cdot$ retention};
+
+\draw[arr] (pool) -- node[lab, above]{} (teacher);
+\draw[arr] (teacher) -- node[lab, above]{$K{=}5$ OOF} (oof);
+\draw[arr] (pool.south) |- node[lab, near end, above]{labels} (hard.west);
+\draw[arr] (oof.south) -- node[lab, right]{targets} (soft.north);
+\draw[arr] (hard.south) |- ([yshift=2mm]eval.north west) -- (eval.north west);
+\draw[arr] (soft.south) |- ([yshift=2mm]eval.north east) -- (eval.north east);
+\end{tikzpicture}
+\caption{The distillation pipeline. The teacher labels every pool row
+out-of-fold ($K{=}5$: conditioned on 4/5 of the pool, it labels the held
+fifth), producing a cached mean and 19 quantile curves per row. Students
+share the benchmark-tuned capacity and differ only in target: the
+hard-label variants are the controls that every distilled variant must
+beat. All systems are scored on the same untouched hold-out.}
+\label{fig:pipeline}
+\end{figure}
+
+\paragraph{Metrics.} RMSE and MAE for point quality. CRPS (continuous
+ranked probability score: a proper scoring rule that generalizes absolute
+error from point predictions to full predictive distributions; lower is
+better) estimated as twice the mean pinball loss over the 19-level grid
+\citep{gneiting2011} --- the standard grid estimator in
+probabilistic-forecasting practice, which we validated against the
+Gaussian closed form: it carries a near-constant multiplicative
+overestimate of ${\sim}4$--5\%, approximately independent of the
+distribution's location and spread in the scenarios tested, so
+within-paper comparisons and retention ratios are unaffected but absolute
+CRPS values should not be compared across papers. PICP80/90
+(prediction-interval coverage probability: the share of test targets
+falling inside the nominal 80\%/90\% interval) with interval widths for
+calibration; and a normalized retention score,
 \begin{equation}
   \mathrm{retention} \;=\;
   \frac{\mathrm{CRPS}_{\mathrm{hard}} - \mathrm{CRPS}_{\mathrm{soft}}}
@@ -262,13 +333,16 @@ Five regression datasets from the companion benchmark
 (\texttt{wine\_quality}, \texttt{california\_housing},
 \texttt{superconduct}, \texttt{kin8nm}, \texttt{year\_prediction}; pools
 5.2k--80k) plus the complete eligible pool of fifteen from the OpenML-CTR23
-suite \citep{fischer2023} under verified constraints (3k--100k rows; two
+suite \citep{fischer2023} (a curated benchmark suite of tabular
+regression tasks) under verified constraints (3k--100k rows; two
 suite datasets excluded for target leakage discovered during verification
 --- the target is a sum of features in \texttt{brazilian\_houses} and
 \texttt{wave\_energy}; version-pinned dataset ids). Splits are identical to
 the companion benchmark: a fixed 20\% hold-out (seed 42) that no selection
-step ever observes; three student seeds throughout. Hardware: a single
-RTX~5080 (16\,GB); VRAM ceilings are treated as measurements, not nuisances
+step ever observes; three student seeds throughout. All datasets are
+public (OpenML); no personal or otherwise sensitive data are processed
+beyond their public form. Hardware: a single RTX~5080 (16\,GB); VRAM
+ceilings are treated as measurements, not nuisances
 (\S\ref{sec:frontier}).
 % configs/datasets.yaml (regression_extension); scripts/extension_ctr23.py
 
@@ -305,7 +379,19 @@ positive in 16 (median $+0.19$), topping at $+1.06$ (\texttt{pumadyn32nh}
 frequentist instruments reject at the 5\% level (one-sided sign test
 $p = 0.006$; Wilcoxon $p = 0.045$) and the Bayesian signed-rank
 \citep{benavoli2017} places 0.70 posterior mass on positive retention at
-ROPE $\pm 0.05$ (0.63--0.71 across ROPE 0.02--0.10). The four failures are
+a ROPE (region of practical equivalence) of $\pm 0.05$ (0.63--0.71
+across ROPE 0.02--0.10). Retention is a ratio and becomes unstable when
+the teacher's absolute edge is small, so Table~\ref{tab:retention}
+reports the absolute CRPS improvement alongside it: the born-again
+\texttt{pumadyn32nh} rides an absolute edge of only ${\sim}0.001$ CRPS
+(\texttt{superconduct} and \texttt{grid\_stability} are similar), and
+the headline therefore rests on the sign test and the median --- which
+are scale-free --- and on the large-edge successes
+(\texttt{california\_housing} $+0.072$ CRPS, \texttt{cps88wages}
+$+0.160$, \texttt{year\_prediction} $+0.130$). No retention is exactly
+zero; near-zero positives (\texttt{miami\_housing} $+0.016$) count as
+successes under the sign test, and the ROPE sweep bounds the effect of
+treating them as equivalences instead. The four failures are
 diagnosable and form the basis of \S\ref{sec:rule}'s decision rule:
 \texttt{wine\_quality} --- where the teacher trails the tuned baseline on
 RMSE (the axis of our pre-registered gate) and its small CRPS edge
@@ -326,36 +412,43 @@ sorting acts as a calibration regularizer, not a mere copy.
 \begin{table}[t]
 \centering
 \caption{CRPS-gap retention of the distilled multi-quantile student over
-all 20 datasets (mean of 3 seeds; teacher edge
-$= \mathrm{CRPS}_{\mathrm{hard}} - \mathrm{CRPS}_{\mathrm{teacher}}$, in
-target units). Positive in 16/20; median $+0.19$.
-Source: \texttt{results/distillation/paper\_retention.csv}.}
+all 20 datasets (mean of 3 seeds). $n$ is the training-pool size after
+the 20\% hold-out; teacher edge
+$= \mathrm{CRPS}_{\mathrm{hard}} - \mathrm{CRPS}_{\mathrm{teacher}}$
+and $\Delta$CRPS
+$= \mathrm{CRPS}_{\mathrm{hard}} - \mathrm{CRPS}_{\mathrm{soft}}$
+(absolute improvement of the distilled over the hard-label student), both
+in target units --- retention is their ratio, unstable when the edge is
+near zero. Positive in 16/20; median $+0.19$. \texttt{diamonds\_real} is
+the true OpenML diamonds dataset, added when the labeling erratum noted
+in \S3 was rectified. Source:
+\texttt{results/distillation/paper\_retention.csv}.}
 \label{tab:retention}
 \small
-\begin{tabular}{llrr}
+\begin{tabular}{llrrrr}
 \toprule
-Dataset & Source & Retention & Teacher edge \\
+Dataset & Source & $n$ & Retention & Teacher edge & $\Delta$CRPS \\
 \midrule
-pumadyn32nh            & CTR23 & $+1.057$ & 0.001 \\
-california\_housing    & core  & $+0.644$ & 0.111 \\
-abalone                & CTR23 & $+0.595$ & 0.095 \\
-fps\_benchmark         & CTR23 & $+0.523$ & 0.152 \\
-cpu\_activity          & CTR23 & $+0.500$ & 0.233 \\
-cps88wages             & CTR23 & $+0.465$ & 0.345 \\
-year\_prediction       & core  & $+0.419$ & 0.311 \\
-superconduct           & core  & $+0.255$ & 0.006 \\
-sarcos                 & CTR23 & $+0.225$ & 0.474 \\
-kings\_county          & CTR23 & $+0.213$ & 7253.4 \\
-grid\_stability        & CTR23 & $+0.170$ & 0.003 \\
-kin8nm                 & core  & $+0.128$ & 0.030 \\
-physiochemical\_protein& CTR23 & $+0.086$ & 0.573 \\
-video\_transcoding     & CTR23 & $+0.086$ & 0.092 \\
-space\_ga              & CTR23 & $+0.078$ & 0.011 \\
-miami\_housing         & CTR23 & $+0.016$ & 4117.4 \\
-health\_insurance      & CTR23 & $-0.255$ & 0.150 \\
-diamonds\_real         & CTR23 & $-0.315$ & 9.422 \\
-wine\_quality          & core  & $-0.970$ & 0.039 \\
-fifa                   & CTR23 & $-1.287$ & 42.96 \\
+pumadyn32nh            & CTR23 & 6{,}553  & $+1.057$ & 0.001 & $+0.0006$ \\
+california\_housing    & core  & 16{,}507 & $+0.644$ & 0.111 & $+0.072$ \\
+abalone                & CTR23 & 3{,}341  & $+0.595$ & 0.095 & $+0.056$ \\
+fps\_benchmark         & CTR23 & 19{,}699 & $+0.523$ & 0.152 & $+0.080$ \\
+cpu\_activity          & CTR23 & 6{,}553  & $+0.500$ & 0.233 & $+0.117$ \\
+cps88wages             & CTR23 & 22{,}524 & $+0.465$ & 0.345 & $+0.160$ \\
+year\_prediction       & core  & 80{,}000 & $+0.419$ & 0.311 & $+0.130$ \\
+superconduct           & core  & 31{,}715 & $+0.255$ & 0.006 & $+0.0015$ \\
+sarcos                 & CTR23 & 39{,}146 & $+0.225$ & 0.474 & $+0.107$ \\
+kings\_county          & CTR23 & 17{,}290 & $+0.213$ & 7253.4 & $+1547$ \\
+grid\_stability        & CTR23 & 8{,}000  & $+0.170$ & 0.003 & $+0.0004$ \\
+kin8nm                 & core  & 6{,}553  & $+0.128$ & 0.030 & $+0.0039$ \\
+physiochemical\_protein& CTR23 & 36{,}584 & $+0.086$ & 0.573 & $+0.049$ \\
+video\_transcoding     & CTR23 & 55{,}027 & $+0.086$ & 0.092 & $+0.0079$ \\
+space\_ga              & CTR23 & 2{,}485  & $+0.078$ & 0.011 & $+0.0009$ \\
+miami\_housing         & CTR23 & 11{,}145 & $+0.016$ & 4117.4 & $+67.7$ \\
+health\_insurance      & CTR23 & 17{,}817 & $-0.255$ & 0.150 & $-0.038$ \\
+diamonds\_real         & CTR23 & 43{,}152 & $-0.315$ & 9.422 & $-2.97$ \\
+wine\_quality          & core  & 5{,}197  & $-0.970$ & 0.039 & $-0.037$ \\
+fifa                   & CTR23 & 15{,}342 & $-1.287$ & 42.96 & $-55.3$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -369,9 +462,9 @@ datasets (Fig.~\ref{fig:pareto}): TabPFN with context subsampled to
 distilled and control students; and the TabFM point anchor.
 % results/distillation/pareto.csv; results/figures/pareto_distill.pdf
 
-Three regimes emerge. For \textbf{point} accuracy, the hard-label student
-already occupies the fast regime (2.6--5.3\,\us/row) --- \S\ref{sec:point}
-made visible. For \textbf{distributional} serving, below
+Three regimes emerge. For \textbf{point} accuracy, the hard-label
+student already occupies the fast regime (2.6--5.3\,\us/row) --- the
+regime \S\ref{sec:point} already made visible. For \textbf{distributional} serving, below
 ${\sim}250$\,\us/row (\texttt{california\_housing}) and
 ${\sim}1{,}300$\,\us/row (\texttt{year\_prediction}) the students are
 alone, and the distilled one is CRPS-optimal among them: 0.109 at
@@ -393,10 +486,15 @@ not pay for itself.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/pareto_distill.pdf}
-\caption{The distill/compress/cache Pareto frontier on three positive-gap
-datasets: CRPS (top) and RMSE (bottom) vs.\ serving latency (\us/row, log
-scale). Below the sub-millisecond line the distilled multi-quantile student
-is the only distributional option.
+\caption{The distill/compress/shrink Pareto frontier on three
+positive-gap datasets: RMSE (top row, point accuracy) and CRPS (bottom
+row, distributional accuracy) vs.\ serving latency (\us/row, log scale).
+Down-left is better; the x-axis is logarithmic, so horizontal gaps are
+multiplicative. The vertical gap between the distilled student (star) and
+the teacher's context-compression curve at matched latency is the
+quantity discussed in \S\ref{sec:frontier}. In the CRPS row, below the
+millisecond mark the quantile students are the only distributional
+systems, and the distilled one is CRPS-optimal among them.
 Source: \texttt{results/distillation/pareto.csv}.}
 \label{fig:pareto}
 \end{figure}
@@ -422,11 +520,14 @@ intervals. OOF labeling in regression is therefore a calibration safeguard.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/calibration_distill.pdf}
-\caption{Quantile reliability curves (empirical vs.\ nominal coverage per
-$\tau$). The distilled student is closest to the diagonal on both panels;
-on \texttt{california\_housing} it is better calibrated than the hard
-control and than its own teacher.
-Source: \texttt{results/figures/calibration\_distill.pdf} pipeline.}
+\caption{Quantile reliability on the hold-out: for each nominal level
+$\tau$ (x-axis), the empirical share of targets below the predicted
+$\tau$-quantile (y-axis). The diagonal is perfect calibration; curves
+above it over-cover, below it under-cover. The distilled student is
+closest to the diagonal on both panels; on
+\texttt{california\_housing} it is better calibrated than the hard
+control and than its own teacher, whose S-shape indicates miscalibrated
+tails. Source: \texttt{scripts/plot\_calibration.py}.}
 \label{fig:calibration}
 \end{figure}
 
@@ -458,7 +559,8 @@ Together these yield the paper's practical rule:
 strong native quantile student. Distill when a genuine teacher edge
 persists after both --- one OOF labeling pass, costing minutes, measures
 that edge directly.} Where the edge persists, distillation is the only
-route to sub-millisecond distributional serving (\S\ref{sec:frontier}).
+measured strategy that carries part of that edge into the
+sub-millisecond regime (\S\ref{sec:frontier}).
 \end{quote}
 
 \section{Discussion}
@@ -475,9 +577,12 @@ in-context serving.
 accuracy table in the companion benchmark yet contributes nothing to the
 distributional axis: its regression head is architecturally point-only, and
 its ensemble spread is measurably useless as an uncertainty estimate
-(16.3\% coverage at 80\% nominal). TabPFN's bar-distribution head emerges
-as a genuine architectural moat, and our results argue that future TFMs
-should ship distributional heads --- we quantify what their absence costs.
+(16.3\% coverage at 80\% nominal). Among the teachers we measure,
+TabPFN's bar-distribution head is the decisive architectural asset;
+independent benchmarks now evaluate TFMs directly as conditional-density
+estimators \citep{izbicki2026}, and our results argue that
+distributional heads should become standard --- we quantify what their
+absence costs.
 
 \paragraph{Serving guidance.} On 16\,GB-class hardware: reduce the ensemble
 first (often free), compress context second, and reserve the full-context
@@ -492,9 +597,13 @@ but magnitudes remain heterogeneous (retention $-1.3$ to $+1.1$) and the
 Bayesian posterior leaves ${\sim}25\%$ mass on negative retention --- the
 decision rule of \S\ref{sec:rule}, not a universal claim, is the honest
 deliverable. Students inherit benchmark-tuned capacity without per-target
-re-tuning. CRPS is approximated on a 19-quantile grid. TabFM results refer
-to the pinned v1.0.1 release, weeks old at the time of writing and without
-a peer-reviewed reference. Single-GPU measurements bound, rather than
+re-tuning. CRPS is approximated on a 19-quantile grid. TabFM results
+refer to the pinned v1.0.1 release (July 2026); the official technical
+report \citep{kong2026} appeared only in late September 2026 and remains
+unreviewed. Classical distributional baselines outside the compared
+families (e.g., NGBoost, quantile random forests) were not included; the
+hard-label quantile students play the role of native distributional
+baselines within them. Single-GPU measurements bound, rather than
 survey, the hardware space.
 
 \section{Reproducibility}
