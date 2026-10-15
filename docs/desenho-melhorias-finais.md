@@ -332,3 +332,21 @@ cpu +0,498 (vs +0,500), fifa -1,00 (vs -1,29), wine -0,93 (vs -0,97)
 — sinais, ordenações e diagnósticos preservados. O viés da grade de
 19 é multiplicativo quase constante TAMBÉM em dados reais de cauda
 pesada, não só nos cenários gaussianos da validação original.
+
+### E3 — EXECUTADO (15/10/2026 ~01h10; grade completa 180/180;
+`decision_utility.csv` + `decision_utility_analysis.csv`)
+
+- **H-D1 CONFIRMADA:** custo realizado do jornaleiro em τ=0,90 do
+  aluno destilado <= controle hard em **18/20** (sinal p=0,0002;
+  Wilcoxon suplementar p=0,0001).
+- **H-D2 CONFIRMADA:** destilado <= ponto+gaussiana em **17/20**
+  (sinal p=0,0013; Wilcoxon suplementar p=0,0002).
+- **H-D3 (exploratória):** perfil em U — edge mediano do destilado
+  vs hard: ~1% no centro (τ=0,45-0,65), subindo a 7,96% em τ=0,90 e
+  8,18% em τ=0,95 (e 8,66% em τ=0,05); vs gaussiano: 14,06% em τ=0,90,
+  20,58% em τ=0,05. A vantagem distribucional concentra-se nas caudas
+  — exatamente onde vivem as decisões de custo assimétrico.
+- Nota de leitura (pré-declarada): E3 resolve por τ e re-expressa em
+  unidades de decisão o mesmo fenômeno que o CRPS agrega; a contagem
+  18/20 > 16/20 reflete que o edge de cauda é mais consistente entre
+  conjuntos que o CRPS agregado.
