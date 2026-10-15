@@ -508,3 +508,16 @@ consequência pré-registrada aplicada.
 tabfm_kin8nm.parquet; dedupe de distill.csv/teacher_eval.csv (o job
 SEEDS-10 escreveu duplicatas e linhas NaN in place — números
 publicados vêm da versão commitada, intactos).
+
+### SEEDS-10 — EXECUTADO (15/10/2026 12h49, grade completa 20/20)
+
+**CRITÉRIO DE ESTABILIDADE CUMPRIDO (com folga de uma ordem de
+grandeza).** Re-execução dos alunos quant hard/soft com 10 sementes
+(0-9) nos 20 conjuntos: positivos 16/20 → **16/20** (faixa pré-fixada
+[14,18]); mediana 0,192 → **0,191** (Δ=−0,001; tolerância ±0,10);
+teste de sinal p=0,0059 (inalterado); maior |Δ| de retenção individual
+= 0,013 (fps_benchmark); 14 dos 20 conjuntos movem ≤0,003. Nenhum
+número publicado muda; a objeção "3 sementes é pouco" está fechada com
+medição. Artefatos: distill.csv e extension.csv agora com sementes 0-9
+(os números dos textos seguem referidos a 0-2, agora demonstradamente
+equivalentes).
