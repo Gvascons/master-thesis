@@ -521,3 +521,27 @@ número publicado muda; a objeção "3 sementes é pouco" está fechada com
 medição. Artefatos: distill.csv e extension.csv agora com sementes 0-9
 (os números dos textos seguem referidos a 0-2, agora demonstradamente
 equivalentes).
+
+### Latência multi-dataset — INTERROMPIDA POR FALHA DE AMBIENTE (15/10/2026 13h07)
+
+O último estágio da cadeia caiu por **queda do driver da GPU no meio da
+medição** (CUDA error 804 / "Driver/library version mismatch" — driver
+NVIDIA atualizado pelo unattended-upgrades sem reboot; nvidia-smi
+inoperante). Consequências e triagem:
+
+- As linhas GBDT (CPU = dispositivo natural) são VÁLIDAS e foram
+  mantidas em `latency_multi.csv`: credit_g 1,1-3,1 µs/linha;
+  cardiovascular 0,3-1,1 µs/linha — coerentes com o adult (0,33).
+- As linhas DL/FM do credit_g foram medidas EM CPU (inválidas para o
+  protocolo de dispositivo natural) e movidas para
+  `latency_multi_cpu_invalid_20261015.csv` (preservadas como registro;
+  nota: TabPFN 17.177 e TabFM 77.262 µs/linha em CPU são limites
+  superiores de um cenário CPU-only, não comparáveis à Fig. 5.3).
+- O TabPFN recusou o cardiovascular (>1000 amostras em CPU) e abortou
+  o script; o marcador "latencia multi ok" da cadeia NÃO verifica exit
+  code — registro corrigido aqui.
+- Plano: após REBOOT da máquina (ação humana), re-executar
+  `scripts/latency_multi.py --datasets credit_g cardiovascular_disease`
+  (resumível; as linhas inválidas foram expurgadas para não serem
+  puladas). O E2 com latência por dataset fica condicionado a essa
+  re-execução.
