@@ -1,0 +1,37 @@
+dataset,target,hp_source,seed,crps,picp80,fit_time_s,best_params
+california_housing,hard,inherited,0,0.180597,0.8803,28.4,
+california_housing,hard,inherited,1,0.179789,0.884662,28.47,
+california_housing,hard,inherited,2,0.180114,0.884904,28.41,
+california_housing,hard,retuned,0,0.109683,0.852193,35.1,"{'n_estimators': 1931, 'max_depth': 6, 'learning_rate': 0.1278724160062592, 'subsample': 0.7644474598764522, 'colsample_bytree': 0.7840222805469661, 'min_child_weight': 11.36114929550375, 'reg_alpha': 4.3583742877412676e-08, 'reg_lambda': 6.083642669826052e-08}"
+california_housing,hard,retuned,1,0.110493,0.866731,34.87,"{'n_estimators': 1931, 'max_depth': 6, 'learning_rate': 0.1278724160062592, 'subsample': 0.7644474598764522, 'colsample_bytree': 0.7840222805469661, 'min_child_weight': 11.36114929550375, 'reg_alpha': 4.3583742877412676e-08, 'reg_lambda': 6.083642669826052e-08}"
+california_housing,hard,retuned,2,0.110023,0.853889,35.33,"{'n_estimators': 1931, 'max_depth': 6, 'learning_rate': 0.1278724160062592, 'subsample': 0.7644474598764522, 'colsample_bytree': 0.7840222805469661, 'min_child_weight': 11.36114929550375, 'reg_alpha': 4.3583742877412676e-08, 'reg_lambda': 6.083642669826052e-08}"
+california_housing,soft,inherited,0,0.108631,0.596075,23.69,
+california_housing,soft,inherited,1,0.108556,0.595832,23.24,
+california_housing,soft,inherited,2,0.108602,0.596317,23.49,
+california_housing,soft,retuned,0,0.10231,0.781924,14.07,"{'n_estimators': 604, 'max_depth': 10, 'learning_rate': 0.07118082434626476, 'subsample': 0.9081726181116871, 'colsample_bytree': 0.9594986390943138, 'min_child_weight': 0.05150280945634309, 'reg_alpha': 2.1291798006185962e-05, 'reg_lambda': 0.02548398792981728}"
+california_housing,soft,retuned,1,0.102815,0.777805,13.87,"{'n_estimators': 604, 'max_depth': 10, 'learning_rate': 0.07118082434626476, 'subsample': 0.9081726181116871, 'colsample_bytree': 0.9594986390943138, 'min_child_weight': 0.05150280945634309, 'reg_alpha': 2.1291798006185962e-05, 'reg_lambda': 0.02548398792981728}"
+california_housing,soft,retuned,2,0.102302,0.781197,13.79,"{'n_estimators': 604, 'max_depth': 10, 'learning_rate': 0.07118082434626476, 'subsample': 0.9081726181116871, 'colsample_bytree': 0.9594986390943138, 'min_child_weight': 0.05150280945634309, 'reg_alpha': 2.1291798006185962e-05, 'reg_lambda': 0.02548398792981728}"
+cpu_activity,hard,inherited,0,1.293974,0.71629,16.62,
+cpu_activity,hard,inherited,1,1.294974,0.71507,16.74,
+cpu_activity,hard,inherited,2,1.293993,0.718121,16.85,
+cpu_activity,hard,retuned,0,1.213851,0.76022,17.69,"{'n_estimators': 1712, 'max_depth': 4, 'learning_rate': 0.2675794957040697, 'subsample': 0.8640861425640901, 'colsample_bytree': 0.8714218433059336, 'min_child_weight': 4.955958533481527, 'reg_alpha': 0.006764166307161142, 'reg_lambda': 1.9092977680926815e-08}"
+cpu_activity,hard,retuned,1,1.232325,0.740696,18.01,"{'n_estimators': 1712, 'max_depth': 4, 'learning_rate': 0.2675794957040697, 'subsample': 0.8640861425640901, 'colsample_bytree': 0.8714218433059336, 'min_child_weight': 4.955958533481527, 'reg_alpha': 0.006764166307161142, 'reg_lambda': 1.9092977680926815e-08}"
+cpu_activity,hard,retuned,2,1.231975,0.746797,17.57,"{'n_estimators': 1712, 'max_depth': 4, 'learning_rate': 0.2675794957040697, 'subsample': 0.8640861425640901, 'colsample_bytree': 0.8714218433059336, 'min_child_weight': 4.955958533481527, 'reg_alpha': 0.006764166307161142, 'reg_lambda': 1.9092977680926815e-08}"
+cpu_activity,soft,inherited,0,1.178066,0.753508,11.27,
+cpu_activity,soft,inherited,1,1.176868,0.758389,11.23,
+cpu_activity,soft,inherited,2,1.178225,0.765101,11.29,
+cpu_activity,soft,retuned,0,1.160433,0.780964,2.13,"{'n_estimators': 607, 'max_depth': 4, 'learning_rate': 0.2017665215577285, 'subsample': 0.5092250395445531, 'colsample_bytree': 0.8660343834593293, 'min_child_weight': 0.6574285139724158, 'reg_alpha': 0.0016622649777412251, 'reg_lambda': 4.558851669763494e-06}"
+cpu_activity,soft,retuned,1,1.15926,0.788286,2.1,"{'n_estimators': 607, 'max_depth': 4, 'learning_rate': 0.2017665215577285, 'subsample': 0.5092250395445531, 'colsample_bytree': 0.8660343834593293, 'min_child_weight': 0.6574285139724158, 'reg_alpha': 0.0016622649777412251, 'reg_lambda': 4.558851669763494e-06}"
+cpu_activity,soft,retuned,2,1.162297,0.780964,2.12,"{'n_estimators': 607, 'max_depth': 4, 'learning_rate': 0.2017665215577285, 'subsample': 0.5092250395445531, 'colsample_bytree': 0.8660343834593293, 'min_child_weight': 0.6574285139724158, 'reg_alpha': 0.0016622649777412251, 'reg_lambda': 4.558851669763494e-06}"
+cps88wages,hard,inherited,0,160.7567,0.801811,25.3,
+cps88wages,hard,inherited,1,160.755464,0.799503,25.27,
+cps88wages,hard,inherited,2,160.750119,0.799148,25.24,
+cps88wages,hard,retuned,0,160.703492,0.801989,35.17,"{'n_estimators': 1745, 'max_depth': 4, 'learning_rate': 0.009504343879187742, 'subsample': 0.6891630333127576, 'colsample_bytree': 0.7165747932269323, 'min_child_weight': 0.5826891532973665, 'reg_alpha': 0.0015031575732677575, 'reg_lambda': 0.0031510426546338603}"
+cps88wages,hard,retuned,1,160.695881,0.802699,34.93,"{'n_estimators': 1745, 'max_depth': 4, 'learning_rate': 0.009504343879187742, 'subsample': 0.6891630333127576, 'colsample_bytree': 0.7165747932269323, 'min_child_weight': 0.5826891532973665, 'reg_alpha': 0.0015031575732677575, 'reg_lambda': 0.0031510426546338603}"
+cps88wages,hard,retuned,2,160.669937,0.804298,34.87,"{'n_estimators': 1745, 'max_depth': 4, 'learning_rate': 0.009504343879187742, 'subsample': 0.6891630333127576, 'colsample_bytree': 0.7165747932269323, 'min_child_weight': 0.5826891532973665, 'reg_alpha': 0.0015031575732677575, 'reg_lambda': 0.0031510426546338603}"
+cps88wages,soft,inherited,0,160.597725,0.791511,5.68,
+cps88wages,soft,inherited,1,160.593053,0.791156,5.45,
+cps88wages,soft,inherited,2,160.590679,0.790979,5.48,
+cps88wages,soft,retuned,0,160.522923,0.789913,14.67,"{'n_estimators': 1988, 'max_depth': 10, 'learning_rate': 0.2448524083382606, 'subsample': 0.8708998235476826, 'colsample_bytree': 0.9019048513191219, 'min_child_weight': 16.961755325253918, 'reg_alpha': 1.2481682806769378e-08, 'reg_lambda': 6.051456859559082}"
+cps88wages,soft,retuned,1,160.512786,0.789913,14.76,"{'n_estimators': 1988, 'max_depth': 10, 'learning_rate': 0.2448524083382606, 'subsample': 0.8708998235476826, 'colsample_bytree': 0.9019048513191219, 'min_child_weight': 16.961755325253918, 'reg_alpha': 1.2481682806769378e-08, 'reg_lambda': 6.051456859559082}"
+cps88wages,soft,retuned,2,160.523147,0.790091,14.93,"{'n_estimators': 1988, 'max_depth': 10, 'learning_rate': 0.2448524083382606, 'subsample': 0.8708998235476826, 'colsample_bytree': 0.9019048513191219, 'min_child_weight': 16.961755325253918, 'reg_alpha': 1.2481682806769378e-08, 'reg_lambda': 6.051456859559082}"

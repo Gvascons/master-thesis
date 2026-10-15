@@ -394,3 +394,31 @@ calibração por fração do custo. Decisão pré-registrada: NENHUM claim de
 contribuição metodológica (dispensa a checagem de novidade específica);
 registrada como variante testada no apêndice, com a leitura "a
 calibração se conserta mais barato por conformal do que por amostragem".
+
+### R-TUNE — EXECUTADO (15/10/2026 06h00, `retune_students.csv`)
+
+**H-T1 REFUTADA em 2 de 3 conjuntos — a consequência pré-registrada
+(revisão com adendo) aplica-se.** Retenção herdada → retunada:
+california **0,644 → 0,185** (o controle hard herdado estava
+sub-provisionado: com Optuna próprio, seu CRPS cai de 0,180 para
+0,110); cpu_activity 0,500 → 0,396; cps88wages 0,465 → 0,607 (sobe).
+A herança de hiperparâmetros NÃO é piso universal: em conjuntos onde o
+controle ganha muito com capacidade própria, ela INFLA a retenção
+aparente.
+
+O que sobrevive (e importa): (i) o SINAL sobrevive ao re-tuning nos
+3/3 — o soft retunado segue melhor que o hard retunado (0,1025 vs
+0,1101; 1,161 vs 1,226; 160,52 vs 160,69); (ii) a destilação e o
+re-tuning COMPÕEM — o soft também melhora ao ser retunado (california
+0,1086 → 0,1025); (iii) leitura notável: o soft HERDADO (0,1086) ≈
+hard RETUNADO (0,1101) no california — a destilação entrega de graça,
+sem nenhum trial, o que 25 trials de Optuna entregam ao controle;
+(iv) a retenção retunada do california (0,185) coincide com a mediana
+global reportada (0,19). Caveats: piloto de 3 conjuntos, 25 trials,
+validação interna 80/20 do pool, um best_params por braço reutilizado
+nas 3 sementes. Consequência nos textos: a limitação "capacidade
+herdada" (cap. 7 e AI-2) é promovida de declaração a resultado
+quantificado, e a retenção POR CONJUNTO passa a ser lida como
+dependente do orçamento de tuning — as manchetes (sinal, mediana,
+pareado) não mudam; a narrativa do california ganha o caveat
+obrigatório.
