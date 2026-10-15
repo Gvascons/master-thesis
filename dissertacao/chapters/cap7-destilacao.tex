@@ -880,7 +880,14 @@ hiperparâmetros ajustados do benchmark, sem re-tuning por alvo de
 destilação. \textbf{Estimador de CRPS:} a grade de 19 quantis
 sobre-estima o CRPS exato em ${\sim}4$--5\% quase constantes ---
 comparações internas preservadas, valores absolutos não comparáveis
-entre trabalhos. \textbf{Datação do TabFM:} os resultados referem-se à
+entre trabalhos. Ablação dedicada (15/10/2026,
+\texttt{ablation\_densegrid.csv}) confirma a constância em dados
+reais: re-estimando com grade de 99 quantis em quatro conjuntos ---
+incluindo o \texttt{fifa}, de cauda pesada ---, a razão entre os dois
+estimadores varia no máximo 0,84 ponto percentual entre professor,
+aluno destilado e controle dentro de cada conjunto, e as retenções
+são indistinguíveis entre grades (sinais, ordenações e diagnósticos
+preservados). \textbf{Datação do TabFM:} os resultados referem-se à
 versão fixada v1.0.1 (julho de 2026); o relatório técnico oficial
 \citep{kong2026} apareceu no fim de setembro de 2026 e permanece sem
 revisão por pares. \textbf{Baselines clássicos:} a limitação declarada
