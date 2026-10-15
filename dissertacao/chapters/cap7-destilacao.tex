@@ -106,7 +106,14 @@ classificação. No braço da aceleração \emph{sem} destilação, TACO
 MotherNet \citep{mothernet2023} amortiza o ajuste em uma hiper-rede e
 TL-ANDI \citep{tlandi2026} transfere para tarefas com contexto
 restrito --- nenhum compara as estratégias entre si nos mesmos
-hold-outs. Três decisões foram herdadas dessa varredura: adotar a
+hold-outs. E a ideia-mãe de destilar distribuições preditivas é anterior
+e não tabular --- do preditivo bayesiano \citep{korattikara2015} aos
+\emph{ensembles} em regressão \citep{malinin2020rpn}, sempre com
+professor de pesos acessíveis, representação paramétrica e aluno neural
+(Seção~\ref{sec:rel-destilacao}); o que a varredura constatou aberto é a
+instância com professor caixa-preta de aprendizado em contexto, alvo
+quantílico e aluno GBDT em regressão tabular. Três decisões foram
+herdadas dessa varredura: adotar a
 rotulagem \emph{out-of-fold} do Pocket~FM como base metodológica;
 jamais reivindicar ``primeira destilação de \emph{foundation model}
 tabular''; e ajustar o recorte para o que estava aberto ---

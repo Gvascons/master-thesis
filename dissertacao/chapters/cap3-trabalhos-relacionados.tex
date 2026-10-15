@@ -331,6 +331,22 @@ acurácia--latência no relatório técnico mas \textbf{sem metodologia nem
 código públicos} --- evidência de demanda industrial pela estratégia, não
 evidência científica sobre ela.
 
+\emph{Fora do mundo tabular, destilar distribuições é linha
+estabelecida.} O preditivo posterior bayesiano é destilado em uma única
+rede desde \citet{korattikara2015}; a distribuição de \emph{ensembles} é
+destilada em classificação \citep{malinin2020end2} e em regressão, via
+Normal--Wishart \citep{malinin2020rpn}; a destilação de incerteza para
+inferência em uma passada é ativa em visão \citep{shen2021}; e um
+trabalho recente destila a incerteza de um \emph{deep ensemble} em
+regressão tabular avaliando CRPS e cobertura \citep{park2025uncertainty}.
+Toda essa linhagem, porém, pressupõe professor de pesos ou membros
+acessíveis, representação paramétrica (Gaussiana, Dirichlet,
+Normal--Wishart) ou amostral, e aluno neural. No tabular pré-TFM, a
+destilação em árvores \emph{boosted} cobre regressão apenas no ponto
+\citep{fakoor2020}. Nenhum desses trabalhos tem professor caixa-preta de
+aprendizado em contexto, alvo quantílico não paramétrico ou aluno GBDT
+multiquantil --- a célula que este trabalho ocupa.
+
 \emph{As peças distribucionais existem --- separadas.} Nenhum ingrediente
 isolado da destilação distribucional é novo, e a lacuna está precisamente
 na composição. A regressão quantílica com perda
@@ -360,7 +376,8 @@ tocam quantis, CRPS, calibração nem fronteira de estratégias.
 
 Às datas verificadas (13--20/07/2026; re-varredura em
 04/10/2026, incluindo buscas dirigidas por destilação combinada com
-quantis/CRPS), nenhum trabalho público cobria: (i) destilação
+quantis/CRPS), nenhum trabalho público cobria, \textbf{para
+\emph{foundation models} tabulares}: (i) destilação
 \emph{distribucional} em regressão --- transferência de curvas de quantis,
 avaliada por CRPS e cobertura de intervalos; (ii) uma fronteira entre
 estratégias de \emph{serving} medidas nos mesmos \emph{hold-outs}; (iii) o

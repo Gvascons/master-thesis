@@ -195,6 +195,24 @@ paper. The classical lineage (model compression via soft labels
 supplies the mechanics we adapt
 to quantile curves.
 
+\paragraph{Distribution and uncertainty distillation.} Outside the
+tabular world, distilling a teacher's \emph{predictive distribution} is
+an established line: Bayesian Dark Knowledge compresses a Monte Carlo
+posterior predictive into a single network \citep{korattikara2015};
+Ensemble Distribution Distillation transfers an ensemble's distribution
+in classification \citep{malinin2020end2} and, via a Normal--Wishart
+parameterization, in regression \citep{malinin2020rpn}; uncertainty
+distillation targets single-pass inference in vision \citep{shen2021};
+and a recent latent-factor approach distills deep-ensemble uncertainty
+on tabular regression benchmarks, scoring CRPS and coverage
+\citep{park2025uncertainty}. All of it assumes a teacher with
+accessible weights or ensemble members, a parametric (Gaussian,
+Dirichlet, Normal--Wishart) or sample-based representation, and a
+neural student; pre-TFM tabular distillation into boosted trees covers
+regression only at the point level \citep{fakoor2020}. None covers a
+black-box in-context teacher, a nonparametric quantile-grid target, or
+a GBDT multi-quantile student --- the cell this paper occupies.
+
 \paragraph{Acceleration without distillation.} TACO \citep{taco2026}
 learns end-to-end compression of the in-context set (up to 94$\times$
 faster inference); CRUMB

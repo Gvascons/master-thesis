@@ -507,7 +507,16 @@ numa árvore de decisão suave em busca de interpretabilidade, e a destilação
 de redes em redes de mesma capacidade (\emph{born-again networks}) revelou
 que até a auto-imitação pode melhorar o aluno \citep{furlanello2018}. A lição
 transversal: a destilação é agnóstica ao par professor--aluno; o que se
-transfere é a \emph{função} aprendida, exposta pelas saídas.
+transfere é a \emph{função} aprendida, exposta pelas saídas. E o alvo da
+transferência não precisa ser um ponto: destilar a \emph{distribuição}
+preditiva do professor tem linhagem própria --- do preditivo posterior
+bayesiano comprimido em uma única rede \citep{korattikara2015} à
+distribuição de \emph{ensembles}, em classificação \citep{malinin2020end2}
+e em regressão via parametrização Normal--Wishart \citep{malinin2020rpn},
+com a mesma motivação de inferência em uma única passada que move a
+destilação de incerteza em visão \citep{shen2021} --- sempre, nessa
+linhagem, com professores de pesos ou membros acessíveis e alunos neurais
+paramétricos.
 
 Com professores
 ICL, a destilação ganha um atrativo adicional: ela remove exatamente o
