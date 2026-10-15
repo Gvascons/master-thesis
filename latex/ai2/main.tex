@@ -59,7 +59,7 @@ teacher's quantile curves into a multi-quantile student --- retains a
 median 19\%, and in one case more than the entirety, of the teacher's
 CRPS (continuous ranked probability score) advantage (positive in 16/20
 datasets, including one born-again case where the student surpasses its
-teacher; one-sided sign test $p = 0.006$, Wilcoxon $p = 0.045$, Bayesian
+teacher; one-sided sign test $p = 0.006$, one-sided Wilcoxon $p = 0.045$, Bayesian
 $P(\mathrm{ret}>0) = 0.70$ at a region of practical equivalence of
 $\pm$0.05) at microsecond latency --- on our three-strategy Pareto
 frontier (distillation vs.\ context compression vs.\ ensemble
@@ -127,13 +127,18 @@ answer RQ1, \S\ref{sec:frontier} RQ2, and
     gain is a small-data phenomenon on some datasets only.
   \item \textbf{A positive on the open axis:} distributional distillation
     via quantile-curve transfer is positive in 16/20 datasets --- the
-    five core datasets plus the complete eligible CTR23 pool, a
-    population fixed by rule before any results ---
+    five core datasets plus the complete CTR23 pool eligible under an
+    objective size/leakage/overlap rule; the extension was completed to
+    the full eligible pool after a non-significant interim read at
+    $N{=}15$ (sign test $p = 0.059$), so the final population is the
+    entire eligible suite, leaving no selection margin ---
     with median retention 19\%, maximum above 100\% (a born-again student),
-    and agreement across instruments (sign test $p = 0.006$; Wilcoxon
+    and agreement across instruments (one-sided sign test $p = 0.006$;
+    one-sided Wilcoxon
     $p = 0.045$; Bayesian signed-rank $P(\mathrm{retention}>0) = 0.70$ at
     ROPE $\pm 0.05$), at microsecond latency.
-  \item \textbf{The first three-strategy Pareto frontier} for TFM serving
+  \item \textbf{The first (to our knowledge) three-strategy Pareto
+    frontier} for TFM serving
     in regression --- distillation vs.\ context compression vs.\ ensemble
     reduction --- measured end-to-end on the same hold-outs; the
     distilled student is CRPS-optimal below the cheapest teacher
@@ -321,7 +326,10 @@ student variant.
 \caption{The distillation pipeline. The teacher labels every pool row
 out-of-fold ($K{=}5$: conditioned on 4/5 of the pool, it labels the held
 fifth), producing a cached mean and 19 quantile curves per row. Students
-share the benchmark-tuned capacity and differ only in target: the
+share the benchmark-tuned capacity and differ in training signal ---
+the target labels and, for the quantile pair, the loss each target
+requires (pinball on $y$ vs.\ multi-output MSE on the teacher's
+curves): the
 hard-label variants are the controls that every distilled variant must
 beat. All systems are scored on the same untouched hold-out.}
 \label{fig:pipeline}
@@ -418,8 +426,11 @@ positive in 16 (median $+0.19$), topping at $+1.06$ (\texttt{pumadyn32nh}
 --- a born-again student that surpasses its teacher), $+0.64$
 (\texttt{california\_housing}), $+0.59$ (\texttt{abalone}), $+0.52$
 (\texttt{fps\_benchmark}) and $+0.50$ (\texttt{cpu\_activity}). Both
-frequentist instruments reject at the 5\% level (one-sided sign test
-$p = 0.006$; Wilcoxon $p = 0.045$) and the Bayesian signed-rank
+frequentist instruments reject at the 5\% level, both one-sided per the
+directional pre-registered hypothesis (sign test
+$p = 0.006$; Wilcoxon $p = 0.045$ --- borderline, and two-sided it
+would not reject, which is why the headline rests on the sign test and
+the median) and the Bayesian signed-rank
 \citep{benavoli2017} places 0.70 posterior mass on positive retention at
 a ROPE (region of practical equivalence) of $\pm 0.05$ (0.63--0.71
 across ROPE 0.02--0.10). Retention is a ratio and becomes unstable when
@@ -434,7 +445,9 @@ $+0.160$, \texttt{year\_prediction} $+0.130$). No retention is exactly
 zero; near-zero positives (\texttt{miami\_housing} $+0.016$) count as
 successes under the sign test, and the ROPE sweep bounds the effect of
 treating them as equivalences instead. Three complementary analyses
-(Oct~14, 2026) bound the headline from independent angles: a
+(Oct~14, 2026) bound the headline from complementary angles ---
+re-analyses of the same 20 hold-out retentions, not independent
+evidence: a
 percentile bootstrap ($B{=}10{,}000$) puts the 95\% CI of the median
 retention at $[0.08,\,0.44]$ --- entirely positive --- and of the
 positive fraction at $[0.60,\,0.95]$
@@ -450,7 +463,8 @@ instruments remain primary for that pair
 (\texttt{friedman\_systems.csv}); and a declared post-hoc conditioning
 on the teacher's \emph{relative} edge shows the decision gate predicts
 the \emph{sign} of the effect: 10/10 positive in the high-edge half,
-all four failures in the low-edge half (Fisher exact $p{=}0.043$),
+all four failures in the low-edge half (one-sided Fisher exact
+$p{=}0.043$),
 with magnitude unpredicted (Spearman n.s.) and two recorded caveats
 --- the conditioner and the outcome share the same hold-out
 $\mathrm{CRPS}_{\text{hard}}$, and the gate is used in oracle form
@@ -727,13 +741,35 @@ retuned control without a single trial --- but per-dataset retention
 magnitudes should be read as tuning-budget-dependent; the aggregate
 claims (sign test, median, paired comparison) rest on no individual
 retention.
-% results/distillation/retune_students.csv CRPS is approximated on a 19-quantile grid. TabFM results
+The re-tuning pilot's soft arm carries a weak pool-internal
+exchangeability asymmetry analogous to the conformal pilot's (the
+Optuna validation rows participated, via teacher context, in the OOF
+targets); its direction favors the distilled arm, which lost ground
+anyway --- the refutation is conservative.
+% results/distillation/retune_students.csv
+CRPS is approximated on a 19-quantile grid. TabFM results
 refer to the pinned v1.0.1 release (July 2026); the official technical
 report \citep{kong2026} appeared only in late September 2026 and remains
-unreviewed. Classical distributional baselines outside the compared
-families (e.g., NGBoost, quantile random forests) were not included; the
-hard-label quantile students play the role of native distributional
-baselines within them. A sampling-based variant --- training the
+unreviewed. Classical distributional baselines (NGBoost, QRF) enter
+only in documented default configuration, via the pre-registered E1
+comparison and the five-system Friedman test of \S\ref{sec:dist}; the
+reading is ``strong default'', not ``tuned classical'', and the
+hard-label quantile students remain the native distributional
+baselines within the compared families. All central $p$-values are
+one-sided, matching the directional pre-registered hypotheses; the
+headline survives a two-sided reading (sign test $p=0.012$), while the
+supplementary Wilcoxon (two-sided $p=0.090$) and the post-hoc Fisher
+(two-sided $p=0.087$) would not reject --- consistent with their
+declared supplementary and post-hoc roles. No multiplicity correction
+is applied across experiments; under a Holm correction over the
+confirmatory family, the primary conclusions (Friedman, decision
+utility, E1, headline sign test) survive and the supplementary
+instruments do not. Random i.i.d.\ splits ignore group structure in a
+few datasets (artist-level structure in \texttt{year\_prediction},
+repeated sales in \texttt{kings\_county}): absolute metrics inflate
+for all systems alike, and the teacher--control gap in the retention
+denominator may be distorted there, without affecting paired
+directions. A sampling-based variant --- training the
 quantile student with its native pinball loss on $K{=}8$ pseudo-labels
 drawn per row from the teacher's OOF quantile function --- was piloted
 and refuted: it beats MSE curve-fitting on 1 of 5 datasets at

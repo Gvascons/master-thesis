@@ -299,7 +299,16 @@ cruzada aninhada (seleção de hiperparâmetros restrita ao laço interno).}
     e 25 \emph{trials} de TPE capturam a maior parte do \emph{landscape} de
     otimização \citep{akiba2019}. Orçamentos iguais em número de
     \emph{trials} dariam aos GBDTs menos tempo de busca por unidade de
-    custo --- a paridade relevante é a de recursos, não a de contagem. Os
+    custo --- a paridade relevante é a de recursos, não a de contagem. Uma
+    exceção histórica é declarada: no \texttt{adult}, os 11 experimentos
+    de aprendizado profundo anteriores à redução de orçamento (100
+    \emph{trials}) foram mantidos como âncora de validação, de modo que,
+    nesse único conjunto, as arquiteturas legadas tiveram 4$\times$ o
+    orçamento de KAN/TabKAN; o conjunto é excluído dos agregados de
+    custo de tuning, e a direção do viés (a favor das legadas, que ainda
+    assim não vencem os GBDTs ali) não toca nenhuma conclusão. Os GBDTs
+    usam parada antecipada interna (50 rodadas sobre conjunto de
+    validação), simétrica em espírito à parada dos modelos profundos. Os
     espaços de busca por modelo estão no Apêndice~\ref{app:espacos-busca}.
     A direção de otimização segue a métrica primária de cada tarefa
     (maximização de ROC-AUC; minimização de \emph{log-loss} e RMSE),
@@ -310,7 +319,10 @@ cruzada aninhada (seleção de hiperparâmetros restrita ao laço interno).}
     validação), lote de 256, otimizador AdamW e restauração do melhor
     estado --- um regime único para toda a família, que evita que
     diferenças de agenda de treinamento se confundam com diferenças de
-    arquitetura.
+    arquitetura. Única exceção: o RealMLP mantém a agenda do pacote
+    \texttt{pytabkit} (256 épocas, paciência aditiva), porque os
+    \emph{defaults} ajustados do pacote são o próprio objeto que o
+    modelo alega testar.
   \item \textbf{Isolamento e robustez operacional.} Cada experimento executa
     em subprocesso isolado; erros de memória disparam redução automática do
     lote e, no limite, poda do \emph{trial} --- uma configuração

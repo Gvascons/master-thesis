@@ -424,8 +424,11 @@ próprio professor) e sequência de sucessos grandes em
 \texttt{california\_housing} ($+0{,}64$), \texttt{abalone}
 ($+0{,}59$), \texttt{fps\_benchmark} ($+0{,}52$) e
 \texttt{cpu\_activity} ($+0{,}50$). Os dois instrumentos frequentistas
-rejeitam a hipótese nula ao nível de 5\% (teste de sinal unilateral
-$p = 0{,}006$; Wilcoxon $p = 0{,}045$) e o teste bayesiano de postos
+rejeitam a hipótese nula ao nível de 5\%, ambos unilaterais conforme a
+hipótese direcional pré-registrada (teste de sinal
+$p = 0{,}006$; Wilcoxon $p = 0{,}045$ --- limítrofe, e na versão
+bilateral não rejeitaria: por isso a manchete repousa no teste de
+sinal e na mediana) e o teste bayesiano de postos
 sinalizados \citep{benavoli2017} coloca 0,70 de massa posterior em
 retenção positiva com região de equivalência prática (ROPE) de
 $\pm 0{,}05$ --- estável em 0,63--0,71 na varredura de ROPE de 0,02 a
@@ -448,8 +451,8 @@ contam como sucesso sob o teste de sinal --- a varredura de ROPE acima
 delimita o efeito de tratá-los como equivalências. Terceiro, as quatro
 falhas são diagnosticáveis, e o diagnóstico alimenta a regra de
 decisão da Seção~\ref{sec:destil-regra}: no \texttt{wine\_quality}, o
-professor fica atrás do \emph{baseline} ajustado em RMSE (o eixo do critério pré-registrado
-pré-registrado) e sua pequena vantagem de CRPS ($+0{,}04$) inverte na
+professor fica atrás do \emph{baseline} ajustado em RMSE (o eixo do
+critério pré-registrado) e sua pequena vantagem de CRPS ($+0{,}04$) inverte na
 transferência; \texttt{fifa}, \texttt{diamonds\_real} e
 \texttt{health\_insurance} são alvos de escala de preço com cauda
 pesada, para os quais a Seção~\ref{sec:destil-regra} mostra que a
@@ -464,7 +467,8 @@ de confiabilidade da Seção~\ref{sec:destil-oof}
 \emph{A destilação distribucional retém mediana de 19\% da
 vantagem de CRPS do professor, positiva em 16 de 20 conjuntos.} A
 transferência das 19 curvas de quantis para um aluno multiquantil é
-positiva em 16/20 conjuntos (teste de sinal $p=0{,}006$; Wilcoxon
+positiva em 16/20 conjuntos (teste de sinal unilateral $p=0{,}006$;
+Wilcoxon unilateral
 $p=0{,}045$; massa posterior bayesiana 0,70 em ROPE $\pm 0{,}05$), com
 máximo de $+1{,}06$ --- um aluno \emph{born-again}, com a ressalva de
 que esse caso repousa sobre vantagem absoluta de ${\sim}0{,}001$ de
@@ -913,7 +917,9 @@ retenção varia de $-1{,}3$ a $+1{,}1$ e o posterior bayesiano deixa
 ${\sim}25\%$ de massa em retenção negativa --- o entregável honesto é
 a regra de decisão da Seção~\ref{sec:destil-regra}, não uma claim
 universal. Três análises complementares de 14/10/2026 cercam essa
-heterogeneidade por ângulos independentes. O intervalo de confiança de
+heterogeneidade por ângulos complementares --- re-análises das mesmas
+20 retenções do mesmo \emph{hold-out}, não evidência independente. O
+intervalo de confiança de
 95\% por \emph{bootstrap} ($B{=}10.000$) da mediana de retenção é
 $[0{,}08;\,0{,}44]$ --- inteiramente positivo --- e o da fração de
 conjuntos com retenção positiva é $[0{,}60;\,0{,}95]$
@@ -931,7 +937,7 @@ descritiva pós-hoc declarada condiciona a retenção à vantagem
 \emph{relativa} do professor: na metade dos conjuntos com vantagem
 acima da mediana a retenção é positiva em 10 de 10, e as quatro falhas
 concentram-se todas na metade de vantagem baixa (Fisher exato
-$p{=}0{,}043$) --- o \emph{gate} da regra prediz o \emph{sinal} do
+unilateral $p{=}0{,}043$) --- o \emph{gate} da regra prediz o \emph{sinal} do
 efeito, não sua magnitude (Spearman não significativo), com dois
 caveats registrados: condicionante e desfecho compartilham o
 $\mathrm{CRPS}_{\text{hard}}$ do mesmo \emph{hold-out}, e o
@@ -961,7 +967,7 @@ entre trabalhos. Ablação dedicada (15/10/2026,
 \texttt{ablation\_densegrid.csv}) confirma a constância em dados
 reais: re-estimando com grade de 99 quantis em quatro conjuntos ---
 incluindo o \texttt{fifa}, de cauda pesada ---, a razão entre os dois
-estimadores varia no máximo 0,84 ponto percentual entre professor,
+estimadores varia no máximo 0,85 ponto percentual entre professor,
 aluno destilado e controle dentro de cada conjunto, e as retenções
 são indistinguíveis entre grades (sinais, ordenações e diagnósticos
 preservados). \textbf{Datação do TabFM:} os resultados referem-se à
@@ -972,7 +978,27 @@ no artigo foi fechada pelo E1 desta dissertação, mas com o escopo
 registrado no pré-registro --- NGBoost e QRF em configuração \emph{default}
 documentada, sem tuning específico, com imputação por mediana no
 caminho da QRF; a interpretação é ``\emph{default} forte'', não ``clássico
-ajustado ao limite''. \textbf{Hardware:} medições em uma única GPU
+ajustado ao limite''. \textbf{Unilateralidade e multiplicidade:} todos
+os $p$-valores centrais são unilaterais, conforme as hipóteses
+direcionais pré-registradas; a manchete sobrevive à leitura bilateral
+(sinal $p=0{,}012$), mas o Wilcoxon suplementar (bilateral $0{,}090$) e
+o Fisher pós-hoc (bilateral $0{,}087$) não rejeitariam --- coerente com
+os papéis suplementar e pós-hoc que já lhes são atribuídos. Nenhuma
+correção de multiplicidade é aplicada entre experimentos; sob correção
+de Holm na família confirmatória, as conclusões primárias (Friedman,
+utilidade de decisão, E1, sinal da manchete) sobrevivem e os
+instrumentos suplementares não. \textbf{Estrutura de grupo:} o split
+aleatório i.i.d.\ ignora estrutura de grupo em alguns conjuntos
+(faixas do mesmo artista no \texttt{year\_prediction}, revendas do
+mesmo imóvel no \texttt{kings\_county}): as métricas absolutas inflam
+para todos os sistemas igualmente, e o gap professor--controle no
+denominador da retenção pode distorcer-se nesses conjuntos, sem afetar
+a direção das comparações pareadas. O braço \emph{soft} do piloto de
+re-tuning carrega ainda a assimetria fraca de \emph{exchangeability}
+pool-interna análoga à do piloto conformal (as linhas de validação do
+Optuna participaram, via contexto do professor, dos alvos OOF);
+sua direção favorece o destilado, que perdeu terreno mesmo assim ---
+a refutação de H-T1 é conservadora. \textbf{Hardware:} medições em uma única GPU
 delimitam, não mapeiam, o espaço de hardware.
 
 \section{Síntese do capítulo}

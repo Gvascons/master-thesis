@@ -214,7 +214,10 @@ preprocessing (one-hot for attention, ordinal for trees, embeddings where
 the model defines them). Foundation models enter zero-shot (no tuning),
 with an 8-member inference ensemble and a 50k-row context cap. Two remarks
 on this asymmetry: the 100/25-trial budgets equalize wall-clock tuning cost
-(a DL trial costs roughly 4$\times$ a GBDT trial), and the foundation
+(a DL trial costs roughly 4$\times$ a GBDT trial; one declared exception
+--- on \texttt{adult}, eleven legacy DL runs predating the budget
+reduction kept 100 trials as a validation anchor, so that dataset is
+excluded from tuning-cost aggregates), and the foundation
 models' zero-shot entry is itself the paradigm claim under test --- their
 inference-time settings (ensemble size, context cap) are fixed library
 policies, not quantities fitted to our data. The two
