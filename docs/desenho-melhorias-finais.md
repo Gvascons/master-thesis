@@ -422,3 +422,89 @@ quantificado, e a retenção POR CONJUNTO passa a ser lida como
 dependente do orçamento de tuning — as manchetes (sinal, mediana,
 pareado) não mudam; a narrativa do california ganha o caveat
 obrigatório.
+
+### Adendo datado (15/10/2026, pós-auditoria de vazamento) — caveats adicionais
+
+Auditoria adversarial independente de vazamento (leitura linha a linha
+dos 7 scripts + verificação empírica dos artefatos: 20/20 parquets OOF
+idênticos ao pool recomputado; interseção pool∩teste nula; splits
+idênticos entre E3/E4/E6/R-TUNE/A-SORT/extensão): **nenhum vazamento
+de dados de teste encontrado**. Quatro ressalvas registradas:
+
+1. **R-TUNE, braço soft (a declarar, espelha o caveat 1 do E4):** o
+   split de validação interna do Optuna (20% do pool) participou, via
+   contexto do professor, da geração dos alvos OOF em que os candidatos
+   soft treinam — contaminação fraca POOL-INTERNA na seleção de HPs,
+   sem caminho até o hold-out. Direção conservadora: favoreceria o
+   soft, e H-T1 foi refutada mesmo assim (a refutação fica mais
+   sólida, não menos).
+2. **Estrutura de grupo em conjuntos específicos (desenho, benchmark
+   inteiro):** split aleatório i.i.d. em year_prediction (artistas),
+   sarcos (trajetórias), kings_county (revendas), fps/video (grades de
+   configuração) pode inflar métricas absolutas de TODOS os sistemas
+   igualmente e distorcer a magnitude do gap professor−hard
+   (denominador da retenção) nesses conjuntos; não afeta a direção das
+   comparações pareadas (mesmo split para os dois braços). Vira frase
+   de limitação.
+3. **Housekeeping:** `oof/tabfm_diamonds.parquet` é órfão da errata
+   diamonds/kin8nm (conteúdo = kin8nm); renomear para
+   `tabfm_kin8nm.parquet` APÓS a cadeia noturna terminar (não mexer
+   em arquivos OOF com job ativo).
+4. **Comparabilidade E4:** os CRPS "raw" do E4 vêm de alunos treinados
+   em 90% do pool (internamente consistente); não citar lado a lado
+   com os números do pipeline principal (100% do pool) como se fossem
+   o mesmo modelo.
+
+### Adendo datado (15/10/2026, manhã) — reinvestigação adversarial em 4 frentes
+
+Quatro auditorias independentes (vazamento; justiça das comparações;
+recomputação estatística; fidelidade texto-artefato) sobre todo o
+material. Resultado global: **nenhuma conclusão central afetada;
+reprodutibilidade numérica 100%** (20+ estatísticas recomputadas do
+zero, zero divergências além de arredondamento; ~60 números de texto
+conferidos). Correções aplicadas em 15/10:
+
+1. **Unilateralidade rotulada em todas as ocorrências** (sinal,
+   Wilcoxon, Fisher) nos dois textos; declarado que a manchete
+   sobrevive bilateral (sinal p=0,012) e que Wilcoxon (bilateral 0,090)
+   e Fisher (bilateral 0,087) não rejeitariam — coerente com seus
+   papéis suplementar/pós-hoc.
+2. **Multiplicidade declarada**: sob Holm na família confirmatória, as
+   conclusões primárias sobrevivem; os instrumentos suplementares não.
+3. **Proveniência da população honestamente reescrita** no AI-2: a
+   extensão foi completada para o pool CTR23 elegível integral APÓS
+   interim não significativo em N=15 (sinal p=0,059); população final =
+   suíte elegível inteira, sem margem de seleção.
+4. **"Ângulos independentes" → "complementares"** (re-análises das
+   mesmas 20 retenções) nos dois textos.
+5. **Erro de LaTeX corrigido no AI-2** (linha de comentário engolia a
+   limitação do estimador de CRPS no PDF) e **contradição interna
+   resolvida** (Limitations dizia que NGBoost/QRF "não foram
+   incluídos" enquanto o Friedman de 5 sistemas os usa — rescopado
+   para "default forte via E1").
+6. **Exceção do adult declarada** (cap. 4 e AI-1): 11 runs DL legados
+   com 100 trials mantidos como âncora; excluído dos agregados de
+   custo. **Early stopping dos GBDTs declarado**; **exceção do RealMLP**
+   (agenda pytabkit) declarada.
+7. **Slogan do pareamento suavizado** (legenda do pipeline, AI-2):
+   alvo E objetivo mudam juntos no par quantílico.
+8. **Estrutura de grupo** (year_prediction/kings_county) declarada como
+   limitação; **caveat do braço soft do R-TUNE** declarado nos textos
+   (direção conservadora).
+
+**Retificações de registro (números deste doc):** no veredito do
+A-GRID, ler "0,85 p.p." onde está "0,84 p.p." (recomputado: 0,849;
+truncamento indevido). No veredito do A-SORT, o p do braço soft é
+0,0002 unilateral (o 0,0004 registrado era o bilateral; convenção do
+trabalho é unilateral). Gates e conclusões inalterados.
+
+**Nota do auditor de texto sobre H-X1 (registrada):** o critério
+"iguala ou supera nos conjuntos de vantagem positiva" admite leitura
+"na maioria" (2/3 confirmaria); o veredito adotou a leitura estrita e
+refutou — movimento contra a candidata a contribuição própria;
+consequência pré-registrada aplicada.
+
+**Pendências pós-cadeia:** renomear oof/tabfm_diamonds.parquet →
+tabfm_kin8nm.parquet; dedupe de distill.csv/teacher_eval.csv (o job
+SEEDS-10 escreveu duplicatas e linhas NaN in place — números
+publicados vêm da versão commitada, intactos).
