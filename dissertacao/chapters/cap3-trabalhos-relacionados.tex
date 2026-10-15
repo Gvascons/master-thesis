@@ -139,9 +139,18 @@ tabulares diretamente como estimadores de densidade condicional em
 regressão, com regras de pontuação próprias
 \citep{izbicki2026,landsgesell2026} --- avaliação distribucional do
 \emph{professor}, sem qualquer componente de destilação ou de \emph{serving}.
+Essa linha consolidou-se ao longo de 2026: o ScoringBench
+\citep{scoringbench2026} avalia \emph{foundation models} com regras de
+pontuação próprias em 101 conjuntos de regressão e conclui que os
+\emph{rankings} pontuais e probabilísticos divergem --- corroboração
+independente da distinção que estrutura o Capítulo~\ref{chap:destilacao};
+e uma aplicação astronômica de larga escala \citep{photoz2026} usa esses
+modelos como regressores probabilísticos e aponta explicitamente que o
+\emph{deployment} em catálogo completo pode exigir destilação ---
+demanda de terceiros pela interseção que este trabalho ocupa.
 
 Até onde verificamos (13/07/2026, reconfirmado em
-04/10/2026), não havia comparação neutra TabPFN~$\times$~TabFM sob
+04/10/2026 e em 14/10/2026), não havia comparação neutra TabPFN~$\times$~TabFM sob
 protocolo idêntico --- mesmas partições, mesmo pré-processamento, mesma
 política de subamostragem de contexto. A exigência não é burocrática: num
 campo em que os modelos recebem atualizações mensais e os resultados
@@ -230,12 +239,22 @@ distribucional (MMD), sem retreinamento do modelo --- é o método
 representativo do braço ``comprimir contexto'' que usamos como referência
 conceitual (nossa fronteira mede a variante mais simples, por
 subamostragem). Na mesma direção geral, há propostas de \emph{foundation
-models} tabulares eficientes em memória \citep{memeff2026}.
+models} tabulares eficientes em memória \citep{memeff2026}. O braço
+seguiu povoando-se em ritmo mensal: só em outubro de 2026 apareceram a
+substituição de até 96\% dos blocos do \emph{transformer} por um
+tradutor afim fechado \citep{shallow2026}, o alinhamento de ativações
+para operar com contextos reduzidos \citep{actalign2026} e a variante
+\emph{Fast} do TabPFN-3.5 \citep{tabpfn35tr2026} --- todos, até onde
+verificamos (14/10/2026), avaliados apenas em classificação ou em
+predição pontual, o que preserva a lacuna distribucional deste trabalho.
 
 Na direção da amortização e da transferência, o MotherNet
 \citep{mothernet2023} amortiza o ajuste numa hiper-rede que emite os pesos de
 um MLP em um único \emph{forward} --- elimina o custo de recondicionamento
-trocando-o por uma rede geradora. O TL-ANDI \citep{tlandi2026} combina
+trocando-o por uma rede geradora; o MotherTree \citep{mothertree2026}
+leva a mesma ideia ao aluno simbólico, emitindo uma árvore de decisão
+autônoma --- preditores rápidos sem professor nem destilação, vizinhos
+conceituais que atestam a demanda pelo regime de microssegundos. O TL-ANDI \citep{tlandi2026} combina
 rótulos destilados e ancoragem para transferência a tarefas com contexto
 restrito --- objetivo ortogonal ao nosso (não produz alunos rápidos nem
 trata o eixo distribucional), citado por completude do mapa.
@@ -415,7 +434,8 @@ Cap.~\ref{chap:benchmark} \\
 \addlinespace
 Avaliação de TFMs &
 Números do proponente (TabFM); avaliação distribucional dos
-\emph{professores} sem destilação \citep{izbicki2026,landsgesell2026} &
+\emph{professores} sem destilação
+\citep{izbicki2026,landsgesell2026,scoringbench2026} &
 Comparação neutra TabPFN $\times$ TabFM sob protocolo idêntico &
 Cap.~\ref{chap:benchmark} \\
 \addlinespace
