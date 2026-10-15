@@ -109,3 +109,160 @@ vencedor de acurácia e é avaliada sob o score ponderado):**
   (mediana) e entre 0,8 e 0,7 (média).
 - Árvore-LODO nunca supera a melhor política fixa em nenhum w (colapsa
   na política FM em w alto — consistente com a explicação do artigo).
+
+---
+
+## E3 — Utilidade de decisão sob custos assimétricos (pré-registro 14/10/2026)
+
+> Registrado em 14/10/2026, ANTES da execução. Motivação: crítica do
+> orientador (reunião de 08/10) de que o ganho distribucional "não mostra
+> resultado real". E3 traduz o efeito em unidades de decisão do problema.
+
+**Natureza declarada (anti-double-counting).** E3 NÃO é evidência
+independente do CRPS: o CRPS é (2×) a média da perda pinball sobre os 19
+níveis τ, e o custo ótimo esperado do problema do jornaleiro com razão de
+custos cu/(cu+co)=τ é exatamente a pinball em τ. O que E3 acrescenta:
+(i) RESOLVE o efeito por τ (o CRPS agrega), respondendo "em que níveis de
+serviço o destilado ganha"; (ii) re-expressa o efeito em unidades nativas
+do alvo (R$, nota, s); (iii) adiciona o baseline realista do praticante
+que só tem um modelo pontual: ponto + resíduo gaussiano global.
+
+**Desenho.** Mesmos 20 datasets, mesmos splits (hold-out 20% seed 42,
+caps), 3 sementes, professor TabPFN (rótulos OOF cacheados). Modelos por
+semente, hiperparâmetros herdados do benchmark (idêntico ao protocolo da
+AI-2):
+- `quant_hard`: XGBoost multi-quantil nos rótulos verdadeiros (controle);
+- `quant_soft`: XGBoost multi-saída nos 19 quantis OOF do professor
+  (o aluno destilado);
+- `gauss`: XGBoost pontual nos rótulos verdadeiros + sigma global dos
+  resíduos num split de validação interno de 10% do pool (modelo final
+  refit no pool completo); quantis = ponto + sigma·z_tau. É o "workaround"
+  padrão de quem só tem modelo pontual.
+Métrica: custo realizado médio do jornaleiro (pinball) no hold-out, por
+τ na grade das 19; decisão primária em τ=0,90 (reserva/cauda — nível de
+serviço típico). Quantis sempre ordenados (sort pós-hoc, como no
+protocolo).
+
+**Hipóteses (falsificáveis, fixadas antes de executar):**
+- **H-D1:** custo realizado do `quant_soft` ≤ `quant_hard` em τ=0,90 na
+  maioria dos 20 (sinal unilateral, α=0,05).
+- **H-D2:** custo realizado do `quant_soft` ≤ `gauss` em τ=0,90 na
+  maioria dos 20 (idem).
+- **H-D3 (exploratória, sem teste):** o edge soft−hard cresce com τ
+  (a vantagem distribucional vive nas caudas); relatar o perfil por τ.
+
+**Gates de interpretação (pré-fixados):**
+- H-D1 confirma → "o ganho em CRPS se materializa no nível de serviço de
+  cauda" entra na dissertação/artigo com o perfil por τ.
+- H-D1 refuta → reportar com a mesma proeminência: o ganho distribucional
+  é detectável no score agregado mas não se traduz em vantagem de decisão
+  em τ=0,90 neste desenho; claims de utilidade prática são rescopadas.
+- H-D2 refuta (gaussiano cobre) → a regra de decisão ganha o passo
+  obrigatório "tente ponto+resíduo paramétrico antes de destilar".
+
+**Artefatos:** `results/distillation/decision_utility.csv` (uma linha por
+dataset×modelo×semente×τ) + `scripts/decision_utility.py` (runner
+resumível) + `scripts/analyze_decision_utility.py` (testes e perfil).
+Teacher no teste NÃO é re-executado (custo GPU); a comparação de E3 é
+intra-tier de alunos, declarado.
+
+---
+
+## Rodada de fortalecimento pós-reunião (pré-registro 14/10/2026)
+
+> Registrado ANTES da execução. Origem: revisão adversarial estilo banca
+> (14/10) + críticas do orientador (08/10). Quatro itens confirmatórios
+> e um piloto exploratório declarado.
+
+### R-COND — retenção condicionada (análise descritiva, já executada)
+
+Pós-hoc DECLARADA (não é teste pré-registrado): retenção vs vantagem
+relativa do professor, rel=(CRPS_hard−CRPS_teacher)/CRPS_hard.
+Resultado (artefato `retention_conditional.csv`): o condicionante prediz
+o SINAL, não a magnitude — metade de edge alto: 10/10 positiva, mediana
+0,19; as 4 falhas concentram-se todas na metade baixa (Fisher p=0,043);
+Spearman da magnitude n.s. Leitura honesta adotada: o gate da regra
+elimina o dano (downside), não garante retenção grande. NOTA DE
+CORREÇÃO: a hipótese alternativa "retenção 0,4+ no regime alto" (sugerida
+na revisão adversarial a partir do edge ABSOLUTO) foi testada e NÃO se
+sustenta — o edge absoluto é dominado pela escala do alvo (Spearman
+−0,27 n.s.) e não serve de condicionante.
+
+### SEEDS-10 — robustez das sementes dos alunos (3→10)
+
+Extensão de robustez, sem hipótese nova: re-executar os alunos
+(xgb_point/xgb_quant × hard/soft) com sementes 0-9 (rótulos OOF do
+professor cacheados; runners resumíveis). Critério pré-fixado: a
+manchete 16/20 é considerada estável se a contagem com 10 sementes
+ficar em [14, 18] e a mediana de retenção em 0,19 ± 0,10. Fora disso,
+os números da dissertação/artigo são ATUALIZADOS para os de 10 sementes
+com adendo datado.
+
+### E5 — roteadores adicionais no LODO
+
+Pergunta: o resultado negativo do roteamento (árvore d=2 não supera a
+classe majoritária) depende da classe de roteador? Roteadores
+adicionais sob o MESMO protocolo LODO (@11 e @14): kNN (k=3) sobre
+meta-características padronizadas, regressão logística multinomial
+(C=1), árvore d=3. H-R1: nenhum roteador supera o baseline de classe
+majoritária em taxa de acerto LODO em nenhuma das duas grades. Se
+algum superar → o resultado negativo é rescopado para "árvores rasas"
+e o cap. 6 é corrigido com adendo (reportado com a mesma proeminência).
+Artefato: `results/aggregated/lodo_routers.csv`.
+
+### A-SORT — ablação do reparo por ordenação
+
+O texto afirma que "transferência + ordenação atua como regularizador de
+calibração" sem isolar o componente. Ablação: mesmos alunos quant
+hard/soft (3 sementes, 20 conjuntos), métricas com e sem o sort
+pós-hoc de quantis. H-S1: o sort melhora (ou não piora) CRPS/PICP em
+ambos os alvos; a fração de linhas com cruzamento é reportada por
+conjunto. Qualquer que seja o resultado, vira parágrafo do apêndice.
+Artefato: `results/distillation/ablation_sort.csv`.
+
+### E4 — PILOTO exploratório: conformalização pós-hoc (declarado)
+
+Pergunta (exploratória; piloto ≠ resultado): a vantagem do aluno
+destilado sobrevive quando ambos os alunos recebem calibração conformal
+barata (split-conformal por quantil, estilo CQR, com 10% do pool como
+calibração)? Se hard+conformal ≈ soft+conformal, a vantagem prática da
+destilação é rescopada para "quando não se pode pagar o split de
+calibração"; se soft+conformal > hard+conformal, a destilação e a
+conformalização são complementares (CRPS mede forma além da cobertura).
+Piloto em 5 conjuntos (california_housing, cpu_activity, cps88wages,
+wine_quality, fifa — 3 sucessos, 2 falhas), 3 sementes. Decisão de
+extensão aos 20 só após o piloto, com adendo. Artefato:
+`results/distillation/pilot_conformal.csv`.
+
+### E5 — EXECUTADO (14/10/2026, `lodo_routers.csv`)
+
+**H-R1 CONFIRMADA: 0/8 células superam o baseline de classe
+majoritária.** @14: tree_d2 0,722 / tree_d3 0,667 / kNN3 0,722 / logreg
+0,556 (baseline 0,778). @11: 0,111 / 0,278 / 0,278 / 0,333 (baseline
+0,444). Sanidade: tree_d2 reproduz exatamente os números do estudo
+original nas duas grades. O resultado negativo do roteamento não
+depende da classe de roteador.
+
+### Adendo datado (14/10/2026, pós-revisão de código) — caveats declarados
+
+Auditoria adversarial independente dos 6 scripts novos: zero achados
+críticos, nenhuma via de vazamento do hold-out. Três ressalvas
+registradas ANTES de qualquer resultado entrar em texto:
+
+1. **E4 (piloto), braço soft:** os rótulos OOF do professor foram
+   gerados por 5-fold sobre o pool COMPLETO; o split de calibração de
+   10% do piloto portanto participou (via contexto do professor) dos
+   alvos de treino do soft — assimetria fraca de exchangeability que o
+   braço hard não tem. Mantida no piloto (declarada); se o E4 for
+   estendido aos 20, regerar OOF dentro dos 90%.
+2. **R-COND:** o condicionante (edge relativo) e o desfecho (sinal da
+   retenção) compartilham o CRPS_hard do MESMO hold-out — ruído em
+   CRPS_hard move os dois na mesma direção, e parte do Fisher p=0,043
+   pode ser esse acoplamento; além disso o gate usa o edge medido no
+   teste (versão oráculo — na prática seria estimado em validação OOF).
+   Leitura mantida modesta ("prediz o sinal") com estes dois caveats.
+3. **E3, baseline gauss:** sigma = desvio-padrão dos resíduos de
+   validação (centrado na média dos resíduos; sem termo de correção de
+   viés) — fórmula exata declarada; Wilcoxon reportado como suplementar
+   (o pré-registro fixa o teste de sinal); análise bloqueada por guarda
+   até a grade completa (20/20).

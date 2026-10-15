@@ -1,0 +1,9 @@
+grid,router,hit_rate,baseline_majority,beats_baseline,n_datasets
+14,tree_d2,0.7222,0.7778,False,18
+14,tree_d3,0.6667,0.7778,False,18
+14,knn3,0.7222,0.7778,False,18
+14,logreg,0.5556,0.7778,False,18
+11,tree_d2,0.1111,0.4444,False,18
+11,tree_d3,0.2778,0.4444,False,18
+11,knn3,0.2778,0.4444,False,18
+11,logreg,0.3333,0.4444,False,18

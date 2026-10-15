@@ -114,3 +114,38 @@ segue aberto; a moldura "prior work = só classificação" precisou de ajuste.**
    Rodrigues 2603.26611) — nenhum mede destilar×comprimir×reduzir nos
    mesmos hold-outs. Claim da fronteira mantida com hedge.
 5. TabPFN-3.5 existe (2609.17895); menção "TabPFN-3/3.5" atualizada no AI-2.
+
+## Adendo datado — re-checagem de 14/10/2026 (pré-reunião de orientação)
+
+Varredura: arXiv API (3 consultas, 32 papers de set-out/2026 triados),
+OpenReview API (15 registros, incl. ICLR 2026), 5 buscas web estendidas.
+Semantic Scholar em rate-limit (coberto por arXiv+web).
+
+**Veredito: o recorte distribucional SEGUE inédito.** A interseção
+(transferir quantis/distribuição de um TFM para aluno multi-quantil
+rápido em REGRESSÃO, com CRPS/PICP e controle hard) permanece
+desocupada. Consulta arXiv `quantile AND knowledge distillation`: zero
+entradas.
+
+1. **Jeong et al. 2610.01435 segue em v1 (01/10)** — texto completo sem
+   nenhuma ocorrência de quantile/CRPS/calibration/probabilistic; perda
+   de regressão = erro quadrático sobre predições pontuais (Ap. A.1).
+2. **Onda ago-out/2026 de destilação/compressão de TFMs é toda
+   classificação ou pontual:** What-If Reasoning (2609.16091),
+   Effectively Shallow (2610.13253, 09/10), Activation Alignment
+   (2610.06679, 05/10), MotherTree (2610.10832, 07/10 — árvore emitida
+   por transformer, sem teacher, sem distribuição).
+3. **Item a vigiar:** o "distillation engine" do TabPFN-2.5
+   (2511.08667 v2) é descrito apenas para CLASSIFICAÇÃO ("MLP or tree
+   ensemble classifier", §3). Se a Prior Labs estender a regressão
+   distribucional, a claim cai — re-checar antes da submissão do arXiv.
+4. **Vizinhos novos citáveis (não ameaçam):** ScoringBench v4
+   (2603.29928, v4 de 12/10 — avaliação distribucional de TFMs em 101
+   datasets de regressão, SEM destilação; grupo do landsgesell2026);
+   UQ Ability of TFMs (2606.01427); photo-z S-PLUS (2608.10280 —
+   afirma que deployment de TFM em catálogo pleno "pode exigir
+   destilação": citação de motivação sob medida).
+5. **Citações re-verificadas na fonte: 15/15 OK** (kong2026, jeong2026,
+   tabarena2025, stab-ref/Voskou, tabkanet2024, memeff2026, herre2026,
+   izbicki2026, park2026, kubler2026, gear2026, landsgesell2026,
+   taco2026, pocketfm2026, crumb2026). Nenhuma divergência de conteúdo.

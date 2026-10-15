@@ -141,6 +141,13 @@ def eval_and_append(ds, cell, seed, model, Xt, y_test, is_quant, ft):
 
 
 def main():
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--seeds", default=3, type=int,
+                    help="roda sementes 0..N-1 (resumível; SEEDS-10 14/10)")
+    args = ap.parse_args()
+    global SEEDS
+    SEEDS = list(range(args.seeds))
     exp_cfg = load_experiment_config()
     done = already_done()
     qcols = [f"q{int(t*100):02d}" for t in QUANTILES]
