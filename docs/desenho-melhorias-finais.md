@@ -266,3 +266,57 @@ registradas ANTES de qualquer resultado entrar em texto:
    viés) — fórmula exata declarada; Wilcoxon reportado como suplementar
    (o pré-registro fixa o teste de sinal); análise bloqueada por guarda
    até a grade completa (20/20).
+
+---
+
+## Segunda leva da rodada de fortalecimento (pré-registro 14/10/2026, 23h30)
+
+> Registrado ANTES da execução. Ataca os itens restantes da revisão
+> adversarial (estimador de CRPS; teto de capacidade) e adiciona uma
+> variante metodológica própria como piloto declarado.
+
+### A-GRID — estabilidade do estimador de CRPS sob grade densa
+
+Pergunta: as comparações internas (retenções, ordenações) são estáveis
+quando o CRPS é estimado com 99 quantis em vez de 19? Desenho: 4
+conjuntos (california_housing, cpu_activity, wine_quality e fifa — o
+último de cauda pesada, onde o ataque tem mais força), professor TabPFN
+re-predito no hold-out na grade τ=0,01..0,99; alunos quant hard/soft
+(3 sementes) avaliados na grade densa por interpolação linear monótona
+da função quantil (método declarado: os 19 quantis DEFINEM a
+distribuição do aluno; a interpolação é a sua extensão canônica).
+H-G1: a razão CRPS99/CRPS19 é aproximadamente constante entre sistemas
+(variação < 3 p.p. dentro de cada conjunto), preservando ordenações e
+retenções. Se violar em cauda pesada → a limitação do estimador é
+promovida de nota a parágrafo, com os diagnósticos de fifa rescopados.
+Artefato: results/distillation/ablation_densegrid.csv.
+
+### E6 — PILOTO: destilação por amostragem (variante metodológica)
+
+Motivação: a destilação atual ajusta 19 superfícies de regressão por
+MSE multi-saída (curve-fitting da função quantil). Variante proposta:
+AMOSTRAR K=8 pseudo-rótulos por linha da distribuição do professor
+(inversa da função quantil OOF por interpolação; u~U estratificado) e
+treinar o aluno quantílico NATIVO (pinball multi-quantil) no pool
+aumentado — o aluno faz regressão quantílica genuína sobre a
+distribuição do professor, com perda própria, em vez de imitar curvas.
+H-X1 (exploratória): o aluno por amostragem iguala ou supera o aluno
+MSE em CRPS nos conjuntos de vantagem positiva. Piloto nos mesmos 5
+conjuntos do E4; decisão de extensão só após o piloto. Se superar →
+candidata a contribuição metodológica (com nova checagem de novidade
+específica antes de qualquer claim); se não → registrado como variante
+testada no apêndice. Artefato: results/distillation/pilot_sampling.csv.
+
+### R-TUNE — teto de capacidade dos alunos (re-tuning)
+
+Item 3 da revisão adversarial ("herança de hiperparâmetros subestima o
+teto?"). Desenho: nos 3 conjuntos de maior vantagem genuína do
+professor com retenção positiva (california_housing, cpu_activity,
+cps88wages), re-otimizar os hiperparâmetros do aluno quantílico com
+Optuna (25 trials, validação interna 80/20 do pool, objetivo = pinball
+média na grade de 19), SEPARADAMENTE para hard e soft (cada alvo ganha
+sua capacidade ótima); 3 sementes finais com os HPs vencedores.
+H-T1: a retenção com re-tuning é >= à retenção com HPs herdados
+(a herança é piso, não viés pró-destilação). Se a retenção CAIR com
+re-tuning no braço soft → a comparação original é revisada com adendo.
+Artefato: results/distillation/retune_students.csv.
