@@ -938,7 +938,23 @@ $\mathrm{CRPS}_{\text{hard}}$ do mesmo \emph{hold-out}, e o
 condicionante usa a versão oráculo do \emph{gate}
 (\texttt{retention\_conditional.csv}). \textbf{Capacidade herdada:} os alunos usam os
 hiperparâmetros ajustados do benchmark, sem re-tuning por alvo de
-destilação. \textbf{Estimador de CRPS:} a grade de 19 quantis
+destilação. Um piloto de re-tuning (15/10/2026; 3 conjuntos de
+retenção positiva, Optuna com 25 \emph{trials} por braço, validação
+interna no \emph{pool}) quantifica a limitação --- e a hipótese de que
+a herança seria piso foi refutada em 2 de 3: quando o \emph{controle}
+ganha capacidade própria, a retenção aparente cai (de 0,64 para 0,19
+no \texttt{california\_housing}, onde o controle herdado estava
+sub-provisionado; de 0,50 para 0,40 no \texttt{cpu\_activity}; sobe de
+0,47 para 0,61 no \texttt{cps88wages}). Três leituras sobrevivem ao
+re-tuning: o \emph{sinal} persiste nos três (o destilado retunado segue
+melhor que o controle retunado), destilação e re-tuning \emph{compõem}
+(o destilado também melhora ao ser retunado), e o destilado herdado,
+sem nenhum \emph{trial}, empata com o controle retunado no
+\texttt{california\_housing} --- a destilação entrega de graça o que o
+re-tuning entrega ao controle. A retenção por conjunto deve, portanto,
+ser lida como dependente do orçamento de tuning; as conclusões
+agregadas (sinal, mediana, comparação pareada) não se apoiam em
+nenhuma retenção individual (\texttt{retune\_students.csv}). \textbf{Estimador de CRPS:} a grade de 19 quantis
 sobre-estima o CRPS exato em ${\sim}4$--5\% quase constantes ---
 comparações internas preservadas, valores absolutos não comparáveis
 entre trabalhos. Ablação dedicada (15/10/2026,
