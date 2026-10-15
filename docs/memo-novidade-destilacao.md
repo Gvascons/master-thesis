@@ -149,3 +149,39 @@ entradas.
    tabarena2025, stab-ref/Voskou, tabkanet2024, memeff2026, herre2026,
    izbicki2026, park2026, kubler2026, gear2026, landsgesell2026,
    taco2026, pocketfm2026, crumb2026). Nenhuma divergência de conteúdo.
+
+## Adendo datado — 15/10/2026: varredura da LINHAGEM AMPLA de destilação distribucional
+
+Ponto cego das varreduras anteriores (dirigidas por "tabular +
+distillation"): a família não tabular de destilação de distribuições.
+Varredura de 15/10 (URLs e vereditos no registro da sessão):
+
+- **A célula exata SEGUE vazia** (professor TFM caixa-preta via ICL →
+  aluno GBDT multiquantil, grade de quantis, regressão tabular,
+  CRPS/PICP com controle pareado): nenhuma colisão.
+- **Mas a linhagem existe desde 2015** e passou a ser CITADA como
+  antecedente (caps. 2/3/7/8 + AI-2 related work, edições de 15/10):
+  Bayesian Dark Knowledge (Korattikara et al., NeurIPS 2015; preditivo
+  posterior → rede única, incl. regressão gaussiana); EnD² (Malinin et
+  al., ICLR 2020; classificação); Regression Prior Networks (Malinin et
+  al., 2020; regressão via Normal-Wishart); destilação de incerteza
+  single-pass (Shen et al., WACV 2021); Park et al. 2025
+  (arXiv:2510.19290 — ensemble→GP latente em regressão tabular UCI com
+  CRPS e cobertura: o vizinho mais próximo em métricas+domínio, sem
+  quantis/TFM/GBDT); FAST-DAD (Fakoor et al., NeurIPS 2020 — tabular
+  pré-TFM em boosted trees, regressão só pontual).
+- **Dois re-escopos textuais aplicados** (leitura literal era ampla
+  demais): cap. 3 enumeração das lacunas agora abre com "para
+  foundation models tabulares"; cap. 8 contribuição 6 ganhou o
+  qualificador do professor/aluno.
+- Registrados sem citação em texto (menor relevância ou fonte não
+  acadêmica): patente Google US12536436B2 (quantis+pinball como alvo de
+  destilação em RANKING — concedida 01/2026); Consist-Wind (Mathematics
+  2026, CRPS pós-destilação em eólica, autores não verificados na
+  fonte); Hydra/FED/DUDES (classificação/visão); RL distribucional
+  (LTCR átomos categóricos; FlowIQN W2 em apêndice).
+- **Enquadramento decidido**: "breakthrough" NÃO é a palavra usada; o
+  enquadramento é "primeira evidência, sob desenho pré-registrado com
+  controles pareados, de que a vantagem distribucional de um TFM é
+  transferível a um aluno GBDT de microssegundos — com o negativo
+  robusto (a média não transfere) e a regra de quando destilar".
