@@ -320,3 +320,15 @@ H-T1: a retenção com re-tuning é >= à retenção com HPs herdados
 (a herança é piso, não viés pró-destilação). Se a retenção CAIR com
 re-tuning no braço soft → a comparação original é revisada com adendo.
 Artefato: results/distillation/retune_students.csv.
+
+### A-GRID — EXECUTADO (15/10/2026 00h, `ablation_densegrid.csv`)
+
+**H-G1 CONFIRMADA.** Razão CRPS99/CRPS19 por sistema (média de
+sementes): california 0,9641-0,9725; cpu_activity 0,9648-0,9670;
+fifa 0,9642-0,9674; wine 0,9663-0,9709 — spread máximo 0,84 p.p.
+dentro de cada conjunto (gate: 3 p.p.), incluindo o alvo de cauda
+pesada. Retenções sob a grade densa: california +0,636 (vs +0,644),
+cpu +0,498 (vs +0,500), fifa -1,00 (vs -1,29), wine -0,93 (vs -0,97)
+— sinais, ordenações e diagnósticos preservados. O viés da grade de
+19 é multiplicativo quase constante TAMBÉM em dados reais de cauda
+pesada, não só nos cenários gaussianos da validação original.
