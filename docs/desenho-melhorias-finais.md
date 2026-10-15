@@ -350,3 +350,47 @@ pesada, não só nos cenários gaussianos da validação original.
   unidades de decisão o mesmo fenômeno que o CRPS agrega; a contagem
   18/20 > 16/20 reflete que o edge de cauda é mais consistente entre
   conjuntos que o CRPS agregado.
+
+### A-SORT — EXECUTADO (15/10/2026 04h22, `ablation_sort.csv`)
+
+**H-S1 CONFIRMADA.** O sort pós-hoc melhora o CRPS em **20/20**
+conjuntos no braço hard (sinal p<10⁻⁵) e **18/20** no soft (p=0,0004);
+nunca piora de forma relevante. Efeito mediano pequeno (0,70% hard /
+0,32% soft) mas com cauda: até 28,8% (hard) / 11,3% (soft) nos
+conjuntos onde o cruzamento é mais danoso. PICP90 fica mais próximo do
+nominal com sort em 19/20 (hard) e 14/20 (soft). Fração de linhas com
+cruzamento: mediana 96,2% (mín 0, máx 100%) — o cruzamento é a regra,
+não a exceção, e o reparo por ordenação é um regularizador consistente
+e de custo zero. As conclusões principais NÃO dependem do sort (efeito
+mediano <1%); vira parágrafo de apêndice como pré-registrado.
+
+### E4 — EXECUTADO (15/10/2026 04h32, piloto 5 conjuntos, `pilot_conformal.csv`)
+
+**Veredito do gate: destilação e conformalização são COMPLEMENTARES.**
+A conformalização split (10% do pool) conserta a cobertura dos DOIS
+braços (PICP90: hard 0,77-0,93 → 0,89-0,95; soft 0,71-0,89 → 0,88-0,91)
+mas deixa o CRPS essencialmente intacto (movimentos <1% em todos os 10
+braços). A vantagem de forma do destilado sobrevive integralmente:
+soft+conformal < hard+conformal em CRPS nos 3 conjuntos de vantagem
+positiva (california 0,108 vs 0,181; cpu 1,177 vs 1,289; cps88 160,50
+vs 160,98), e os 2 reveses pré-declarados (wine, fifa) permanecem
+reveses. Leitura: conformal compra CALIBRAÇÃO, destilação compra FORMA
+— são ortogonais. Caveat 1 do adendo de 14/10 (exchangeability fraca no
+braço soft) permanece declarado; decisão de extensão: NÃO estender aos
+20 antes da defesa do resultado principal (o piloto já responde a
+pergunta exploratória; extensão exigiria regerar OOF dentro dos 90%).
+
+### E6 — EXECUTADO (15/10/2026 05h18, piloto 5 conjuntos, `pilot_sampling.csv`)
+
+**H-X1 REFUTADA (no balanço).** Nos 3 conjuntos de vantagem positiva, a
+variante por amostragem supera o aluno MSE em CRPS apenas em
+california (+2,2%); empata em cps88 (−0,02%) e perde em cpu_activity
+(−5,6%); nos reveses, perde em ambos (fifa −0,8%, wine −0,7%). Por
+(conjunto, semente): 3/15. Custo: 2,8-44× o tempo de treino do MSE
+(K=8 amostras por linha). Nuance honesta: a amostragem melhora a
+CALIBRAÇÃO onde o MSE subcobre (california PICP80 0,60→0,80; PICP90
+0,71→0,87) — mas o E4 mostra que a conformalização compra a mesma
+calibração por fração do custo. Decisão pré-registrada: NENHUM claim de
+contribuição metodológica (dispensa a checagem de novidade específica);
+registrada como variante testada no apêndice, com a leitura "a
+calibração se conserta mais barato por conformal do que por amostragem".
