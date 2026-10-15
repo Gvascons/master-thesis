@@ -126,9 +126,14 @@ conjuntos.
 Com $N{=}18$ conjuntos, um roteador aprendido (árvore de profundidade
 2) não supera o \emph{baseline} de classe majoritária em nenhuma das duas
 gerações de modelos (0,11 vs.\ 0,44 com 11 modelos; 0,72 vs.\ 0,78 com
-14). O arcabouço de decisão não deve conter um preditor de família
-vencedora --- conclusão corroborada por evidência independente
-\citep{herre2026}.
+14). O resultado tampouco depende da classe de roteador: em experimento
+pré-registrado de robustez (14/10/2026), árvore de profundidade 3,
+$k$NN ($k{=}3$, meta-características padronizadas) e regressão
+logística multinomial, sob o mesmo protocolo LODO, também não superam o
+\emph{baseline} em nenhuma das duas grades --- 0 de 8 células
+(\texttt{results/aggregated/lodo\_routers.csv}). O arcabouço de decisão
+não deve conter um preditor de família vencedora --- conclusão
+corroborada por evidência independente \citep{herre2026}.
 
 \section{O resultado positivo: a política ``FM primeiro'' e sua
 evolução}

@@ -851,7 +851,31 @@ conjuntos dão significância a 5\% nos dois instrumentos, mas a
 retenção varia de $-1{,}3$ a $+1{,}1$ e o posterior bayesiano deixa
 ${\sim}25\%$ de massa em retenção negativa --- o entregável honesto é
 a regra de decisão da Seção~\ref{sec:destil-regra}, não uma claim
-universal. \textbf{Capacidade herdada:} os alunos usam os
+universal. Três análises complementares de 14/10/2026 cercam essa
+heterogeneidade por ângulos independentes. O intervalo de confiança de
+95\% por \emph{bootstrap} ($B{=}10.000$) da mediana de retenção é
+$[0{,}08;\,0{,}44]$ --- inteiramente positivo --- e o da fração de
+conjuntos com retenção positiva é $[0{,}60;\,0{,}95]$
+(\texttt{bootstrap\_retention.csv}). Um teste de Friedman sobre os
+cinco sistemas distribucionais medidos (professor, aluno destilado,
+controle \emph{hard}, QRF e NGBoost) nos 20 conjuntos rejeita a
+igualdade ($\chi^2{=}64{,}6$, $p{=}3{\times}10^{-13}$), com ranks
+médios 1,1; 2,3; 3,1; 3,6 e 4,9 --- o aluno destilado é o único
+sistema que não difere do professor pelo pós-teste de Nemenyi
+($\mathrm{CD}{=}1{,}36$), embora a diferença destilado--\emph{hard}
+(0,8) tampouco atinja o CD nesse teste conservador de cinco sistemas:
+para esse par, o instrumento primário segue sendo a comparação pareada
+pré-registrada (\texttt{friedman\_systems.csv}). Por fim, uma análise
+descritiva pós-hoc declarada condiciona a retenção à vantagem
+\emph{relativa} do professor: na metade dos conjuntos com vantagem
+acima da mediana a retenção é positiva em 10 de 10, e as quatro falhas
+concentram-se todas na metade de vantagem baixa (Fisher exato
+$p{=}0{,}043$) --- o \emph{gate} da regra prediz o \emph{sinal} do
+efeito, não sua magnitude (Spearman não significativo), com dois
+caveats registrados: condicionante e desfecho compartilham o
+$\mathrm{CRPS}_{\text{hard}}$ do mesmo \emph{hold-out}, e o
+condicionante usa a versão oráculo do \emph{gate}
+(\texttt{retention\_conditional.csv}). \textbf{Capacidade herdada:} os alunos usam os
 hiperparâmetros ajustados do benchmark, sem re-tuning por alvo de
 destilação. \textbf{Estimador de CRPS:} a grade de 19 quantis
 sobre-estima o CRPS exato em ${\sim}4$--5\% quase constantes ---

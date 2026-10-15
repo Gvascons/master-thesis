@@ -428,8 +428,14 @@ share). We test this with leave-one-dataset-out (LODO) validation: a
 depth-2 tree trained on the remaining 17 datasets predicts the winning
 family of the held-out one. Result: \textbf{hit rate 0.11 against a 0.44
 majority-class baseline} (11-model study; at 14 models the picture
-persists --- 0.72 vs.\ a 0.78 majority baseline). With $N{=}18$, the
-routing is not learnable under LODO with this model class --- and stating
+persists --- 0.72 vs.\ a 0.78 majority baseline). The result does not
+hinge on the router class: in a pre-registered robustness check
+(Oct~14, 2026), a depth-3 tree, $k$NN ($k{=}3$ on standardized
+meta-features) and multinomial logistic regression under the same LODO
+protocol also fail to beat the majority baseline in either grid ---
+0 of 8 cells (\texttt{results/aggregated/lodo\_routers.csv}). With
+$N{=}18$, the
+routing is not learnable under LODO across router classes --- and stating
 this under an explicit protocol shields the framework from the
 overclaiming critique that reaches part of the algorithm-recommendation
 literature. The tree remains

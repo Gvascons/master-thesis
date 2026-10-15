@@ -415,7 +415,28 @@ are scale-free --- and on the large-edge successes
 $+0.160$, \texttt{year\_prediction} $+0.130$). No retention is exactly
 zero; near-zero positives (\texttt{miami\_housing} $+0.016$) count as
 successes under the sign test, and the ROPE sweep bounds the effect of
-treating them as equivalences instead. The four failures are
+treating them as equivalences instead. Three complementary analyses
+(Oct~14, 2026) bound the headline from independent angles: a
+percentile bootstrap ($B{=}10{,}000$) puts the 95\% CI of the median
+retention at $[0.08,\,0.44]$ --- entirely positive --- and of the
+positive fraction at $[0.60,\,0.95]$
+(\texttt{bootstrap\_retention.csv}); a Friedman test over the five
+measured distributional systems (teacher, distilled, hard control,
+QRF, NGBoost) on the 20 datasets rejects equality
+($\chi^2{=}64.6$, $p{=}3{\times}10^{-13}$; mean ranks 1.1, 2.3, 3.1,
+3.6, 4.9), with the distilled student the only system not separated
+from the teacher by the Nemenyi test ($\mathrm{CD}{=}1.36$) --- though
+the distilled--hard gap (0.8) also falls short of the CD in this
+conservative five-system test, so the pre-registered paired
+instruments remain primary for that pair
+(\texttt{friedman\_systems.csv}); and a declared post-hoc conditioning
+on the teacher's \emph{relative} edge shows the decision gate predicts
+the \emph{sign} of the effect: 10/10 positive in the high-edge half,
+all four failures in the low-edge half (Fisher exact $p{=}0.043$),
+with magnitude unpredicted (Spearman n.s.) and two recorded caveats
+--- the conditioner and the outcome share the same hold-out
+$\mathrm{CRPS}_{\text{hard}}$, and the gate is used in oracle form
+(\texttt{retention\_conditional.csv}). The four failures are
 diagnosable and form the basis of \S\ref{sec:rule}'s decision rule:
 \texttt{wine\_quality} --- where the teacher trails the tuned baseline on
 RMSE (the axis of our pre-registered gate) and its small CRPS edge
