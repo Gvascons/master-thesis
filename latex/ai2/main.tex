@@ -769,7 +769,11 @@ few datasets (artist-level structure in \texttt{year\_prediction},
 repeated sales in \texttt{kings\_county}): absolute metrics inflate
 for all systems alike, and the teacher--control gap in the retention
 denominator may be distorted there, without affecting paired
-directions. A sampling-based variant --- training the
+directions. Finally, the protocol uses 3 seeds per student; a full
+re-run with 10 seeds under a pre-fixed stability criterion (count in
+$[14,18]$, median $\pm 0.10$) left the count at 16/20 and the median
+at 0.191 (vs.\ 0.192), with a maximum per-dataset retention shift of
+0.013 --- seed variance is negligible against dataset variance. A sampling-based variant --- training the
 quantile student with its native pinball loss on $K{=}8$ pseudo-labels
 drawn per row from the teacher's OOF quantile function --- was piloted
 and refuted: it beats MSE curve-fitting on 1 of 5 datasets at

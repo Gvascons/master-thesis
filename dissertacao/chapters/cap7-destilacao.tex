@@ -998,7 +998,13 @@ re-tuning carrega ainda a assimetria fraca de \emph{exchangeability}
 pool-interna análoga à do piloto conformal (as linhas de validação do
 Optuna participaram, via contexto do professor, dos alvos OOF);
 sua direção favorece o destilado, que perdeu terreno mesmo assim ---
-a refutação de H-T1 é conservadora. \textbf{Hardware:} medições em uma única GPU
+a refutação de H-T1 é conservadora. \textbf{Sementes:} o protocolo usa
+3 sementes por aluno; uma re-execução completa com 10 sementes
+(critério de estabilidade pré-fixado: contagem em $[14,18]$, mediana
+$\pm 0{,}10$) deixou a contagem em 16/20 e a mediana em 0,191 (contra
+0,192), com deslocamento máximo de retenção individual de 0,013 ---
+a variância entre sementes é desprezível face à variância entre
+conjuntos. \textbf{Hardware:} medições em uma única GPU
 delimitam, não mapeiam, o espaço de hardware.
 
 \section{Síntese do capítulo}
