@@ -468,9 +468,14 @@ Calibration accompanies the transfer --- and exceeds it. Reliability curves
 diagonal on both panels; on \texttt{california\_housing} it is better
 calibrated than the hard control \emph{and} than its own teacher, whose
 per-level quantile calibration is imperfect (S-shaped). Curve transfer plus
-sorting acts as a calibration regularizer, not a mere copy.
+sorting acts as a calibration regularizer, not a mere copy. A dedicated
+ablation isolates the repair: quantile crossing affects a median 96\% of
+hold-out rows before sorting, and the repair improves CRPS on 20/20
+(hard) and 18/20 (soft) datasets --- yet its median effect is below
+1\%, so no conclusion depends on it.
 % results/distillation/distill.csv + extension.csv;
 % results/figures/calibration_distill.pdf
+% results/distillation/ablation_sort.csv
 
 \begin{table}[t]
 \centering
@@ -588,6 +593,18 @@ invisible to accuracy metrics --- transfers to the student as too-narrow
 intervals. OOF labeling in regression is therefore a calibration safeguard.
 % results/distillation/ablation_insample.csv (3 regimes, 72 rows)
 
+The symmetric objection --- that the distilled edge is ``just
+calibration'', so a cheap conformal correction of the hard control
+would match it --- fails in a declared pilot (5 datasets, 3 seeds,
+split-conformal per quantile applied to \emph{both} arms):
+conformalization repairs coverage for both students (PICP90 to
+0.88--0.95) but moves CRPS by under 1\% in every arm, leaving the
+shape advantage intact. Conformal buys calibration; distillation buys
+shape. (A weak exchangeability asymmetry in the soft arm --- OOF
+labels generated over the full pool --- is declared; extending beyond
+the pilot would regenerate OOF labels within the proper split.)
+% results/distillation/pilot_conformal.csv
+
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/calibration_distill.pdf}
@@ -704,7 +721,14 @@ report \citep{kong2026} appeared only in late September 2026 and remains
 unreviewed. Classical distributional baselines outside the compared
 families (e.g., NGBoost, quantile random forests) were not included; the
 hard-label quantile students play the role of native distributional
-baselines within them. Single-GPU measurements bound, rather than
+baselines within them. A sampling-based variant --- training the
+quantile student with its native pinball loss on $K{=}8$ pseudo-labels
+drawn per row from the teacher's OOF quantile function --- was piloted
+and refuted: it beats MSE curve-fitting on 1 of 5 datasets at
+2.8--44$\times$ the training cost, so we keep curve-fitting and report
+the variant as a tested negative.
+% results/distillation/pilot_sampling.csv
+Single-GPU measurements bound, rather than
 survey, the hardware space.
 
 \section{Reproducibility}

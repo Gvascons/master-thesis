@@ -107,6 +107,53 @@ Retenção \\
 \end{tabular}
 \end{table}
 
+\subsection{Reparo por ordenação dos quantis}
+\label{sec:app-abl-sort}
+
+O texto do Capítulo~\ref{chap:destilacao} afirma que a transferência
+de curvas com reparo por ordenação ``atua como regularizador de
+calibração''; esta ablação pré-registrada (15/10/2026) isola o
+componente. Os mesmos alunos-quantil \emph{hard} e \emph{soft} dos 20
+conjuntos (3 sementes) foram avaliados com e sem a ordenação pós-hoc
+dos 19 quantis preditos. O cruzamento de quantis é a regra, não a
+exceção: a fração mediana de linhas do \emph{hold-out} com ao menos um
+cruzamento é de 96,2\% (mínimo 0, máximo 100\%). O reparo melhora o
+CRPS em 20 de 20 conjuntos no braço \emph{hard} (teste de sinal
+$p<10^{-5}$) e em 18 de 20 no \emph{soft} ($p=0{,}0004$), e aproxima o
+PICP90 do nominal em 19 de 20 e 14 de 20, respectivamente. O efeito
+mediano, porém, é pequeno --- 0,7\% (\emph{hard}) e 0,3\% (\emph{soft})
+de CRPS relativo, com cauda até 28,8\% nos conjuntos em que o
+cruzamento é mais danoso ---, de modo que nenhuma conclusão do
+capítulo depende do reparo: ele é um regularizador consistente e de
+custo zero, não uma fonte de vantagem. Fonte:
+\texttt{results/distillation/ablation\_sort.csv}.
+
+\subsection{Calibração conformal pós-hoc (piloto declarado)}
+\label{sec:app-pilot-conformal}
+
+Piloto exploratório pré-registrado (15/10/2026; piloto $\neq$
+resultado): se os \emph{dois} alunos recebem calibração
+\emph{split-conformal} por quantil (estilo CQR, com 10\% do
+\emph{pool} reservado para calibração), a vantagem do destilado
+sobrevive? Em 5 conjuntos (3 de retenção positiva, 2 reveses; 3
+sementes), a conformalização conserta a cobertura dos dois braços ---
+PICP90 de 0,77--0,93 para 0,89--0,95 no \emph{hard} e de 0,71--0,89
+para 0,88--0,91 no \emph{soft} --- mas deixa o CRPS essencialmente
+intacto (movimentos inferiores a 1\% em todos os 10 braços). A
+vantagem de forma do destilado sobrevive integralmente
+(\texttt{california} 0,108 \emph{vs.} 0,181; \texttt{cpu\_activity}
+1,18 \emph{vs.} 1,29; \texttt{cps88wages} 160,5 \emph{vs.} 161,0), e
+os dois reveses permanecem reveses. Leitura: a conformalização compra
+\emph{calibração} e a destilação compra \emph{forma} --- são
+intervenções complementares, não substitutas. Caveat declarado antes
+da execução: no braço \emph{soft}, os rótulos OOF do professor foram
+gerados sobre o \emph{pool} completo, de modo que o \emph{split} de
+calibração participou (via contexto do professor) dos alvos de treino
+--- assimetria fraca de \emph{exchangeability} que o braço \emph{hard}
+não tem; uma extensão além do piloto exigiria regenerar os rótulos OOF
+dentro dos 90\%. Fonte:
+\texttt{results/distillation/pilot\_conformal.csv}.
+
 \section{Cemitério de hipóteses e desvios}
 \label{sec:suple-cemiterio}
 
@@ -153,6 +200,28 @@ decisão ``quando destilar'' (Seção~\ref{sec:destil-regra}): antes de
 destilar, aplique transformações baratas de alvo. Registros:
 \texttt{docs/relatorio-ai2.md} (fase 6a),
 \texttt{results/distillation/ablation\_logtarget.csv}.
+
+\subsection{Destilação por amostragem (variante metodológica própria)}
+\emph{O que era:} hipótese exploratória pré-registrada (H-X1,
+14/10/2026) de que amostrar $K{=}8$ pseudo-rótulos por linha da
+distribuição do professor (inversa da função quantil OOF) e treinar o
+aluno quantílico com a perda \emph{pinball} nativa sobre o \emph{pool}
+aumentado --- regressão quantílica genuína em vez de imitação de
+curvas por MSE --- igualaria ou superaria o aluno MSE em CRPS nos
+conjuntos de vantagem positiva. \emph{O que aconteceu:} refutada no
+piloto de 5 conjuntos (3 sementes): a variante só supera o aluno MSE
+no \texttt{california\_housing} ($+2{,}2\%$), empata no
+\texttt{cps88wages} e perde nos demais (até $-5{,}6\%$ no
+\texttt{cpu\_activity}), custando 2,8--44$\times$ o tempo de treino. A
+amostragem melhora a calibração onde o aluno MSE subcobre
+(\texttt{california}: PICP80 de 0,60 para 0,80), mas o piloto conformal
+(Apêndice~\ref{sec:app-pilot-conformal}) mostra que a mesma calibração
+se compra por fração do custo. \emph{Por que está aqui:} era a
+candidata a contribuição metodológica própria da rodada final; o
+critério pré-registrado mandava, em caso de refutação, registrá-la
+como variante testada sem claim --- e é o que este registro faz.
+Registros: \texttt{docs/desenho-melhorias-finais.md} (pré-registro e
+veredito datados), \texttt{results/distillation/pilot\_sampling.csv}.
 
 \subsection{Roteamento por meta-características}
 \emph{O que era:} a promessa, herdada da literatura de

@@ -592,7 +592,11 @@ professor exibe a forma em S de caudas mal calibradas, enquanto o
 aluno destilado é o mais próximo da diagonal; no \texttt{cpu\_activity},
 os três sistemas são bem calibrados e o destilado permanece
 competitivo. A transferência de curvas com reparo por ordenação atua
-como regularizador de calibração, não como cópia.
+como regularizador de calibração, não como cópia --- e uma ablação
+dedicada isola o componente: o reparo melhora o CRPS em 20 de 20
+conjuntos no braço \emph{hard} e 18 de 20 no \emph{soft}, mas com
+efeito mediano inferior a 1\%, de modo que nenhuma conclusão do
+capítulo depende dele (Apêndice~\ref{sec:app-abl-sort}).
 
 \begin{figure}[htb]
 \centering
@@ -610,6 +614,15 @@ degradam RMSE nem CRPS, mas erodem a cobertura de intervalos em 0,5 a
 em contexto do professor transfere-se ao aluno. E a destilação chega a
 \emph{melhorar} a calibração: no \texttt{california\_housing}, o aluno
 destilado é mais bem calibrado que o controle e que o próprio professor.
+
+Resta a objeção simétrica: se o ganho fosse \emph{apenas} calibração,
+uma correção conformal barata sobre o controle de rótulos verdadeiros
+o alcançaria. Um piloto declarado (5 conjuntos, 3 sementes,
+\emph{split-conformal} por quantil nos dois braços) responde que não:
+a conformalização conserta a cobertura de \emph{ambos} os alunos, mas
+move o CRPS em menos de 1\% --- a vantagem de forma do destilado
+sobrevive intacta à correção. Conformalização compra calibração;
+destilação compra forma (Apêndice~\ref{sec:app-pilot-conformal}).
 
 \section{E1 --- baselines distribucionais clássicos: o nativo forte
 posto à prova}
