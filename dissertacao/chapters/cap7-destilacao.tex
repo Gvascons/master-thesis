@@ -745,6 +745,47 @@ a QRF \emph{default} supera até o professor --- e convertem o passo ``nativo
 forte'' da regra de decisão em instrução concreta: tente a QRF
 primeiro; custa segundos.
 
+\section{E3 --- utilidade de decisão: o ganho distribucional em
+unidades do problema}
+\label{sec:destil-e3}
+
+O CRPS é uma régua de estatístico; decisões reais são tomadas sob
+custos assimétricos. O experimento E3, pré-registrado em 14/10/2026
+com a natureza declarada de antemão --- o custo ótimo do problema do
+jornaleiro com razão de custos $\tau$ \emph{é} a perda \emph{pinball}
+em $\tau$, de modo que E3 não é evidência independente do CRPS, e sim
+a sua \emph{resolução por nível de serviço}, re-expressa em unidades
+nativas do alvo --- mede o custo realizado de agir pelo quantil
+$\tau$ de cada sistema no \emph{hold-out}, nos mesmos 20 conjuntos e 3
+sementes do protocolo. Três sistemas por semente: o aluno destilado, o
+controle \emph{hard} e o \emph{workaround} realista de quem só tem um
+modelo pontual --- ponto + resíduo gaussiano global, com desvio
+estimado em validação interna de 10\% do pool e refit no pool
+completo.
+
+As duas hipóteses pré-registradas confirmaram com folga. Em
+$\tau{=}0{,}90$ --- o nível de serviço típico de reserva de capital ou
+provisão de cauda ---, o custo realizado do aluno destilado é menor ou
+igual ao do controle \emph{hard} em \textbf{18 de 20} conjuntos
+(sinal unilateral $p{=}0{,}0002$; Wilcoxon suplementar $p{=}0{,}0001$)
+e menor ou igual ao do \emph{workaround} gaussiano em \textbf{17 de
+20} ($p{=}0{,}0013$). A contagem supera a do próprio CRPS agregado
+(16 de 20) --- o \emph{edge} de cauda é mais consistente entre
+conjuntos do que a média sobre todos os níveis.
+
+A análise exploratória pré-declarada (H-D3) explica por quê: o perfil
+do ganho por nível $\tau$ tem forma de U. No centro da distribuição
+($\tau$ entre 0,45 e 0,65), a redução mediana de custo sobre o
+controle é de ${\sim}1\%$; nas caudas, sobe para $8{,}0\%$ em
+$\tau{=}0{,}90$, $8{,}2\%$ em $\tau{=}0{,}95$ e $8{,}7\%$ em
+$\tau{=}0{,}05$ --- e, contra o gaussiano, para $14$--$21\%$ nas
+mesmas caudas. A leitura fecha o argumento do capítulo: \emph{a
+vantagem distribucional do professor vive nas caudas --- exatamente
+onde vivem as decisões de custo assimétrico --- e é lá que o aluno
+destilado a entrega, em microssegundos}
+(\texttt{results/distillation/decision\_utility.csv};
+análise em \texttt{decision\_utility\_analysis.csv}).
+
 \section{Quando destilar: duas hipóteses refutadas e a regra de
 decisão}
 \label{sec:destil-regra}

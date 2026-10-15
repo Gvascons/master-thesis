@@ -602,6 +602,34 @@ tails. Source: \texttt{scripts/plot\_calibration.py}.}
 \label{fig:calibration}
 \end{figure}
 
+\subsection{Decision utility: the distributional edge in problem units}
+\label{sec:decision-utility}
+
+CRPS is a statistician's ruler; real decisions face asymmetric costs.
+A pre-registered follow-up (E3, Oct~14, 2026) translates the effect
+into decision units, with its nature declared up front: the optimal
+newsvendor cost at cost ratio $\tau$ \emph{is} the pinball loss at
+$\tau$, so E3 is not independent evidence --- it is the CRPS
+\emph{resolved by service level}. On the same 20 datasets and seeds,
+we measure the realized cost of acting on each system's
+$\tau$-quantile on the hold-out, adding the realistic point-model
+workaround (point student plus a global Gaussian residual, with scale
+fit on an internal 10\% validation split). Both pre-registered
+hypotheses confirm: at $\tau{=}0.90$ the distilled student's realized
+cost is lower than or equal to the hard control's on \textbf{18 of
+20} datasets (one-sided sign test $p{=}0.0002$) and lower than or
+equal to the Gaussian workaround's on \textbf{17 of 20}
+($p{=}0.0013$) --- counts that exceed the aggregate-CRPS headline
+itself (16/20). The declared exploratory profile explains why: the
+median cost reduction over the hard control is U-shaped in $\tau$ ---
+${\sim}1\%$ near the median, rising to $8.0\%$ at $\tau{=}0.90$,
+$8.2\%$ at $\tau{=}0.95$ and $8.7\%$ at $\tau{=}0.05$ (14--21\%
+against the Gaussian workaround in the tails). The teacher's
+distributional advantage lives in the tails --- exactly where
+asymmetric-cost decisions live --- and that is where the distilled
+student delivers it, at microseconds
+(\texttt{results/distillation/decision\_utility.csv}).
+
 \subsection{When to distill: two refuted hypotheses become a decision rule}
 \label{sec:rule}
 
