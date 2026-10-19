@@ -1,7 +1,8 @@
 % ============================================================
 % ARQUIVO GERADO — NÃO EDITAR À MÃO.
 % Gerado por scripts/gen_appendix_tables.py a partir de
-% results/aggregated/test_results.csv.
+% results/aggregated/{test_results,cohens_d_*,bootstrap_ci,
+% cv_summary}.csv e results/latency/latency_adult.csv.
 % Regenerar: uv run python scripts/gen_appendix_tables.py
 % ============================================================
 
@@ -59,9 +60,227 @@
 \midrule
 \texttt{california\_housing} & 0{,}2637 & 0{,}2641 & 0{,}2653 & 0{,}3002 & 0{,}2801 & 0{,}2851 & 0{,}2873 & 0{,}2905 & 0{,}3326 & 0{,}2798 & 0{,}3371 & 0{,}3324 & 0{,}2570 & \textbf{0{,}2346} \\
 \texttt{kin8nm} & 0{,}1117 & 0{,}1075 & 0{,}0859 & 0{,}0821 & \textbf{0{,}0630} & 0{,}0677 & 0{,}0653 & 0{,}0820 & 0{,}0808 & 0{,}0656 & 0{,}1513 & 0{,}1526 & 0{,}0667 & 0{,}0652 \\
-\texttt{superconduct} & 0{,}8308 & 0{,}8320 & 0{,}8331 & 0{,}8523 & 0{,}8401 & 0{,}8432 & 0{,}8464 & 0{,}8415 & 0{,}8594 & 0{,}8482 & 0{,}8457 & 0{,}8460 & 0{,}8284 & \textbf{0{,}8269} \\
+\texttt{online\_news} & 0{,}8308 & 0{,}8320 & 0{,}8331 & 0{,}8523 & 0{,}8401 & 0{,}8432 & 0{,}8464 & 0{,}8415 & 0{,}8594 & 0{,}8482 & 0{,}8457 & 0{,}8460 & 0{,}8284 & \textbf{0{,}8269} \\
 \texttt{wine\_quality} & 0{,}5975 & 0{,}6131 & 0{,}6005 & 0{,}6629 & 0{,}6728 & 0{,}6774 & 0{,}6869 & 0{,}7077 & 0{,}6993 & 0{,}6607 & 0{,}6597 & 0{,}6941 & 0{,}6129 & \textbf{0{,}5747} \\
 \texttt{year\_prediction} & 8{,}6801 & 8{,}6727 & 8{,}6949 & 9{,}3563 & 8{,}6269 & 8{,}8727 & 8{,}8207 & 8{,}8357 & 8{,}8622 & 8{,}9224 & 8{,}7864 & 8{,}8662 & 8{,}5952 & \textbf{8{,}3634} \\
 \bottomrule
 \end{tabular}
 \end{sidewaystable}
+
+\begin{table}[p]
+\centering
+\small
+\caption[Métricas secundárias --- tarefa binária]{Rank médio (1 = melhor) dos 14 modelos em cada métrica da tarefa binária; a primária aparece como referência. Valores por célula em \texttt{results/aggregated/test\_results.csv}. Fonte: idem.}
+\label{tab:app-secundarias-binary}
+\begin{tabular}{lccccc}
+\toprule
+\emph{Modelo} & AUC-ROC & Acurácia & F1 & KS & log-loss \\
+\midrule
+XGBoost & 5{,}00 & 6{,}65 & 6{,}10 & 5{,}00 & 4{,}60 \\
+LightGBM & 6{,}30 & 5{,}80 & 7{,}00 & 5{,}65 & 7{,}50 \\
+CatBoost & 5{,}30 & 4{,}65 & 5{,}30 & 5{,}50 & 5{,}00 \\
+MLP & 9{,}30 & 10{,}05 & 8{,}90 & 9{,}70 & 8{,}80 \\
+RealMLP & 7{,}70 & 7{,}50 & 6{,}30 & 7{,}20 & 9{,}80 \\
+FT-Transformer & 7{,}40 & 8{,}50 & 7{,}60 & 7{,}00 & 8{,}70 \\
+SAINT & 7{,}50 & 7{,}90 & 8{,}20 & 7{,}00 & 6{,}80 \\
+STab & 8{,}80 & 8{,}00 & 9{,}20 & 8{,}70 & 7{,}80 \\
+TabNet & 11{,}80 & 10{,}30 & 10{,}50 & 11{,}70 & 11{,}20 \\
+TabM & 6{,}60 & 7{,}05 & 6{,}90 & 7{,}25 & 5{,}70 \\
+KAN & 11{,}00 & 9{,}75 & 10{,}00 & 11{,}00 & 10{,}70 \\
+TabKAN & 11{,}40 & 11{,}70 & 11{,}80 & 11{,}50 & 11{,}40 \\
+TabPFN & 4{,}20 & 4{,}05 & 5{,}30 & 4{,}80 & 4{,}10 \\
+TabFM & \textbf{2{,}70} & \textbf{3{,}10} & \textbf{1{,}90} & \textbf{3{,}00} & \textbf{2{,}90} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[p]
+\centering
+\small
+\caption[Métricas secundárias --- tarefa multiclasse]{Rank médio (1 = melhor) dos 14 modelos em cada métrica da tarefa multiclasse; a primária aparece como referência. Valores por célula em \texttt{results/aggregated/test\_results.csv}. Fonte: idem.}
+\label{tab:app-secundarias-multiclass}
+\begin{tabular}{lccccc}
+\toprule
+\emph{Modelo} & log-loss & Acurácia & F1-macro & F1-ponderado & AUC-OvR \\
+\midrule
+XGBoost & 6{,}00 & 6{,}33 & 7{,}00 & 5{,}33 & 6{,}67 \\
+LightGBM & 8{,}00 & 7{,}67 & 10{,}33 & 7{,}33 & 8{,}33 \\
+CatBoost & 7{,}00 & 6{,}67 & 6{,}67 & 6{,}67 & 7{,}33 \\
+MLP & 7{,}67 & 8{,}00 & 7{,}67 & 8{,}67 & 8{,}00 \\
+RealMLP & 4{,}33 & 3{,}67 & 3{,}00 & 3{,}33 & 4{,}33 \\
+FT-Transformer & 6{,}33 & 5{,}33 & 4{,}00 & 4{,}67 & 6{,}00 \\
+SAINT & 10{,}00 & 10{,}00 & 9{,}33 & 10{,}00 & 9{,}00 \\
+STab & 3{,}67 & 4{,}67 & 6{,}67 & 5{,}67 & 3{,}67 \\
+TabNet & 11{,}67 & 11{,}67 & 11{,}67 & 12{,}00 & 11{,}33 \\
+TabM & 3{,}67 & 4{,}67 & 5{,}00 & 5{,}67 & 4{,}33 \\
+KAN & 12{,}00 & 12{,}33 & 9{,}67 & 12{,}00 & 12{,}00 \\
+TabKAN & 13{,}33 & 13{,}00 & 12{,}67 & 12{,}67 & 13{,}00 \\
+TabPFN & 2{,}50 & 2{,}00 & 2{,}50 & 2{,}00 & 2{,}00 \\
+TabFM & \textbf{1{,}00} & \textbf{1{,}00} & \textbf{1{,}00} & \textbf{1{,}00} & \textbf{1{,}00} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[p]
+\centering
+\small
+\caption[Métricas secundárias --- tarefa regressão]{Rank médio (1 = melhor) dos 14 modelos em cada métrica da tarefa regressão; a primária aparece como referência. Valores por célula em \texttt{results/aggregated/test\_results.csv}. Fonte: idem.}
+\label{tab:app-secundarias-regression}
+\begin{tabular}{lccc}
+\toprule
+\emph{Modelo} & RMSE & MAE & $R^{2}$ \\
+\midrule
+XGBoost & 5{,}00 & 6{,}40 & 5{,}00 \\
+LightGBM & 5{,}60 & 6{,}20 & 5{,}60 \\
+CatBoost & 5{,}80 & 6{,}80 & 5{,}80 \\
+MLP & 11{,}00 & 9{,}60 & 11{,}00 \\
+RealMLP & 5{,}20 & 4{,}40 & 5{,}20 \\
+FT-Transformer & 8{,}80 & 8{,}00 & 8{,}80 \\
+SAINT & 8{,}40 & 9{,}40 & 8{,}40 \\
+STab & 9{,}60 & 10{,}00 & 9{,}60 \\
+TabNet & 11{,}40 & 10{,}20 & 11{,}40 \\
+TabM & 8{,}40 & 7{,}60 & 8{,}40 \\
+KAN & 9{,}80 & 9{,}60 & 9{,}80 \\
+TabKAN & 11{,}80 & 12{,}20 & 11{,}80 \\
+TabPFN & 3{,}00 & 3{,}20 & 3{,}00 \\
+TabFM & \textbf{1{,}20} & \textbf{1{,}40} & \textbf{1{,}20} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{sidewaystable}[p]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\caption[Tamanhos de efeito ($d$ de Cohen) --- binária]{$d$ de Cohen pareado (linha $-$ coluna) na tarefa binária (AUC-ROC); positivo = linha melhor (AUC maior). Fonte: \texttt{results/aggregated/cohens\_d\_binary.csv}.}
+\label{tab:app-cohensd-binary}
+\begin{tabular}{lcccccccccccccc}
+\toprule
+ & \rotatebox{90}{XGBoost} & \rotatebox{90}{LightGBM} & \rotatebox{90}{CatBoost} & \rotatebox{90}{MLP} & \rotatebox{90}{RealMLP} & \rotatebox{90}{FT-Transformer} & \rotatebox{90}{SAINT} & \rotatebox{90}{STab} & \rotatebox{90}{TabNet} & \rotatebox{90}{TabM} & \rotatebox{90}{KAN} & \rotatebox{90}{TabKAN} & \rotatebox{90}{TabPFN} & \rotatebox{90}{TabFM} \\
+\midrule
+XGBoost & --- & 0{,}38 & -0{,}35 & 0{,}72 & 0{,}52 & 0{,}44 & 0{,}55 & 0{,}47 & 1{,}14 & 0{,}35 & 1{,}10 & 0{,}99 & -0{,}28 & -0{,}68 \\
+LightGBM & -0{,}38 & --- & -0{,}44 & 0{,}63 & 0{,}43 & 0{,}38 & 0{,}48 & 0{,}44 & 1{,}01 & 0{,}29 & 1{,}02 & 0{,}91 & -0{,}33 & -0{,}73 \\
+CatBoost & 0{,}35 & 0{,}44 & --- & 0{,}69 & 0{,}47 & 0{,}43 & 0{,}48 & 0{,}45 & 0{,}85 & 0{,}41 & 0{,}97 & 0{,}91 & 0{,}15 & -0{,}31 \\
+MLP & -0{,}72 & -0{,}63 & -0{,}69 & --- & -0{,}16 & -0{,}07 & 0{,}05 & 0{,}29 & 0{,}72 & -0{,}68 & 0{,}67 & 0{,}71 & -0{,}91 & -1{,}02 \\
+RealMLP & -0{,}52 & -0{,}43 & -0{,}47 & 0{,}16 & --- & 0{,}11 & 0{,}23 & 0{,}38 & 0{,}84 & -0{,}07 & 0{,}49 & 0{,}41 & -0{,}75 & -0{,}91 \\
+FT-Transformer & -0{,}44 & -0{,}38 & -0{,}43 & 0{,}07 & -0{,}11 & --- & 0{,}23 & 0{,}43 & 0{,}74 & -0{,}41 & 0{,}41 & 0{,}49 & -0{,}65 & -0{,}72 \\
+SAINT & -0{,}55 & -0{,}48 & -0{,}48 & -0{,}05 & -0{,}23 & -0{,}23 & --- & 0{,}39 & 0{,}94 & -0{,}49 & 0{,}34 & 0{,}34 & -0{,}77 & -0{,}81 \\
+STab & -0{,}47 & -0{,}44 & -0{,}45 & -0{,}29 & -0{,}38 & -0{,}43 & -0{,}39 & --- & -0{,}11 & -0{,}44 & -0{,}12 & -0{,}12 & -0{,}55 & -0{,}62 \\
+TabNet & -1{,}14 & -1{,}01 & -0{,}85 & -0{,}72 & -0{,}84 & -0{,}74 & -0{,}94 & 0{,}11 & --- & -1{,}28 & -0{,}11 & -0{,}08 & -1{,}54 & -1{,}40 \\
+TabM & -0{,}35 & -0{,}29 & -0{,}41 & 0{,}68 & 0{,}07 & 0{,}41 & 0{,}49 & 0{,}44 & 1{,}28 & --- & 0{,}75 & 0{,}84 & -0{,}59 & -0{,}78 \\
+KAN & -1{,}10 & -1{,}02 & -0{,}97 & -0{,}67 & -0{,}49 & -0{,}41 & -0{,}34 & 0{,}12 & 0{,}11 & -0{,}75 & --- & 0{,}02 & -1{,}08 & -1{,}07 \\
+TabKAN & -0{,}99 & -0{,}91 & -0{,}91 & -0{,}71 & -0{,}41 & -0{,}49 & -0{,}34 & 0{,}12 & 0{,}08 & -0{,}84 & -0{,}02 & --- & -1{,}05 & -1{,}00 \\
+TabPFN & 0{,}28 & 0{,}33 & -0{,}15 & 0{,}91 & 0{,}75 & 0{,}65 & 0{,}77 & 0{,}55 & 1{,}54 & 0{,}59 & 1{,}08 & 1{,}05 & --- & -0{,}55 \\
+TabFM & 0{,}68 & 0{,}73 & 0{,}31 & 1{,}02 & 0{,}91 & 0{,}72 & 0{,}81 & 0{,}62 & 1{,}40 & 0{,}78 & 1{,}07 & 1{,}00 & 0{,}55 & --- \\
+\bottomrule
+\end{tabular}
+\end{sidewaystable}
+
+\begin{sidewaystable}[p]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\caption[Tamanhos de efeito ($d$ de Cohen) --- regressão]{$d$ de Cohen pareado (linha $-$ coluna) na tarefa regressão (RMSE); positivo = linha \emph{pior} (RMSE maior). Fonte: \texttt{results/aggregated/cohens\_d\_regression.csv}.}
+\label{tab:app-cohensd-regression}
+\begin{tabular}{lcccccccccccccc}
+\toprule
+ & \rotatebox{90}{XGBoost} & \rotatebox{90}{LightGBM} & \rotatebox{90}{CatBoost} & \rotatebox{90}{MLP} & \rotatebox{90}{RealMLP} & \rotatebox{90}{FT-Transformer} & \rotatebox{90}{SAINT} & \rotatebox{90}{STab} & \rotatebox{90}{TabNet} & \rotatebox{90}{TabM} & \rotatebox{90}{KAN} & \rotatebox{90}{TabKAN} & \rotatebox{90}{TabPFN} & \rotatebox{90}{TabFM} \\
+\midrule
+XGBoost & --- & -0{,}13 & 0{,}05 & -0{,}52 & 0{,}00 & -0{,}58 & -0{,}62 & -0{,}72 & -0{,}88 & -0{,}53 & -1{,}71 & -1{,}24 & 0{,}61 & 0{,}64 \\
+LightGBM & 0{,}13 & --- & 0{,}12 & -0{,}51 & 0{,}03 & -0{,}56 & -0{,}61 & -0{,}71 & -0{,}86 & -0{,}51 & -1{,}55 & -1{,}18 & 0{,}78 & 0{,}67 \\
+CatBoost & -0{,}05 & -0{,}12 & --- & -0{,}54 & -0{,}01 & -0{,}69 & -0{,}77 & -0{,}86 & -1{,}06 & -0{,}60 & -2{,}06 & -1{,}43 & 0{,}54 & 0{,}60 \\
+MLP & 0{,}52 & 0{,}51 & 0{,}54 & --- & 0{,}48 & 0{,}47 & 0{,}46 & 0{,}42 & 0{,}36 & 0{,}50 & 0{,}35 & 0{,}31 & 0{,}55 & 0{,}56 \\
+RealMLP & -0{,}00 & -0{,}03 & 0{,}01 & -0{,}48 & --- & -0{,}49 & -0{,}54 & -0{,}63 & -0{,}75 & -0{,}44 & -0{,}86 & -0{,}87 & 1{,}03 & 0{,}78 \\
+FT-Transformer & 0{,}58 & 0{,}56 & 0{,}69 & -0{,}47 & 0{,}49 & --- & 0{,}31 & -0{,}09 & -0{,}85 & -0{,}24 & -0{,}10 & -0{,}78 & 0{,}67 & 0{,}64 \\
+SAINT & 0{,}62 & 0{,}61 & 0{,}77 & -0{,}46 & 0{,}54 & -0{,}31 & --- & -0{,}95 & -1{,}56 & -0{,}28 & -0{,}28 & -1{,}05 & 0{,}76 & 0{,}68 \\
+STab & 0{,}72 & 0{,}71 & 0{,}86 & -0{,}42 & 0{,}63 & 0{,}09 & 0{,}95 & --- & -0{,}75 & -0{,}08 & -0{,}08 & -0{,}82 & 0{,}83 & 0{,}72 \\
+TabNet & 0{,}88 & 0{,}86 & 1{,}06 & -0{,}36 & 0{,}75 & 0{,}85 & 1{,}56 & 0{,}75 & --- & 0{,}26 & 0{,}20 & -0{,}33 & 0{,}94 & 0{,}78 \\
+TabM & 0{,}53 & 0{,}51 & 0{,}60 & -0{,}50 & 0{,}44 & 0{,}24 & 0{,}28 & 0{,}08 & -0{,}26 & --- & -0{,}01 & -0{,}42 & 0{,}61 & 0{,}61 \\
+KAN & 1{,}71 & 1{,}55 & 2{,}06 & -0{,}35 & 0{,}86 & 0{,}10 & 0{,}28 & 0{,}08 & -0{,}20 & 0{,}01 & --- & -0{,}62 & 1{,}28 & 0{,}90 \\
+TabKAN & 1{,}24 & 1{,}18 & 1{,}43 & -0{,}31 & 0{,}87 & 0{,}78 & 1{,}05 & 0{,}82 & 0{,}33 & 0{,}42 & 0{,}62 & --- & 1{,}10 & 0{,}86 \\
+TabPFN & -0{,}61 & -0{,}78 & -0{,}54 & -0{,}55 & -1{,}03 & -0{,}67 & -0{,}76 & -0{,}83 & -0{,}94 & -0{,}61 & -1{,}28 & -1{,}10 & --- & 0{,}60 \\
+TabFM & -0{,}64 & -0{,}67 & -0{,}60 & -0{,}56 & -0{,}78 & -0{,}64 & -0{,}68 & -0{,}72 & -0{,}78 & -0{,}61 & -0{,}90 & -0{,}86 & -0{,}60 & --- \\
+\bottomrule
+\end{tabular}
+\end{sidewaystable}
+
+\begin{table}[p]
+\centering
+\small
+\caption[IC bootstrap da média de AUC --- binária]{Média de AUC-ROC na tarefa binária com IC95\% de \emph{bootstrap} percentil ($B{=}10\,000$) sobre os conjuntos. Fonte: \texttt{results/aggregated/bootstrap\_ci.csv}.}
+\label{tab:app-bootstrap-auc}
+\begin{tabular}{lcc}
+\toprule
+\emph{Modelo} & Média & IC95\% \\
+\midrule
+XGBoost & 0{,}8666 & [0{,}8282; 0{,}9037] \\
+LightGBM & 0{,}8658 & [0{,}8279; 0{,}9025] \\
+CatBoost & 0{,}8717 & [0{,}8335; 0{,}9077] \\
+MLP & 0{,}8560 & [0{,}8202; 0{,}8920] \\
+RealMLP & 0{,}8593 & [0{,}8159; 0{,}9008] \\
+FT-Transformer & 0{,}8569 & [0{,}8190; 0{,}8954] \\
+SAINT & 0{,}8552 & [0{,}8145; 0{,}8958] \\
+STab & 0{,}8426 & [0{,}7916; 0{,}8888] \\
+TabNet & 0{,}8468 & [0{,}8049; 0{,}8886] \\
+TabM & 0{,}8607 & [0{,}8236; 0{,}8983] \\
+KAN & 0{,}8485 & [0{,}8119; 0{,}8843] \\
+TabKAN & 0{,}8484 & [0{,}8142; 0{,}8822] \\
+TabPFN & 0{,}8688 & [0{,}8293; 0{,}9079] \\
+TabFM & \textbf{0{,}8775} & [0{,}8365; 0{,}9181] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[p]
+\centering
+\small
+\caption[Custos consolidados por modelo]{Custos medianos por modelo: treino (s, 18 conjuntos), tuning (s, excl.\ \texttt{adult} --- Seção~\ref{sec:met-custo}) e latência (\textmu s/linha, \texttt{adult}). Fonte: \texttt{test\_results.csv} + \texttt{latency\_adult.csv}.}
+\label{tab:app-custos}
+\begin{tabular}{lrrr}
+\toprule
+\emph{Modelo} & Treino (s) & Tuning (s) & Latência (\textmu s/linha) \\
+\midrule
+XGBoost & 0,69 & 157 & 0,33 \\
+LightGBM & 0,66 & 104 & 1,91 \\
+CatBoost & 3,76 & 646 & 1,43 \\
+MLP & 12,95 & 1.117 & 2,37 \\
+RealMLP & 36,90 & 1.352 & 1,52 \\
+FT-Transformer & 87,22 & 4.505 & 28,87 \\
+SAINT & 202,19 & 9.831 & 44,69 \\
+STab & 198,85 & 14.622 & 8.644,82 \\
+TabNet & 64,97 & 5.928 & 17,09 \\
+TabM & 33,76 & 2.242 & 3,48 \\
+KAN & 11,94 & 767 & 3,07 \\
+TabKAN & 9,15 & 690 & 2,32 \\
+TabPFN & 1,35 & --- & 7.416,10 \\
+TabFM & 0,18 & --- & 43.262,04 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[p]
+\centering
+\small
+\caption[Variabilidade entre \emph{folds}]{Mediana, sobre os conjuntos da tarefa, do coeficiente de variação entre \emph{folds} da métrica primária (\%; menor = mais estável). Fonte: \texttt{results/aggregated/cv\_summary.csv}.}
+\label{tab:app-foldvar}
+\begin{tabular}{lccc}
+\toprule
+\emph{Modelo} & Binária (AUC) & Multiclasse (log-loss) & Regressão (RMSE) \\
+\midrule
+XGBoost & 0{,}49 & 0{,}79 & 1{,}96 \\
+LightGBM & 0{,}52 & 0{,}73 & 1{,}79 \\
+CatBoost & 0{,}35 & 0{,}85 & 2{,}11 \\
+MLP & 0{,}44 & 0{,}65 & 3{,}75 \\
+RealMLP & 0{,}51 & 1{,}22 & 1{,}61 \\
+FT-Transformer & 0{,}46 & 0{,}77 & 1{,}46 \\
+SAINT & 0{,}62 & 1{,}11 & 1{,}61 \\
+STab & 0{,}46 & 1{,}32 & 3{,}60 \\
+TabNet & 0{,}73 & 0{,}98 & 2{,}47 \\
+TabM & 0{,}48 & 0{,}75 & 1{,}86 \\
+KAN & 0{,}43 & 1{,}10 & 1{,}87 \\
+TabKAN & 0{,}50 & 0{,}80 & 1{,}69 \\
+TabPFN & 0{,}37 & 1{,}60 & 1{,}48 \\
+TabFM & 0{,}36 & 1{,}57 & 1{,}46 \\
+\bottomrule
+\end{tabular}
+\end{table}

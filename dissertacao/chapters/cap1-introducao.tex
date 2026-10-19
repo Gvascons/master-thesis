@@ -236,7 +236,8 @@ o recorte e a evidência que faltavam. Em ordem de apresentação:
     onde alcançam as verificações datadas (Capítulo~\ref{chap:benchmark}).
   \item \textbf{Um resultado negativo independente sobre as redes de
     Kolmogorov--Arnold} --- no primeiro teste da família contra a grade
-    completa GBDT/aprendizado profundo/\emph{foundation models} em
+    completa GBDT (\emph{gradient-boosted decision trees})/aprendizado
+    profundo/\emph{foundation models} em
     benchmark multicritério (verificação datada), KAN e TabKAN terminam no
     último terço nas três tarefas, embora baratas de servir: sob protocolo
     uniforme com ajuste equalizado, as alegações dos artigos originais não
@@ -259,14 +260,18 @@ o recorte e a evidência que faltavam. Em ordem de apresentação:
     forma robusta com qualquer professor (um resultado negativo reportado
     com proeminência integral), enquanto a transferência das curvas de
     quantis retém mediana de 19\% da vantagem distribucional do professor,
-    positiva em 16 de 20 conjuntos (teste de sinal $p=0{,}006$), a
+    positiva em 16 de 20 conjuntos (teste de sinal unilateral
+    $p=0{,}006$; 15 de 19 na sensibilidade que exclui o conjunto de alvo
+    binarizado da errata --- Capítulo~\ref{chap:destilacao}), a
     latências de microssegundos; a primeira fronteira medida de ponta a
     ponta entre destilar, comprimir contexto e reduzir \emph{ensemble}; a
     ablação que mostra que a rotulagem \emph{out-of-fold} protege
-    calibração, não acurácia; o experimento pré-registrado E1, também
-    exclusivo desta dissertação, em que o aluno destilado vence
+    calibração, não acurácia; o experimento pré-registrado E1, cuja
+    comparação pareada completa é exclusiva desta dissertação, em que o
+    aluno destilado vence
     \emph{baselines} distribucionais clássicos em 17 de 20 conjuntos
-    ($p=0{,}0013$); e a regra de decisão prática que converte as
+    (teste de sinal unilateral $p=0{,}0013$); e a regra de decisão
+    prática que converte as
     refutações em instrução verificável em minutos
     (Capítulo~\ref{chap:destilacao}).
   \item \textbf{Infraestrutura e conduta reutilizáveis} --- o protocolo, os
@@ -305,8 +310,12 @@ Os dois relatórios são trabalhos avaliativos do programa, sem revisão por
 pares externa até a data desta escrita; seu conteúdo corresponde,
 respectivamente, aos Capítulos~\ref{chap:benchmark}
 e~\ref{chap:framework} e ao Capítulo~\ref{chap:destilacao}, que incluem
-ainda os dois experimentos (E1 e E2) que são contribuições novas da
-dissertação, inéditas em relação aos relatórios.
+ainda duas contribuições novas da dissertação: o E2 (regret
+multicritério ponderado), integralmente inédito em relação aos
+relatórios, e os resultados completos por conjunto do E1 (a comparação
+pareada 17/20 contra clássicos) --- o relatório da destilação
+incorpora os dados do E1 apenas por meio do teste de Friedman de cinco
+sistemas.
 
 \section{Como ler esta dissertação}
 \label{sec:intro-comoler}

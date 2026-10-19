@@ -254,7 +254,8 @@ uma decisão incômoda: como entregar \texttt{ocupação} a uma rede que só
 consome números? A codificação \emph{one-hot} --- uma coluna binária por
 categoria --- explode a dimensionalidade quando a cardinalidade é alta: no
 benchmark desta dissertação, o conjunto \texttt{amazon\_employee} atingiria
-cerca de 6{,}9 mil colunas sem um teto de cardinalidade, penalizando
+da ordem de 7 a 16 mil colunas (conforme o \emph{split}) sem um teto de
+cardinalidade, penalizando
 especialmente os modelos de atenção, cujo custo cresce com o número de
 colunas. A alternativa padrão são \emph{embeddings} aprendidos: cada
 categoria é mapeada a um vetor denso de baixa dimensão, treinado junto com
@@ -653,7 +654,16 @@ condição necessária e não suficiente: um intervalo absurdamente largo cobre
 sempre e não informa nada. Por isso a cobertura é lida junto com a
 \emph{afiação} (\emph{sharpness}) --- a largura média dos intervalos: entre
 modelos igualmente calibrados, o de intervalos mais estreitos é o mais
-informativo \citep{gneiting2007calib}.
+informativo \citep{gneiting2007calib}. Quando a cobertura empírica foge
+do nominal, existe um reparo pós-hoc com garantia formal: a
+\emph{calibração conformal} (\emph{split-conformal}) separa um conjunto
+de calibração, mede nele os resíduos do modelo e ajusta os limites dos
+intervalos pelo quantil empírico desses resíduos --- o que garante, sob
+trocabilidade dos dados, cobertura marginal no nível nominal,
+qualquer que seja o modelo por baixo; a variante por quantis
+(CQR, \emph{conformalized quantile regression}) aplica o mesmo ajuste
+diretamente aos quantis previstos. O Capítulo~\ref{chap:destilacao}
+usa essa ferramenta como piloto declarado.
 
 \subsection{Dois \emph{baselines} distribucionais nativos}
 

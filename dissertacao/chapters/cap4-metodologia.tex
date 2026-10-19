@@ -80,7 +80,7 @@ cardiovascular\_disease & binária & 45547 & 70\,000  & 11 & 2 & mistos \\
 credit\_g               & binária & 31    & 1\,000   & 20 & 2 & mistos \\
 give\_me\_some\_credit  & binária & 46929 & 150\,000 & 10 & 2 & numéricos \\
 higgs                   & binária & 23512 & 98\,000  & 28 & 2 & numéricos \\
-magictelescope          & binária & 44125 & 19\,000  & 10 & 2 & numéricos \\
+magictelescope          & binária & 44125 & 13\,000  & 10 & 2 & numéricos \\
 phoneme                 & binária & 1489  & 5\,400   & 5  & 2 & numéricos \\
 telco\_customer\_churn  & binária & 42178 & 7\,000   & 19 & 2 & mistos \\
 \midrule
@@ -88,14 +88,35 @@ covertype               & multiclasse & 1596  & 581\,000 & 54 & 7   & numéricos
 helena                  & multiclasse & 41169 & 65\,000  & 27 & 100 & numéricos \\
 jannis                  & multiclasse & 41168 & 84\,000  & 54 & 4   & numéricos \\
 \midrule
-california\_housing     & regressão & 44090 & 21\,000  & 8  & -- & numéricos \\
+california\_housing$^{\dagger}$ & regressão & 44090 & 21\,000  & 8  & -- & numéricos \\
 kin8nm                  & regressão & 44980 & 8\,192   & 8  & -- & numéricos \\
-superconduct            & regressão & 44064 & 21\,000  & 81 & -- & numéricos \\
+online\_news$^{\ddagger}$ & regressão & 44064 & 40\,000  & 59 & -- & mistos \\
 wine\_quality           & regressão & 287   & 6\,500   & 11 & -- & numéricos \\
 year\_prediction        & regressão & 44027 & 515\,000 & 90 & -- & numéricos \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+Duas notas de identidade acompanham a tabela, resultado da auditoria
+nome$\leftrightarrow$ID$\leftrightarrow$dimensões de 19/10/2026 sobre
+os 33 identificadores do estudo (a checagem registrada como pendência
+na errata do \texttt{kin8nm}; registro canônico em
+\texttt{docs/errata-datasets-core-regressao.md}). ($\dagger$)~O
+\texttt{california\_housing} do id 44090 é a variante do
+\emph{tabular-benchmark} de \citet{grinsztajn2022} com \textbf{alvo
+binarizado pela mediana} (valor do imóvel acima/abaixo), não a
+regressão original: todos os modelos competem na mesma tarefa --- o
+RMSE sobre alvo $\{0,1\}$ é a raiz do escore de Brier, e os
+\emph{ranks} internos permanecem válidos ---, mas o conjunto é
+degenerado para leituras distribucionais, e cada resultado que o
+envolve no Capítulo~\ref{chap:destilacao} carrega análise de
+sensibilidade com ele excluído. ($\ddagger$)~O conjunto
+historicamente rotulado ``superconduct'' sempre foi o
+\textbf{OnlineNewsPopularity} (alvo = logaritmo do número de
+compartilhamentos; regressão contínua legítima): apenas o rótulo
+estava errado, e foi renomeado para \texttt{online\_news} em todos os
+artefatos por retificação datada --- o mesmo tratamento do episódio
+\texttt{diamonds}/\texttt{kin8nm}.
 
 A seleção obedeceu a quatro critérios, cada um ligado a uma necessidade da
 investigação:
@@ -237,9 +258,11 @@ Três decisões de composição merecem justificativa explícita:
     (Capítulo~\ref{chap:fundamentacao}). Essa assimetria é deliberada ---
     o regime \emph{zero-shot} é precisamente a alegação paradigmática sob
     teste, e seus parâmetros de inferência (conjunto de 8 membros de
-    \emph{ensemble}; teto de contexto de 50~mil amostras, com política de
-    subamostragem idêntica entre os dois modelos para comparabilidade) são
-    políticas fixas das bibliotecas, não quantidades ajustadas aos nossos
+    \emph{ensemble} --- o \emph{default} do TabPFN, espelhado no TabFM,
+    cujo \emph{default} de biblioteca é 32, para comparabilidade e custo;
+    teto de contexto de 50~mil amostras, com política de
+    subamostragem idêntica entre os dois modelos) são
+    políticas fixas, não quantidades ajustadas aos nossos
     dados.
 \end{itemize}
 
@@ -294,15 +317,23 @@ cruzada aninhada (seleção de hiperparâmetros restrita ao laço interno).}
   \item \textbf{Orçamentos de otimização 100/25 --- por quê a assimetria.}
     A busca usa Optuna com amostrador TPE e MedianPruner \citep{akiba2019}:
     100 \emph{trials} para gradient boosting e 25 para aprendizado profundo.
-    A assimetria nominal \emph{equaliza o custo}: um \emph{trial} de
-    aprendizado profundo custa cerca de 4$\times$ um \emph{trial} de GBDT,
-    e 25 \emph{trials} de TPE capturam a maior parte do \emph{landscape} de
-    otimização \citep{akiba2019}. Orçamentos iguais em número de
-    \emph{trials} dariam aos GBDTs menos tempo de busca por unidade de
-    custo --- a paridade relevante é a de recursos, não a de contagem. Uma
+    A assimetria nominal \emph{atenua} a disparidade de custo: a premissa
+    de desenho estimava um \emph{trial} de aprendizado profundo em cerca de
+    4$\times$ um \emph{trial} de GBDT, e 25 \emph{trials} de TPE (o
+    amostrador \emph{Tree-structured Parzen Estimator} do Optuna) capturam
+    a maior parte do \emph{landscape} de
+    otimização \citep{akiba2019}. As medições realizadas mostraram
+    disparidade maior que a premissa (o custo mediano por \emph{trial}
+    do aprendizado profundo ficou uma ordem de grandeza acima do dos
+    GBDTs, e o tempo total de busca, 2--30$\times$ acima, conforme o
+    par de modelos); o viés residual favorece o aprendizado profundo em
+    tempo de busca --- que, ainda assim, não vence --- e a leitura
+    correta é ``orçamentos assimétricos por desenho, paridade imperfeita
+    medida e declarada'', não equalização. Uma
     exceção histórica é declarada: no \texttt{adult}, os 11 experimentos
-    de aprendizado profundo anteriores à redução de orçamento (100
-    \emph{trials}) foram mantidos como âncora de validação, de modo que,
+    da Fase~1 anteriores à redução de orçamento (100
+    \emph{trials}; 7 deles de aprendizado profundo) foram mantidos como
+    âncora de validação, de modo que,
     nesse único conjunto, as arquiteturas legadas tiveram 4$\times$ o
     orçamento de KAN/TabKAN; o conjunto é excluído dos agregados de
     custo de tuning, e a direção do viés (a favor das legadas, que ainda
@@ -351,7 +382,8 @@ clássica de vazamento:
   \item \textbf{Aprendizado profundo:} padronização das numéricas e
     \emph{one-hot} das categóricas com teto de 50 categorias por coluna. O
     teto é necessário para evitar explosão dimensional: sem ele, o conjunto
-    \texttt{amazon\_employee} atingiria cerca de 6\,900 colunas, excedendo a
+    \texttt{amazon\_employee} atingiria entre 7 e 16~mil colunas conforme o
+    \emph{split} (a soma de cardinalidades do conjunto completo é 15.626), excedendo a
     memória da GPU nos modelos de atenção.
   \item \textbf{\emph{Foundation models}:} codificação ordinal; a
     normalização interna é dos próprios modelos, por desenho.
@@ -391,7 +423,8 @@ Multiclasse (3) & \emph{log-loss} ($\downarrow$) &
   a $K$ classes sem agregação arbitrária\end{tabular} \\
 \addlinespace
 Regressão (5) & RMSE ($\downarrow$) & MAE, $R^2$ &
-  \begin{tabular}[t]{@{}l@{}}na unidade do alvo; penalização\\
+  \begin{tabular}[t]{@{}l@{}}na escala em que a suíte distribui o alvo\\
+  (ver notas da Tabela~\ref{tab:datasets}); penalização\\
   quadrática de erros grandes\end{tabular} \\
 \bottomrule
 \end{tabular}
@@ -667,7 +700,7 @@ conhecidas e as decisões tomadas diante delas.
     tamanho do benchmark (\texttt{credit\_g}, mil amostras, e
     \texttt{cardiovascular\_disease}, 70~mil) confirmou que os
     \emph{rankings} de latência entre os 14 modelos são estáveis entre
-    conjuntos (Spearman 0{,}79--0{,}95) e que a dependência do contexto
+    conjuntos (correlação de postos de Spearman 0{,}79--0{,}95) e que a dependência do contexto
     dos \emph{foundation models} tem a direção declarada (TabPFN: 840
     $\mu$s/linha no menor conjunto, 45{\,}578 no maior). Os números não se
     transferem para serviço \emph{online} de linha única nem para outro

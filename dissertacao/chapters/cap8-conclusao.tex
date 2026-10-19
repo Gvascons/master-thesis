@@ -73,12 +73,15 @@ sozinho dos rótulos brutos. O que o professor carrega e o aluno não
 aprende sozinho é a \emph{forma} da distribuição preditiva --- e é isso
 que se destila. A transferência das curvas de quantis do TabPFN para um
 aluno de microssegundos retém mediana de 19\% da vantagem de CRPS do
-professor, positiva em 16 de 20 conjuntos (teste de sinal $p=0{,}006$),
+professor, positiva em 16 de 20 conjuntos (teste de sinal unilateral
+$p=0{,}006$; 15 de 19 na sensibilidade que exclui o conjunto de alvo
+binarizado da errata),
 sobrevive ao confronto com nativos distribucionais clássicos fortes (17
 de 20 contra o melhor entre QRF e NGBoost, $p=0{,}0013$, no experimento
-E1) e, onde a vantagem do professor é grande, é a única estratégia
-medida que a carrega para baixo da configuração competitiva mais barata
-do próprio professor (Capítulo~\ref{chap:destilacao}). As falhas não são
+E1) e, onde a vantagem do professor é grande, é a estratégia
+\emph{derivada do professor} que a carrega para baixo da configuração
+competitiva mais barata
+dele (Capítulo~\ref{chap:destilacao}). As falhas não são
 aleatórias: concentram-se onde não há vantagem genuína a transferir, e a
 pré-condição é verificável em minutos --- o que converte o resultado em
 regra de decisão, não em promessa.
@@ -203,9 +206,11 @@ conforme o contrato de conduta do programa
     (evidência; Capítulo~\ref{chap:destilacao}).} Destilar, comprimir
     contexto e reduzir \emph{ensemble} medidos pela primeira vez nos
     mesmos \emph{hold-outs}: onde a vantagem do professor é grande, o
-    aluno destilado é o sistema distribucional CRPS-ótimo abaixo da
-    configuração competitiva mais barata do professor ($2{,}5\times$ e
-    $27\times$ a latência do aluno nos dois casos medidos); onde é
+    aluno destilado é, entre as estratégias derivadas do professor, o
+    sistema distribucional CRPS-ótimo abaixo da
+    configuração competitiva mais barata dele ($2{,}5\times$ e
+    $27\times$ a latência do aluno nos dois casos medidos --- o E1
+    mostra que uma QRF nativa também habita o regime); onde é
     pequena, reduzir o \emph{ensemble} basta. Dois achados colaterais de
     engenharia: um membro do TabPFN $\approx$ oito a um sétimo da
     latência, e a última duplicação de contexto é desproporcionalmente
@@ -217,10 +222,12 @@ conforme o contrato de conduta do programa
     idêntico): um refinamento desconfundido do achado de classificação
     do Pocket~FM \citep{pocketfm2026}.
   \item \textbf{Confronto com nativos distribucionais clássicos --- E1
-    (evidência; Capítulo~\ref{chap:destilacao}; inédito em relação ao
-    AI-2).} O aluno destilado vence o melhor entre QRF e NGBoost em 17
+    (evidência; Capítulo~\ref{chap:destilacao}; a comparação pareada
+    completa é inédita em relação ao AI-2, que incorpora os dados do E1
+    apenas via o Friedman de cinco sistemas).} O aluno destilado vence o
+    melhor entre QRF e NGBoost em 17
     de 20 conjuntos ($p=0{,}0013$), com os três reveses diagnosticáveis
-    --- no \texttt{wine\_quality}, onde o gate pré-registrado já
+    --- no \texttt{wine\_quality}, onde o \emph{gate} pré-registrado já
     desaconselhava destilar, a QRF \emph{default} supera até o
     professor. O complemento negativo tem valor próprio: o passo ``teste
     um nativo forte antes'' da regra de decisão deixou de ser retórico.
@@ -293,8 +300,8 @@ e~\ref{chap:destilacao}, na ordem em que as perguntas devem ser feitas
     \texttt{wine\_quality}, venceu até o professor (E1,
     Seção~\ref{sec:destil-e1}); um MLP-quantil cobre os conjuntos
     pequenos e numéricos (Seção~\ref{sec:destil-regra}).
-  \item \textbf{Destile quando o \emph{vantagem} sobreviver às
-    transformações e a um nativo forte --- e meça-o antes.} Uma única
+  \item \textbf{Destile quando a vantagem sobreviver às
+    transformações e a um nativo forte --- e meça-a antes.} Uma única
     rotulagem OOF, de custo de minutos, mede diretamente a vantagem
     genuína do professor; destile somente se ela persistir
     (Seção~\ref{sec:destil-regra}). Não destile a média: em pools
@@ -412,6 +419,21 @@ lacuna carrega data de verificação (13--20/07/2026; re-varredura em
 04/10/2026), e deve ser lida como ``aberta até onde verificamos, nas
 datas declaradas'' --- nunca como certeza atemporal
 (Capítulo~\ref{chap:related}).
+
+\textbf{Identidade dos conjuntos do núcleo de regressão.} A auditoria
+nome$\leftrightarrow$ID$\leftrightarrow$dimensões de 19/10/2026
+(Tabela~\ref{tab:datasets}) encontrou dois erros herdados da criação do
+projeto: o rótulo ``superconduct'' designava o
+\texttt{online\_news} (regressão contínua legítima; retificação por
+renomeação datada) e o \texttt{california\_housing} é a variante de
+alvo binarizado do \emph{tabular-benchmark}. O segundo caso é o
+substantivo: cada resultado-manchete da destilação carrega análise de
+sensibilidade com o conjunto excluído --- o teste de sinal, o E3, o
+Friedman de cinco sistemas e as ablações sobrevivem; o Wilcoxon
+unilateral da retenção passa de $0{,}045$ a $0{,}067$ e deixa de
+rejeitar a 5\%, degradação declarada com a mesma proeminência do
+resultado (Capítulo~\ref{chap:destilacao};
+\texttt{docs/errata-datasets-core-regressao.md}).
 
 \subsection{Validade de construto}
 

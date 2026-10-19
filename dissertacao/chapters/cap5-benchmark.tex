@@ -50,7 +50,7 @@ Capítulo~\ref{chap:metodologia} (o conjunto historicamente chamado
 reportados neste capítulo: cada valor aqui citado é posterior à errata.
 
 Antes dos resultados, convém revisitar o espaço amostral sobre o qual
-eles se apoiam. A Figura~4.1, no Capítulo~\ref{chap:metodologia},
+eles se apoiam. A Figura~\ref{fig:dataset-landscape}, no Capítulo~\ref{chap:metodologia},
 posiciona os 18 conjuntos no plano amostras $\times$ atributos;
 retomamos aqui apenas a leitura de que este capítulo precisa. Ela mostra
 que a amostra de conjuntos não se concentra em um único
@@ -85,9 +85,12 @@ DL), \emph{hold-out} fixo de 20\% (semente 42) que nenhuma etapa de seleção
 jamais observa, e pré-processamento por família (one-hot para atenção,
 ordinal para árvores, embeddings onde o modelo os define). Duas
 assimetrias do desenho são declaradas porque afetam a leitura dos
-resultados: os orçamentos de 100/25 tentativas equalizam o custo de
-relógio do ajuste (uma tentativa de DL custa aproximadamente
-$4\times$ uma de GBDT), e os \emph{foundation models} entram
+resultados: os orçamentos de 100/25 tentativas \emph{atenuam} a
+disparidade de custo de relógio do ajuste (a premissa de desenho
+estimava uma tentativa de DL em ${\sim}4\times$ uma de GBDT; as
+medições mostraram disparidade maior, declarada na
+Seção~\ref{sec:met-protocolo} --- o viés residual favorece o DL, que
+ainda assim não vence), e os \emph{foundation models} entram
 \emph{zero-shot} --- sem ajuste algum --- porque essa entrada é a
 própria alegação de paradigma sob teste; suas configurações de
 inferência (\emph{ensemble} de 8 membros, teto de contexto de 50 mil linhas)
@@ -146,7 +149,17 @@ acima de 0,5 como ``mais provavelmente equivalente que não'', o XGBoost
 ($P(\mathrm{equiv}) = 0{,}65$) supera essa barra mesmo no limiar
 estrito de 0,005, com o CatBoost no limite (0,54). O empate do topo,
 portanto, não é um artefato de baixo poder: é equivalência prática
-positivamente aferida.
+positivamente aferida. Os tamanhos de efeito pareados ($d$ de Cohen
+sobre as diferenças de AUC por conjunto; item 5 do protocolo do
+Capítulo~\ref{chap:metodologia}) contam a mesma história em outra
+régua: dentro do pelotão, os efeitos são pequenos a médios (TabPFN
+$-$ XGBoost $d{=}0{,}28$), crescem na fronteira da geração (TabFM $-$
+XGBoost $d{=}0{,}68$) e só ficam grandes contra a cauda da grade
+(TabNet $-$ TabPFN $d{=}{-}1{,}54$); as matrizes completas, binária e
+de regressão, e os intervalos de \emph{bootstrap} da média de AUC
+(item 6 do protocolo) estão no Apêndice~\ref{app:tabelas}, junto às
+tabelas de métricas secundárias em \emph{ranks} e à variabilidade
+entre \emph{folds}.
 
 \emph{No núcleo de 11 modelos, o topo da classificação binária é um
 empate estatístico: 8 dos 10 modelos não-líderes são praticamente
@@ -241,12 +254,15 @@ hiperparâmetros a pagar. Essa inversão, cujo outro lado aparece já no
 próximo parágrafo, é o fio que costura o capítulo.
 
 O segundo eixo é o custo total do ajuste de hiperparâmetros, que o tempo
-de treino de um único ajuste subestima. Nas medianas entre conjuntos, os
-GBDTs pagam de 106~s (LightGBM) a 648~s (CatBoost) pelo ciclo completo de
-busca; o DL tipo-MLP paga de 1.150~s (MLP) a 3.515~s (TabM); e a atenção
-pesada chega a 12.245~s (SAINT) e 14.956~s (STab) --- duas ordens de
+de treino de um único ajuste subestima. Nas medianas entre conjuntos
+(excluído o \texttt{adult}, conforme o protocolo de custo da
+Seção~\ref{sec:met-protocolo}), os
+GBDTs pagam de 104~s (LightGBM) a 646~s (CatBoost) pelo ciclo completo de
+busca; o DL tipo-MLP paga de 1.117~s (MLP) a 2.242~s (TabM); e a atenção
+pesada chega a 9.831~s (SAINT) e 14.622~s (STab) --- duas ordens de
 magnitude acima dos GBDTs mais baratos, para, como visto no Ato~I, não
-sair do empate. Os \emph{foundation models} pagam zero. Esse eixo raramente
+sair do empate (a tabela consolidada de custos está no
+Apêndice~\ref{app:tabelas}). Os \emph{foundation models} pagam zero. Esse eixo raramente
 aparece nos benchmarks da literatura, mas é o que o praticante paga a
 cada reajuste do modelo em produção.
 
@@ -321,7 +337,8 @@ eixo de restrições do arcabouço de decisão
 (Capítulo~\ref{chap:destilacao}): quanto desse preço é removível?
 
 \emph{Modelos praticamente equivalentes em acurácia diferem em
-${\sim}300\times$ no tempo de treino e em cinco ordens de magnitude na
+${\sim}300\times$ no tempo de treino e em mais de quatro ordens de
+magnitude na
 latência de inferência; no núcleo de 11, a fronteira de Pareto
 rank~$\times$~custo é \{TabPFN, XGBoost, LightGBM\} no eixo de treino ---
 e todo o aprendizado profundo clássico é dominado.} Quando o desempenho
@@ -374,7 +391,9 @@ one-hot penaliza os modelos de atenção (o caso
 \texttt{amazon\_employee} visível na Figura~\ref{fig:cap5-heatmap}); e o
 TabPFN combina, dentro do núcleo, o melhor rank médio com o melhor
 pior-caso --- é o modelo que mais raramente falha de forma catastrófica,
-um atributo de robustez que rank médio sozinho não captura.
+um atributo de robustez que rank médio sozinho não captura (a
+variabilidade entre \emph{folds} que sustenta essa leitura está
+tabulada no Apêndice~\ref{app:tabelas}).
 
 Nenhuma das análises anteriores responde à pergunta mais frequente do
 praticante: ``com \emph{meu} volume de dados, quem vence?''. As curvas
@@ -471,8 +490,10 @@ figura em inglês). Fonte: \texttt{latex/ai1/figures/average\_ranks.pdf}.}
 
 Dois detalhes concretos dão escala à liderança. Na multiclasse, onde a
 margem é mais visível, o TabFM alcança log-loss de 0,0966 no
-\texttt{covertype} e 0,5709 no \texttt{jannis}, contra 0,1644 e 0,6583
-do segundo colocado (TabPFN) --- margens visivelmente maiores que as que
+\texttt{covertype} e 0,5709 no \texttt{jannis}, contra 0,1644 do
+segundo colocado no \texttt{covertype} (TabPFN) e 0,6583 do TabPFN no
+\texttt{jannis} (ali 3º; o 2º é o TabM, com 0,6572) --- margens
+visivelmente maiores que as que
 separam vizinhos de rank dentro do núcleo de 11 na mesma tabela
 (Apêndice~\ref{app:tabelas}). E o TabPFN, por sua vez,
 consolida-se como o vice consistente da grade (ranks médios
@@ -487,10 +508,15 @@ atropelou ambos. E a cautela estatística permanece dita: com $k{=}14$ e
 $N{=}10$, a distância crítica de Nemenyi é larga
 (Figura~\ref{fig:cap5-cd}) --- a separação do TabFM apoia-se na
 consistência entre conjuntos (13 vitórias em 18) e no instrumento
-bayesiano, \textbf{não} no post-hoc frequentista. Duas condições de
+bayesiano, \textbf{não} no post-hoc frequentista. Três condições de
 contorno adicionais são declaradas: na regressão, $N{=}5$ põe o piso do
 p-valor de Wilcoxon em 0,0625 (piso combinatório --- nenhum resultado
-pode ser ``significativo a 5\%'' ali); e o TabFM é avaliado na versão
+pode ser ``significativo a 5\%'' ali); um dos cinco conjuntos de
+regressão é o \texttt{california\_housing} de alvo binarizado da
+errata (Tabela~\ref{tab:datasets}) --- a sensibilidade é inócua aqui:
+sem ele, os líderes não mudam (TabFM 1,25, TabPFN 3,25) e apenas
+XGBoost (5,0${\to}$5,5) e RealMLP (4,75) trocam de posição no meio da
+grade; e o TabFM é avaliado na versão
 fixada v1.0.1 (julho de 2026), cujo relatório técnico oficial apareceu
 apenas no fim de setembro de 2026 \citep{kong2026} e segue sem revisão
 por pares --- os resultados são sobre essa versão, e isso fica
@@ -507,7 +533,7 @@ model cabe no caso de uso?}''.
 \emph{A geração 2026 quebra o empate: o TabFM lidera o rank médio
 nas três tarefas e é o melhor modelo em 13 dos 18 conjuntos, zero-shot
 --- ao preço de quatro a cinco ordens de magnitude em latência de
-serving (43.262 vs.\ 0,33~\us/linha).} O empate não tornou o arcabouço multicritério obsoleto; a quebra o
+\emph{serving} (43.262 vs.\ 0,33~\us/linha).} O empate não tornou o arcabouço multicritério obsoleto; a quebra o
 tornou mais necessário --- e apontou seu único obstáculo.
 
 No mesmo movimento da extensão, o benchmark produz o teste independente
@@ -551,7 +577,7 @@ estrutura da tarefa, exatamente os eixos em que os modelos diferem por
 ordens de magnitude. \textbf{(ii)}~A geração 2026 quebra o empate em
 acurácia: o TabFM lidera as três tarefas e vence em 13 de 18 conjuntos,
 \emph{zero-shot} --- ao preço de quatro a cinco ordens de magnitude em latência
-de serving, invertendo o eixo de custo (treino de segundos e ajuste
+de \emph{serving}, invertendo o eixo de custo (treino de segundos e ajuste
 zero; serviço proibitivo). A quebra não aposenta a leitura
 multicritério: ela a torna mais necessária, porque a escolha ótima
 passa a depender de uma única restrição dominante. \textbf{(iii)}~Essa

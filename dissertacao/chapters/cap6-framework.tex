@@ -91,14 +91,14 @@ categóricos. Se funcionasse, o arcabouço de decisão seria um modelo
 preditivo, não um fluxograma. Testamos essa promessa com o protocolo
 honesto disponível para $N{=}18$ conjuntos: validação
 \emph{leave-one-dataset-out} (LODO), em que uma árvore de decisão de
-profundidade 2 --- o mesmo modelo ilustrativo da Figura~2.1, no
+profundidade 2 --- o mesmo modelo ilustrativo da
+Figura~\ref{fig:arvore-exemplo}, no
 Capítulo~\ref{chap:fundamentacao} --- é treinada nos demais 17 conjuntos para
 prever a família vencedora do conjunto excluído, repetindo-se o
 procedimento para cada um dos 18.
 
 O resultado contraria a expectativa criada pela literatura --- e por
-isso o reportamos com o protocolo à vista. No estudo com 11 modelos
-(o núcleo de 11 modelos do estudo original), a árvore atinge \textbf{taxa de acerto de 0,11 contra
+isso o reportamos com o protocolo à vista. No estudo com 11 modelos, a árvore atinge \textbf{taxa de acerto de 0,11 contra
 0,44 do \emph{baseline} de classe majoritária}; no estudo com 14 modelos
 (incluindo a geração 2026), 0,72 contra 0,78 do \emph{baseline}. Em nenhuma
 das duas configurações o roteador aprendido supera a regra trivial
@@ -232,7 +232,9 @@ quatro políticas do pré-registro estão no artefato
 (\texttt{lodo\_validation\_14.csv}), sem reajuste --- ela foi treinada
 para prever o vencedor de \emph{acurácia} e aqui é pontuada sob o score
 ponderado. O resultado antecipa a Seção~\ref{sec:resultado-negativo}:
-a árvore nunca supera a melhor política fixa em nenhum $w$ e colapsa na
+em mediana, a árvore nunca supera a melhor política fixa em nenhum $w$
+(pela média, cruza a sempre-FM num único ponto, $w{=}0{,}8$ --- sobre
+$N$s distintos: o artefato pontua a árvore em 16 conjuntos) e colapsa na
 política sempre-FM nos pesos altos (mediana 0{,}000 apenas em
 $w \geq 0{,}9$).}
 Os $N$s espelham os da Tabela~\ref{tab:regret-lodo}: 18 conjuntos para
@@ -379,8 +381,8 @@ validado na sua forma final, com os 14 modelos do estudo completo.
 \centering
 \includegraphics[width=0.88\linewidth]{images/decision_flowchart_14_pt.pdf}
 \caption{Fluxograma de decisão validado, estudo com 14 modelos: cada
-losango é uma restrição verificável \emph{a priori}. Gerado por
-\texttt{scripts/figures\_ai1\_display.py}.}
+losango é uma restrição verificável \emph{a priori}. Fonte: elaboração
+própria (\texttt{scripts/figures\_ai1\_display.py}).}
 \label{fig:flowchart-14}
 \end{figure}
 
@@ -425,7 +427,13 @@ sustentam.
 As limitações deste capítulo são declaradas na mesma moeda dos seus
 resultados.
 
-Quanto ao tamanho da amostra de conjuntos, $N{=}18$ impede validação
+Quanto à composição da amostra, a errata de identidade dos conjuntos
+(Tabela~\ref{tab:datasets}) não altera as leituras deste capítulo: o
+\texttt{california\_housing} binarizado participa do LODO e do E2 como
+tarefa interna consistente (todos os 14 modelos competem no mesmo alvo,
+e os \emph{ranks} usados pelos scores são internos a cada conjunto), e
+o \texttt{online\_news} só teve o rótulo corrigido. Quanto ao tamanho
+da amostra de conjuntos, $N{=}18$ impede validação
 estatística fina do próprio arcabouço; o LODO é a ferramenta honesta
 possível nessa escala, e é exatamente por isso que o resultado negativo
 da Seção~\ref{sec:resultado-negativo} é formulado como ``não aprendível
