@@ -178,7 +178,8 @@ def main():
                 f"spread global {glob:.2f} p.p.",
                 "estabilidade do estimador inalterada")
     reg("R-TUNE", "3->2", "H-T1 refutada 2/3; california era o caso forte",
-        "resta cps88wages (refuta) e cpu_activity (nao); 1/2",
+        "resta cpu_activity (refuta: 0,500->0,396) e cps88wages (nao: "
+        "0,465->0,607); 1/2",
         "licao qualitativa sobrevive, caso-vitrine degradado")
 
     out = DIST / "sensitivity_california.csv"

@@ -2,6 +2,9 @@
 
 # Relatório técnico consolidado — AI-2 (Atividade de Orientação Individual)
 
+> **ADENDO (19/10/2026):** a auditoria de identidade dos datasets encontrou que o rótulo "superconduct" sempre designou o OnlineNewsPopularity (renomeado `online_news`) e que o `california_housing` é a variante de alvo binarizado. Menções abaixo usam os rótulos da época. Registro canônico: `docs/errata-datasets-core-regressao.md`.
+
+
 > Estado em 21/07/2026 — programa experimental COMPLETO (fases 1-6;
 > N=20, o pool elegível integral) e framework validado. Todos os números provêm de
 > artefatos versionados (`results/distillation/*`, `results/aggregated/*`,

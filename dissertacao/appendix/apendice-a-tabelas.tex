@@ -20,8 +20,15 @@ models}). A métrica primária segue a definição do protocolo:
   \item \textbf{classificação multiclasse} (3 conjuntos):
     \emph{log-loss} --- menor é melhor
     (Tabela~\ref{tab:app-multiclasse});
-  \item \textbf{regressão} (5 conjuntos): RMSE sobre o alvo
-    padronizado --- menor é melhor (Tabela~\ref{tab:app-regressao}).
+  \item \textbf{regressão} (5 conjuntos): RMSE na escala em que a
+    suíte de origem distribui o alvo de cada conjunto --- menor é
+    melhor (Tabela~\ref{tab:app-regressao}). As escalas diferem entre
+    conjuntos (notas da Tabela~\ref{tab:datasets}: o
+    \texttt{california\_housing} tem alvo binarizado, de modo que seu
+    RMSE é a raiz do escore de Brier; o \texttt{online\_news} tem alvo
+    em logaritmo de compartilhamentos), razão pela qual nenhuma
+    agregação de RMSE entre conjuntos é feita em lugar algum do
+    estudo --- as comparações são sempre por linha ou por \emph{rank}.
 \end{itemize}
 O melhor valor de cada linha está em \textbf{negrito}. Os valores têm
 quatro casas decimais, com vírgula como separador decimal. As duas
@@ -38,7 +45,7 @@ do benchmark; as tabelas em si são geradas automaticamente por
 \texttt{scripts/gen\_appendix\_tables.py} a partir desse artefato
 (nenhum valor é transcrito à mão). Os resultados por \emph{fold} da
 validação cruzada interna, que fundamentam as análises estatísticas
-do Capítulo~5, estão em \texttt{results/aggregated/fold\_results.csv}
+do Capítulo~\ref{chap:benchmark}, estão em \texttt{results/aggregated/fold\_results.csv}
 --- arquivo de $\sim$300~MB que permanece no repositório local (fora
 do controle de versão remoto por tamanho), reproduzível a partir de
 \texttt{results/raw} e das sementes registradas.
@@ -49,5 +56,27 @@ por páginas rotacionadas (\texttt{sidewaystable}, pacote
 \texttt{rotating}) com os nomes dos modelos rotacionados no cabeçalho,
 mantendo os 14 modelos lado a lado --- a comparação por linha, que é a
 leitura principal, fica íntegra numa única tabela por tarefa.
+
+Completam o apêndice os instrumentos restantes do protocolo
+estatístico do Capítulo~\ref{chap:metodologia}, todos gerados do mesmo
+modo (nenhum valor transcrito à mão): as métricas
+\textbf{secundárias} de cada tarefa, resumidas em \emph{rank} médio
+por modelo (Tabelas~\ref{tab:app-secundarias-binary},
+\ref{tab:app-secundarias-multiclass}
+e~\ref{tab:app-secundarias-regression} --- \emph{ranks} porque
+\emph{log-loss}, RMSE e MAE têm escalas incomensuráveis entre
+conjuntos; os valores por célula estão no artefato); as matrizes de
+\textbf{tamanho de efeito} ($d$ de Cohen pareado,
+Tabelas~\ref{tab:app-cohensd-binary}
+e~\ref{tab:app-cohensd-regression}); os \textbf{intervalos de
+confiança de \emph{bootstrap}} da média de AUC na binária
+(Tabela~\ref{tab:app-bootstrap-auc}; nas demais tarefas, $N{=}3$ e
+$N{=}5$ conjuntos e escalas incomensuráveis tornariam a média entre
+conjuntos não interpretável, e o instrumento não é reportado --- a
+mesma razão pela qual o estudo não agrega RMSE); os \textbf{custos
+consolidados} por modelo (Tabela~\ref{tab:app-custos}); e a
+\textbf{variabilidade entre \emph{folds}} da métrica primária
+(Tabela~\ref{tab:app-foldvar}), que sustenta a leitura de pior-caso do
+Capítulo~\ref{chap:benchmark}.
 
 \input{appendix/tabelas-geradas}

@@ -47,7 +47,7 @@ before the 2024--2026 generation of tabular deep learning and of tabular
 foundation models. We re-test it in a neutral, uniform-protocol benchmark:
 14 models $\times$ 18 OpenML datasets (250 of 252 cells; two structural
 exclusions), with nested cross-validation, Bayesian tuning under an
-equalized per-family budget, a fixed untouched hold-out, and both
+per-family budgets equalized by design, a fixed untouched hold-out, and both
 frequentist and Bayesian statistical inference. The answer has two
 movements. \textbf{(1)} Restricted to the study's 11-model core slate (the models predating the
 2026 benchmark extension), top-end accuracy is a statistical tie --- 8 of the 10 non-leader models practically
@@ -188,19 +188,33 @@ cardiovascular\_disease  & binary & 70{,}000 & 11 & 2 & mixed \\
 credit\_g                & binary & 1{,}000  & 20 & 2 & mixed \\
 give\_me\_some\_credit    & binary & 150{,}000 & 10 & 2 & numerical \\
 higgs                    & binary & 98{,}000 & 28 & 2 & numerical \\
-magictelescope           & binary & 19{,}000 & 10 & 2 & numerical \\
+magictelescope           & binary & 13{,}000 & 10 & 2 & numerical \\
 phoneme                  & binary & 5{,}400  & 5  & 2 & numerical \\
 telco\_customer\_churn    & binary & 7{,}000  & 19 & 2 & mixed \\
 covertype                & multiclass & 581{,}000 & 54 & 7 & numerical \\
 helena                   & multiclass & 65{,}000 & 27 & 100 & numerical \\
 jannis                   & multiclass & 84{,}000 & 54 & 4 & numerical \\
-california\_housing      & regression & 21{,}000 & 8  & -- & numerical \\
+california\_housing$^{\dagger}$ & regression & 21{,}000 & 8  & -- & numerical \\
 kin8nm                   & regression & 8{,}192  & 8  & -- & numerical \\
-superconduct             & regression & 21{,}000 & 81 & -- & numerical \\
+online\_news$^{\ddagger}$ & regression & 40{,}000 & 59 & -- & mixed \\
 wine\_quality            & regression & 6{,}500  & 11 & -- & numerical \\
 year\_prediction         & regression & 515{,}000 & 90 & -- & numerical \\
 \bottomrule
 \end{tabular}
+
+\smallskip
+\raggedright\footnotesize Dataset-identity erratum (dated audit,
+2026-10-19; canonical record in the repository):
+($\dagger$)~\texttt{california\_housing} (OpenML 44090) is the
+\emph{binarized-target} variant from the tabular-benchmark
+classification suite --- all 14 models compete on the same task (RMSE
+on a $\{0,1\}$ target is the root Brier score) and within-dataset
+ranks remain valid, but the target is degenerate for distributional
+readings; dropping it leaves the regression leaders unchanged (TabFM
+1.25, TabPFN 3.25). ($\ddagger$)~The dataset historically labeled
+``superconduct'' (OpenML 44064) is OnlineNewsPopularity
+(log-shares target); only the label was wrong, and it was renamed in
+all artifacts by a dated rectification.
 \end{table}
 
 \paragraph{Protocol.} Nested cross-validation (5 outer $\times$ 3 inner
@@ -213,9 +227,13 @@ hold-out (seed 42) that no selection step ever observes; per-family
 preprocessing (one-hot for attention, ordinal for trees, embeddings where
 the model defines them). Foundation models enter zero-shot (no tuning),
 with an 8-member inference ensemble and a 50k-row context cap. Two remarks
-on this asymmetry: the 100/25-trial budgets equalize wall-clock tuning cost
-(a DL trial costs roughly 4$\times$ a GBDT trial; one declared exception
---- on \texttt{adult}, eleven legacy DL runs predating the budget
+on this asymmetry: the 100/25-trial budgets partially offset the
+per-trial cost asymmetry (the design-time assumption was a DL trial
+costing roughly 4$\times$ a GBDT trial; measured, the per-trial cost
+runs an order of magnitude above, and total search wall-clock
+2--30$\times$ by model pair, a residual bias
+that favors DL --- which still does not win; one declared exception
+--- on \texttt{adult}, eleven legacy Phase-1 runs predating the budget
 reduction kept 100 trials as a validation anchor, so that dataset is
 excluded from tuning-cost aggregates), and the foundation
 models' zero-shot entry is itself the paradigm claim under test --- their
@@ -299,7 +317,10 @@ TabFM 43,262~\us/row (STab's cost comes from Bayesian inference averaging
 over 64 stochastic forward passes; the foundation models' from carrying
 the training set as context). On mean rank $\times$ cost --- rank being the paper's primary comparison
 instrument --- the 11-model core slate resolves to a Pareto frontier of
-\{TabPFN, XGBoost, LightGBM\} on the training-cost axis, narrowing to
+\{TabPFN, XGBoost, LightGBM\} on the training-cost axis (with training
+medians over all 18 datasets; under the figure's binary-only medians,
+XGBoost dominates LightGBM and the frontier is \{XGBoost, TabPFN\}),
+narrowing to
 \{XGBoost, TabPFN\} on the latency axis (on mean AUC instead of rank,
 CatBoost also joins the frontier --- and, on the latency axis, TabPFN
 drops out of it); all classical deep learning is
@@ -315,7 +336,9 @@ datasets (log scale; the rank axis is inverted so up-left is better), all
 14 models. The starred point is Pareto-optimal over the full slate
 (TabFM --- simultaneously the cheapest fit and the best rank); the
 \{TabPFN, XGBoost, LightGBM\} frontier quoted in the text is the
-restriction to the 11-model core slate. Inference-latency comparisons are
+restriction to the 11-model core slate under all-dataset training
+medians (under this figure's binary-only medians it is \{XGBoost,
+TabPFN\}). Inference-latency comparisons are
 reported in the text.}
 \label{fig:pareto}
 \end{figure}
@@ -335,7 +358,8 @@ dataset-specific --- on 3 of 5, DL overtakes and does not give the lead
 back; on \texttt{adult}, the GBDT retakes it at $n \approx 4{,}000$ ---
 and TabPFN has the best regime-averaged metric on all five swept datasets
 for $n \leq 4{,}000$, quantifying the few-shot niche of the zero-shot
-paradigm.
+paradigm (the smallest measured slice has $n_{\text{train}}{=}450$
+after the internal validation split).
 % notebooks/10_learning_curves.ipynb
 
 \begin{figure}[t]
@@ -528,6 +552,12 @@ apply. Generated by \texttt{scripts/figures\_ai1\_display.py}.}
     online serving narrows the gaps, though not the orders of magnitude.
   \item LODO regret is computed on the primary metric, not on
     preference-weighted multi-criteria combinations.
+  \item A dated identity audit (2026-10-19) of all OpenML ids found two
+    inherited errors in the regression slate, both declared in
+    Table~\ref{tab:datasets}: ``superconduct'' was OnlineNewsPopularity
+    (label renamed; results valid), and \texttt{california\_housing} is
+    the binarized-target benchmark variant (within-dataset comparisons
+    remain valid; regression leaders unchanged without it).
   \item The model frontier changes on a cadence of months --- the
     framework is dated by construction and versioned with the benchmark
     that supports it.

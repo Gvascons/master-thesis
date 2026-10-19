@@ -25,9 +25,11 @@ Qualquer afirmação do tipo ``nenhum trabalho faz X'' é, portanto,
 perecível. O contrato de conduta científica deste projeto
 (Capítulo~\ref{chap:metodologia}) exige que afirmações de novidade sejam
 sustentadas por verificação online datada; as datas relevantes são
-13--20/07/2026 (antes de investir nas contribuições) e 04/10/2026
+13--20/07/2026 (antes de investir nas contribuições), 04/10/2026
 (re-varredura pré-entrega, que inclusive corrigiu um lapso nosso,
-registrado na Seção~\ref{sec:rel-kan}). As lacunas enunciadas a seguir
+registrado na Seção~\ref{sec:rel-kan}) e 19/10/2026 (re-varredura
+pós-fechamento da cadeia experimental, incluindo varredura primária
+pela API do arXiv). As lacunas enunciadas a seguir
 devem ser lidas como ``abertas até onde verificamos, nas datas
 declaradas'' --- nunca como certezas atemporais. Os registros canônicos
 dessas verificações, com datas e vereditos, estão em
@@ -150,7 +152,7 @@ modelos como regressores probabilísticos e aponta explicitamente que o
 demanda de terceiros pela interseção que este trabalho ocupa.
 
 Até onde verificamos (13/07/2026, reconfirmado em
-04/10/2026 e em 14/10/2026), não havia comparação neutra TabPFN~$\times$~TabFM sob
+04/10, 14/10 e 19/10/2026), não havia comparação neutra TabPFN~$\times$~TabFM sob
 protocolo idêntico --- mesmas partições, mesmo pré-processamento, mesma
 política de subamostragem de contexto. A exigência não é burocrática: num
 campo em que os modelos recebem atualizações mensais e os resultados
@@ -196,7 +198,8 @@ um grupo pequeno publicando em venue recém-criada, com orçamento
 computacional limitado --- do que ao estado da evidência: seis dos dez
 conjuntos têm menos de 8 mil amostras, não há regressão, e o XGBoost de
 comparação parece subajustado (AUC de 0,726 em \texttt{credit\_g}, quando
-nosso próprio \emph{tuning} obtém acima de 0,77 no mesmo conjunto).
+nosso próprio \emph{tuning} obtém ${\approx}0{,}77$ no mesmo conjunto ---
+0,767 no \emph{hold-out}, 0,786 em validação cruzada).
 
 Registre-se um lapso nosso: nas checagens de julho de 2026
 afirmáramos que nenhum benchmark independente de KANs tabulares existia; a
@@ -245,8 +248,11 @@ substituição de até 96\% dos blocos do \emph{transformer} por um
 tradutor afim fechado \citep{shallow2026}, o alinhamento de ativações
 para operar com contextos reduzidos \citep{actalign2026} e a variante
 \emph{Fast} do TabPFN-3.5 \citep{tabpfn35tr2026} --- todos, até onde
-verificamos (14/10/2026), avaliados apenas em classificação ou em
-predição pontual, o que preserva a lacuna distribucional deste trabalho.
+verificamos (14/10 e 19/10/2026), avaliados apenas em classificação ou em
+predição pontual: o relatório do TabPFN-3.5 avalia distribucionalmente
+(no ScoringBench) apenas o modelo cheio, não a variante \emph{Fast} ---
+e avaliação distribucional \emph{do professor} segue não sendo
+destilação. A lacuna distribucional deste trabalho fica preservada.
 
 Na direção da amortização e da transferência, o MotherNet
 \citep{mothernet2023} amortiza o ajuste numa hiper-rede que emite os pesos de
@@ -320,7 +326,10 @@ distribucional}: calibração, não acurácia
 Em torno dessa linha orbitam variantes e vizinhos. O GEAR
 \citep{gear2026} adiciona uma
 variante em dois estágios com expansão sintética do conjunto de
-transferência --- classificação apenas. O TabDistill \citep{tabdistill2025}
+transferência --- classificação apenas; na mesma família, \citet{dey2026}
+destilam um professor TabPFN em uma rede \emph{feed-forward} compacta
+(${\sim}6$~mil vezes menor) para decisão de crédito, avaliada em
+acurácia e AUC --- também classificação apenas. O TabDistill \citep{tabdistill2025}
 destila \emph{transformers} em MLPs minúsculos no regime \emph{few-shot} de
 classificação (e ocupa o nome, razão pela qual não o usamos). Outra linha
 destila \emph{foundation models} em modelos aditivos generalizados (GAMs)
@@ -374,9 +383,11 @@ treino varre diretamente, somado à diferença de \emph{professor} e
 protocolo. O ponto de posicionamento permanece: \citet{jeong2026} não
 tocam quantis, CRPS, calibração nem fronteira de estratégias.
 
-Às datas verificadas (13--20/07/2026; re-varredura em
-04/10/2026, incluindo buscas dirigidas por destilação combinada com
-quantis/CRPS), nenhum trabalho público cobria, \textbf{para
+Às datas verificadas (13--20/07/2026; re-varreduras em
+04/10 e 19/10/2026, incluindo buscas dirigidas por destilação combinada com
+quantis/CRPS e varredura primária pela API do arXiv --- em 19/10,
+\citet{jeong2026} seguia na v1, estritamente pontual), nenhum trabalho
+público cobria, \textbf{para
 \emph{foundation models} tabulares}: (i) destilação
 \emph{distribucional} em regressão --- transferência de curvas de quantis,
 avaliada por CRPS e cobertura de intervalos; (ii) uma fronteira entre
@@ -434,8 +445,8 @@ partir da linha correspondente.
 \begin{table}[htbp]
 \centering
 \caption[Mapa de lacunas por eixo da literatura]{Mapa de lacunas por eixo da literatura. Caracterizações conforme
-verificações online datadas (13--20/07/2026; re-varredura em 04/10/2026),
-registradas nos memorandos citados na abertura do capítulo.}
+verificações online datadas (13--20/07/2026; re-varreduras em 04/10 e
+19/10/2026), registradas nos memorandos citados na abertura do capítulo.}
 \label{tab:lacunas}
 \small
 \begin{tabular}{p{0.21\textwidth}p{0.30\textwidth}p{0.27\textwidth}p{0.10\textwidth}}
@@ -499,7 +510,7 @@ duas das lacunas foram parcialmente erodidas durante a execução do projeto
 estreito, e \citet{jeong2026} alcançou a regressão pontual dias antes da
 nossa entrega --- e ambas as erosões estão registradas com data e
 reescopo explícito, em vez de silenciadas; o pilar distribucional e a
-fronteira de estratégias permaneciam, em 04/10/2026, inéditos. Terceira, a
+fronteira de estratégias permaneciam, em 19/10/2026, inéditos. Terceira, a
 tabela deixa visível que as três frentes empíricas da dissertação
 (Capítulos~\ref{chap:benchmark}, \ref{chap:framework}
 e~\ref{chap:destilacao}) atacam lacunas distintas mas encadeadas: o

@@ -207,7 +207,8 @@ def build_cohensd_table(which: str) -> str:
         cells = [disp[m]]
         for c in order:
             v = mat.loc[m, c]
-            cells.append("---" if m == c else fmt2(v))
+            # modo matemático para o sinal de menos tipográfico correto
+            cells.append("---" if m == c else "$" + fmt2(v) + "$")
         lines.append(" & ".join(cells) + r" \\")
     lines += [r"\bottomrule", r"\end{tabular}", r"\end{sidewaystable}"]
     return "\n".join(lines)

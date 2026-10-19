@@ -33,7 +33,7 @@ Distributional Regression and the Distill/Compress/Shrink Pareto Frontier}}
   \small Centro de Informática, Universidade Federal de Pernambuco\\
   \small \texttt{jgav@cin.ufpe.br}
   \and
-  Germano Crispim Vasconcelos\\
+  Germano Crispim Vasconcelos (advisor)\\
   \small Centro de Informática, Universidade Federal de Pernambuco\\
   \small \texttt{gcv@cin.ufpe.br}}
 \date{Atividade de Orientação Individual --- October 2026}
@@ -61,7 +61,9 @@ CRPS (continuous ranked probability score) advantage (positive in 16/20
 datasets, including one born-again case where the student surpasses its
 teacher; one-sided sign test $p = 0.006$, one-sided Wilcoxon $p = 0.045$, Bayesian
 $P(\mathrm{ret}>0) = 0.70$ at a region of practical equivalence of
-$\pm$0.05) at microsecond latency --- on our three-strategy Pareto
+$\pm$0.05; 15/19 with sign test $p = 0.010$ under the sensitivity that
+excludes one dataset whose target a dated identity erratum found to be
+binarized) at microsecond latency --- on our three-strategy Pareto
 frontier (distillation vs.\ context compression vs.\ ensemble
 shrinking; three datasets, measured end-to-end), the distilled student
 is the CRPS-optimal system below the teacher's cheapest competitive
@@ -136,7 +138,9 @@ answer RQ1, \S\ref{sec:frontier} RQ2, and
     and agreement across instruments (one-sided sign test $p = 0.006$;
     one-sided Wilcoxon
     $p = 0.045$; Bayesian signed-rank $P(\mathrm{retention}>0) = 0.70$ at
-    ROPE $\pm 0.05$), at microsecond latency.
+    ROPE $\pm 0.05$; robust to the dataset-identity sensitivity of
+    \S\ref{sec:setup}: 15/19, sign $p = 0.010$), at
+    microsecond latency.
   \item \textbf{The first (to our knowledge) three-strategy Pareto
     frontier} for TFM serving
     in regression --- distillation vs.\ context compression vs.\ ensemble
@@ -272,7 +276,8 @@ available from it.
 Both teachers run with an 8-member inference ensemble and a 50k-row context
 cap, matching the companion benchmark's policies (for TabFM, 8 members
 measured accuracy-equivalent to the library default of 32 at $\tfrac14$
-the cost, on our datasets).
+the cost in a pilot on \texttt{adult}, the benchmark's
+latency-reference dataset).
 
 \paragraph{Out-of-fold labeling.} Teacher targets for every training row
 come from a $K{=}5$ out-of-fold scheme: the teacher conditioned on 4/5 of
@@ -369,11 +374,22 @@ reproducibility check of the pipeline.
 % docs/desenho-experimental-destilacao.md; docs/errata-diamonds-kin8nm.md
 
 \section{Experimental Setup}
+\label{sec:setup}
 
 Five regression datasets from the companion benchmark
 (\texttt{wine\_quality}, \texttt{california\_housing},
-\texttt{superconduct}, \texttt{kin8nm}, \texttt{year\_prediction}; pools
-5.2k--80k) plus the complete eligible pool of fifteen from the OpenML-CTR23
+\texttt{online\_news}, \texttt{kin8nm}, \texttt{year\_prediction}; pools
+5.2k--80k). Two dataset-identity notes from a dated audit (2026-10-19;
+canonical erratum in the repository): the dataset historically labeled
+``superconduct'' is OnlineNewsPopularity (OpenML 44064; a legitimate
+continuous log-shares regression --- only the label was wrong, renamed
+in all artifacts), and \texttt{california\_housing} (OpenML 44090) is
+the \emph{binarized-target} variant from the tabular-benchmark
+classification suite --- mechanically valid for paired comparisons
+(CRPS on a Bernoulli target is well defined and identical across the
+compared systems) but degenerate for distributional claims, so every
+headline below carries a sensitivity analysis with it excluded. To
+these we add the complete eligible pool of fifteen from the OpenML-CTR23
 suite \citep{fischer2023} (a curated benchmark suite of tabular
 regression tasks) under verified constraints (3k--100k rows; two
 suite datasets excluded for target leakage discovered during verification
@@ -433,15 +449,27 @@ would not reject, which is why the headline rests on the sign test and
 the median) and the Bayesian signed-rank
 \citep{benavoli2017} places 0.70 posterior mass on positive retention at
 a ROPE (region of practical equivalence) of $\pm 0.05$ (0.63--0.71
-across ROPE 0.02--0.10). Retention is a ratio and becomes unstable when
+across ROPE 0.02--0.10). The sensitivity to the \texttt{california}
+erratum is reported with equal prominence: excluding the
+binarized-target dataset, retention is positive in 15 of 19 (median
+$+0.17$; sign test $p = 0.010$; bootstrap CI still entirely positive,
+$[0.08, 0.42]$), but the one-sided Wilcoxon moves to $p = 0.067$ and no
+longer rejects at 5\% --- the qualitative conclusion does not depend on
+the dataset, and the instrument pair is left with a significant sign
+test and a marginal Wilcoxon
+(\texttt{sensitivity\_california.csv}). Retention is a ratio and becomes unstable when
 the teacher's absolute edge is small, so Table~\ref{tab:retention}
 reports the absolute CRPS improvement alongside it: the born-again
 \texttt{pumadyn32nh} rides an absolute edge of only ${\sim}0.001$ CRPS
-(\texttt{superconduct} and \texttt{grid\_stability} are similar), and
+(\texttt{online\_news} and \texttt{grid\_stability} are similar), and
 the headline therefore rests on the sign test and the median --- which
 are scale-free --- and on the large-edge successes
-(\texttt{california\_housing} $+0.072$ CRPS, \texttt{cps88wages}
-$+0.160$, \texttt{year\_prediction} $+0.130$). No retention is exactly
+(\texttt{cps88wages} $+0.160$, \texttt{year\_prediction} $+0.130$,
+\texttt{cpu\_activity} $+0.117$; the table's second-largest success,
+\texttt{california\_housing} at $+0.072$ CRPS, is precisely the
+binarized-target dataset of the erratum --- there, the
+``distributional gain'' is calibration of a Bernoulli, and no claim in
+this paper uses it as a showcase). No retention is exactly
 zero; near-zero positives (\texttt{miami\_housing} $+0.016$) count as
 successes under the sign test, and the ROPE sweep bounds the effect of
 treating them as equivalences instead. Three complementary analyses
@@ -518,7 +546,7 @@ fps\_benchmark         & CTR23 & 19{,}699 & $+0.523$ & 0.152 & $+0.080$ \\
 cpu\_activity          & CTR23 & 6{,}553  & $+0.500$ & 0.233 & $+0.117$ \\
 cps88wages             & CTR23 & 22{,}524 & $+0.465$ & 0.345 & $+0.160$ \\
 year\_prediction       & core  & 80{,}000 & $+0.419$ & 0.311 & $+0.130$ \\
-superconduct           & core  & 31{,}715 & $+0.255$ & 0.006 & $+0.0015$ \\
+online\_news           & core  & 31{,}715 & $+0.255$ & 0.006 & $+0.0015$ \\
 sarcos                 & CTR23 & 39{,}146 & $+0.225$ & 0.474 & $+0.107$ \\
 kings\_county          & CTR23 & 17{,}290 & $+0.213$ & 7253.4 & $+1547$ \\
 grid\_stability        & CTR23 & 8{,}000  & $+0.170$ & 0.003 & $+0.0004$ \\
@@ -539,7 +567,11 @@ fifa                   & CTR23 & 15{,}342 & $-1.287$ & 42.96 & $-55.3$ \\
 \label{sec:frontier}
 
 We measured accuracy and latency of every strategy on three positive-gap
-datasets (Fig.~\ref{fig:pareto}): TabPFN with context subsampled to
+datasets (Fig.~\ref{fig:pareto}; one of them,
+\texttt{california\_housing}, is the binarized-target dataset of the
+erratum --- its numbers stand as latency$\times$CRPS measurements, and
+\texttt{year\_prediction} is the frontier's legitimate distributional
+showcase): TabPFN with context subsampled to
 \{1k, 5k, 10k, 25k, full\}; TabPFN with 1/4/8 ensemble members; the
 distilled and control students; and the TabFM point anchor.
 % results/distillation/pareto.csv; results/figures/pareto_distill.pdf
@@ -629,7 +661,8 @@ above it over-cover, below it under-cover. The distilled student is
 closest to the diagonal on both panels; on
 \texttt{california\_housing} it is better calibrated than the hard
 control and than its own teacher, whose S-shape indicates miscalibrated
-tails. Source: \texttt{scripts/plot\_calibration.py}.}
+tails (erratum caveat: that panel's target is binarized, so its
+``calibration'' is of a Bernoulli). Source: \texttt{scripts/plot\_calibration.py}.}
 \label{fig:calibration}
 \end{figure}
 
@@ -651,11 +684,14 @@ cost is lower than or equal to the hard control's on \textbf{18 of
 20} datasets (one-sided sign test $p{=}0.0002$) and lower than or
 equal to the Gaussian workaround's on \textbf{17 of 20}
 ($p{=}0.0013$) --- counts that exceed the aggregate-CRPS headline
-itself (16/20). The declared exploratory profile explains why: the
+itself (16/20) and survive the erratum sensitivity comfortably (17/19,
+$p{=}0.0004$; 16/19, $p{=}0.0022$). The declared exploratory profile
+explains why: the
 median cost reduction over the hard control is U-shaped in $\tau$ ---
 ${\sim}1\%$ near the median, rising to $8.0\%$ at $\tau{=}0.90$,
 $8.2\%$ at $\tau{=}0.95$ and $8.7\%$ at $\tau{=}0.05$ (14--21\%
-against the Gaussian workaround in the tails). The teacher's
+against the Gaussian workaround at $\tau{=}0.90$ and $\tau{=}0.05$;
+13\% at $\tau{=}0.95$). The teacher's
 distributional advantage lives in the tails --- exactly where
 asymmetric-cost decisions live --- and that is where the distilled
 student delivers it, at microseconds
@@ -719,8 +755,11 @@ their absence costs.
 first (often free), compress context second, and reserve the full-context
 teacher for accuracy-critical batch settings; when distributional predictions must be served below the teacher's
 cheapest competitive configuration, the distilled quantile student is
-the only measured occupant of that regime --- and when the teacher's
-edge is small, ensemble reduction alone may close the case.
+the CRPS-optimal occupant of that regime \emph{among teacher-derived
+strategies} (E1 later measured that a native QRF also inhabits it ---
+and surpasses the student on \texttt{california\_housing} --- which is
+why the rule puts ``try a strong native student'' first) --- and when
+the teacher's edge is small, ensemble reduction alone may close the case.
 
 \section{Limitations}
 
@@ -745,9 +784,24 @@ The re-tuning pilot's soft arm carries a weak pool-internal
 exchangeability asymmetry analogous to the conformal pilot's (the
 Optuna validation rows participated, via teacher context, in the OOF
 targets); its direction favors the distilled arm, which lost ground
-anyway --- the refutation is conservative.
+anyway --- the refutation is conservative. With the
+\texttt{california} erratum, the pilot's most dramatic case sits on the
+degenerate dataset: what remains is \texttt{cpu\_activity} (refutes:
+0.50${\to}$0.40) and \texttt{cps88wages} (does not: 0.47${\to}$0.61),
+so the lesson --- per-dataset
+retention depends on tuning budget --- stands qualitatively rather
+than anchored on that number.
 % results/distillation/retune_students.csv
-CRPS is approximated on a 19-quantile grid. TabFM results
+CRPS is approximated on a 19-quantile grid, validated against the
+Gaussian closed form (ratio 1.048, approximately independent of
+location and scale across four scenarios;
+\texttt{crps\_grid\_gaussian\_validation.csv}) and against a dense
+99-quantile grid on real data (A-GRID ablation: between-system ratio
+spread at most 0.85~p.p.\ within each dataset; retention signs
+identical on 4/4, with shifts $\leq 0.05$ except on one failing
+dataset; \texttt{ablation\_densegrid.csv}) --- internal
+comparisons are preserved; absolute CRPS values are not comparable
+across papers. TabFM results
 refer to the pinned v1.0.1 release (July 2026); the official technical
 report \citep{kong2026} appeared only in late September 2026 and remains
 unreviewed. Classical distributional baselines (NGBoost, QRF) enter
@@ -773,15 +827,25 @@ directions. Finally, the protocol uses 3 seeds per student; a full
 re-run with 10 seeds under a pre-fixed stability criterion (count in
 $[14,18]$, median $\pm 0.10$) left the count at 16/20 and the median
 at 0.191 (vs.\ 0.192), with a maximum per-dataset retention shift of
-0.013 --- seed variance is negligible against dataset variance. A sampling-based variant --- training the
+0.013 --- seed variance is negligible against dataset variance (the
+erratum sensitivity mirrors the 3-seed one: 15/19, median 0.166). A sampling-based variant --- training the
 quantile student with its native pinball loss on $K{=}8$ pseudo-labels
 drawn per row from the teacher's OOF quantile function --- was piloted
 and refuted: it beats MSE curve-fitting on 1 of 5 datasets at
 2.8--44$\times$ the training cost, so we keep curve-fitting and report
-the variant as a tested negative.
+the variant as a tested negative (post-erratum note: the single win is
+precisely the binarized-target dataset; without it the score is 0 of
+4, strengthening the refutation).
 % results/distillation/pilot_sampling.csv
 Single-GPU measurements bound, rather than
-survey, the hardware space.
+survey, the hardware space. One licensing note, verified at the
+primary source (2026-10-19): the TabPFN-2.5 weights license
+(\texttt{tabpfn-2.5-license-v1.1}) forbids commercial or production
+use of the model, \emph{its derivatives and its outputs} --- which
+reaches a student trained on the teacher's outputs. The cheap-serving
+argument of this paper therefore holds for research and internal
+evaluation; commercial deployment of the distilled student requires
+the vendor's enterprise license (or a permissively licensed teacher).
 
 \section{Reproducibility}
 

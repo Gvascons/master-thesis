@@ -172,16 +172,14 @@ adendo de 19/10/2026, três desvios do desenho original apontados em
 auditoria: hiperparâmetros herdados em lugar do Optuna por aluno ---
 cujo custo o piloto de re-tuning desta seção mede ---, a variante
 mista executada só em $\lambda{=}0{,}8$ e o \emph{transfer set} MUNGE
-não executado). Dois erros de rotulagem de dataset foram tratados por
-retificação registrada, nunca por reescrita de histórico: a chave
-historicamente chamada \texttt{diamonds} apontava para o OpenML id do
-\texttt{kin8nm} (\texttt{docs/errata-diamonds-kin8nm.md}), e a
-auditoria de identidade de 19/10/2026 encontrou os dois casos
-remanescentes --- ``superconduct''~$=$~\texttt{online\_news} e o alvo
-binarizado do \texttt{california\_housing}
-(\texttt{docs/errata-datasets-core-regressao.md}; ver
-Capítulo~\ref{chap:metodologia}). A execução duplicada acidental que o
-episódio produziu reproduziu o \emph{pipeline} de ponta a ponta com
+não executado). Três erros de rotulagem/identidade de dataset foram
+tratados por retificação registrada, nunca por reescrita de histórico
+(\texttt{diamonds}/\texttt{kin8nm} em julho; \texttt{online\_news} e o
+alvo binarizado do \texttt{california\_housing} em 19/10 --- as
+identidades e a análise de sensibilidade estão na
+Seção~\ref{sec:destil-setup} e no Capítulo~\ref{chap:metodologia}). A execução duplicada acidental que o
+episódio do \texttt{diamonds} produziu reproduziu o \emph{pipeline} de
+ponta a ponta com
 resultados idênticos --- uma verificação involuntária, e por isso
 valiosa, de reprodutibilidade exata.
 
@@ -997,7 +995,8 @@ descritiva pós-hoc declarada condiciona a retenção à vantagem
 \emph{relativa} do professor: na metade dos conjuntos com vantagem
 acima da mediana a retenção é positiva em 10 de 10, e as quatro falhas
 concentram-se todas na metade de vantagem baixa (Fisher exato
-unilateral $p{=}0{,}043$) --- o \emph{gate} da regra prediz o \emph{sinal} do
+unilateral $p{=}0{,}043$; $p{=}0{,}033$ sem o conjunto binarizado da
+errata) --- o \emph{gate} da regra prediz o \emph{sinal} do
 efeito, não sua magnitude (Spearman não significativo), com dois
 caveats registrados: condicionante e desfecho compartilham o
 $\mathrm{CRPS}_{\text{hard}}$ do mesmo \emph{hold-out}, e o
@@ -1022,8 +1021,9 @@ sem nenhum \emph{trial}, empata com o controle retunado no
 \texttt{california\_housing} --- a destilação entrega de graça o que o
 re-tuning entrega ao controle. Com a errata do
 \texttt{california\_housing} (alvo binarizado), o caso mais dramático
-do piloto está no conjunto degenerado: restam \texttt{cps88wages}
-(refuta) e \texttt{cpu\_activity} (não refuta), e a lição --- retenção
+do piloto está no conjunto degenerado: restam \texttt{cpu\_activity}
+(refuta: 0,50${\to}$0,40) e \texttt{cps88wages} (não refuta:
+0,47${\to}$0,61), e a lição --- retenção
 individual depende do orçamento de tuning --- fica qualitativa, não
 mais ancorada naquele número. A retenção por conjunto deve, portanto,
 ser lida como dependente do orçamento de tuning; as conclusões
@@ -1036,9 +1036,11 @@ entre trabalhos. Ablação dedicada (15/10/2026,
 reais: re-estimando com grade de 99 quantis em quatro conjuntos ---
 incluindo o \texttt{fifa}, de cauda pesada ---, a razão entre os dois
 estimadores varia no máximo 0,85 ponto percentual entre professor,
-aluno destilado e controle dentro de cada conjunto, e as retenções
-são indistinguíveis entre grades (sinais, ordenações e diagnósticos
-preservados). \textbf{Datação do TabFM:} os resultados referem-se à
+aluno destilado e controle dentro de cada conjunto (0,70 sem o
+conjunto binarizado da errata), e as retenções
+mantêm sinais, ordenações e diagnósticos entre grades (deslocamentos
+$\leq 0{,}05$, exceto 0,29 em um conjunto de retenção negativa, com
+sinal preservado). \textbf{Datação do TabFM:} os resultados referem-se à
 versão fixada v1.0.1 (julho de 2026); o relatório técnico oficial
 \citep{kong2026} apareceu no fim de setembro de 2026 e permanece sem
 revisão por pares. \textbf{Baselines clássicos:} a limitação declarada

@@ -54,11 +54,18 @@ Eighteen datasets sourced from OpenML, spanning binary classification, multiclas
 | covertype | Multiclass (7) | ~581,000 | 54 | Numerical |
 | jannis | Multiclass (4) | ~84,000 | 54 | Numerical |
 | helena | Multiclass (100) | ~65,000 | 27 | Numerical |
-| california_housing | Regression | ~21,000 | 8 | Numerical |
+| california_housing† | Regression | ~21,000 | 8 | Numerical |
 | wine_quality | Regression | ~6,500 | 11 | Numerical |
 | kin8nm | Regression | 8,192 | 8 | Numerical |
-| superconduct | Regression | ~21,000 | 81 | Numerical |
+| online_news‡ | Regression | ~40,000 | 59 | Mixed |
 | year_prediction | Regression | ~515,000 | 90 | Numerical |
+
+† Binarized-target variant from the tabular-benchmark classification
+suite (target ∈ {0,1}); kept as pre-registered, with sensitivity
+analyses attached to every distillation headline. ‡ Historically
+labeled "superconduct"; the pinned OpenML id (44064) was always
+OnlineNewsPopularity — label renamed in all artifacts. Dated erratum:
+`docs/errata-datasets-core-regressao.md`.
 
 ## Experimental Protocol
 
@@ -179,7 +186,7 @@ python scripts/train.py --model ft_transformer --dataset adult --gpu 0
 ### Full experimental pipeline
 
 ```bash
-# Run all 11 models x 18 datasets (resumes from where it left off)
+# Run all 14 models x 18 datasets (resumes from where it left off)
 python scripts/run_all.py --gpu 0
 
 # Run a subset

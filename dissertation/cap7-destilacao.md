@@ -2,6 +2,9 @@
 
 # Capítulo 7 — Destilação Distribucional de Foundation Models
 
+> **ADENDO (19/10/2026):** a auditoria de identidade dos datasets encontrou que o rótulo "superconduct" sempre designou o OnlineNewsPopularity (renomeado `online_news`) e que o `california_housing` é a variante de alvo binarizado. Menções abaixo usam os rótulos da época. Registro canônico: `docs/errata-datasets-core-regressao.md`.
+
+
 > Rascunho v1 (19/07/2026). Fontes: `docs/desenho-experimental-destilacao.md`
 > (pré-registro + adendo), `docs/relatorio-ai2.md`,
 > `results/distillation/*`. A fronteira de Pareto (§7.6) será completada com

@@ -1,5 +1,8 @@
 # Distilling Tabular Foundation Models Beyond Classification: Distributional Regression and the Distill/Compress/Cache Pareto Frontier
 
+> **ADENDO (19/10/2026):** a auditoria de identidade dos datasets encontrou que o rótulo "superconduct" sempre designou o OnlineNewsPopularity (renomeado `online_news`) e que o `california_housing` é a variante de alvo binarizado. Menções abaixo usam os rótulos da época. Registro canônico: `docs/errata-datasets-core-regressao.md`.
+
+
 > **NOTA (04/10/2026):** a versão mantida deste artigo é
 > `latex/ai2/main.tex` (pós-auditoria round 3: título Distill/Compress/
 > Shrink, reconciliação com arXiv 2610.01435, TR oficial do TabFM, caveat

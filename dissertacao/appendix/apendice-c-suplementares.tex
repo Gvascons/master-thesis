@@ -7,6 +7,21 @@ Capítulo~\ref{chap:destilacao} e o registro de processo do trabalho
 --- hipóteses que não sobreviveram ao contato com os dados e desvios
 operacionais documentados.
 
+Para rastreabilidade com os documentos de desenho do repositório
+(\texttt{docs/desenho-experimental-destilacao.md} e
+\texttt{docs/desenho-melhorias-finais.md}), os codinomes de registro
+correspondem às seguintes partes do texto: E1 = \emph{baselines}
+clássicos (Seção~\ref{sec:destil-e1}); E2 = \emph{regret} ponderado
+(Seção~\ref{sec:regret-ponderado}); E3 = utilidade de decisão
+(Seção~\ref{sec:destil-e3}); E4 = piloto conformal
+(Seção~\ref{sec:app-pilot-conformal}); E5 = roteadores no LODO
+(Capítulo~\ref{chap:framework}); E6 = variante por amostragem (neste
+apêndice); A-GRID = ablação do estimador de CRPS em grade densa;
+A-SORT = reparo por ordenação (Seção~\ref{sec:app-abl-sort}); R-COND =
+retenção condicionada; R-TUNE = piloto de re-tuning; SEEDS-10 =
+re-execução com 10 sementes (os quatro últimos nas limitações do
+Capítulo~\ref{chap:destilacao}).
+
 \section{Ablações da destilação: tabelas desagregadas}
 \label{sec:suple-ablacoes}
 
@@ -49,7 +64,7 @@ nominal $= 0{,}80$. Fonte:
   & 0{,}270 & 0{,}111 & 0{,}545 & 0{,}268 & 0{,}111 & 0{,}532 \\
 \texttt{kin8nm}              & 0{,}110 & 0{,}064 & 0{,}617
   & 0{,}108 & 0{,}064 & 0{,}571 & 0{,}107 & 0{,}064 & 0{,}574 \\
-\texttt{superconduct}        & 0{,}860 & 0{,}454 & 0{,}770
+\texttt{online\_news}         & 0{,}860 & 0{,}454 & 0{,}770
   & 0{,}858 & 0{,}453 & 0{,}765 & 0{,}857 & 0{,}453 & 0{,}767 \\
 \texttt{wine\_quality}       & 0{,}683 & 0{,}365 & 0{,}707
   & 0{,}629 & 0{,}338 & 0{,}661 & 0{,}615 & 0{,}336 & 0{,}602 \\
@@ -61,7 +76,7 @@ Para o aluno XGBoost-ponto (sem componente distribucional), o mesmo
 artefato mostra o mesmo não-dano em RMSE: \emph{in-sample} fica igual
 ou levemente melhor que OOF nos quatro conjuntos
 (\texttt{california\_housing} $0{,}262$ \emph{vs.} $0{,}268$;
-\texttt{kin8nm} $0{,}109$ \emph{vs.} $0{,}111$; \texttt{superconduct}
+\texttt{kin8nm} $0{,}109$ \emph{vs.} $0{,}111$; \texttt{online\_news}
 $0{,}833$ \emph{vs.} $0{,}835$; \texttt{wine\_quality} $0{,}617$
 \emph{vs.} $0{,}667$) --- o custo do vazamento em regressão está na
 calibração, não na acurácia.
@@ -112,7 +127,7 @@ Retenção \\
 
 O texto do Capítulo~\ref{chap:destilacao} afirma que a transferência
 de curvas com reparo por ordenação ``atua como regularizador de
-calibração''; esta ablação pré-registrada (15/10/2026) isola o
+calibração''; esta ablação pré-registrada (14/10/2026; executada em 15/10) isola o
 componente. Os mesmos alunos-quantil \emph{hard} e \emph{soft} dos 20
 conjuntos (3 sementes) foram avaliados com e sem a ordenação pós-hoc
 dos 19 quantis preditos. O cruzamento de quantis é a regra, não a
@@ -132,7 +147,7 @@ custo zero, não uma fonte de vantagem. Fonte:
 \subsection{Calibração conformal pós-hoc (piloto declarado)}
 \label{sec:app-pilot-conformal}
 
-Piloto exploratório pré-registrado (15/10/2026; piloto $\neq$
+Piloto exploratório pré-registrado (14/10/2026, executado em 15/10; piloto $\neq$
 resultado): se os \emph{dois} alunos recebem calibração
 \emph{split-conformal} por quantil (estilo CQR, com 10\% do
 \emph{pool} reservado para calibração), a vantagem do destilado
@@ -142,8 +157,10 @@ PICP90 de 0,77--0,93 para 0,89--0,95 no \emph{hard} e de 0,71--0,89
 para 0,88--0,91 no \emph{soft} --- mas deixa o CRPS essencialmente
 intacto (movimentos inferiores a 1\% em todos os 10 braços). A
 vantagem de forma do destilado sobrevive integralmente
-(\texttt{california} 0,108 \emph{vs.} 0,181; \texttt{cpu\_activity}
-1,18 \emph{vs.} 1,29; \texttt{cps88wages} 160,5 \emph{vs.} 161,0), e
+(\texttt{cpu\_activity} 1,18 \emph{vs.} 1,29; \texttt{cps88wages}
+160,5 \emph{vs.} 161,0; \texttt{california} 0,108 \emph{vs.} 0,181 ---
+com a ressalva do alvo binarizado da errata; o padrão se mantém nos 4
+conjuntos restantes), e
 os dois reveses permanecem reveses. Leitura: a conformalização compra
 \emph{calibração} e a destilação compra \emph{forma} --- são
 intervenções complementares, não substitutas. Caveat declarado antes
@@ -169,7 +186,7 @@ de histórico; este registro é a consolidação desses episódios.
 
 \subsection{H1 --- destilação pontual}
 \emph{O que era:} hipótese pré-registrada
-(\texttt{docs/desenho-experimental-destilacao.md}, §1) de que um aluno
+(\texttt{docs/desenho-experimental-destilacao.md}, \S1) de que um aluno
 GBDT destilado reteria $\geq 50\%$ do gap de RMSE do professor em
 $\geq 3$ dos 5 conjuntos de regressão. \emph{O que aconteceu:}
 refutada nos cinco conjuntos centrais com o professor TabPFN; a
@@ -186,6 +203,31 @@ se transfere é a distribuição. Registros:
 \texttt{docs/desenho-experimental-destilacao.md} (pré-registro),
 \texttt{docs/relatorio-ai2.md} (fases 1--2),
 Seções~\ref{sec:destil-ponto} e~\ref{sec:destil-e1}.
+
+A varredura de tamanho de \emph{pool} que escopa essa refutação ---
+e sustenta a reconciliação com os ganhos pontuais de
+\citet{jeong2026} via o moderador de poucos dados --- está na
+Tabela~\ref{tab:app-cap-sweep}: a vantagem pontual do destilado só
+aparece no \texttt{wine\_quality} com \emph{pool} limitado a 800
+linhas, e desaparece (ou inverte) a partir de 2~mil.
+
+\begin{table}[htb]
+\centering
+\small
+\caption{Varredura de tamanho de \emph{pool} da destilação pontual
+(professor TabPFN): $\Delta$RMSE = \emph{hard} $-$ \emph{soft}
+(positivo = destilado melhor), média de 3 sementes. Fonte:
+\texttt{results/distillation/distill\_cap\{800,2000,8000\}.csv}.}
+\label{tab:app-cap-sweep}
+\begin{tabular}{lccc}
+\toprule
+\emph{Conjunto} & \emph{pool} 800 & \emph{pool} 2.000 & \emph{pool} 8.000 \\
+\midrule
+\texttt{california\_housing} & $-0{,}008$ & $+0{,}005$ & $-0{,}007$ \\
+\texttt{wine\_quality}       & $+0{,}026$ & $-0{,}079$ & $-0{,}081$ \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Cauda pesada como moderador de falha (log-target)}
 \emph{O que era:} com a extensão a $N{=}15$, três das quatro falhas de
@@ -220,7 +262,10 @@ amostragem melhora a calibração onde o aluno MSE subcobre
 se compra por fração do custo. \emph{Por que está aqui:} era a
 candidata a contribuição metodológica própria da rodada final; o
 critério pré-registrado mandava, em caso de refutação, registrá-la
-como variante testada sem claim --- e é o que este registro faz.
+como variante testada sem claim --- e é o que este registro faz. Nota
+pós-errata (19/10/2026): a única vitória da variante é exatamente no
+conjunto de alvo binarizado da errata; sem ele, o placar é 0 de 4, e a
+refutação fortalece.
 Registros: \texttt{docs/desenho-melhorias-finais.md} (pré-registro e
 veredito datados), \texttt{results/distillation/pilot\_sampling.csv}.
 
@@ -284,6 +329,35 @@ dimensões no download; divergência de \texttt{approx\_samples} como
 sinal de investigação obrigatória). Registro canônico:
 \texttt{docs/errata-diamonds-kin8nm.md}; commits \texttt{d1168fa}
 (erratum) e \texttt{c407ef6} (reexecução das análises).
+
+\subsection{Errata de identidade do núcleo de regressão
+(\texttt{online\_news} e \texttt{california\_housing})}
+\emph{O que era:} a salvaguarda prometida na errata anterior --- a
+verificação nome$\leftrightarrow$ID$\leftrightarrow$dimensões ---
+permanecia pendente. \emph{O que aconteceu:} executada em 19/10/2026
+sobre os 33 identificadores do estudo, encontrou os dois casos
+remanescentes, ambos herdados do commit de criação do projeto. O
+rótulo ``superconduct'' sempre designou o OnlineNewsPopularity
+(OpenML 44064; regressão contínua legítima de log-compartilhamentos)
+--- os metadados antigos do config descreviam o superconduct
+pretendido, nunca o dado carregado; o rótulo foi renomeado para
+\texttt{online\_news} em todos os artefatos por script de retificação
+versionado, com histórico preservado. E o \texttt{california\_housing}
+(OpenML 44090) é a variante de \textbf{alvo binarizado} da suíte de
+classificação do \emph{tabular-benchmark}: mantido como executado (a
+população de 20 era pré-registrada; removê-lo a posteriori seria
+curadoria pós-hoc), com análise de sensibilidade de exclusão anexada a
+cada resultado-manchete do Capítulo~\ref{chap:destilacao} --- sinal,
+E3, Friedman, A-SORT, R-COND e A-GRID sobrevivem; o Wilcoxon
+unilateral da retenção passa de 0,045 a 0,067; a única vitória do E6 e
+o caso-vitrine do R-TUNE estavam no conjunto degenerado. \emph{Por que
+está aqui:} fecha o ciclo aberto pela errata anterior --- a lição
+registrada lá, executada, encontrou exatamente o que previa; a nova
+lição registrada é que suítes curadas reusam o mesmo nome em variantes
+de classificação e regressão do mesmo dado, de modo que identidade
+exige verificar a suíte de origem. Registro canônico:
+\texttt{docs/errata-datasets-core-regressao.md}; sensibilidade:
+\texttt{results/distillation/sensitivity\_california.csv}.
 
 \subsection{Troca \texttt{year\_prediction} $\to$
 \texttt{cpu\_activity} na figura de calibração}

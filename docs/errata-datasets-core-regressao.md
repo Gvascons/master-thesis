@@ -68,7 +68,7 @@
 | A-GRID (spread) | 0,85 p.p. | 0,70 p.p. | inalterado |
 | E6 amostragem | vence 1/5 | a única vitória ERA o california; **0/4** | refutação FORTALECE |
 | E4 conformal | conserta PICP nos 2 braços | padrão mantido nos 4 restantes | inalterado |
-| R-TUNE | H-T1 refutada 2/3 (california era o caso forte) | resta 1/2 (cps88wages refuta; cpu_activity não) | lição qualitativa sobrevive; caso-vitrine degradado |
+| R-TUNE | H-T1 refutada 2/3 (california era o caso forte) | resta 1/2 (cpu_activity refuta, 0,500→0,396; cps88wages não, 0,465→0,607) | lição qualitativa sobrevive; caso-vitrine degradado |
 | Benchmark: ranks de regressão | TabFM 1,2 / TabPFN 3,0 | TabFM 1,25 / TabPFN 3,25 (líderes idem; XGBoost 5,0→5,5 troca com RealMLP 4,75) | leitura inalterada |
 
 Leitura honesta: a conclusão qualitativa (sinal positivo dominante,

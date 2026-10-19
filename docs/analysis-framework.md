@@ -1,5 +1,8 @@
 # Analysis Framework — Research Roadmap
 
+> **ADENDO (19/10/2026):** a auditoria de identidade dos datasets encontrou que o rótulo "superconduct" sempre designou o OnlineNewsPopularity (renomeado `online_news`) e que o `california_housing` é a variante de alvo binarizado. Menções abaixo usam os rótulos da época. Registro canônico: `docs/errata-datasets-core-regressao.md`.
+
+
 > **Purpose**: This document defines how the experimental results will be analyzed, segmented, and interpreted. It serves as the blueprint for the entire analytical phase — from raw experiment outputs to thesis-level conclusions. It also maps how this project feeds into the three-stage academic pipeline: Individual Development 1, Individual Development 2, and the Master's Thesis.
 
 ---

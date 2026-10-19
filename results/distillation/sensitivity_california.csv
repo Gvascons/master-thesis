@@ -10,4 +10,4 @@ R-COND (gate preditivo),20->19,alto 10/10 baixo 6/10 Fisher p=0.043,alto 10/10 b
 E4 conformal,5->4,"conserta PICP nos 2 bracos, CRPS <1%",4/4 conjuntos restantes mantem o padrao (ver pilot_conformal.csv),leitura qualitativa inalterada
 E6 amostragem,5->4,"vence 1/5, custo 2,8-44x",a unica vitoria ERA do california (verif.: True); sem ele 0/4,refutacao FORTALECE (0/4)
 A-GRID estimador,4->3,spread global 0.85 p.p.,spread global 0.70 p.p.,estabilidade do estimador inalterada
-R-TUNE,3->2,H-T1 refutada 2/3; california era o caso forte,resta cps88wages (refuta) e cpu_activity (nao); 1/2,"licao qualitativa sobrevive, caso-vitrine degradado"
+R-TUNE,3->2,H-T1 refutada 2/3; california era o caso forte,"resta cpu_activity (refuta: 0,500->0,396) e cps88wages (nao: 0,465->0,607); 1/2","licao qualitativa sobrevive, caso-vitrine degradado"

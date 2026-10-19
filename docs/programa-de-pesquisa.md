@@ -5,12 +5,41 @@
 > cada frente, os critérios de conclusão e os riscos. Versionado no
 > repositório para que nada dependa de estado local. Campos entre [ ] exigem
 > confirmação do aluno/secretaria — não foram assumidos.
-> Última revisão: 06/10/2026 (dissertação COMPLETA em dissertacao/ —
+> Última revisão: 19/10/2026 — ver "Estado em 19/10/2026" abaixo.
+> Revisões anteriores: 06/10/2026 (dissertação COMPLETA em dissertacao/ —
 > 8 capítulos + pré-textuais + apêndices, 137 pp, auditada integralmente:
 > ~130 números recomputados sem divergência; artigos AI-1/AI-2 prontos
-> em latex/; E1/E2 executados). Revisão anterior: 21/07/2026 (AI-1 completa; AI-2 com pacote empírico
+> em latex/; E1/E2 executados); 21/07/2026 (AI-1 completa; AI-2 com pacote empírico
 > FECHADO — 6 fases, N=20, ambos os testes significativos; paper draft v1
 > com 2 figuras; dissertação com caps. 2-7 em prosa).
+
+## Estado em 19/10/2026 (revisão corrente)
+
+- **Cadeia experimental da fase final 7/7 FECHADA** (registro canônico:
+  `docs/desenho-melhorias-finais.md`): E3 (utilidade de decisão,
+  18/20 p=0,0002), E5 (roteadores 0/8), A-GRID, A-SORT, E4 (conformal),
+  E6 (amostragem, REFUTADA), R-TUNE (H-T1 refutada), R-COND, SEEDS-10
+  (estável: 16/20 e mediana 0,191 com 10 sementes) e latência
+  multi-dataset + robustez do proxy do E2 (cruzamento idêntico nos 3
+  conjuntos de medição, Spearman 0,79-0,95).
+- **Reunião de orientação de 15/10: positiva** — material aprovado;
+  pontos de encaminhamento do orientador a incorporar (pendente).
+- **Auditoria integral de 19/10** (6 agentes + verificação de
+  identidade): ~280 números recomputados, zero manchetes erradas;
+  **ERRATA de identidade de 2 datasets do núcleo de regressão**
+  ("superconduct"=OnlineNewsPopularity, renomeado `online_news`;
+  california_housing = variante binarizada, mantido com sensibilidade
+  completa — Wilcoxon unilateral da retenção 0,045→0,067 declarado;
+  sinal/E3/Friedman robustos). Registro canônico:
+  `docs/errata-datasets-core-regressao.md`.
+- **Dissertação ~135 pp** com errata integrada, Apêndice A estendido
+  (métricas secundárias, d de Cohen, IC bootstrap, custos,
+  variabilidade entre folds), AI-1/AI-2 atualizados; zips do Overleaf a
+  re-subir pelo autor.
+- **Pendências**: incorporar os pontos do orientador (próximo passo);
+  decisão autor+orientador sobre eventual re-execução com o california
+  de regressão verdadeiro (opcional; errata+sensibilidade já é o
+  tratamento registrado); depósito nov/2026, defesa dez/2026.
 
 ## 0. Fio condutor científico (a tese em um parágrafo)
 
@@ -117,7 +146,7 @@ sólida. **Tese plena:** o acima com destilação funcionando + preprint.
 
 | Mês | AI-1 | AI-2 | Dissertação |
 |---|---|---|---|
-| **jul/26** (agora) | Fechar run 14 modelos; refresh notebooks/deck | Harness destilação ✓; OOF real + piloto (gate) | — |
+| **jul/26** | Fechar run 14 modelos; refresh notebooks/deck | Harness destilação ✓; OOF real + piloto (gate) | — |
 | **ago/26** | Entrega/apresentação [data a confirmar] | Grade completa destilação; LODO@14; ablações | Caps. 2-4 em rascunho |
 | **set/26** | — | Extensão de datasets; Pareto 3-estratégias; relatório AI-2 | Caps. 5-6 em rascunho |
 | **out/26** | — | **Preprint** + entrega AI-2 [data a confirmar] | Cap. 7 |

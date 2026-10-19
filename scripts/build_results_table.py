@@ -134,8 +134,11 @@ def main():
               "resultado no hold-out (seed 42). Gerado por `scripts/build_results_table.py` "
               "a partir de `results/aggregated/test_results.csv` (+ latência e curvas RQ2). "
               "Cobertura: **250/252** — as 2 ausências são exclusões estruturais no helena "
-              "(100 classes excede o limite de TabPFN e TabFM). Latência medida para os 14 modelos (adult); curvas RQ2 cobrem os 6 "
-              "modelos varridos.\n")
+              "(100 classes excede o limite de TabPFN e TabFM). Latência medida para os 14 modelos (adult; "
+              "medição de controle em credit_g e cardiovascular em `latency_multi.csv`, 19/10/2026 — rankings estáveis, "
+              "Spearman 0,79-0,95); curvas RQ2 cobrem os 6 "
+              "modelos varridos. Identidade dos datasets auditada em 19/10/2026: ver "
+              "`docs/errata-datasets-core-regressao.md` (online_news ex-\"superconduct\"; california_housing com alvo binarizado).\n")
     md.append("Métrica primária por tarefa: **binária → ROC-AUC (↑)**, "
               "**multiclasse → log-loss (↓)**, **regressão → RMSE (↓)**. "
               "Em cada coluna o **melhor valor está em negrito**; `Rank méd.` é o rank médio "

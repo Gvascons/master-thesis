@@ -1,5 +1,8 @@
 # Desenho experimental — destilação distribucional de FMs tabulares (AI-2)
 
+> **ADENDO (19/10/2026):** a auditoria de identidade dos datasets encontrou que o rótulo "superconduct" sempre designou o OnlineNewsPopularity (renomeado `online_news`) e que o `california_housing` é a variante de alvo binarizado. Menções abaixo usam os rótulos da época. Registro canônico: `docs/errata-datasets-core-regressao.md`.
+
+
 > Título de trabalho: *"Destilação de foundation models tabulares além da
 > classificação: regressão distribucional e a fronteira de Pareto entre
 > destilar, comprimir e cachear."*

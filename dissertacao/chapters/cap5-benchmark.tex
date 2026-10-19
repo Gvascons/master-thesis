@@ -80,8 +80,8 @@ Para a leitura autocontida deste capítulo, vale recapitular o essencial
 do Capítulo~\ref{chap:metodologia}: validação cruzada aninhada ($5$
 folds externos $\times$ $3$ internos, com hiperparâmetros selecionados
 apenas nos internos), ajuste bayesiano via Optuna/TPE \citep{akiba2019}
-com orçamento equalizado por família (100 tentativas para GBDTs, 25 para
-DL), \emph{hold-out} fixo de 20\% (semente 42) que nenhuma etapa de seleção
+com orçamento fixado por família (100 tentativas para GBDTs, 25 para
+DL; assimetria de custo medida e declarada na Seção~\ref{sec:met-protocolo}), \emph{hold-out} fixo de 20\% (semente 42) que nenhuma etapa de seleção
 jamais observa, e pré-processamento por família (one-hot para atenção,
 ordinal para árvores, embeddings onde o modelo os define). Duas
 assimetrias do desenho são declaradas porque afetam a leitura dos
@@ -232,7 +232,7 @@ consistentemente o pior modelo da geração do núcleo, com ranks médios de
 É o único veredito de desempenho bruto que o benchmark autoriza sem
 qualificação dentro do núcleo --- e um lembrete de que arquiteturas
 celebradas na literatura podem não sobreviver a um protocolo uniforme
-com orçamento de ajuste equalizado.
+com orçamento de ajuste fixado por família e condições pareadas.
 
 \section{Ato II --- os eixos de custo}
 \label{sec:cap5-ato2}
@@ -492,7 +492,7 @@ Dois detalhes concretos dão escala à liderança. Na multiclasse, onde a
 margem é mais visível, o TabFM alcança log-loss de 0,0966 no
 \texttt{covertype} e 0,5709 no \texttt{jannis}, contra 0,1644 do
 segundo colocado no \texttt{covertype} (TabPFN) e 0,6583 do TabPFN no
-\texttt{jannis} (ali 3º; o 2º é o TabM, com 0,6572) --- margens
+\texttt{jannis} (ali terceiro; o segundo é o TabM, com 0,6572) --- margens
 visivelmente maiores que as que
 separam vizinhos de rank dentro do núcleo de 11 na mesma tabela
 (Apêndice~\ref{app:tabelas}). E o TabPFN, por sua vez,
@@ -543,7 +543,7 @@ KAN (ranks 11,0/12,0/9,8 em binária/multiclasse/regressão) e TabKAN
 atrás até do TabNet em multiclasse e regressão. Surpreendente à luz das
 alegações dos artigos originais \citep{kan2024,tabkan2025}, o resultado
 pede explicação: sob protocolo uniforme com orçamento de ajuste
-equalizado, as alegações não se sustentam, e a explicação mais provável
+fixado por família, as alegações não se sustentam, e a explicação mais provável
 é que as comparações originais usaram \emph{baselines} subajustados ---
 leitura consistente com a literatura cética anterior
 \citep{poeta2024,kancritical2024}. Até onde alcança nossa verificação
