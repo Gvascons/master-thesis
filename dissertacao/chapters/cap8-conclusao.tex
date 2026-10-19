@@ -417,13 +417,15 @@ datas declaradas'' --- nunca como certeza atemporal
 
 \textbf{O \emph{proxy} de latência do \texttt{adult}.} A latência entra
 nas análises --- inclusive no score ponderado do E2 --- pela medição
-padronizada em um único conjunto e um único regime (lote amortizado,
-cada modelo em seu dispositivo natural). A direção do viés é conhecida e
-foi declarada no pré-registro (conservador a favor dos \emph{foundation
-models} em conjuntos pequenos, contra eles em grandes), mas sua
-magnitude por conjunto não foi medida; o que as conclusões usam são as
-ordens de grandeza, que o regime não altera
-(Seções~\ref{sec:met-limitacoes} e~\ref{sec:regret-ponderado}).
+padronizada em um único regime (lote amortizado, cada modelo em seu
+dispositivo natural), com o \texttt{adult} como referência. A direção do
+viés foi declarada no pré-registro e a sua magnitude foi depois medida
+nos extremos de tamanho do benchmark: os \emph{rankings} entre os 14
+modelos são estáveis entre conjuntos (Spearman 0{,}79--0{,}95) e o
+cruzamento do E2 é idêntico sob os três \emph{proxies}
+(Seções~\ref{sec:met-limitacoes} e~\ref{sec:regret-ponderado}). O que
+permanece não medido é a sensibilidade ao hardware: todos os números vêm
+de uma única máquina declarada.
 
 \textbf{O estimador de CRPS em grade.} A grade de 19 quantis
 sobre-estima o CRPS exato em ${\sim}$4--5\% quase constantes, validado
@@ -470,12 +472,13 @@ Listam-se apenas direções com lastro direto na evidência dos capítulos
     estratégias da Seção~\ref{sec:destil-fronteira} está construída
     para recebê-la como quarto braço nos mesmos \emph{hold-outs}.
   \item \textbf{Regret multicritério com preferências elicitadas.} O E2
-    varreu pesos lineares sobre dois critérios com um \emph{proxy} de
-    latência; a extensão natural é medir latência por conjunto,
-    incorporar custo de treino, robustez e interpretabilidade ao score
-    e elicitar funções de utilidade de praticantes reais --- testando
-    se o ponto de inversão (10--20\% de peso na latência) se move com
-    critérios adicionais.
+    varreu pesos lineares sobre dois critérios, e a robustez do
+    \emph{proxy} de latência ao conjunto de medição já foi verificada
+    (Seção~\ref{sec:regret-ponderado}); a extensão natural é incorporar
+    custo de treino, robustez e interpretabilidade ao score e elicitar
+    funções de utilidade de praticantes reais --- testando se o ponto de
+    inversão (10--20\% de peso na latência) se move com critérios
+    adicionais.
   \item \textbf{KANs sob ajuste dedicado.} O resultado negativo do
     Capítulo~\ref{chap:benchmark} usa o protocolo uniforme da grade ---
     a leitura justa para a pergunta do benchmark, mas não a última

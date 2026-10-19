@@ -660,12 +660,19 @@ conhecidas e as decisões tomadas diante delas.
     (Seção~\ref{sec:met-estatistica}). A alternativa --- remover o
     \texttt{helena} do benchmark --- esconderia precisamente o tipo de
     restrição arquitetural que um estudo de decisão prática deve expor.
-  \item \textbf{Latência medida em um único conjunto e um único regime.} O
-    protocolo de latência (Seção~\ref{sec:met-custo}) usa o \texttt{adult} e
-    o regime amortizado em lote, com cada modelo em seu dispositivo natural.
-    Os números não se transferem para serviço \emph{online} de linha única
-    nem para outro hardware; o que se transfere --- e é o que as conclusões
-    usam --- são as ordens de grandeza entre famílias.
+  \item \textbf{Latência medida em um único regime.} O protocolo de
+    latência (Seção~\ref{sec:met-custo}) usa o regime amortizado em lote,
+    com cada modelo em seu dispositivo natural, e o \texttt{adult} como
+    conjunto de referência. Uma medição de controle nos extremos de
+    tamanho do benchmark (\texttt{credit\_g}, mil amostras, e
+    \texttt{cardiovascular\_disease}, 70~mil) confirmou que os
+    \emph{rankings} de latência entre os 14 modelos são estáveis entre
+    conjuntos (Spearman 0{,}79--0{,}95) e que a dependência do contexto
+    dos \emph{foundation models} tem a direção declarada (TabPFN: 840
+    $\mu$s/linha no menor conjunto, 45{\,}578 no maior). Os números não se
+    transferem para serviço \emph{online} de linha única nem para outro
+    hardware; o que se transfere --- e é o que as conclusões usam --- são
+    as ordens de grandeza entre famílias.
   \item \textbf{Curvas de aprendizado com hiperparâmetros fixos.} O re-uso
     dos hiperparâmetros do conjunto completo em todas as fatias isola o
     efeito do tamanho a capacidade fixa, mas pode desfavorecer modelos cuja

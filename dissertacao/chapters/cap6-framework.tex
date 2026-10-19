@@ -250,8 +250,14 @@ modelos sob protocolo idêntico. A latência relativa entre modelos é
 aproximadamente estável entre conjuntos para GBDTs e modelos de deep
 learning; para \emph{foundation models}, porém, ela cresce com o tamanho do
 contexto, de modo que o proxy é conservador a favor dos FMs em
-conjuntos pequenos e contra eles em conjuntos grandes. As conclusões
-desta seção devem ser lidas com essa ressalva.
+conjuntos pequenos e contra eles em conjuntos grandes. Essa ressalva
+foi posteriormente fechada com medição: a latência dos 14 modelos foi
+re-medida sob protocolo idêntico nos dois extremos de tamanho do
+benchmark (\texttt{credit\_g}, mil amostras; \texttt{cardiovascular\_disease},
+70~mil), os \emph{rankings} mostraram-se estáveis (Spearman
+0{,}79--0{,}95 entre os três conjuntos) e a varredura completa desta
+seção, re-executada com cada um dos três \emph{proxies}, produz o mesmo
+veredito --- o detalhe fica para a discussão dos resultados.
 
 \subsection{Resultados: o cruzamento}
 \label{sec:e2-resultados}
@@ -349,9 +355,16 @@ $S = w \cdot r_{\text{acc}} + (1-w) \cdot r_{\text{lat}}$, a política
 sempre-FM só é regret-ótima na mediana para $w \geq 0{,}9$; em
 $w{=}0{,}8$ já é superada por sempre-GBDT e sempre-DL, e para
 $w \leq 0{,}6$ ``sempre-GBDT'' tem \emph{regret} mediano zero. A ressalva
-acompanha o achado: a latência usa o proxy padronizado do
-\texttt{adult}, conservador a favor dos FMs em conjuntos pequenos e
-contra eles em grandes.
+do proxy acompanha o achado --- e foi testada: re-executando a varredura
+com os \emph{rankings} de latência medidos no \texttt{credit\_g} (mil
+amostras) e no \texttt{cardiovascular\_disease} (70~mil) em lugar do
+\texttt{adult}, o cruzamento é idêntico nos três casos (sempre-FM
+regret-ótima apenas em $w \geq 0{,}9$); só a extensão da zona em que
+sempre-GBDT tem mediana zero desloca-se em $\pm 0{,}1$ ($w \leq 0{,}7$
+com o proxy do conjunto pequeno, $w \leq 0{,}5$ com o do grande),
+exatamente na direção do viés declarada no pré-registro. A inversão da
+recomendação com 10--20\% de peso na latência não depende, portanto, do
+conjunto em que a latência foi medida.
 
 \section{O arcabouço resultante: decisão por restrições}
 \label{sec:arcabouco-resultante}
@@ -424,10 +437,11 @@ Seção~\ref{sec:regret-ponderado} fecha parte dessa lacuna, mas herda
 duas simplificações próprias: o score pondera apenas dois critérios
 (acurácia e latência) de uma função de utilidade que, na prática, pode
 incluir custo de treino, robustez e interpretabilidade; e a latência
-entra pelo proxy padronizado do \texttt{adult}, medido em uma única
-máquina declarada --- a direção do viés desse proxy é conhecida e foi
-declarada no pré-registro, mas sua magnitude por conjunto não foi
-medida.
+entra por um proxy medido em uma única máquina declarada. A sensibilidade
+ao conjunto de medição, porém, deixou de ser incógnita: a varredura
+re-executada com os \emph{proxies} dos extremos de tamanho do benchmark
+produz o mesmo cruzamento (Seção~\ref{sec:e2-resultados}), restando como
+limitação apenas a máquina única e os dois critérios.
 
 Por fim, a datação: a fronteira de modelos muda em ciclos de meses --- a
 diferença entre as colunas @11 e @14 da Tabela~\ref{tab:regret-lodo} é,

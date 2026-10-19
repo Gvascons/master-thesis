@@ -545,3 +545,45 @@ inoperante). Consequências e triagem:
   (resumível; as linhas inválidas foram expurgadas para não serem
   puladas). O E2 com latência por dataset fica condicionado a essa
   re-execução.
+
+### Latência multi-dataset — CONCLUÍDA; robustez do proxy do E2 VERIFICADA (19/10/2026)
+
+Re-execução pós-reboot concluída com exit=0 (19/10/2026 14h21; driver
+NVIDIA 580.178.04 restaurado, `torch.cuda` operante na RTX 5080). Grade
+completa: 14 modelos × {credit_g 1k, cardiovascular 70k}, protocolo
+idêntico ao do adult (dispositivo natural; 1 warm-up + mediana de 5
+passadas). Artefato: `results/latency/latency_multi.csv` (28 linhas).
+
+**Leituras diretas (µs/linha):**
+- A dependência do contexto dos FMs, declarada como direção de viés no
+  pré-registro, agora está MEDIDA: TabPFN 840 (1k) → 7.416 (49k) →
+  45.578 (70k); TabFM 3.510 → 43.262 → 74.220. GBDTs e DL permanecem
+  na mesma ordem de grandeza entre conjuntos (ex.: xgboost 1,14/0,33/
+  0,30; mlp 2,25/2,37/2,37).
+- Curiosidade honesta: no credit_g (200 linhas de teste) alguns DLs
+  pagam overhead fixo de kernel/transferência (realmlp 37,1 vs 0,93 no
+  cardiovascular) — efeito de lote pequeno, declarado.
+
+**Robustez do proxy (pergunta condicionada no registro de 15/10):** a
+varredura do E2 foi re-executada trocando o ranking de latência do adult
+pelos dos outros dois conjuntos
+(`scripts/latency_proxy_robustness.py` →
+`results/aggregated/lodo_weighted_regret_robustness.csv`):
+- Spearman entre rankings de latência (14 modelos): adult×cardio 0,95;
+  adult×credit_g 0,79; credit_g×cardio 0,80.
+- **O veredito de H-W1 é IDÊNTICO nos 3 proxies:** sempre-FM só é
+  regret-ótima (mediana) em w ∈ {0,9; 1,0} — o cruzamento entre 0,9 e
+  0,8 não se move.
+- A única coisa que se desloca é a extensão da zona GBDT-ótima
+  (mediana 0): w ≤ 0,6 (adult), w ≤ 0,7 (credit_g), w ≤ 0,5
+  (cardiovascular) — ±0,1, na direção prevista pelo pré-registro
+  (proxy conservador a favor dos FMs em conjuntos pequenos, contra em
+  grandes).
+
+**Veredito:** a limitação "magnitude do viés do proxy não medida" é
+REBAIXADA a observação quantificada; a conclusão do E2 (inversão da
+recomendação com 10-20% de peso na latência) é robusta ao conjunto de
+medição. Textos atualizados: cap. 4 (limitação reescrita), cap. 6
+(ressalva do E2 fechada com a medição), cap. 8 (validade de construto +
+trabalho futuro rescopado). Com isso, a cadeia experimental da fase
+final está 7/7 FECHADA.
