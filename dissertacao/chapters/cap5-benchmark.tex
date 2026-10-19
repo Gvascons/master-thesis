@@ -124,7 +124,7 @@ relativa o diagrama preserva.
 \caption{Diagrama de distância crítica (Nemenyi) para a classificação
 binária, grade completa de 14 modelos ($N{=}10$ conjuntos, CD $= 6{,}27$;
 rótulos internos da figura em inglês). Fonte:
-\texttt{latex/ai1/figures/cd\_diagram\_binary.pdf}.}
+\texttt{latex/\allowbreak ai1/\allowbreak figures/\allowbreak cd\_\allowbreak diagram\_\allowbreak binary.\allowbreak pdf}.}
 \label{fig:cap5-cd}
 \end{figure}
 
@@ -213,7 +213,7 @@ linhas.
 \caption{Mapa de calor da classificação: métrica primária por modelo
 (colunas) e conjunto (linhas); células vazias em \texttt{helena} são as
 duas exclusões estruturais (rótulos internos da figura em inglês). Fonte:
-\texttt{results/figures/heatmap\_classification.pdf}.}
+\texttt{results/\allowbreak figures/\allowbreak heatmap\_\allowbreak classification.\allowbreak pdf}.}
 \label{fig:cap5-heatmap}
 \end{figure}
 
@@ -221,7 +221,7 @@ A leitura por conjunto confirma a do agregado --- margens pequenas no
 topo das binárias --- e adiciona o que o agregado não mostra: as duas
 células estruturalmente vazias ficam visíveis, e os poucos conjuntos em
 que um modelo abre vantagem nítida (como o CatBoost em
-\texttt{amazon\_employee}, de alta cardinalidade categórica) antecipam as
+\texttt{amazon\_\allowbreak employee}, de alta cardinalidade categórica) antecipam as
 reversões condicionais do Ato~III. A ressalva permanece: valores de
 \emph{hold-out} em uma única partição fixa não carregam, sozinhos, significância
 --- eles ilustram; a inferência vem dos testes pareados sobre os folds.
@@ -279,8 +279,8 @@ em GPU).
 \includegraphics[width=0.95\linewidth]{images/inference_time.pdf}
 \caption{Latência de inferência no \texttt{adult}, em \us{} por linha
 (mediana de 5 passadas, escala logarítmica; rótulos internos da figura em
-inglês). Fonte: \texttt{results/figures/inference\_time.pdf} (dados em
-\texttt{results/latency/latency\_adult.csv}).}
+inglês). Fonte: \texttt{results/\allowbreak figures/\allowbreak inference\_\allowbreak time.\allowbreak pdf} (dados em
+\texttt{results/\allowbreak latency/\allowbreak latency\_\allowbreak adult.\allowbreak csv}).}
 \label{fig:cap5-latencia}
 \end{figure}
 
@@ -322,7 +322,7 @@ inferência são as reportadas acima.
 \includegraphics[width=0.92\linewidth]{images/pareto_binary.pdf}
 \caption{Fronteira de Pareto: rank binário médio \emph{versus} tempo
 mediano de treino, grade completa de 14 modelos (rótulos internos da
-figura em inglês). Fonte: \texttt{latex/ai1/figures/pareto\_binary.pdf}.}
+figura em inglês). Fonte: \texttt{latex/\allowbreak ai1/\allowbreak figures/\allowbreak pareto\_\allowbreak binary.\allowbreak pdf}.}
 \label{fig:cap5-pareto}
 \end{figure}
 
@@ -372,8 +372,8 @@ majoritária/minoritária: leve ($<$2:1), moderada (2--5:1) e severa
 \includegraphics[width=0.85\linewidth]{images/imbalance_robustness.png}
 \caption{Robustez ao desbalanceamento: rank médio agregado por família e
 faixa de severidade nos conjuntos de classificação (rótulos internos da
-figura em inglês). Fonte: \texttt{results/figures/imbalance\_robustness.png}
-(\texttt{notebooks/07\_segmented\_robustness.ipynb}).}
+figura em inglês). Fonte: \texttt{results/\allowbreak figures/\allowbreak imbalance\_\allowbreak robustness.\allowbreak png}
+(\texttt{notebooks/\allowbreak 07\_\allowbreak segmented\_\allowbreak robustness.\allowbreak ipynb}).}
 \label{fig:cap5-imbalance}
 \end{figure}
 
@@ -388,7 +388,7 @@ capítulo (TabPFN 22.473$\times$, TabFM 131.097$\times$). Duas observações
 completam o quadro
 condicional: no extremo de cardinalidade categórica, a codificação
 one-hot penaliza os modelos de atenção (o caso
-\texttt{amazon\_employee} visível na Figura~\ref{fig:cap5-heatmap}); e o
+\texttt{amazon\_\allowbreak employee} visível na Figura~\ref{fig:cap5-heatmap}); e o
 TabPFN combina, dentro do núcleo, o melhor rank médio com o melhor
 pior-caso --- é o modelo que mais raramente falha de forma catastrófica,
 um atributo de robustez que rank médio sozinho não captura (a
@@ -406,20 +406,21 @@ permanentemente a da outra.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{images/learning_curves.pdf}
-\caption{Curvas de aprendizado de 6 modelos em 5 conjuntos, de 500
+\includegraphics[width=\linewidth]{images/learning_curves_diss.pdf}
+\caption[Curvas de aprendizado --- 6 modelos, 5 conjuntos]{Curvas de aprendizado de 6 modelos em 5 conjuntos, de 500
 amostras ao \emph{pool} completo (3 sementes; rótulos internos da figura
-em inglês). Fonte: \texttt{latex/ai1/figures/learning\_curves.pdf}
-(\texttt{notebooks/10\_learning\_curves.ipynb}).}
+em inglês). Fonte:
+\texttt{scripts/\allowbreak fig\_\allowbreak learning\_\allowbreak curves\_\allowbreak diss.\allowbreak py}
+sobre \texttt{results/\allowbreak learning\_\allowbreak curve/\allowbreak curve.\allowbreak csv}.}
 \label{fig:cap5-curvas}
 \end{figure}
 
 Três leituras saem da figura. Primeira: o cruzamento de liderança entre
 GBDTs e DL existe, mas é específico por conjunto --- em 3 dos 5
 conjuntos varridos (\texttt{higgs}, \texttt{jannis} e
-\texttt{year\_prediction}), o DL ultrapassa os GBDTs e não devolve a
+\texttt{year\_\allowbreak prediction}), o DL ultrapassa os GBDTs e não devolve a
 liderança; no \texttt{adult}, o GBDT a retoma em $n \approx 4.000$; e em
-\texttt{give\_me\_some\_credit}, o GBDT lidera do início ao fim. Não há,
+\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit}, o GBDT lidera do início ao fim. Não há,
 portanto, um ``$n$ crítico'' universal a recomendar: a resposta honesta
 ao praticante é que o cruzamento depende do conjunto, não apenas do
 tamanho. Segunda: o TabPFN
@@ -464,7 +465,7 @@ desse subconjunto --- e por isso não diretamente comparável aos ranks de
 \caption{Rank médio por tarefa, geração 2026 \emph{versus} referências
 ($k{=}14$ modelos; menor é melhor; \textbf{negrito} = melhor da coluna;
 ranks multiclasse dos \emph{foundation models} excluem \texttt{helena}).
-Fonte: \texttt{notebooks/TABELA\_RESULTADOS.md}.}
+Fonte: \texttt{notebooks/\allowbreak TABELA\_\allowbreak RESULTADOS.\allowbreak md}.}
 \label{tab:cap5-ranks}
 \begin{tabular}{lccc}
 \toprule
@@ -484,7 +485,7 @@ TabKAN              & 11,4         & 13,3          & 11,8 \\
 \includegraphics[width=0.92\linewidth]{images/average_ranks.pdf}
 \caption{Ranks médios por tarefa na grade completa (painel multiclasse
 restrito aos 12 modelos avaliados nos três conjuntos; rótulos internos da
-figura em inglês). Fonte: \texttt{latex/ai1/figures/average\_ranks.pdf}.}
+figura em inglês). Fonte: \texttt{latex/\allowbreak ai1/\allowbreak figures/\allowbreak average\_\allowbreak ranks.\allowbreak pdf}.}
 \label{fig:cap5-ranks}
 \end{figure}
 
@@ -512,7 +513,7 @@ bayesiano, \textbf{não} no post-hoc frequentista. Três condições de
 contorno adicionais são declaradas: na regressão, $N{=}5$ põe o piso do
 p-valor de Wilcoxon em 0,0625 (piso combinatório --- nenhum resultado
 pode ser ``significativo a 5\%'' ali); um dos cinco conjuntos de
-regressão é o \texttt{california\_housing} de alvo binarizado da
+regressão é o \texttt{california\_\allowbreak housing} de alvo binarizado da
 errata (Tabela~\ref{tab:datasets}) --- a sensibilidade é inócua aqui:
 sem ele, os líderes não mudam (TabFM 1,25, TabPFN 3,25) e apenas
 XGBoost (5,0${\to}$5,5) e RealMLP (4,75) trocam de posição no meio da

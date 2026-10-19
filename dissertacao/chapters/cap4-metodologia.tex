@@ -61,13 +61,13 @@ O benchmark usa \textbf{18 conjuntos de dados públicos do OpenML}
 \citep{vanschoren2014}: 10 de classificação binária, 3 de classificação
 multiclasse e 5 de regressão. A Tabela~\ref{tab:datasets} lista os 18
 conjuntos com seus identificadores OpenML, tamanhos aproximados e composição
-de atributos; a fonte canônica é \texttt{configs/datasets.yaml}, versionada
+de atributos; a fonte canônica é \texttt{configs/\allowbreak datasets.\allowbreak yaml}, versionada
 no repositório.
 
 \begin{table}[htbp]
 \centering
 \caption{Os 18 conjuntos de dados OpenML do benchmark (tamanhos aproximados
-antes do teto de 100~mil amostras). Fonte: \texttt{configs/datasets.yaml}.}
+antes do teto de 100~mil amostras). Fonte: \texttt{configs/\allowbreak datasets.\allowbreak yaml}.}
 \label{tab:datasets}
 \small
 \begin{tabular}{llrrrrl}
@@ -99,11 +99,11 @@ year\_prediction        & regressão & 44027 & 515\,000 & 90 & -- & numéricos \
 \end{table}
 
 Duas notas de identidade acompanham a tabela, resultado da auditoria
-nome$\leftrightarrow$ID$\leftrightarrow$dimensões de 19/10/2026 sobre
+nome\slash ID\slash dimensões de 19/10/2026 sobre
 os 33 identificadores do estudo (a checagem registrada como pendência
 na errata do \texttt{kin8nm}; registro canônico em
-\texttt{docs/errata-datasets-core-regressao.md}). ($\dagger$)~O
-\texttt{california\_housing} do id 44090 é a variante do
+\texttt{docs/\allowbreak errata-\allowbreak datasets-\allowbreak core-\allowbreak regressao.\allowbreak md}). ($\dagger$)~O
+\texttt{california\_\allowbreak housing} do id 44090 é a variante do
 \emph{tabular-benchmark} de \citet{grinsztajn2022} com \textbf{alvo
 binarizado pela mediana} (valor do imóvel acima/abaixo), não a
 regressão original: todos os modelos competem na mesma tarefa --- o
@@ -135,7 +135,7 @@ investigação:
     irrespondível por construção.
   \item \textbf{Diversidade de composição de atributos.} Conjuntos puramente
     numéricos, mistos e um caso extremo predominantemente categórico de alta
-    cardinalidade (\texttt{amazon\_employee}), porque o tratamento de
+    cardinalidade (\texttt{amazon\_\allowbreak employee}), porque o tratamento de
     categóricas é um dos eixos que historicamente separa as famílias
     \citep{grinsztajn2022, mcelfresh2023}.
   \item \textbf{Desbalanceamento realista.} Razões de desbalanceamento de
@@ -155,14 +155,14 @@ condicional da QP1.
   \includegraphics[width=0.85\textwidth]{images/dataset_landscape.pdf}
   \caption{Paisagem dos 18 conjuntos de dados no plano amostras $\times$
   atributos (rótulos internos da figura em inglês). Fonte:
-  \texttt{results/figures/dataset\_landscape.pdf}, gerado a partir de
-  \texttt{configs/datasets.yaml}.}
+  \texttt{results/\allowbreak figures/\allowbreak dataset\_\allowbreak landscape.\allowbreak pdf}, gerado a partir de
+  \texttt{configs/\allowbreak datasets.\allowbreak yaml}.}
   \label{fig:dataset-landscape}
 \end{figure}
 
 Conjuntos com mais de 100~mil amostras
-(\texttt{covertype}, \texttt{year\_prediction},
-\texttt{give\_me\_some\_credit}) são subamostrados de forma estratificada
+(\texttt{covertype}, \texttt{year\_\allowbreak prediction},
+\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit}) são subamostrados de forma estratificada
 para 100~mil amostras \emph{antes de qualquer particionamento}. A prática é
 padrão em benchmarks tabulares por viabilidade computacional
 \citep{gorishniy2021, mcelfresh2023} e, no nosso caso, é também uma
@@ -182,7 +182,7 @@ configuração \texttt{diamonds} apontava, desde a origem, para o identificador
 OpenML do conjunto \texttt{kin8nm} --- foi retificado com trilha pública
 completa, e todo número desta dissertação é posterior à
 retificação.\footnote{O registro canônico da errata está em
-\texttt{docs/errata-diamonds-kin8nm.md}; o episódio é retomado como lição de
+\texttt{docs/\allowbreak errata-\allowbreak diamonds-\allowbreak kin8nm.\allowbreak md}; o episódio é retomado como lição de
 conduta científica na Seção~\ref{sec:met-conduta} e nas limitações do
 Capítulo~\ref{chap:conclusao}.}
 
@@ -199,30 +199,31 @@ proveniência de cada implementação.
 cada implementação (``própria'' indica reimplementação a partir do artigo
 original).}
 \label{tab:modelos}
-\small
+\footnotesize
+\setlength{\tabcolsep}{3pt}
 \begin{tabular}{llll}
 \toprule
 Família & Modelo & Referência & Implementação \\
 \midrule
-\multirow{3}{*}{Gradient boosting}
- & XGBoost        & \citet{chen2016}          & biblioteca oficial \\
- & LightGBM       & \citet{ke2017}            & biblioteca oficial \\
- & CatBoost       & \citet{prokhorenkova2018} & biblioteca oficial \\
+\multirow{3}{*}{\shortstack[l]{Gradient\\boosting}}
+ & XGBoost        & \citet{chen2016}          & oficial \\
+ & LightGBM       & \citet{ke2017}            & oficial \\
+ & CatBoost       & \citet{prokhorenkova2018} & oficial \\
 \midrule
-\multirow{9}{*}{Aprendizado profundo}
- & MLP            & \citet{gorishniy2021}     & própria (modelo-base) \\
- & RealMLP        & \citet{realmlp2024}       & pacote oficial \\
- & TabM           & \citet{tabm2025}          & pacote oficial \\
- & TabNet         & \citet{arik2021}          & pacote da comunidade \\
+\multirow{9}{*}{\shortstack[l]{Aprendizado\\profundo}}
+ & MLP            & \citet{gorishniy2021}     & própria (base) \\
+ & RealMLP        & \citet{realmlp2024}       & oficial \\
+ & TabM           & \citet{tabm2025}          & oficial \\
+ & TabNet         & \citet{arik2021}          & comunidade \\
  & FT-Transformer & \citet{gorishniy2021}     & própria \\
  & SAINT          & \citet{somepalli2021}     & própria \\
  & STab           & \citet{stab-ref}          & própria \\
- & KAN            & \citet{kan2024}           & \emph{efficient-kan} adaptado \\
+ & KAN            & \citet{kan2024}           & \emph{efficient-kan} adapt.\ \\
  & TabKAN         & \citet{tabkan2025}        & própria \\
 \midrule
-\multirow{2}{*}{Foundation models}
- & TabPFN v2.5    & \citet{hollmann2025, priorlabs2025} & pacote oficial \\
- & TabFM          & \citet{tabfm2026}         & pacote oficial \\
+\multirow{2}{*}{\shortstack[l]{Foundation\\models}}
+ & TabPFN v2.5    & \citet{hollmann2025, priorlabs2025} & oficial \\
+ & TabFM          & \citet{tabfm2026}         & oficial \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -383,7 +384,7 @@ clássica de vazamento:
   \item \textbf{Aprendizado profundo:} padronização das numéricas e
     \emph{one-hot} das categóricas com teto de 50 categorias por coluna. O
     teto é necessário para evitar explosão dimensional: sem ele, o conjunto
-    \texttt{amazon\_employee} atingiria entre 7 e 16~mil colunas conforme o
+    \texttt{amazon\_\allowbreak employee} atingiria entre 7 e 16~mil colunas conforme o
     \emph{split} (a soma de cardinalidades do conjunto completo é 15.626), excedendo a
     memória da GPU nos modelos de atenção.
   \item \textbf{\emph{Foundation models}:} codificação ordinal; a
@@ -409,7 +410,8 @@ sensível à qualidade probabilística do modelo; as secundárias cobrem os
 \caption{Métricas por tipo de tarefa (setas indicam a direção de
 otimização).}
 \label{tab:metricas}
-\small
+\footnotesize
+\setlength{\tabcolsep}{4pt}
 \begin{tabular}{llll}
 \toprule
 Tarefa & Primária & Secundárias & Justificativa da primária \\
@@ -457,7 +459,7 @@ variância. Toda a cadeia foi submetida a auditoria de corretude (julho de
 (idêntica à da implementação: $\chi^2 = 31{,}309$ nos dados binários) e o
 cotejo linha a linha da implementação bayesiana com a formulação de
 referência; o registro completo está em
-\texttt{docs/metodologia-estatistica.md}.
+\texttt{docs/\allowbreak metodologia-\allowbreak estatistica.\allowbreak md}.
 
 \begin{enumerate}
   \item \textbf{Unidade de análise: o conjunto de dados.} Os testes operam
@@ -558,15 +560,15 @@ experimentos complementares completam o protocolo:
     do tamanho amostral a capacidade fixa. O re-uso de hiperparâmetros é
     declarado como limitação: re-otimizar por tamanho deslocaria níveis
     absolutos, não a direção dos cruzamentos.
-  \item \textbf{Validação do arcabouço de decisão (LODO; QP2).} O recomendador
-    meta-características$\to$família é avaliado por
+  \item \textbf{Validação do arcabouço de decisão (LODO; QP2).} O
+    recomendador de família por meta-características é avaliado por
     \emph{leave-one-dataset-out}, com métrica de \emph{regret} normalizado
     contra políticas fixas --- o desenho impede que uma árvore descritiva
     seja lida como preditor validado. O protocolo e os resultados estão no
     Capítulo~\ref{chap:framework}.
   \item \textbf{Destilação distribucional (QP3/contribuição).} Desenho
     pré-registrado em documento próprio
-    (\texttt{docs/desenho-experimental-destilacao.md}), com hipóteses
+    (\texttt{docs/\allowbreak desenho-\allowbreak experimental-\allowbreak destilacao.\allowbreak md}), com hipóteses
     falsificáveis, controles de capacidade (hiperparâmetros dos alunos
     fixados nos valores otimizados do benchmark), rotulagem
     \emph{out-of-fold} e métricas distribucionais. O desenho completo é
@@ -699,7 +701,7 @@ conhecidas e as decisões tomadas diante delas.
     com cada modelo em seu dispositivo natural, e o \texttt{adult} como
     conjunto de referência. Uma medição de controle nos extremos de
     tamanho do benchmark (\texttt{credit\_g}, mil amostras, e
-    \texttt{cardiovascular\_disease}, 70~mil) confirmou que os
+    \texttt{cardiovascular\_\allowbreak disease}, 70~mil) confirmou que os
     \emph{rankings} de latência entre os 14 modelos são estáveis entre
     conjuntos (correlação de postos de Spearman 0{,}79--0{,}95) e que a dependência do contexto
     dos \emph{foundation models} tem a direção declarada (TabPFN: 840

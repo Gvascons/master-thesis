@@ -18,6 +18,10 @@
 \usepackage{subcaption}
 \usepackage{amsmath,amssymb}
 \usepackage{textcomp}
+% Válvula de escape para parágrafos com tokens longos (caminhos de
+% artefato em \texttt): permite esticar linhas difíceis em vez de
+% estourar a margem (auditoria de layout de 19/10/2026).
+\emergencystretch=1.5em
 % tikz removido do preâmbulo: os 6 diagramas são pré-compilados em
 % images/tikz-*.pdf (fontes editáveis em tikz-src/) — corta o tempo de
 % compilação p/ caber no limite do plano grátis do Overleaf.

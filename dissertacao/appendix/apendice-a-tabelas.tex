@@ -24,7 +24,7 @@ models}). A métrica primária segue a definição do protocolo:
     suíte de origem distribui o alvo de cada conjunto --- menor é
     melhor (Tabela~\ref{tab:app-regressao}). As escalas diferem entre
     conjuntos (notas da Tabela~\ref{tab:datasets}: o
-    \texttt{california\_housing} tem alvo binarizado, de modo que seu
+    \texttt{california\_\allowbreak housing} tem alvo binarizado, de modo que seu
     RMSE é a raiz do escore de Brier; o \texttt{online\_news} tem alvo
     em logaritmo de compartilhamentos), razão pela qual nenhuma
     agregação de RMSE entre conjuntos é feita em lugar algum do
@@ -40,12 +40,12 @@ células medidas em $14 \times 18 = 252$ possíveis.
 
 Quanto à proveniência, todos os números
 provêm de
-\texttt{results/aggregated/test\_results.csv}, o agregado versionado
+\texttt{results/\allowbreak aggregated/\allowbreak test\_\allowbreak results.\allowbreak csv}, o agregado versionado
 do benchmark; as tabelas em si são geradas automaticamente por
-\texttt{scripts/gen\_appendix\_tables.py} a partir desse artefato
+\texttt{scripts/\allowbreak gen\_\allowbreak appendix\_\allowbreak tables.\allowbreak py} a partir desse artefato
 (nenhum valor é transcrito à mão). Os resultados por \emph{fold} da
 validação cruzada interna, que fundamentam as análises estatísticas
-do Capítulo~\ref{chap:benchmark}, estão em \texttt{results/aggregated/fold\_results.csv}
+do Capítulo~\ref{chap:benchmark}, estão em \texttt{results/\allowbreak aggregated/\allowbreak fold\_\allowbreak results.\allowbreak csv}
 --- arquivo de $\sim$300~MB que permanece no repositório local (fora
 do controle de versão remoto por tamanho), reproduzível a partir de
 \texttt{results/raw} e das sementes registradas.

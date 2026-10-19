@@ -253,7 +253,7 @@ Antes de qualquer camada, há
 uma decisão incômoda: como entregar \texttt{ocupação} a uma rede que só
 consome números? A codificação \emph{one-hot} --- uma coluna binária por
 categoria --- explode a dimensionalidade quando a cardinalidade é alta: no
-benchmark desta dissertação, o conjunto \texttt{amazon\_employee} atingiria
+benchmark desta dissertação, o conjunto \texttt{amazon\_\allowbreak employee} atingiria
 da ordem de 7 a 16 mil colunas (conforme o \emph{split}) sem um teto de
 cardinalidade, penalizando
 especialmente os modelos de atenção, cujo custo cresce com o número de
@@ -607,7 +607,7 @@ preditiva com função de distribuição acumulada $F$ e um alvo observado $y$,
 \begin{equation}
   \operatorname{CRPS}(F, y) \;=\;
   \int_{-\infty}^{\infty}
-  \left( F(z) - \mathbb{1}\{z \geq y\} \right)^2 \mathrm{d}z,
+  \left( F(z) - \mathbf{1}\{z \geq y\} \right)^2 \mathrm{d}z,
   \label{eq:crps}
 \end{equation}
 a distância quadrática integrada entre a CDF predita e a CDF degrau do

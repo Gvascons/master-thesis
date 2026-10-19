@@ -56,7 +56,7 @@ melhor), e sua leitura motiva todo o restante do capítulo.
 \includegraphics[width=0.92\linewidth]{images/decision_matrix.png}
 \caption{Matriz de decisão multicritério dos 14 modelos (linhas,
 ordenadas por desempenho) em seis critérios (colunas; rótulos internos da
-figura em inglês). Fonte: \texttt{results/figures/decision\_matrix.png}.}
+figura em inglês). Fonte: \texttt{results/\allowbreak figures/\allowbreak decision\_\allowbreak matrix.\allowbreak png}.}
 \label{fig:decision-matrix}
 \end{figure}
 
@@ -131,7 +131,7 @@ pré-registrado de robustez (14/10/2026), árvore de profundidade 3,
 $k$NN ($k{=}3$, meta-características padronizadas) e regressão
 logística multinomial, sob o mesmo protocolo LODO, também não superam o
 \emph{baseline} em nenhuma das duas grades --- 0 de 8 células
-(\texttt{results/aggregated/lodo\_routers.csv}). O arcabouço de decisão
+(\texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak routers.\allowbreak csv}). O arcabouço de decisão
 não deve conter um preditor de família vencedora --- conclusão
 corroborada por evidência independente \citep{herre2026}.
 
@@ -156,7 +156,7 @@ todos os 18.
 \centering
 \caption{Regret normalizado das políticas de recomendação sob LODO, nos
 estudos com 11 e com 14 modelos (\textbf{negrito} = melhor política da
-coluna). Fonte: \texttt{results/aggregated/lodo\_validation\{,\_14\}.csv}.}
+coluna). Fonte: \texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak validation\{,\allowbreak \_\allowbreak 14\}.\allowbreak csv}.}
 \label{tab:regret-lodo}
 \small
 \begin{tabular}{lcccc}
@@ -205,7 +205,7 @@ mostrou que o líder de acurácia custa 4--5 ordens de magnitude mais
 para servir que um GBDT; um praticante cuja função de utilidade pondere
 acurácia \emph{e} custo de inferência pode, legitimamente, chegar a
 outra recomendação. Esta seção fecha essa lacuna com o experimento E2,
-pré-registrado em \texttt{docs/desenho-melhorias-finais.md}
+pré-registrado em \texttt{docs/\allowbreak desenho-\allowbreak melhorias-\allowbreak finais.\allowbreak md}
 (05/10/2026, antes da execução, conforme o contrato de conduta do
 programa de pesquisa): a política ``FM primeiro'' continua regret-ótima
 quando a métrica de decisão pondera acurácia e custo?
@@ -227,9 +227,9 @@ calcula-se o \emph{regret} normalizado de cada política fixa exatamente como
 no estudo original: 0 se a família recomendada contém o modelo de
 melhor score $S$ no conjunto; 1 se contém apenas o pior.\footnote{As
 quatro políticas do pré-registro estão no artefato
-(\texttt{results/aggregated/lodo\_weighted\_regret.csv}): a árvore-LODO
+(\texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak weighted\_\allowbreak regret.\allowbreak csv}): a árvore-LODO
 é avaliada pela recomendação por conjunto armazenada no estudo original
-(\texttt{lodo\_validation\_14.csv}), sem reajuste --- ela foi treinada
+(\texttt{lodo\_\allowbreak validation\_\allowbreak 14.\allowbreak csv}), sem reajuste --- ela foi treinada
 para prever o vencedor de \emph{acurácia} e aqui é pontuada sob o score
 ponderado. O resultado antecipa a Seção~\ref{sec:resultado-negativo}:
 em mediana, a árvore nunca supera a melhor política fixa em nenhum $w$
@@ -255,7 +255,7 @@ contexto, de modo que o proxy é conservador a favor dos FMs em
 conjuntos pequenos e contra eles em conjuntos grandes. Essa ressalva
 foi posteriormente fechada com medição: a latência dos 14 modelos foi
 re-medida sob protocolo idêntico nos dois extremos de tamanho do
-benchmark (\texttt{credit\_g}, mil amostras; \texttt{cardiovascular\_disease},
+benchmark (\texttt{credit\_g}, mil amostras; \texttt{cardiovascular\_\allowbreak disease},
 70~mil), os \emph{rankings} mostraram-se estáveis (Spearman
 0{,}79--0{,}95 entre os três conjuntos) e a varredura completa desta
 seção, re-executada com cada um dos três \emph{proxies}, produz o mesmo
@@ -276,7 +276,7 @@ os conjuntos.
 \caption{Regret multicritério ponderado das três políticas fixas em
 função do peso da acurácia $w$ (Eq.~\ref{eq:score-ponderado}; experimento
 E2, estudo com 14 modelos). Fonte:
-\texttt{results/aggregated/lodo\_weighted\_regret.csv}.}
+\texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak weighted\_\allowbreak regret.\allowbreak csv}.}
 \label{fig:lodo-weighted}
 \end{figure}
 
@@ -289,7 +289,7 @@ tenha origem inspecionável.
 \caption{Regret normalizado mediano das três políticas fixas em função do
 peso da acurácia $w$ (estudo com 14 modelos; \textbf{negrito} = melhor
 política da coluna). Fonte:
-\texttt{results/aggregated/lodo\_weighted\_regret.csv} (medianas
+\texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak weighted\_\allowbreak regret.\allowbreak csv} (medianas
 recomputadas do artefato).}
 \label{tab:weighted-regret}
 \small
@@ -359,7 +359,7 @@ $w{=}0{,}8$ já é superada por sempre-GBDT e sempre-DL, e para
 $w \leq 0{,}6$ ``sempre-GBDT'' tem \emph{regret} mediano zero. A ressalva
 do proxy acompanha o achado --- e foi testada: re-executando a varredura
 com os \emph{rankings} de latência medidos no \texttt{credit\_g} (mil
-amostras) e no \texttt{cardiovascular\_disease} (70~mil) em lugar do
+amostras) e no \texttt{cardiovascular\_\allowbreak disease} (70~mil) em lugar do
 \texttt{adult}, o cruzamento é idêntico nos três casos (sempre-FM
 regret-ótima apenas em $w \geq 0{,}9$); só a extensão da zona em que
 sempre-GBDT tem mediana zero desloca-se em $\pm 0{,}1$ ($w \leq 0{,}7$
@@ -382,7 +382,7 @@ validado na sua forma final, com os 14 modelos do estudo completo.
 \includegraphics[width=0.88\linewidth]{images/decision_flowchart_14_pt.pdf}
 \caption{Fluxograma de decisão validado, estudo com 14 modelos: cada
 losango é uma restrição verificável \emph{a priori}. Fonte: elaboração
-própria (\texttt{scripts/figures\_ai1\_display.py}).}
+própria (\texttt{scripts/\allowbreak figures\_\allowbreak ai1\_\allowbreak display.\allowbreak py}).}
 \label{fig:flowchart-14}
 \end{figure}
 
@@ -429,7 +429,7 @@ resultados.
 
 Quanto à composição da amostra, a errata de identidade dos conjuntos
 (Tabela~\ref{tab:datasets}) não altera as leituras deste capítulo: o
-\texttt{california\_housing} binarizado participa do LODO e do E2 como
+\texttt{california\_\allowbreak housing} binarizado participa do LODO e do E2 como
 tarefa interna consistente (todos os 14 modelos competem no mesmo alvo,
 e os \emph{ranks} usados pelos scores são internos a cada conjunto), e
 o \texttt{online\_news} só teve o rótulo corrigido. Quanto ao tamanho

@@ -8,8 +8,8 @@ Capítulo~\ref{chap:destilacao} e o registro de processo do trabalho
 operacionais documentados.
 
 Para rastreabilidade com os documentos de desenho do repositório
-(\texttt{docs/desenho-experimental-destilacao.md} e
-\texttt{docs/desenho-melhorias-finais.md}), os codinomes de registro
+(\texttt{docs/\allowbreak desenho-\allowbreak experimental-\allowbreak destilacao.\allowbreak md} e
+\texttt{docs/\allowbreak desenho-\allowbreak melhorias-\allowbreak finais.\allowbreak md}), os codinomes de registro
 correspondem às seguintes partes do texto: E1 = \emph{baselines}
 clássicos (Seção~\ref{sec:destil-e1}); E2 = \emph{regret} ponderado
 (Seção~\ref{sec:regret-ponderado}); E3 = utilidade de decisão
@@ -49,7 +49,7 @@ efeito puro do vazamento sobre a calibração do aluno.
 desagregada]{Ablação OOF \emph{vs.} \emph{in-sample} --- aluno
 XGBoost-quantil, professor TabPFN; média de 3 sementes. PICP~80\%
 nominal $= 0{,}80$. Fonte:
-\texttt{results/distillation/ablation\_insample.csv}.}
+\texttt{results/\allowbreak distillation/\allowbreak ablation\_\allowbreak insample.\allowbreak csv}.}
 \label{tab:app-abl-oof}
 \setlength{\tabcolsep}{4.5pt}
 \begin{tabular}{lccccccccc}
@@ -60,7 +60,7 @@ nominal $= 0{,}80$. Fonte:
 \emph{Conjunto} & RMSE & CRPS & PICP & RMSE & CRPS & PICP
                & RMSE & CRPS & PICP \\
 \midrule
-\texttt{california\_housing} & 0{,}277 & 0{,}109 & 0{,}596
+\texttt{california\_\allowbreak housing} & 0{,}277 & 0{,}109 & 0{,}596
   & 0{,}270 & 0{,}111 & 0{,}545 & 0{,}268 & 0{,}111 & 0{,}532 \\
 \texttt{kin8nm}              & 0{,}110 & 0{,}064 & 0{,}617
   & 0{,}108 & 0{,}064 & 0{,}571 & 0{,}107 & 0{,}064 & 0{,}574 \\
@@ -75,7 +75,7 @@ nominal $= 0{,}80$. Fonte:
 Para o aluno XGBoost-ponto (sem componente distribucional), o mesmo
 artefato mostra o mesmo não-dano em RMSE: \emph{in-sample} fica igual
 ou levemente melhor que OOF nos quatro conjuntos
-(\texttt{california\_housing} $0{,}262$ \emph{vs.} $0{,}268$;
+(\texttt{california\_\allowbreak housing} $0{,}262$ \emph{vs.} $0{,}268$;
 \texttt{kin8nm} $0{,}109$ \emph{vs.} $0{,}111$; \texttt{online\_news}
 $0{,}833$ \emph{vs.} $0{,}835$; \texttt{wine\_quality} $0{,}617$
 \emph{vs.} $0{,}667$) --- o custo do vazamento em regressão está na
@@ -103,7 +103,7 @@ $0{,}004$--$0{,}025$ --- boa parte da vantagem distribucional do
 logarítmica do alvo --- CRPS em espaço log, média de 3 sementes
 (professor determinístico, 1 execução). ``Hard'' = aluno de rótulos
 verdadeiros; ``soft'' = aluno destilado. Fonte:
-\texttt{results/distillation/ablation\_logtarget.csv}.}
+\texttt{results/\allowbreak distillation/\allowbreak ablation\_\allowbreak logtarget.\allowbreak csv}.}
 \label{tab:app-abl-log}
 \begin{tabular}{llcccc}
 \toprule
@@ -113,7 +113,7 @@ Retenção \\
 \multirow{3}{*}{Falha}
  & \texttt{fifa}              & 0{,}3405 & 0{,}3499 & 0{,}3656 & $-1{,}69$ \\
  & \texttt{diamonds\_real}    & 0{,}0411 & 0{,}0449 & 0{,}0451 & $-0{,}03$ \\
- & \texttt{health\_insurance} & 0{,}5713 & 0{,}5961 & 0{,}5951 & $+0{,}04$ \\
+ & \texttt{health\_\allowbreak insurance} & 0{,}5713 & 0{,}5961 & 0{,}5951 & $+0{,}04$ \\
 \midrule
 \multirow{2}{*}{Controle}
  & \texttt{kings\_county}     & 0{,}0783 & 0{,}0862 & 0{,}0859 & $+0{,}04$ \\
@@ -142,7 +142,7 @@ de CRPS relativo, com cauda até 28,8\% nos conjuntos em que o
 cruzamento é mais danoso ---, de modo que nenhuma conclusão do
 capítulo depende do reparo: ele é um regularizador consistente e de
 custo zero, não uma fonte de vantagem. Fonte:
-\texttt{results/distillation/ablation\_sort.csv}.
+\texttt{results/\allowbreak distillation/\allowbreak ablation\_\allowbreak sort.\allowbreak csv}.
 
 \subsection{Calibração conformal pós-hoc (piloto declarado)}
 \label{sec:app-pilot-conformal}
@@ -170,7 +170,7 @@ calibração participou (via contexto do professor) dos alvos de treino
 --- assimetria fraca de \emph{exchangeability} que o braço \emph{hard}
 não tem; uma extensão além do piloto exigiria regenerar os rótulos OOF
 dentro dos 90\%. Fonte:
-\texttt{results/distillation/pilot\_conformal.csv}.
+\texttt{results/\allowbreak distillation/\allowbreak pilot\_\allowbreak conformal.\allowbreak csv}.
 
 \section{Cemitério de hipóteses e desvios}
 \label{sec:suple-cemiterio}
@@ -185,10 +185,10 @@ que correções sejam feitas por retificação datada, nunca por reescrita
 de histórico; este registro é a consolidação desses episódios.
 
 \subsection{H1 --- destilação pontual}
-\emph{O que era:} hipótese pré-registrada
-(\texttt{docs/desenho-experimental-destilacao.md}, \S1) de que um aluno
+\emph{O que era:} a hipótese de que um aluno
 GBDT destilado reteria $\geq 50\%$ do gap de RMSE do professor em
-$\geq 3$ dos 5 conjuntos de regressão. \emph{O que aconteceu:}
+$\geq 3$ dos 5 conjuntos de regressão, pré-registrada em
+\texttt{docs/\allowbreak desenho-\allowbreak experimental-\allowbreak destilacao.\allowbreak md} (\S1). \emph{O que aconteceu:}
 refutada nos cinco conjuntos centrais com o professor TabPFN; a
 refutação replicou com o professor TabFM, de gaps pontuais maiores, e
 na extensão confirmatória ao pool completo de 20 conjuntos (CTR23), na
@@ -200,8 +200,8 @@ Capítulo~\ref{chap:destilacao} (Seção~\ref{sec:destil-ponto}) --- em
 \emph{pool} completo, o aluno não absorve a vantagem \emph{pontual} do
 \emph{foundation model}, independentemente do tamanho do gap; o que
 se transfere é a distribuição. Registros:
-\texttt{docs/desenho-experimental-destilacao.md} (pré-registro),
-\texttt{docs/relatorio-ai2.md} (fases 1--2),
+\texttt{docs/\allowbreak desenho-\allowbreak experimental-\allowbreak destilacao.\allowbreak md} (pré-registro),
+\texttt{docs/\allowbreak relatorio-\allowbreak ai2.\allowbreak md} (fases 1--2),
 Seções~\ref{sec:destil-ponto} e~\ref{sec:destil-e1}.
 
 A varredura de tamanho de \emph{pool} que escopa essa refutação ---
@@ -217,13 +217,13 @@ linhas, e desaparece (ou inverte) a partir de 2~mil.
 \caption{Varredura de tamanho de \emph{pool} da destilação pontual
 (professor TabPFN): $\Delta$RMSE = \emph{hard} $-$ \emph{soft}
 (positivo = destilado melhor), média de 3 sementes. Fonte:
-\texttt{results/distillation/distill\_cap\{800,2000,8000\}.csv}.}
+\texttt{results/\allowbreak distillation/\allowbreak distill\_\allowbreak cap\{800,\allowbreak 2000,\allowbreak 8000\}.\allowbreak csv}.}
 \label{tab:app-cap-sweep}
 \begin{tabular}{lccc}
 \toprule
 \emph{Conjunto} & \emph{pool} 800 & \emph{pool} 2.000 & \emph{pool} 8.000 \\
 \midrule
-\texttt{california\_housing} & $-0{,}008$ & $+0{,}005$ & $-0{,}007$ \\
+\texttt{california\_\allowbreak housing} & $-0{,}008$ & $+0{,}005$ & $-0{,}007$ \\
 \texttt{wine\_quality}       & $+0{,}026$ & $-0{,}079$ & $-0{,}081$ \\
 \bottomrule
 \end{tabular}
@@ -241,8 +241,8 @@ a própria vantagem do professor no espaço logarítmico
 é mais útil que a hipótese --- virou a cláusula (i) da regra de
 decisão ``quando destilar'' (Seção~\ref{sec:destil-regra}): antes de
 destilar, aplique transformações baratas de alvo. Registros:
-\texttt{docs/relatorio-ai2.md} (fase 6a),
-\texttt{results/distillation/ablation\_logtarget.csv}.
+\texttt{docs/\allowbreak relatorio-\allowbreak ai2.\allowbreak md} (fase 6a),
+\texttt{results/\allowbreak distillation/\allowbreak ablation\_\allowbreak logtarget.\allowbreak csv}.
 
 \subsection{Destilação por amostragem (variante metodológica própria)}
 \emph{O que era:} hipótese exploratória pré-registrada (H-X1,
@@ -253,7 +253,7 @@ aumentado --- regressão quantílica genuína em vez de imitação de
 curvas por MSE --- igualaria ou superaria o aluno MSE em CRPS nos
 conjuntos de vantagem positiva. \emph{O que aconteceu:} refutada no
 piloto de 5 conjuntos (3 sementes): a variante só supera o aluno MSE
-no \texttt{california\_housing} ($+2{,}2\%$), empata no
+no \texttt{california\_\allowbreak housing} ($+2{,}2\%$), empata no
 \texttt{cps88wages} e perde nos demais (até $-5{,}6\%$ no
 \texttt{cpu\_activity}), custando 2,8--44$\times$ o tempo de treino. A
 amostragem melhora a calibração onde o aluno MSE subcobre
@@ -266,12 +266,13 @@ como variante testada sem claim --- e é o que este registro faz. Nota
 pós-errata (19/10/2026): a única vitória da variante é exatamente no
 conjunto de alvo binarizado da errata; sem ele, o placar é 0 de 4, e a
 refutação fortalece.
-Registros: \texttt{docs/desenho-melhorias-finais.md} (pré-registro e
-veredito datados), \texttt{results/distillation/pilot\_sampling.csv}.
+Registros: \texttt{docs/\allowbreak desenho-\allowbreak melhorias-\allowbreak finais.\allowbreak md} (pré-registro e
+veredito datados), \texttt{results/\allowbreak distillation/\allowbreak pilot\_\allowbreak sampling.\allowbreak csv}.
 
 \subsection{Roteamento por meta-características}
 \emph{O que era:} a promessa, herdada da literatura de
-meta-learning, de que meta-características do conjunto de dados poderiam
+\emph{meta-learning}, de que características descritivas
+(meta-características) do conjunto de dados poderiam
 prever a família vencedora --- o arcabouço de decisão seria um
 preditor, não um fluxograma. \emph{O que aconteceu:} sob validação
 \emph{leave-one-dataset-out}, a árvore de profundidade 2 não supera o
@@ -283,17 +284,17 @@ resultado negativo é o que justifica a forma final do arcabouço
 trabalho apenas como ilustração descritiva. Registros:
 Seção~\ref{sec:resultado-negativo} do
 Capítulo~\ref{chap:framework},
-\texttt{results/aggregated/lodo\_validation.csv} e
-\texttt{lodo\_validation\_14.csv}, \texttt{scripts/lodo\_validation.py}.
+\texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak validation.\allowbreak csv} e
+\texttt{lodo\_\allowbreak validation\_\allowbreak 14.\allowbreak csv}, \texttt{scripts/\allowbreak lodo\_\allowbreak validation.\allowbreak py}.
 
 \subsection{A claim retratada do OOM ``determinístico'' no
-\texttt{year\_prediction}}
+\texttt{year\_\allowbreak prediction}}
 \emph{O que era:} durante a medição da fronteira de Pareto,
 afirmou-se que o ponto professor TabPFN com contexto de 50~mil linhas no
-\texttt{year\_prediction} era imensurável na GPU de 16~GB por OOM
+\texttt{year\_\allowbreak prediction} era imensurável na GPU de 16~GB por OOM
 determinístico. \emph{O que aconteceu:} a análise forense da sessão
 mostrou que a claim estava errada --- o culpado era a estimativa do
-modo automático de memória; com \texttt{memory\_saving\_mode} forçado,
+modo automático de memória; com \texttt{memory\_\allowbreak saving\_\allowbreak mode} forçado,
 o ponto foi medido ($148{,}6$~ms/linha, $\sim$3,3$\times$ a latência
 do ponto de 25~mil, por um ganho de RMSE de apenas
 $8{,}661 \to 8{,}610$). A claim foi retratada conforme a política de
@@ -303,12 +304,12 @@ aqui:} retratações públicas fazem parte do contrato de conduta; o
 episódio também ilustra que ``imensurável'' exige verificação
 exaustiva dos modos de operação antes de ser afirmado. Registros:
 commit \texttt{64b410a} (\emph{``ai2: correction --- year@50K WAS
-measurable''}), \texttt{docs/relatorio-ai2.md} (fase 3), comentário em
-\texttt{scripts/pareto\_strategies.py}.
+measurable''}), \texttt{docs/\allowbreak relatorio-\allowbreak ai2.\allowbreak md} (fase 3), comentário em
+\texttt{scripts/\allowbreak pareto\_\allowbreak strategies.\allowbreak py}.
 
 \subsection{Errata \texttt{diamonds}/\texttt{kin8nm}}
 \emph{O que era:} a entrada \texttt{diamonds} de
-\texttt{configs/datasets.yaml} apontava, desde a criação do projeto,
+\texttt{configs/\allowbreak datasets.\allowbreak yaml} apontava, desde a criação do projeto,
 para o \texttt{openml\_id} 44980 --- que é o \texttt{kin8nm} (8.192
 amostras), não o \texttt{diamonds} (44979; 53.940 amostras).
 \emph{O que aconteceu:} o erro foi descoberto em 20/07/2026, quando a
@@ -320,20 +321,19 @@ configuração --- lapso registrado. A validade experimental não foi
 afetada (apenas o rótulo estava errado); os rótulos foram corrigidos
 por commit de retificação com histórico preservado, a duplicata
 involuntária virou teste de reprodutibilidade ponta-a-ponta
-(\texttt{extension\_kin8nm\_repro\_check.csv}: números reproduzidos
+(\texttt{extension\_\allowbreak kin8nm\_\allowbreak repro\_\allowbreak check.\allowbreak csv}: números reproduzidos
 exatamente sob as mesmas sementes) e o \texttt{diamonds} verdadeiro
 entrou na extensão como \texttt{diamonds\_real}. \emph{Por que está
 aqui:} é o desvio de registro mais sério do trabalho e a origem de
-duas salvaguardas (verificação nome$\leftrightarrow$ID$\leftrightarrow$%
-dimensões no download; divergência de \texttt{approx\_samples} como
+duas salvaguardas (verificação nome\slash ID\slash %
+dimensões no download; divergência de \texttt{approx\_\allowbreak samples} como
 sinal de investigação obrigatória). Registro canônico:
-\texttt{docs/errata-diamonds-kin8nm.md}; commits \texttt{d1168fa}
+\texttt{docs/\allowbreak errata-\allowbreak diamonds-\allowbreak kin8nm.\allowbreak md}; commits \texttt{d1168fa}
 (erratum) e \texttt{c407ef6} (reexecução das análises).
 
-\subsection{Errata de identidade do núcleo de regressão
-(\texttt{online\_news} e \texttt{california\_housing})}
+\subsection{Errata de identidade do núcleo de regressão}
 \emph{O que era:} a salvaguarda prometida na errata anterior --- a
-verificação nome$\leftrightarrow$ID$\leftrightarrow$dimensões ---
+verificação nome\slash ID\slash dimensões ---
 permanecia pendente. \emph{O que aconteceu:} executada em 19/10/2026
 sobre os 33 identificadores do estudo, encontrou os dois casos
 remanescentes, ambos herdados do commit de criação do projeto. O
@@ -342,7 +342,7 @@ rótulo ``superconduct'' sempre designou o OnlineNewsPopularity
 --- os metadados antigos do config descreviam o superconduct
 pretendido, nunca o dado carregado; o rótulo foi renomeado para
 \texttt{online\_news} em todos os artefatos por script de retificação
-versionado, com histórico preservado. E o \texttt{california\_housing}
+versionado, com histórico preservado. E o \texttt{california\_\allowbreak housing}
 (OpenML 44090) é a variante de \textbf{alvo binarizado} da suíte de
 classificação do \emph{tabular-benchmark}: mantido como executado (a
 população de 20 era pré-registrada; removê-lo a posteriori seria
@@ -356,15 +356,16 @@ registrada lá, executada, encontrou exatamente o que previa; a nova
 lição registrada é que suítes curadas reusam o mesmo nome em variantes
 de classificação e regressão do mesmo dado, de modo que identidade
 exige verificar a suíte de origem. Registro canônico:
-\texttt{docs/errata-datasets-core-regressao.md}; sensibilidade:
-\texttt{results/distillation/sensitivity\_california.csv}.
+\texttt{docs/\allowbreak errata-\allowbreak datasets-\allowbreak core-\allowbreak regressao.\allowbreak md}; sensibilidade:
+\texttt{results/\allowbreak distillation/\allowbreak sensitivity\_\allowbreak california.\allowbreak csv}.
 
-\subsection{Troca \texttt{year\_prediction} $\to$
+\subsection[Troca de conjunto na figura de
+calibração]{Troca \texttt{year\_\allowbreak prediction} $\to$
 \texttt{cpu\_activity} na figura de calibração}
 \emph{O que era:} a figura de calibração da destilação usaria
-\texttt{california\_housing} e \texttt{year\_prediction} como
+\texttt{california\_\allowbreak housing} e \texttt{year\_\allowbreak prediction} como
 exemplos. \emph{O que aconteceu:} a passada do professor com contexto de
-50~mil linhas no \texttt{year\_prediction} excedeu o orçamento de
+50~mil linhas no \texttt{year\_\allowbreak prediction} excedeu o orçamento de
 tempo da sessão de geração de figuras
 (\emph{time-box}); o conjunto foi substituído por
 \texttt{cpu\_activity}, que carrega a mesma mensagem --- retenção
@@ -372,6 +373,6 @@ distribucional forte ($+0{,}50$) --- a cerca de 1/50 do custo
 computacional. \emph{Por que está aqui:} é um desvio operacional, não
 científico, mas altera um artefato apresentado; a decisão e sua
 justificativa estão comentadas no próprio script gerador. Registro:
-comentário em \texttt{scripts/plot\_calibration.py} (definição de
+comentário em \texttt{scripts/\allowbreak plot\_\allowbreak calibration.\allowbreak py} (definição de
 \texttt{DATASETS}); retenção do \texttt{cpu\_activity} em
-\texttt{docs/relatorio-ai2.md} (fase 6a).
+\texttt{docs/\allowbreak relatorio-\allowbreak ai2.\allowbreak md} (fase 6a).

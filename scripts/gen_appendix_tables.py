@@ -22,6 +22,7 @@ Convenções (documentadas na prosa do apêndice):
 Uso:  uv run python scripts/gen_appendix_tables.py
 """
 
+import sys
 from pathlib import Path
 
 import pandas as pd
@@ -83,7 +84,7 @@ def build_table(df: pd.DataFrame, task: str, metric: str,
     lines.append(r"\begin{sidewaystable}[p]")
     lines.append(r"\centering")
     lines.append(r"\small")
-    lines.append(r"\setlength{\tabcolsep}{4pt}")
+    lines.append(r"\setlength{\tabcolsep}{3pt}")
     lines.append(
         r"\caption[" + TASK_TITLES[label].split(" --- ")[0]
         + r" --- resultados completos]{"
@@ -160,7 +161,7 @@ def build_secondary_rank_table(df: pd.DataFrame, task: str) -> str:
         cols[disp] = ranks
     tab = pd.DataFrame(cols)
 
-    lines = [r"\begin{table}[p]", r"\centering", r"\small",
+    lines = [r"\begin{table}[htbp]", r"\centering", r"\small",
              r"\caption[Métricas secundárias --- tarefa " + TASK_PT[task]
              + r"]{Rank médio (1 = melhor) dos 14 modelos em cada métrica "
              + r"da tarefa " + TASK_PT[task] + r"; a primária aparece como "
@@ -220,7 +221,7 @@ def build_ci_table() -> str:
     ci = pd.read_csv(src)
     ci = ci[(ci.task_type == "binary") & (ci.metric == "roc_auc")]
     ci = ci.set_index("model")
-    lines = [r"\begin{table}[p]", r"\centering", r"\small",
+    lines = [r"\begin{table}[htbp]", r"\centering", r"\small",
              r"\caption[IC bootstrap da média de AUC --- binária]{Média de "
              r"AUC-ROC na tarefa binária com IC95\% de \emph{bootstrap} "
              r"percentil ($B{=}10\,000$) sobre os conjuntos. Fonte: "
@@ -249,7 +250,7 @@ def build_cost_table(df: pd.DataFrame) -> str:
     no_adult = df[df.dataset != "adult"]
     train = df.groupby("model")["train_time_s"].median()
     tune = no_adult.groupby("model")["tuning_time_s"].median()
-    lines = [r"\begin{table}[p]", r"\centering", r"\small",
+    lines = [r"\begin{table}[htbp]", r"\centering", r"\small",
              r"\caption[Custos consolidados por modelo]{Custos medianos por "
              r"modelo: treino (s, 18 conjuntos), tuning (s, excl.\ "
              r"\texttt{adult} --- Seção~\ref{sec:met-custo}) e latência "
@@ -287,7 +288,7 @@ def build_foldvar_table() -> str:
         sub = sub.dropna(subset=[mcol, scol])
         sub["cvpct"] = 100 * sub[scol] / sub[mcol].abs()
         out[task] = sub.groupby("model")["cvpct"].median()
-    lines = [r"\begin{table}[p]", r"\centering", r"\small",
+    lines = [r"\begin{table}[htbp]", r"\centering", r"\small",
              r"\caption[Variabilidade entre \emph{folds}]{Mediana, sobre os "
              r"conjuntos da tarefa, do coeficiente de variação entre "
              r"\emph{folds} da métrica primária (\%; menor = mais estável). "
@@ -335,7 +336,11 @@ def main() -> None:
     blocks.append(build_cost_table(df))
     blocks.append(build_foldvar_table())
 
-    OUT.write_text("\n\n".join(blocks) + "\n", encoding="utf-8")
+    # caminhos quebráveis nas legendas (auditoria de layout 19/10/2026)
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from fix_tt_breaks import process as _ttbreaks
+    texto, _ = _ttbreaks("\n\n".join(blocks) + "\n")
+    OUT.write_text(texto, encoding="utf-8")
     total = len(df)
     print(f"OK: {OUT.relative_to(ROOT)} escrito ({len(blocks) - 1} tabelas).")
     print(f"Células lidas: {total} (esperado 250 = 252 - 2 exclusões "
