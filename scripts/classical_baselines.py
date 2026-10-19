@@ -31,7 +31,7 @@ from src.utils.config import load_experiment_config
 from src.utils.reproducibility import set_seed
 
 CSV_PATH = REPO / "results" / "distillation" / "classical_baselines.csv"
-CORE = ["wine_quality", "california_housing", "superconduct", "kin8nm",
+CORE = ["wine_quality", "california_housing", "online_news", "kin8nm",
         "year_prediction"]
 EXT = ["abalone", "cpu_activity", "diamonds_real", "grid_stability",
        "miami_housing", "fifa", "kings_county", "health_insurance",

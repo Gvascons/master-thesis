@@ -1,6 +1,6 @@
 {
   "model": "stab",
-  "dataset": "superconduct",
+  "dataset": "online_news",
   "task_type": "regression",
   "best_params": {
     "depth": 5,

@@ -1,0 +1,13 @@
+analise,escopo,publicado,sem_california,veredito
+retencao (3 sementes),20->19,16/20 med=0.192 sinal p=0.0059 Wilc p=0.0448,15/19 med=0.170 sinal p=0.0096 Wilc p=0.0668,"sinal sobrevive; Wilcoxon unilateral perde 5% (0,045->0,067)"
+IC bootstrap mediana,20->19,[0.08;0.44],[0.08;0.42],segue inteiramente positivo
+SEEDS-10 (10 sementes),20->19,16/20 med=0.191 sinal p=0.0059 Wilc p=0.0413,15/19 med=0.166 sinal p=0.0096 Wilc p=0.0616,"espelha as 3 sementes: sinal sobrevive, Wilcoxon perde 5%"
+E3 vs hard,20->19,"18/20 p=0,0002",17/19 p=0.0004,sobrevive com folga
+E3 vs gauss,20->19,"17/20 p=0,0013",16/19 p=0.0022,sobrevive com folga
+Friedman 5 sistemas,20->19,chi2=64.6 p=3e-13,chi2=63.8 p=5e-13,ordenacao identica: teacher < student_soft < student_hard < qrf < ngboost
+A-SORT,20->19,hard 20/20 soft 18/20,hard 19/19 soft 17/19,conclusao inalterada
+R-COND (gate preditivo),20->19,alto 10/10 baixo 6/10 Fisher p=0.043,alto 10/10 baixo 5/9 Fisher p=0.033,direcao preservada
+E4 conformal,5->4,"conserta PICP nos 2 bracos, CRPS <1%",4/4 conjuntos restantes mantem o padrao (ver pilot_conformal.csv),leitura qualitativa inalterada
+E6 amostragem,5->4,"vence 1/5, custo 2,8-44x",a unica vitoria ERA do california (verif.: True); sem ele 0/4,refutacao FORTALECE (0/4)
+A-GRID estimador,4->3,spread global 0.85 p.p.,spread global 0.70 p.p.,estabilidade do estimador inalterada
+R-TUNE,3->2,H-T1 refutada 2/3; california era o caso forte,resta cps88wages (refuta) e cpu_activity (nao); 1/2,"licao qualitativa sobrevive, caso-vitrine degradado"

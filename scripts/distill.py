@@ -63,7 +63,7 @@ OOF_DIR = OUT_DIR / "oof"
 TEACHER_EVAL = OUT_DIR / "teacher_eval.csv"
 STUDENT_CSV = OUT_DIR / "distill.csv"
 
-REG_DATASETS = ["wine_quality", "california_housing", "superconduct",
+REG_DATASETS = ["wine_quality", "california_housing", "online_news",
                 "kin8nm", "year_prediction"]
 
 STUDENT_HEADER = [

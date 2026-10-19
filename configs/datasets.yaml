@@ -44,7 +44,9 @@ classification:
     version: 1
     task_type: binary
     n_classes: 2
-    approx_samples: 19000
+    # 19/10/2026: corrigido de 19000 (tamanho do MagicTelescope original;
+    # o 44125 e a versao curada sem duplicatas, 13.376 linhas).
+    approx_samples: 13000
     approx_features: 10
     feature_types: numerical
 
@@ -122,12 +124,20 @@ classification:
 
 regression:
   california_housing:
+    # ERRATA 19/10/2026 (auditoria nome<->ID<->shape, licao 2 da errata
+    # diamonds/kin8nm): o 44090 e a versao BINARIZADA do tabular-benchmark
+    # de Grinsztajn (suite "classification on numerical features"; alvo
+    # {0,1} = valor acima da mediana), nao a regressao original. Mantido
+    # como executado (populacao pre-registrada); impacto quantificado em
+    # results/distillation/sensitivity_california.csv e declarado nos
+    # textos. Ver docs/errata-datasets-core-regressao.md.
     openml_id: 44090
     version: 1
     task_type: regression
     approx_samples: 21000
     approx_features: 8
     feature_types: numerical
+    target_note: binarized  # alvo {0,1}; degenerado p/ claims distribucionais
 
   year_prediction:
     openml_id: 44027
@@ -157,13 +167,22 @@ regression:
     approx_features: 11
     feature_types: numerical
 
-  superconduct:
+  online_news:
+    # ERRATA 19/10/2026: esta entrada chamava-se "superconduct" mas o
+    # openml_id 44064 sempre foi o OnlineNewsPopularity (tabular-benchmark,
+    # suite "regression on categorical and numerical features"; alvo = log
+    # de compartilhamentos; 39.644 x 59, 14 features categoricas). Os
+    # approx_* antigos (21000 x 81) descreviam o superconduct pretendido,
+    # nunca o dado carregado. Mesma classe de erro do diamonds/kin8nm.
+    # Rotulos renomeados em todos os artefatos por
+    # scripts/errata_rename_online_news.py. Ver
+    # docs/errata-datasets-core-regressao.md.
     openml_id: 44064
     version: 1
     task_type: regression
-    approx_samples: 21000
-    approx_features: 81
-    feature_types: numerical
+    approx_samples: 40000
+    approx_features: 59
+    feature_types: mixed
 
 # CTR23 distillation-extension datasets (AI-2 phase 5). Loaded by
 # dataset_id of the suite's dedicated 2023 uploads (never by name — old

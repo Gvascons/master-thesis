@@ -587,3 +587,63 @@ medição. Textos atualizados: cap. 4 (limitação reescrita), cap. 6
 (ressalva do E2 fechada com a medição), cap. 8 (validade de construto +
 trabalho futuro rescopado). Com isso, a cadeia experimental da fase
 final está 7/7 FECHADA.
+
+---
+
+## Auditoria integral de 19/10/2026 (6 agentes + verificação de identidade) — adendo datado
+
+Reinvestigação completa pós-fechamento da cadeia (pedido do autor):
+fact-check caps. 1-6, caps. 7-8+apêndices e AI-1/AI-2 (3 auditores
+independentes recomputando ~280 números dos artefatos), varredura de
+lacunas vs material disponível, due diligence acadêmica online (novidade
+re-verificada em 19/10: segue inédita; Jeong segue v1 pontual) e
+consistência cruzada+pedagogia. Vereditos: ZERO números-manchete
+errados; achados de enquadramento/adjudicação corrigidos nos textos
+(lista completa nos relatórios da sessão; itens principais abaixo).
+
+**ERRATA MAIOR (achado meu, fora dos agentes): identidade de 2 datasets
+do núcleo de regressão** — ver `docs/errata-datasets-core-regressao.md`
+(canônico): (1) "superconduct" sempre foi o OnlineNewsPopularity
+(44064); renomeado para `online_news` em todos os artefatos
+(`scripts/errata_rename_online_news.py`, 52 alterações). (2) o
+california_housing (44090) é a versão BINARIZADA (alvo {0,1}) da suíte
+de classificação do tabular-benchmark; mantido (população
+pré-registrada) com sensibilidade completa em
+`results/distillation/sensitivity_california.csv`: sinal e E3 e
+Friedman e A-SORT e R-COND e A-GRID sobrevivem; Wilcoxon unilateral da
+retenção passa de 0,045 para 0,067 (degradação DECLARADA nos textos); a
+única vitória do E6 era o california (refutação fortalece, 0/4);
+caso-vitrine do R-TUNE rebaixado (resta 1/2).
+
+**Retificações de registro deste documento:**
+- SEEDS-10: onde se lê "14 dos 20 conjuntos movem ≤0,003", o recompute
+  estrito dá **13** (o 14º, fifa, move 0,0032 e só entra com
+  arredondamento a 3 casas). Nenhum texto publicado cita esse número.
+- Latência multi: a tabela do adendo de 19/10 ganha o contexto da
+  errata — "credit_g 1,1-3,1; cardiovascular 0,3-1,1 µs/linha" e os
+  rankings/E2 não envolvem os conjuntos renomeados (sem impacto).
+
+**Adendo de desvios do pré-registro ORIGINAL da destilação**
+(`docs/desenho-experimental-destilacao.md`), apontados pelo auditor e
+registrados aqui com data (a regra "desvio vira adendo datado" não
+havia sido cumprida para estes três):
+1. *Tuning dos alunos*: o pré-registro previa Optuna 25 trials por
+   aluno COM os alvos de destilação; o protocolo executado herda os
+   hiperparâmetros do benchmark (decisão de desenho declarada nos
+   textos, mas sem adendo). O R-TUNE (15/10) mediu exatamente o custo
+   dessa escolha e mitiga a substância do desvio.
+2. *Variante mista*: executada só com λ=0,8 (`LAMBDA_MIXED`); o λ=0,5
+   pré-registrado não foi varrido.
+3. *Transfer set MUNGE* (item d do desenho): não executado — candidato
+   a trabalho futuro, não a claim.
+
+**Pendências de texto fechadas nesta sessão** (integração nos
+capítulos/artigos; detalhes nos commits): adjudicação explícita da 2ª
+cláusula de H2 (cobertura ±5 p.p. NÃO cumprida sem conformal — 10/20),
+rescope de "único ocupante medido do regime" (QRF ocupa no california),
+proveniência interim N=15 portada ao cap. 7, correções de rotulagem e
+precisão dos 3 fact-checks, licença dos pesos TabPFN-2.5 (proíbe uso
+comercial de derivados E SAÍDAS — alcança o aluno destilado; declarada
+como limitação de deployment), e enriquecimento do Apêndice A (métricas
+secundárias em ranks, d de Cohen, IC bootstrap, custos consolidados,
+variabilidade entre folds — fechando as promessas do cap. 4).

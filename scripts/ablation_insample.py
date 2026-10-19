@@ -8,7 +8,7 @@ students trained on in-sample targets (teacher fit on the full pool,
 predicting that same pool) vs the OOF targets already cached.
 
 Datasets: the four whose pool fits the 50K context entirely (wine_quality,
-california_housing, superconduct, kin8nm) — year_prediction is excluded
+california_housing, online_news (ex-"superconduct"), kin8nm) — year_prediction is excluded
 because 30K of its 80K rows would fall outside the context, making the
 "in-sample" condition only partial (documented design choice).
 
@@ -40,7 +40,7 @@ from src.utils.config import load_experiment_config
 from src.utils.reproducibility import set_seed
 
 OUT = REPO / "results" / "distillation" / "ablation_insample.csv"
-DATASETS = ["wine_quality", "california_housing", "superconduct", "kin8nm"]
+DATASETS = ["wine_quality", "california_housing", "online_news", "kin8nm"]
 SEEDS = [0, 1, 2]
 HEADER = ["dataset", "regime", "student", "seed", "rmse", "crps",
           "picp80", "fit_time_s"]
