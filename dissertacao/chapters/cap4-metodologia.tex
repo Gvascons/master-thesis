@@ -303,6 +303,28 @@ cruzada aninhada (seleção de hiperparâmetros restrita ao laço interno).}
     \emph{hold-out} prévio oferece uma garantia mais forte: mesmo um erro
     sutil de vazamento no laço de seleção não contamina o número final,
     porque nenhum estágio de seleção jamais observa esses dados.
+  \item \textbf{Por que a proporção 80:20.} A fração de teste equilibra
+    dois recursos finitos, e os dois lados são mensuráveis nos próprios
+    artefatos. Do lado do \emph{teste}, 20\% compram precisão de métrica:
+    no \texttt{adult} (9\,769 linhas de teste), o IC95\% de
+    \emph{bootstrap} da AUC no \emph{hold-out} tem meia-largura de
+    $\pm$0{,}005; no piso da grade (\texttt{credit\_g}, 200 linhas), a
+    meia-largura sobe a $\pm$0{,}074 --- razão pela qual nenhuma conclusão
+    se apoia em um conjunto isolado e a inferência agrega os conjuntos por
+    postos (Seção~\ref{sec:met-estatistica}). Encolher o teste além disso
+    degradaria a precisão com a raiz de $n$; ampliá-lo roubaria treino.
+    Do lado do \emph{treino}, as curvas de aprendizado medidas
+    (Figura~\ref{fig:cap5-curvas}) mostram que, na região do corte, a
+    métrica primária já está quase plana --- da metade do \emph{pool}
+    para o \emph{pool} inteiro, a melhora relativa mediana é de 1{,}2\%
+    (máximo: 5{,}1\%, RealMLP no \texttt{jannis}) --- mas ainda crescente
+    justamente para as redes famintas de amostra: ceder treino ao teste
+    penalizaria seletivamente uma família, o que feriria a justiça da
+    comparação. A proporção foi fixada antes de qualquer resultado, é
+    idêntica para os 14 modelos e segue a convenção dominante da área;
+    dentro da faixa razoável (70:30 a 90:10), a leitura por postos é
+    insensível à escolha, pois todos os modelos ganham e perdem dados
+    juntos.
   \item \textbf{Validação cruzada aninhada --- por quê.} O laço externo
     (5 \emph{folds}) mede o modelo; o laço interno (3 \emph{folds})
     seleciona hiperparâmetros. Selecionar e medir nos mesmos \emph{folds}
