@@ -1,0 +1,391 @@
+% ============================================================
+% ARQUIVO GERADO — NÃO EDITAR À MÃO.
+% Gerado por scripts/gen_chosen_hparams.py a partir de
+% results/raw/<modelo>_<dataset>.json (campo best_params).
+% Regenerar: uv run python scripts/gen_chosen_hparams.py
+% ============================================================
+
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption[Hiperparâmetros escolhidos --- XGBoost]{XGBoost: configuração vencedora do Optuna em cada conjunto (consumida pelo refit final e pelos \emph{folds} externos). Fonte: \texttt{results/\allowbreak raw/\allowbreak xgboost\_\allowbreak <conjunto>.\allowbreak json}, campo \texttt{best\_params}.}
+\label{tab:app-hp-xgboost}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+\emph{Conjunto} & \rotatebox{90}{\texttt{n\_estimators}} & \rotatebox{90}{\texttt{max\_depth}} & \rotatebox{90}{\texttt{learning\_rate}} & \rotatebox{90}{\texttt{subsample}} & \rotatebox{90}{\texttt{colsample\_\allowbreak bytree}} & \rotatebox{90}{\texttt{min\_\allowbreak child\_\allowbreak weight}} & \rotatebox{90}{\texttt{reg\_alpha}} & \rotatebox{90}{\texttt{reg\_lambda}} \\
+\midrule
+\texttt{adult} & 1144 & 8 & 0{,}035 & 0{,}955 & 0{,}529 & 1{,}969 & 1{,}9\,e-8 & 0{,}386 \\
+\texttt{amazon\_\allowbreak employee} & 218 & 11 & 0{,}019 & 0{,}777 & 0{,}521 & 1{,}019 & 2{,}4\,e-6 & 0{,}156 \\
+\texttt{bank\_\allowbreak marketing} & 1152 & 9 & 0{,}015 & 0{,}781 & 0{,}767 & 2{,}325 & 2{,}007 & 0{,}385 \\
+\texttt{california\_\allowbreak housing} & 1668 & 9 & 7{,}4\,e-3 & 0{,}818 & 0{,}833 & 2{,}58 & 1{,}9\,e-8 & 0{,}041 \\
+\texttt{cardiovascular\_\allowbreak disease} & 1359 & 4 & 0{,}04 & 0{,}658 & 0{,}802 & 3{,}642 & 0{,}521 & 4{,}2\,e-8 \\
+\texttt{covertype} & 804 & 12 & 0{,}04 & 0{,}858 & 0{,}99 & 2{,}703 & 4{,}6\,e-3 & 5{,}7\,e-8 \\
+\texttt{credit\_g} & 1998 & 8 & 0{,}064 & 0{,}556 & 0{,}879 & 6{,}66 & 0{,}067 & 0{,}464 \\
+\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit} & 1761 & 9 & 0{,}012 & 0{,}525 & 0{,}713 & 8{,}755 & 3{,}0\,e-4 & 1{,}6\,e-4 \\
+\texttt{helena} & 1933 & 8 & 5{,}6\,e-3 & 0{,}588 & 0{,}782 & 7{,}825 & 5{,}9\,e-7 & 4{,}6\,e-6 \\
+\texttt{higgs} & 1767 & 12 & 7{,}4\,e-3 & 0{,}771 & 0{,}764 & 9{,}099 & 4{,}3\,e-7 & 2{,}9\,e-5 \\
+\texttt{jannis} & 1846 & 10 & 5{,}6\,e-3 & 0{,}881 & 0{,}73 & 9{,}244 & 6{,}2\,e-5 & 1{,}7\,e-5 \\
+\texttt{kin8nm} & 1907 & 11 & 0{,}019 & 0{,}519 & 0{,}904 & 9{,}032 & 3{,}9\,e-6 & 9{,}956 \\
+\texttt{magictelescope} & 1231 & 6 & 0{,}013 & 0{,}776 & 0{,}967 & 1{,}213 & 0{,}017 & 1{,}1\,e-7 \\
+\texttt{online\_news} & 977 & 8 & 9{,}6\,e-3 & 0{,}836 & 0{,}5 & 8{,}543 & 3{,}1\,e-7 & 6{,}691 \\
+\texttt{phoneme} & 1526 & 11 & 9{,}5\,e-3 & 0{,}836 & 0{,}845 & 1{,}138 & 2{,}5\,e-8 & 2{,}4\,e-5 \\
+\texttt{telco\_\allowbreak customer\_\allowbreak churn} & 1801 & 4 & 0{,}025 & 0{,}5 & 0{,}666 & 8{,}2 & 2{,}3\,e-6 & 0{,}496 \\
+\texttt{wine\_quality} & 1562 & 12 & 6{,}3\,e-3 & 0{,}648 & 0{,}687 & 1{,}598 & 5{,}3\,e-5 & 3{,}7\,e-4 \\
+\texttt{year\_\allowbreak prediction} & 1836 & 10 & 0{,}01 & 0{,}784 & 0{,}806 & 4{,}319 & 0{,}018 & 5{,}906 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption[Hiperparâmetros escolhidos --- LightGBM]{LightGBM: configuração vencedora do Optuna em cada conjunto (consumida pelo refit final e pelos \emph{folds} externos). Fonte: \texttt{results/\allowbreak raw/\allowbreak lightgbm\_\allowbreak <conjunto>.\allowbreak json}, campo \texttt{best\_params}.}
+\label{tab:app-hp-lightgbm}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+\emph{Conjunto} & \rotatebox{90}{\texttt{n\_estimators}} & \rotatebox{90}{\texttt{max\_depth}} & \rotatebox{90}{\texttt{learning\_rate}} & \rotatebox{90}{\texttt{num\_leaves}} & \rotatebox{90}{\texttt{subsample}} & \rotatebox{90}{\texttt{colsample\_\allowbreak bytree}} & \rotatebox{90}{\texttt{min\_\allowbreak child\_\allowbreak samples}} & \rotatebox{90}{\texttt{reg\_alpha}} & \rotatebox{90}{\texttt{reg\_lambda}} \\
+\midrule
+\texttt{adult} & 1903 & 12 & 0{,}018 & 50 & 0{,}874 & 0{,}519 & 5 & 2{,}2\,e-6 & 1{,}4\,e-6 \\
+\texttt{amazon\_\allowbreak employee} & 812 & 12 & 0{,}1 & 160 & 0{,}578 & 0{,}578 & 10 & 0{,}625 & 2{,}6\,e-3 \\
+\texttt{bank\_\allowbreak marketing} & 741 & 12 & 7{,}0\,e-3 & 117 & 0{,}5 & 0{,}504 & 11 & 1{,}7\,e-7 & 1{,}6\,e-3 \\
+\texttt{california\_\allowbreak housing} & 812 & 10 & 0{,}02 & 101 & 0{,}763 & 0{,}8 & 9 & 5{,}5\,e-4 & 5{,}3\,e-7 \\
+\texttt{cardiovascular\_\allowbreak disease} & 1215 & 4 & 0{,}024 & 206 & 0{,}917 & 0{,}585 & 30 & 3{,}712 & 0{,}493 \\
+\texttt{covertype} & 762 & 11 & 0{,}047 & 256 & 0{,}628 & 0{,}719 & 10 & 0{,}548 & 5{,}0\,e-3 \\
+\texttt{credit\_g} & 1446 & 3 & 0{,}265 & 216 & 0{,}606 & 0{,}591 & 22 & 5{,}5\,e-6 & 5{,}3\,e-4 \\
+\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit} & 1579 & 9 & 0{,}026 & 33 & 0{,}927 & 0{,}717 & 74 & 0{,}013 & 2{,}122 \\
+\texttt{helena} & 1716 & 9 & 0{,}013 & 149 & 0{,}615 & 0{,}516 & 59 & 0{,}015 & 6{,}557 \\
+\texttt{higgs} & 1303 & 12 & 0{,}014 & 250 & 0{,}817 & 0{,}66 & 70 & 2{,}846 & 0{,}727 \\
+\texttt{jannis} & 1569 & 10 & 0{,}014 & 126 & 0{,}583 & 0{,}601 & 50 & 2{,}562 & 1{,}983 \\
+\texttt{kin8nm} & 1845 & 10 & 0{,}056 & 211 & 0{,}971 & 0{,}959 & 100 & 0{,}335 & 4{,}978 \\
+\texttt{magictelescope} & 1809 & 5 & 0{,}06 & 197 & 0{,}652 & 0{,}971 & 20 & 2{,}6\,e-4 & 6{,}9\,e-7 \\
+\texttt{online\_news} & 1414 & 11 & 6{,}2\,e-3 & 173 & 0{,}823 & 0{,}509 & 13 & 0{,}019 & 1{,}8\,e-4 \\
+\texttt{phoneme} & 1609 & 10 & 0{,}152 & 125 & 0{,}591 & 0{,}974 & 7 & 0{,}017 & 0{,}03 \\
+\texttt{telco\_\allowbreak customer\_\allowbreak churn} & 1838 & 4 & 0{,}196 & 135 & 0{,}533 & 0{,}51 & 85 & 3{,}067 & 2{,}6\,e-6 \\
+\texttt{wine\_quality} & 1832 & 9 & 0{,}022 & 212 & 0{,}898 & 0{,}556 & 5 & 7{,}0\,e-3 & 0{,}143 \\
+\texttt{year\_\allowbreak prediction} & 1818 & 12 & 0{,}011 & 248 & 0{,}814 & 0{,}673 & 74 & 0{,}879 & 1{,}2\,e-4 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption[Hiperparâmetros escolhidos --- CatBoost]{CatBoost: configuração vencedora do Optuna em cada conjunto (consumida pelo refit final e pelos \emph{folds} externos). Fonte: \texttt{results/\allowbreak raw/\allowbreak catboost\_\allowbreak <conjunto>.\allowbreak json}, campo \texttt{best\_params}.}
+\label{tab:app-hp-catboost}
+\begin{tabular}{lrrrrrr}
+\toprule
+\emph{Conjunto} & \rotatebox{90}{\texttt{iterations}} & \rotatebox{90}{\texttt{depth}} & \rotatebox{90}{\texttt{learning\_rate}} & \rotatebox{90}{\texttt{l2\_leaf\_reg}} & \rotatebox{90}{\texttt{bagging\_\allowbreak temperature}} & \rotatebox{90}{\texttt{random\_\allowbreak strength}} \\
+\midrule
+\texttt{adult} & 1513 & 5 & 0{,}029 & 1{,}321 & 0{,}547 & 7{,}325 \\
+\texttt{amazon\_\allowbreak employee} & 522 & 8 & 0{,}045 & 2{,}2 & 0{,}415 & 7{,}776 \\
+\texttt{bank\_\allowbreak marketing} & 1834 & 7 & 0{,}026 & 1{,}088 & 0{,}543 & 7{,}751 \\
+\texttt{california\_\allowbreak housing} & 1711 & 8 & 0{,}047 & 9{,}998 & 4{,}1\,e-3 & 1{,}083 \\
+\texttt{cardiovascular\_\allowbreak disease} & 1874 & 7 & 0{,}035 & 3{,}464 & 0{,}674 & 4{,}582 \\
+\texttt{covertype} & 1997 & 10 & 0{,}14 & 3{,}038 & 0{,}135 & 0{,}278 \\
+\texttt{credit\_g} & 1139 & 4 & 0{,}265 & 7{,}976 & 0{,}939 & 8{,}948 \\
+\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit} & 1935 & 8 & 0{,}011 & 7{,}334 & 0{,}666 & 2{,}607 \\
+\texttt{helena} & 1997 & 6 & 0{,}026 & 2{,}421 & 0{,}372 & 5{,}543 \\
+\texttt{higgs} & 1976 & 9 & 0{,}016 & 9{,}699 & 0{,}502 & 0{,}271 \\
+\texttt{jannis} & 1928 & 9 & 0{,}027 & 9{,}994 & 0{,}161 & 1{,}082 \\
+\texttt{kin8nm} & 1909 & 9 & 0{,}048 & 5{,}747 & 0{,}053 & 1{,}853 \\
+\texttt{magictelescope} & 1618 & 6 & 0{,}032 & 1{,}334 & 0{,}271 & 7{,}902 \\
+\texttt{online\_news} & 1900 & 9 & 0{,}017 & 4{,}915 & 0{,}779 & 8{,}56 \\
+\texttt{phoneme} & 1239 & 10 & 0{,}069 & 3{,}251 & 0{,}508 & 3{,}503 \\
+\texttt{telco\_\allowbreak customer\_\allowbreak churn} & 1579 & 3 & 0{,}237 & 4{,}928 & 0{,}604 & 8{,}843 \\
+\texttt{wine\_quality} & 1946 & 10 & 0{,}044 & 2{,}364 & 0{,}111 & 8{,}796 \\
+\texttt{year\_\allowbreak prediction} & 1891 & 10 & 0{,}044 & 8{,}284 & 0{,}702 & 0{,}599 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption[Hiperparâmetros escolhidos --- MLP]{MLP: configuração vencedora do Optuna em cada conjunto (consumida pelo refit final e pelos \emph{folds} externos). Fonte: \texttt{results/\allowbreak raw/\allowbreak mlp\_\allowbreak <conjunto>.\allowbreak json}, campo \texttt{best\_params}.}
+\label{tab:app-hp-mlp}
+\begin{tabular}{lrrrrr}
+\toprule
+\emph{Conjunto} & \rotatebox{90}{\texttt{n\_blocks}} & \rotatebox{90}{\texttt{d\_hidden}} & \rotatebox{90}{\texttt{dropout}} & \rotatebox{90}{\texttt{learning\_rate}} & \rotatebox{90}{\texttt{weight\_decay}} \\
+\midrule
+\texttt{adult} & 4 & 512 & 0{,}399 & 2{,}8\,e-4 & 1{,}6\,e-5 \\
+\texttt{amazon\_\allowbreak employee} & 3 & 256 & 0{,}084 & 3{,}2\,e-5 & 2{,}2\,e-4 \\
+\texttt{bank\_\allowbreak marketing} & 2 & 128 & 0{,}313 & 2{,}5\,e-4 & 1{,}8\,e-4 \\
+\texttt{california\_\allowbreak housing} & 4 & 512 & 0{,}208 & 4{,}9\,e-4 & 2{,}2\,e-4 \\
+\texttt{cardiovascular\_\allowbreak disease} & 4 & 256 & 0{,}485 & 7{,}7\,e-4 & 9{,}0\,e-5 \\
+\texttt{covertype} & 3 & 512 & 0{,}337 & 8{,}6\,e-4 & 2{,}1\,e-4 \\
+\texttt{credit\_g} & 1 & 512 & 0{,}235 & 8{,}5\,e-4 & 1{,}1\,e-4 \\
+\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit} & 2 & 256 & 0{,}493 & 3{,}5\,e-4 & 3{,}9\,e-6 \\
+\texttt{helena} & 3 & 256 & 0{,}369 & 4{,}4\,e-4 & 2{,}2\,e-4 \\
+\texttt{higgs} & 4 & 256 & 0{,}498 & 7{,}8\,e-4 & 1{,}1\,e-4 \\
+\texttt{jannis} & 4 & 256 & 0{,}485 & 7{,}7\,e-4 & 9{,}0\,e-5 \\
+\texttt{kin8nm} & 3 & 512 & 0{,}322 & 8{,}6\,e-4 & 1{,}1\,e-6 \\
+\texttt{magictelescope} & 3 & 512 & 0{,}351 & 5{,}8\,e-4 & 2{,}8\,e-5 \\
+\texttt{online\_news} & 4 & 64 & 0{,}214 & 7{,}8\,e-4 & 1{,}0\,e-6 \\
+\texttt{phoneme} & 3 & 512 & 0{,}326 & 8{,}6\,e-4 & 4{,}6\,e-5 \\
+\texttt{telco\_\allowbreak customer\_\allowbreak churn} & 1 & 512 & 0{,}136 & 4{,}5\,e-4 & 1{,}2\,e-5 \\
+\texttt{wine\_quality} & 3 & 512 & 0{,}153 & 1{,}2\,e-4 & 2{,}3\,e-4 \\
+\texttt{year\_\allowbreak prediction} & 1 & 512 & 0{,}136 & 4{,}5\,e-4 & 1{,}2\,e-5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption[Hiperparâmetros escolhidos --- RealMLP]{RealMLP: configuração vencedora do Optuna em cada conjunto (consumida pelo refit final e pelos \emph{folds} externos). Fonte: \texttt{results/\allowbreak raw/\allowbreak realmlp\_\allowbreak <conjunto>.\allowbreak json}, campo \texttt{best\_params}.}
+\label{tab:app-hp-realmlp}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+\emph{Conjunto} & \rotatebox{90}{\texttt{learning\_rate}} & \rotatebox{90}{\texttt{hidden\_width}} & \rotatebox{90}{\texttt{n\_\allowbreak hidden\_\allowbreak layers}} & \rotatebox{90}{\texttt{dropout}} & \rotatebox{90}{\texttt{weight\_decay}} & \rotatebox{90}{\texttt{activation}} & \rotatebox{90}{\texttt{num\_emb\_type}} & \rotatebox{90}{\texttt{add\_\allowbreak front\_\allowbreak scale}} & \rotatebox{90}{\texttt{ls\_eps}} \\
+\midrule
+\texttt{adult} & 0{,}274 & 512 & 5 & 0{,}3 & 0{,}02 & \texttt{selu} & \texttt{pbld} & \texttt{true} & 0{,}1 \\
+\texttt{amazon\_\allowbreak employee} & 0{,}022 & 64 & 2 & 0{,}15 & 0 & \texttt{selu} & \texttt{none} & \texttt{false} & 0{,}1 \\
+\texttt{bank\_\allowbreak marketing} & 0{,}289 & 64 & 3 & 0 & 0{,}02 & \texttt{mish} & \texttt{pl} & \texttt{true} & 0 \\
+\texttt{california\_\allowbreak housing} & 0{,}125 & 512 & 2 & 0{,}3 & 0{,}02 & \texttt{relu} & \texttt{pl} & \texttt{true} & 0 \\
+\texttt{cardiovascular\_\allowbreak disease} & 0{,}078 & 512 & 2 & 0{,}3 & 0{,}02 & \texttt{selu} & \texttt{pl} & \texttt{false} & 0 \\
+\texttt{covertype} & 0{,}122 & 512 & 2 & 0 & 0{,}02 & \texttt{mish} & \texttt{pbld} & \texttt{false} & 0 \\
+\texttt{credit\_g} & 0{,}039 & 256 & 1 & 0{,}3 & 0 & \texttt{selu} & \texttt{plr} & \texttt{true} & 0{,}1 \\
+\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit} & 0{,}063 & 512 & 2 & 0{,}3 & 0{,}02 & \texttt{relu} & \texttt{pl} & \texttt{false} & 0 \\
+\texttt{helena} & 0{,}024 & 512 & 4 & 0{,}3 & 0{,}02 & \texttt{relu} & \texttt{none} & \texttt{true} & 0{,}1 \\
+\texttt{higgs} & 0{,}1 & 512 & 4 & 0 & 0{,}02 & \texttt{mish} & \texttt{none} & \texttt{true} & 0{,}1 \\
+\texttt{jannis} & 0{,}139 & 256 & 5 & 0 & 0{,}02 & \texttt{relu} & \texttt{pl} & \texttt{true} & 0 \\
+\texttt{kin8nm} & 0{,}035 & 512 & 3 & 0{,}3 & 0 & \texttt{selu} & \texttt{pbld} & \texttt{false} & 0{,}1 \\
+\texttt{magictelescope} & 0{,}034 & 512 & 2 & 0{,}3 & 0{,}02 & \texttt{selu} & \texttt{pbld} & \texttt{false} & 0 \\
+\texttt{online\_news} & 0{,}074 & 512 & 2 & 0{,}3 & 0{,}02 & \texttt{relu} & \texttt{pl} & \texttt{true} & 0{,}1 \\
+\texttt{phoneme} & 0{,}071 & 512 & 4 & 0 & 0{,}02 & \texttt{mish} & \texttt{pl} & \texttt{false} & 0 \\
+\texttt{telco\_\allowbreak customer\_\allowbreak churn} & 0{,}033 & 64 & 1 & 0{,}3 & 0{,}02 & \texttt{mish} & \texttt{plr} & \texttt{true} & 0 \\
+\texttt{wine\_quality} & 0{,}089 & 512 & 2 & 0{,}15 & 0{,}02 & \texttt{selu} & \texttt{pl} & \texttt{false} & 0 \\
+\texttt{year\_\allowbreak prediction} & 0{,}029 & 512 & 4 & 0{,}3 & 0{,}02 & \texttt{relu} & \texttt{none} & \texttt{true} & 0{,}1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption[Hiperparâmetros escolhidos --- FT-Transformer]{FT-Transformer: configuração vencedora do Optuna em cada conjunto (consumida pelo refit final e pelos \emph{folds} externos). Fonte: \texttt{results/\allowbreak raw/\allowbreak ft\_\allowbreak transformer\_\allowbreak <conjunto>.\allowbreak json}, campo \texttt{best\_params}.}
+\label{tab:app-hp-ft-transformer}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+\emph{Conjunto} & \rotatebox{90}{\texttt{n\_blocks}} & \rotatebox{90}{\texttt{d\_block}} & \rotatebox{90}{\texttt{attention\_\allowbreak n\_\allowbreak heads}} & \rotatebox{90}{\texttt{attention\_\allowbreak dropout}} & \rotatebox{90}{\texttt{ffn\_\allowbreak d\_\allowbreak hidden\_\allowbreak multiplier}} & \rotatebox{90}{\texttt{ffn\_dropout}} & \rotatebox{90}{\texttt{residual\_\allowbreak dropout}} & \rotatebox{90}{\texttt{learning\_rate}} & \rotatebox{90}{\texttt{weight\_decay}} \\
+\midrule
+\texttt{adult} & 3 & 256 & 4 & 0{,}177 & 1{,}937 & 0{,}021 & 0{,}024 & 3{,}2\,e-5 & 3{,}8\,e-4 \\
+\texttt{amazon\_\allowbreak employee} & 2 & 256 & 8 & 0{,}22 & 2{,}049 & 0{,}24 & 0{,}028 & 1{,}2\,e-4 & 8{,}3\,e-5 \\
+\texttt{bank\_\allowbreak marketing} & 5 & 192 & 4 & 0{,}013 & 1{,}477 & 0{,}016 & 0{,}127 & 4{,}3\,e-5 & 3{,}4\,e-5 \\
+\texttt{california\_\allowbreak housing} & 2 & 256 & 8 & 0{,}195 & 1{,}73 & 0{,}11 & 0{,}021 & 3{,}0\,e-5 & 5{,}6\,e-5 \\
+\texttt{cardiovascular\_\allowbreak disease} & 6 & 128 & 8 & 0{,}053 & 2{,}425 & 0{,}236 & 0{,}131 & 1{,}5\,e-4 & 4{,}7\,e-4 \\
+\texttt{covertype} & 1 & 256 & 4 & 0{,}077 & 2{,}198 & 6{,}8\,e-3 & 0{,}109 & 1{,}6\,e-4 & 1{,}3\,e-6 \\
+\texttt{credit\_g} & 1 & 192 & 8 & 0{,}2 & 1{,}553 & 0{,}144 & 0{,}076 & 3{,}3\,e-4 & 6{,}2\,e-5 \\
+\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit} & 4 & 128 & 4 & 0{,}299 & 1{,}344 & 0{,}08 & 0{,}056 & 1{,}5\,e-4 & 1{,}9\,e-5 \\
+\texttt{helena} & 2 & 256 & 4 & 0{,}227 & 2{,}453 & 0{,}092 & 2{,}8\,e-4 & 2{,}5\,e-5 & 1{,}5\,e-5 \\
+\texttt{higgs} & 5 & 192 & 8 & 0{,}081 & 2{,}242 & 0{,}04 & 0{,}093 & 1{,}4\,e-4 & 8{,}5\,e-6 \\
+\texttt{jannis} & 2 & 128 & 4 & 0{,}389 & 2{,}415 & 0{,}241 & 0{,}016 & 3{,}9\,e-5 & 5{,}9\,e-5 \\
+\texttt{kin8nm} & 4 & 128 & 8 & 0{,}211 & 1{,}407 & 0{,}088 & 0{,}051 & 1{,}3\,e-4 & 3{,}0\,e-6 \\
+\texttt{magictelescope} & 4 & 64 & 8 & 0{,}306 & 2{,}079 & 0{,}495 & 4{,}4\,e-3 & 9{,}6\,e-4 & 9{,}8\,e-4 \\
+\texttt{online\_news} & 5 & 64 & 8 & 0{,}244 & 1{,}732 & 0{,}05 & 0{,}1 & 3{,}4\,e-4 & 4{,}9\,e-4 \\
+\texttt{phoneme} & 6 & 256 & 4 & 0{,}047 & 2{,}481 & 0{,}267 & 0{,}057 & 3{,}7\,e-4 & 1{,}2\,e-6 \\
+\texttt{telco\_\allowbreak customer\_\allowbreak churn} & 3 & 128 & 8 & 0{,}163 & 2{,}306 & 0{,}319 & 0{,}177 & 8{,}8\,e-5 & 2{,}3\,e-6 \\
+\texttt{wine\_quality} & 5 & 64 & 8 & 0{,}23 & 2{,}425 & 0{,}21 & 0{,}069 & 4{,}3\,e-4 & 8{,}1\,e-5 \\
+\texttt{year\_\allowbreak prediction} & 2 & 64 & 8 & 0{,}206 & 2{,}025 & 0{,}105 & 0{,}083 & 6{,}2\,e-4 & 4{,}7\,e-6 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption[Hiperparâmetros escolhidos --- SAINT]{SAINT: configuração vencedora do Optuna em cada conjunto (consumida pelo refit final e pelos \emph{folds} externos). Fonte: \texttt{results/\allowbreak raw/\allowbreak saint\_\allowbreak <conjunto>.\allowbreak json}, campo \texttt{best\_params}.}
+\label{tab:app-hp-saint}
+\begin{tabular}{lrrrrrrr}
+\toprule
+\emph{Conjunto} & \rotatebox{90}{\texttt{depth}} & \rotatebox{90}{\texttt{heads}} & \rotatebox{90}{\texttt{dim}} & \rotatebox{90}{\texttt{attn\_dropout}} & \rotatebox{90}{\texttt{ff\_dropout}} & \rotatebox{90}{\texttt{learning\_rate}} & \rotatebox{90}{\texttt{weight\_decay}} \\
+\midrule
+\texttt{adult} & 5 & 4 & 32 & 0{,}029 & 0{,}034 & 1{,}6\,e-4 & 1{,}1\,e-5 \\
+\texttt{amazon\_\allowbreak employee} & 3 & 4 & 64 & 6{,}0\,e-3 & 0{,}09 & 8{,}3\,e-4 & 3{,}0\,e-6 \\
+\texttt{bank\_\allowbreak marketing} & 6 & 4 & 128 & 0{,}053 & 0{,}254 & 1{,}8\,e-5 & 4{,}5\,e-4 \\
+\texttt{california\_\allowbreak housing} & 4 & 8 & 64 & 0{,}274 & 5{,}1\,e-3 & 6{,}2\,e-5 & 1{,}3\,e-5 \\
+\texttt{cardiovascular\_\allowbreak disease} & 5 & 8 & 64 & 0{,}157 & 0{,}047 & 9{,}3\,e-5 & 3{,}0\,e-5 \\
+\texttt{covertype} & 4 & 8 & 64 & 0{,}112 & 0{,}03 & 1{,}1\,e-4 & 7{,}3\,e-4 \\
+\texttt{credit\_g} & 6 & 4 & 256 & 0{,}162 & 0{,}039 & 1{,}2\,e-4 & 2{,}8\,e-5 \\
+\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit} & 1 & 4 & 32 & 0{,}326 & 0{,}283 & 2{,}9\,e-4 & 2{,}1\,e-4 \\
+\texttt{helena} & 6 & 4 & 256 & 9{,}2\,e-3 & 0{,}222 & 1{,}1\,e-5 & 1{,}7\,e-4 \\
+\texttt{higgs} & 5 & 4 & 256 & 0{,}039 & 0{,}177 & 2{,}4\,e-5 & 9{,}5\,e-4 \\
+\texttt{jannis} & 6 & 8 & 128 & 6{,}4\,e-3 & 0{,}218 & 1{,}0\,e-5 & 1{,}0\,e-4 \\
+\texttt{kin8nm} & 5 & 4 & 256 & 0{,}088 & 0{,}08 & 5{,}1\,e-5 & 3{,}6\,e-6 \\
+\texttt{magictelescope} & 6 & 4 & 64 & 0{,}178 & 0{,}041 & 4{,}5\,e-5 & 3{,}1\,e-6 \\
+\texttt{online\_news} & 5 & 4 & 64 & 0{,}077 & 0{,}162 & 5{,}7\,e-5 & 1{,}4\,e-4 \\
+\texttt{phoneme} & 5 & 8 & 64 & 0{,}128 & 0{,}082 & 8{,}9\,e-4 & 1{,}1\,e-5 \\
+\texttt{telco\_\allowbreak customer\_\allowbreak churn} & 5 & 8 & 128 & 0{,}237 & 0{,}097 & 1{,}3\,e-4 & 1{,}5\,e-5 \\
+\texttt{wine\_quality} & 4 & 8 & 256 & 0{,}05 & 0{,}038 & 3{,}9\,e-4 & 2{,}6\,e-5 \\
+\texttt{year\_\allowbreak prediction} & 4 & 8 & 64 & 6{,}0\,e-3 & 0{,}034 & 6{,}8\,e-4 & 1{,}9\,e-5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption[Hiperparâmetros escolhidos --- STab]{STab: configuração vencedora do Optuna em cada conjunto (consumida pelo refit final e pelos \emph{folds} externos). Fonte: \texttt{results/\allowbreak raw/\allowbreak stab\_\allowbreak <conjunto>.\allowbreak json}, campo \texttt{best\_params}.}
+\label{tab:app-hp-stab}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+\emph{Conjunto} & \rotatebox{90}{\texttt{depth}} & \rotatebox{90}{\texttt{dim}} & \rotatebox{90}{\texttt{heads}} & \rotatebox{90}{\texttt{attn\_dropout}} & \rotatebox{90}{\texttt{ff\_dropout}} & \rotatebox{90}{\texttt{cases}} & \rotatebox{90}{\texttt{learning\_rate}} & \rotatebox{90}{\texttt{weight\_decay}} \\
+\midrule
+\texttt{adult} & 5 & 256 & 4 & 0{,}087 & 0{,}129 & 4 & 6{,}3\,e-4 & 1{,}3\,e-5 \\
+\texttt{amazon\_\allowbreak employee} & 3 & 192 & 4 & 0{,}079 & 0{,}041 & 16 & 2{,}3\,e-4 & 9{,}5\,e-4 \\
+\texttt{bank\_\allowbreak marketing} & 5 & 256 & 8 & 0{,}215 & 0{,}116 & 4 & 2{,}5\,e-4 & 2{,}7\,e-4 \\
+\texttt{california\_\allowbreak housing} & 6 & 256 & 4 & 0{,}019 & 0{,}093 & 8 & 5{,}9\,e-4 & 8{,}8\,e-5 \\
+\texttt{cardiovascular\_\allowbreak disease} & 4 & 128 & 4 & 0{,}074 & 0{,}042 & 4 & 2{,}6\,e-4 & 1{,}8\,e-5 \\
+\texttt{covertype} & 5 & 192 & 4 & 0{,}205 & 0{,}132 & 8 & 6{,}6\,e-4 & 3{,}3\,e-5 \\
+\texttt{credit\_g} & 5 & 192 & 4 & 0{,}205 & 0{,}132 & 8 & 6{,}6\,e-4 & 3{,}3\,e-5 \\
+\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit} & 4 & 96 & 8 & 0{,}191 & 0{,}259 & 4 & 4{,}6\,e-4 & 2{,}6\,e-4 \\
+\texttt{helena} & 3 & 96 & 8 & 0{,}242 & 0{,}19 & 4 & 6{,}1\,e-4 & 1{,}2\,e-4 \\
+\texttt{higgs} & 5 & 192 & 4 & 0{,}205 & 0{,}132 & 8 & 6{,}6\,e-4 & 3{,}3\,e-5 \\
+\texttt{jannis} & 6 & 256 & 4 & 0{,}169 & 0{,}267 & 4 & 5{,}6\,e-4 & 7{,}0\,e-5 \\
+\texttt{kin8nm} & 6 & 256 & 4 & 0{,}141 & 0{,}064 & 4 & 9{,}8\,e-4 & 3{,}4\,e-4 \\
+\texttt{magictelescope} & 7 & 256 & 4 & 0{,}15 & 0{,}075 & 8 & 9{,}9\,e-4 & 2{,}3\,e-4 \\
+\texttt{online\_news} & 5 & 128 & 4 & 0{,}06 & 0{,}052 & 4 & 1{,}0\,e-3 & 5{,}8\,e-5 \\
+\texttt{phoneme} & 6 & 256 & 4 & 0{,}064 & 0{,}092 & 4 & 9{,}8\,e-4 & 1{,}2\,e-5 \\
+\texttt{telco\_\allowbreak customer\_\allowbreak churn} & 4 & 128 & 4 & 0{,}108 & 0{,}024 & 4 & 2{,}8\,e-4 & 2{,}6\,e-5 \\
+\texttt{wine\_quality} & 7 & 256 & 4 & 0{,}168 & 0{,}074 & 8 & 9{,}6\,e-4 & 1{,}7\,e-4 \\
+\texttt{year\_\allowbreak prediction} & 3 & 96 & 4 & 0{,}142 & 6{,}3\,e-3 & 8 & 1{,}0\,e-3 & 3{,}8\,e-4 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption[Hiperparâmetros escolhidos --- TabNet]{TabNet: configuração vencedora do Optuna em cada conjunto (consumida pelo refit final e pelos \emph{folds} externos). Fonte: \texttt{results/\allowbreak raw/\allowbreak tabnet\_\allowbreak <conjunto>.\allowbreak json}, campo \texttt{best\_params}.}
+\label{tab:app-hp-tabnet}
+\begin{tabular}{lrrrrrrr}
+\toprule
+\emph{Conjunto} & \rotatebox{90}{\texttt{n\_d}} & \rotatebox{90}{\texttt{n\_a}} & \rotatebox{90}{\texttt{n\_steps}} & \rotatebox{90}{\texttt{gamma}} & \rotatebox{90}{\texttt{lambda\_sparse}} & \rotatebox{90}{\texttt{learning\_rate}} & \rotatebox{90}{\texttt{mask\_type}} \\
+\midrule
+\texttt{adult} & 16 & 8 & 4 & 1{,}026 & 2{,}9\,e-6 & 0{,}013 & \texttt{entmax} \\
+\texttt{amazon\_\allowbreak employee} & 32 & 8 & 4 & 1{,}104 & 5{,}1\,e-5 & 0{,}019 & \texttt{entmax} \\
+\texttt{bank\_\allowbreak marketing} & 8 & 8 & 9 & 1{,}86 & 8{,}6\,e-6 & 0{,}037 & \texttt{entmax} \\
+\texttt{california\_\allowbreak housing} & 32 & 16 & 3 & 1{,}018 & 1{,}0\,e-4 & 0{,}011 & \texttt{entmax} \\
+\texttt{cardiovascular\_\allowbreak disease} & 64 & 64 & 3 & 1{,}641 & 3{,}8\,e-6 & 0{,}031 & \texttt{entmax} \\
+\texttt{covertype} & 64 & 32 & 5 & 1{,}366 & 2{,}3\,e-5 & 0{,}03 & \texttt{entmax} \\
+\texttt{credit\_g} & 8 & 16 & 6 & 1{,}102 & 2{,}7\,e-4 & 6{,}9\,e-3 & \texttt{entmax} \\
+\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit} & 64 & 16 & 4 & 1{,}62 & 1{,}1\,e-6 & 0{,}05 & \texttt{entmax} \\
+\texttt{helena} & 32 & 64 & 3 & 1{,}059 & 8{,}1\,e-5 & 7{,}1\,e-3 & \texttt{entmax} \\
+\texttt{higgs} & 8 & 16 & 7 & 1{,}638 & 1{,}0\,e-4 & 0{,}019 & \texttt{entmax} \\
+\texttt{jannis} & 32 & 16 & 3 & 1{,}018 & 1{,}0\,e-4 & 0{,}011 & \texttt{entmax} \\
+\texttt{kin8nm} & 8 & 16 & 3 & 1{,}538 & 1{,}1\,e-6 & 1{,}0\,e-2 & \texttt{entmax} \\
+\texttt{magictelescope} & 32 & 16 & 3 & 1{,}018 & 1{,}0\,e-4 & 0{,}011 & \texttt{entmax} \\
+\texttt{online\_news} & 64 & 32 & 5 & 1{,}543 & 2{,}6\,e-6 & 0{,}032 & \texttt{entmax} \\
+\texttt{phoneme} & 32 & 16 & 3 & 1{,}185 & 6{,}7\,e-5 & 0{,}01 & \texttt{entmax} \\
+\texttt{telco\_\allowbreak customer\_\allowbreak churn} & 8 & 64 & 8 & 1{,}016 & 3{,}1\,e-4 & 0{,}037 & \texttt{entmax} \\
+\texttt{wine\_quality} & 32 & 16 & 3 & 1{,}241 & 2{,}7\,e-4 & 8{,}7\,e-3 & \texttt{entmax} \\
+\texttt{year\_\allowbreak prediction} & 8 & 32 & 9 & 1{,}896 & 9{,}0\,e-6 & 6{,}4\,e-3 & \texttt{entmax} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption[Hiperparâmetros escolhidos --- TabM]{TabM: configuração vencedora do Optuna em cada conjunto (consumida pelo refit final e pelos \emph{folds} externos). Fonte: \texttt{results/\allowbreak raw/\allowbreak tabm\_\allowbreak <conjunto>.\allowbreak json}, campo \texttt{best\_params}.}
+\label{tab:app-hp-tabm}
+\begin{tabular}{lrrrrrrr}
+\toprule
+\emph{Conjunto} & \rotatebox{90}{\texttt{arch\_type}} & \rotatebox{90}{\texttt{k}} & \rotatebox{90}{\texttt{d\_block}} & \rotatebox{90}{\texttt{n\_blocks}} & \rotatebox{90}{\texttt{dropout}} & \rotatebox{90}{\texttt{learning\_rate}} & \rotatebox{90}{\texttt{weight\_decay}} \\
+\midrule
+\texttt{adult} & \texttt{tabm} & 40 & 512 & 4 & 0{,}079 & 1{,}6\,e-4 & 6{,}5\,e-5 \\
+\texttt{amazon\_\allowbreak employee} & \texttt{tabm} & 21 & 256 & 3 & 0{,}291 & 9{,}7\,e-4 & 2{,}1\,e-4 \\
+\texttt{bank\_\allowbreak marketing} & \texttt{tabm} & 43 & 256 & 3 & 0{,}499 & 3{,}9\,e-4 & 3{,}7\,e-4 \\
+\texttt{california\_\allowbreak housing} & \texttt{tabm} & 41 & 512 & 4 & 0{,}335 & 1{,}0\,e-3 & 2{,}6\,e-4 \\
+\texttt{cardiovascular\_\allowbreak disease} & \texttt{tabm} & 31 & 256 & 2 & 0{,}202 & 4{,}5\,e-4 & 3{,}4\,e-4 \\
+\texttt{covertype} & \texttt{tabm} & 18 & 512 & 4 & 0{,}139 & 3{,}8\,e-4 & 3{,}0\,e-4 \\
+\texttt{credit\_g} & \texttt{tabm} & 19 & 256 & 2 & 0{,}074 & 2{,}8\,e-4 & 9{,}7\,e-4 \\
+\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit} & \texttt{tabm} & 28 & 256 & 3 & 0{,}3 & 5{,}7\,e-4 & 4{,}3\,e-5 \\
+\texttt{helena} & \texttt{tabm} & 30 & 512 & 3 & 0{,}332 & 8{,}7\,e-4 & 8{,}3\,e-5 \\
+\texttt{higgs} & \texttt{tabm} & 35 & 512 & 4 & 0{,}386 & 7{,}6\,e-4 & 9{,}2\,e-5 \\
+\texttt{jannis} & \texttt{tabm} & 32 & 512 & 4 & 0{,}365 & 6{,}3\,e-4 & 7{,}0\,e-5 \\
+\texttt{kin8nm} & \texttt{tabm} & 45 & 512 & 4 & 0{,}14 & 3{,}6\,e-4 & 5{,}4\,e-5 \\
+\texttt{magictelescope} & \texttt{tabm} & 43 & 512 & 3 & 0{,}443 & 5{,}7\,e-4 & 5{,}8\,e-5 \\
+\texttt{online\_news} & \texttt{tabm} & 33 & 512 & 3 & 0{,}345 & 9{,}6\,e-4 & 9{,}7\,e-4 \\
+\texttt{phoneme} & \texttt{tabm} & 32 & 512 & 4 & 0{,}189 & 9{,}7\,e-4 & 2{,}4\,e-4 \\
+\texttt{telco\_\allowbreak customer\_\allowbreak churn} & \texttt{tabm} & 45 & 256 & 3 & 0{,}205 & 2{,}2\,e-4 & 1{,}7\,e-5 \\
+\texttt{wine\_quality} & \texttt{tabm} & 17 & 256 & 3 & 0{,}072 & 9{,}9\,e-4 & 4{,}8\,e-4 \\
+\texttt{year\_\allowbreak prediction} & \texttt{tabm} & 40 & 256 & 4 & 7{,}9\,e-3 & 2{,}5\,e-4 & 7{,}3\,e-4 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption[Hiperparâmetros escolhidos --- KAN]{KAN: configuração vencedora do Optuna em cada conjunto (consumida pelo refit final e pelos \emph{folds} externos). Fonte: \texttt{results/\allowbreak raw/\allowbreak kan\_\allowbreak <conjunto>.\allowbreak json}, campo \texttt{best\_params}.}
+\label{tab:app-hp-kan}
+\begin{tabular}{lrrrrrr}
+\toprule
+\emph{Conjunto} & \rotatebox{90}{\texttt{n\_layers}} & \rotatebox{90}{\texttt{d\_hidden}} & \rotatebox{90}{\texttt{grid\_size}} & \rotatebox{90}{\texttt{learning\_rate}} & \rotatebox{90}{\texttt{weight\_decay}} & \rotatebox{90}{\texttt{reg\_lambda}} \\
+\midrule
+\texttt{adult} & 1 & 64 & 5 & 6{,}6\,e-4 & 4{,}5\,e-5 & 7{,}6\,e-8 \\
+\texttt{amazon\_\allowbreak employee} & 2 & 64 & 10 & 2{,}5\,e-4 & 1{,}4\,e-6 & 9{,}0\,e-7 \\
+\texttt{bank\_\allowbreak marketing} & 3 & 128 & 5 & 3{,}4\,e-3 & 3{,}9\,e-4 & 5{,}7\,e-5 \\
+\texttt{california\_\allowbreak housing} & 3 & 128 & 5 & 8{,}1\,e-3 & 8{,}9\,e-4 & 2{,}8\,e-3 \\
+\texttt{cardiovascular\_\allowbreak disease} & 1 & 128 & 5 & 4{,}9\,e-4 & 1{,}1\,e-4 & 1{,}9\,e-3 \\
+\texttt{covertype} & 3 & 128 & 3 & 6{,}4\,e-4 & 2{,}9\,e-5 & 8{,}1\,e-5 \\
+\texttt{credit\_g} & 1 & 32 & 20 & 3{,}3\,e-3 & 6{,}9\,e-5 & 1{,}7\,e-6 \\
+\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit} & 2 & 32 & 5 & 4{,}6\,e-4 & 1{,}1\,e-4 & 2{,}2\,e-4 \\
+\texttt{helena} & 1 & 256 & 5 & 3{,}7\,e-4 & 6{,}5\,e-5 & 1{,}2\,e-8 \\
+\texttt{higgs} & 3 & 128 & 3 & 8{,}1\,e-3 & 9{,}0\,e-5 & 1{,}7\,e-8 \\
+\texttt{jannis} & 3 & 128 & 3 & 6{,}2\,e-3 & 3{,}3\,e-4 & 3{,}4\,e-5 \\
+\texttt{kin8nm} & 3 & 128 & 3 & 4{,}2\,e-3 & 1{,}1\,e-4 & 5{,}7\,e-5 \\
+\texttt{magictelescope} & 1 & 128 & 3 & 1{,}2\,e-3 & 4{,}4\,e-5 & 6{,}4\,e-5 \\
+\texttt{online\_news} & 1 & 64 & 10 & 5{,}2\,e-4 & 3{,}8\,e-6 & 3{,}5\,e-7 \\
+\texttt{phoneme} & 1 & 128 & 20 & 4{,}5\,e-4 & 3{,}5\,e-5 & 2{,}6\,e-7 \\
+\texttt{telco\_\allowbreak customer\_\allowbreak churn} & 1 & 32 & 5 & 6{,}8\,e-3 & 1{,}8\,e-5 & 1{,}9\,e-3 \\
+\texttt{wine\_quality} & 2 & 256 & 20 & 5{,}7\,e-3 & 4{,}2\,e-4 & 3{,}9\,e-8 \\
+\texttt{year\_\allowbreak prediction} & 3 & 128 & 3 & 1{,}2\,e-4 & 3{,}8\,e-6 & 2{,}1\,e-6 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption[Hiperparâmetros escolhidos --- TabKAN]{TabKAN: configuração vencedora do Optuna em cada conjunto (consumida pelo refit final e pelos \emph{folds} externos). Fonte: \texttt{results/\allowbreak raw/\allowbreak tabkan\_\allowbreak <conjunto>.\allowbreak json}, campo \texttt{best\_params}.}
+\label{tab:app-hp-tabkan}
+\begin{tabular}{lrrrrr}
+\toprule
+\emph{Conjunto} & \rotatebox{90}{\texttt{n\_layers}} & \rotatebox{90}{\texttt{d\_hidden}} & \rotatebox{90}{\texttt{degree}} & \rotatebox{90}{\texttt{learning\_rate}} & \rotatebox{90}{\texttt{weight\_decay}} \\
+\midrule
+\texttt{adult} & 2 & 16 & 2 & 8{,}7\,e-3 & 1{,}0\,e-6 \\
+\texttt{amazon\_\allowbreak employee} & 1 & 64 & 2 & 1{,}2\,e-4 & 1{,}0\,e-5 \\
+\texttt{bank\_\allowbreak marketing} & 2 & 16 & 2 & 8{,}7\,e-3 & 1{,}0\,e-6 \\
+\texttt{california\_\allowbreak housing} & 2 & 16 & 2 & 8{,}7\,e-3 & 1{,}0\,e-6 \\
+\texttt{cardiovascular\_\allowbreak disease} & 3 & 32 & 2 & 5{,}9\,e-3 & 1{,}0\,e-4 \\
+\texttt{covertype} & 3 & 128 & 5 & 5{,}6\,e-4 & 1{,}0\,e-6 \\
+\texttt{credit\_g} & 1 & 32 & 4 & 8{,}9\,e-3 & 1{,}0\,e-4 \\
+\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit} & 2 & 16 & 2 & 1{,}3\,e-4 & 0 \\
+\texttt{helena} & 1 & 128 & 2 & 1{,}0\,e-4 & 1{,}0\,e-5 \\
+\texttt{higgs} & 3 & 32 & 2 & 6{,}8\,e-3 & 1{,}0\,e-4 \\
+\texttt{jannis} & 3 & 16 & 2 & 2{,}6\,e-3 & 1{,}0\,e-4 \\
+\texttt{kin8nm} & 2 & 16 & 2 & 8{,}7\,e-3 & 1{,}0\,e-6 \\
+\texttt{magictelescope} & 1 & 32 & 2 & 3{,}1\,e-3 & 1{,}0\,e-4 \\
+\texttt{online\_news} & 1 & 32 & 2 & 1{,}7\,e-3 & 1{,}0\,e-4 \\
+\texttt{phoneme} & 3 & 128 & 3 & 1{,}5\,e-4 & 0 \\
+\texttt{telco\_\allowbreak customer\_\allowbreak churn} & 4 & 128 & 4 & 3{,}5\,e-3 & 1{,}0\,e-6 \\
+\texttt{wine\_quality} & 3 & 128 & 2 & 5{,}6\,e-3 & 1{,}0\,e-4 \\
+\texttt{year\_\allowbreak prediction} & 4 & 32 & 2 & 2{,}2\,e-3 & 1{,}0\,e-4 \\
+\bottomrule
+\end{tabular}
+\end{table}

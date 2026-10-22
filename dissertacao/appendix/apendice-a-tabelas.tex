@@ -65,7 +65,12 @@ por modelo (Tabelas~\ref{tab:app-secundarias-binary},
 \ref{tab:app-secundarias-multiclass}
 e~\ref{tab:app-secundarias-regression} --- \emph{ranks} porque
 \emph{log-loss}, RMSE e MAE têm escalas incomensuráveis entre
-conjuntos; os valores por célula estão no artefato); as matrizes de
+conjuntos; os valores por célula estão no artefato), com uma exceção
+aberta por inteiro: a estatística \textbf{KS}, métrica padrão da
+indústria de crédito, ganha tabela própria com os valores por conjunto
+(Tabela~\ref{tab:app-ks}) --- o KS é comensurável entre conjuntos
+binários, e é a leitura que conecta o benchmark à prática de risco; as
+matrizes de
 \textbf{tamanho de efeito} ($d$ de Cohen pareado,
 Tabelas~\ref{tab:app-cohensd-binary}
 e~\ref{tab:app-cohensd-regression}); os \textbf{intervalos de

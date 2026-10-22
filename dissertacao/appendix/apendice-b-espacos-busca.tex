@@ -200,3 +200,24 @@ Duas notas de escopo, registradas como comentários no próprio
 ChebyKAN é fixa e as faixas seguem a seção de NAS do artigo original,
 aparadas para o orçamento de 25 \emph{trials} (ver
 \texttt{src/\allowbreak models/\allowbreak tabkan\_\allowbreak model.\allowbreak py}).
+
+\section{Hiperparâmetros escolhidos por conjunto}
+\label{app:hp-escolhidos}
+
+As tabelas a seguir completam a rastreabilidade: para cada modelo
+ajustado, a configuração \emph{vencedora} da busca em cada conjunto ---
+exatamente o que o refit final e os \emph{folds} externos consumiram.
+Nenhum valor é transcrito à mão: as tabelas são geradas por
+\texttt{scripts/\allowbreak gen\_\allowbreak chosen\_\allowbreak hparams.\allowbreak py} a partir do campo
+\texttt{best\_params} de \texttt{results/\allowbreak raw/\allowbreak
+<modelo>\_\allowbreak <conjunto>.\allowbreak json}. Duas leituras que elas sustentam:
+(i)~a busca \emph{não} converge para uma configuração única por modelo
+--- profundidades e taxas de aprendizado variam por ordem de grandeza
+entre conjuntos, o que reforça a necessidade do protocolo de busca por
+conjunto; e (ii)~valores encostados na borda do espaço (por exemplo,
+\texttt{n\_estimators} próximo do teto) sinalizam onde um espaço mais
+largo poderia ajudar --- limitação discutida no
+Capítulo~\ref{chap:metodologia}. Notação: vírgula decimal;
+\mbox{$a{,}b\,$e$-n$} denota $a{,}b \times 10^{-n}$.
+
+\input{appendix/hiperparametros-escolhidos}

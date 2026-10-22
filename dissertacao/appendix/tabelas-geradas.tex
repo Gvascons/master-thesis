@@ -148,6 +148,30 @@ TabFM & \textbf{1{,}20} & \textbf{1{,}40} & \textbf{1{,}20} \\
 \end{tabular}
 \end{table}
 
+\begin{sidewaystable}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\caption[Estatística KS por conjunto --- binária]{Estatística de Kolmogorov--Smirnov (KS; maior é melhor) por modelo em cada conjunto binário --- a métrica de separação padrão da indústria de crédito (Seção~\ref{sec:met-metricas}); \textbf{negrito} = melhor da linha. Fonte: \texttt{results/\allowbreak aggregated/\allowbreak test\_\allowbreak results.\allowbreak csv}.}
+\label{tab:app-ks}
+\begin{tabular}{lcccccccccccccc}
+\toprule
+\emph{Conjunto} & \rotatebox{90}{XGBoost} & \rotatebox{90}{LightGBM} & \rotatebox{90}{CatBoost} & \rotatebox{90}{MLP} & \rotatebox{90}{RealMLP} & \rotatebox{90}{FT-Transformer} & \rotatebox{90}{SAINT} & \rotatebox{90}{STab} & \rotatebox{90}{TabNet} & \rotatebox{90}{TabM} & \rotatebox{90}{KAN} & \rotatebox{90}{TabKAN} & \rotatebox{90}{TabPFN} & \rotatebox{90}{TabFM} \\
+\midrule
+\texttt{adult} & 0{,}6965 & 0{,}6920 & 0{,}6924 & 0{,}6596 & 0{,}6707 & 0{,}6618 & 0{,}6748 & 0{,}6690 & 0{,}6577 & 0{,}6651 & 0{,}6600 & 0{,}6588 & 0{,}6695 & \textbf{0{,}6965} \\
+\texttt{amazon\_\allowbreak employee} & 0{,}5376 & 0{,}5674 & \textbf{0{,}6408} & 0{,}5110 & 0{,}5013 & 0{,}4495 & 0{,}4251 & 0{,}2628 & 0{,}4607 & 0{,}5025 & 0{,}4998 & 0{,}4722 & 0{,}5440 & 0{,}6136 \\
+\texttt{bank\_\allowbreak marketing} & 0{,}7398 & 0{,}7387 & 0{,}7350 & 0{,}7281 & 0{,}7358 & 0{,}7465 & 0{,}7437 & 0{,}7409 & 0{,}7238 & 0{,}7572 & 0{,}7196 & 0{,}7118 & 0{,}7518 & \textbf{0{,}7671} \\
+\texttt{cardiovascular\_\allowbreak disease} & 0{,}4701 & 0{,}4731 & 0{,}4702 & 0{,}4678 & 0{,}4708 & \textbf{0{,}4738} & 0{,}4712 & 0{,}4652 & 0{,}4492 & 0{,}4643 & 0{,}4657 & 0{,}4599 & 0{,}4704 & 0{,}4734 \\
+\texttt{credit\_g} & \textbf{0{,}5286} & 0{,}4905 & 0{,}4833 & 0{,}4381 & 0{,}3738 & 0{,}5095 & 0{,}4119 & 0{,}4524 & 0{,}3762 & 0{,}4690 & 0{,}3976 & 0{,}4429 & 0{,}4286 & 0{,}4500 \\
+\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit} & 0{,}5684 & 0{,}5648 & 0{,}5659 & 0{,}5035 & 0{,}5596 & 0{,}5106 & 0{,}5115 & 0{,}5092 & 0{,}4961 & 0{,}5094 & 0{,}4951 & 0{,}4988 & 0{,}5647 & \textbf{0{,}5732} \\
+\texttt{higgs} & 0{,}4611 & 0{,}4603 & 0{,}4610 & 0{,}4718 & 0{,}4712 & 0{,}4651 & 0{,}4623 & 0{,}4721 & 0{,}4571 & 0{,}4788 & 0{,}4491 & 0{,}4326 & 0{,}4633 & \textbf{0{,}5128} \\
+\texttt{magictelescope} & 0{,}7123 & 0{,}7138 & 0{,}7212 & 0{,}7003 & 0{,}7235 & 0{,}7018 & 0{,}7265 & 0{,}7063 & 0{,}7265 & 0{,}7138 & 0{,}6831 & 0{,}6786 & 0{,}7519 & \textbf{0{,}7930} \\
+\texttt{phoneme} & 0{,}7703 & 0{,}7805 & 0{,}7692 & 0{,}7087 & 0{,}7599 & 0{,}7503 & 0{,}7392 & 0{,}6882 & 0{,}7179 & 0{,}7458 & 0{,}6435 & 0{,}6548 & 0{,}7834 & \textbf{0{,}8270} \\
+\texttt{telco\_\allowbreak customer\_\allowbreak churn} & 0{,}5381 & 0{,}5285 & 0{,}5340 & 0{,}5171 & 0{,}5300 & 0{,}5288 & 0{,}5347 & 0{,}5301 & 0{,}5079 & 0{,}5262 & \textbf{0{,}5415} & 0{,}5351 & 0{,}5389 & 0{,}5150 \\
+\bottomrule
+\end{tabular}
+\end{sidewaystable}
+
 \begin{sidewaystable}[p]
 \centering
 \scriptsize

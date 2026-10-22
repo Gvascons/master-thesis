@@ -183,6 +183,45 @@ def build_secondary_rank_table(df: pd.DataFrame, task: str) -> str:
     return "\n".join(lines)
 
 
+def build_ks_table(df: pd.DataFrame) -> str:
+    """KS por modelo em cada conjunto binário (valores por célula).
+
+    Fecha a pendência da reunião de 15/10/2026: o KS está declarado como
+    secundária da binária (Tabela 4.3) e é a métrica padrão da indústria
+    de crédito, mas só o rank médio estava impresso."""
+    sub = df[df["task_type"] == "binary"]
+    pivot = sub.pivot(index="dataset", columns="model", values="ks")
+    lines = [r"\begin{sidewaystable}[htbp]", r"\centering", r"\small",
+             r"\setlength{\tabcolsep}{3pt}",
+             r"\caption[Estatística KS por conjunto --- binária]{Estatística "
+             r"de Kolmogorov--Smirnov (KS; maior é melhor) por modelo em "
+             r"cada conjunto binário --- a métrica de separação padrão da "
+             r"indústria de crédito (Seção~\ref{sec:met-metricas}); "
+             r"\textbf{negrito} = melhor da linha. Fonte: "
+             r"\texttt{results/aggregated/test\_results.csv}.}",
+             r"\label{tab:app-ks}",
+             r"\begin{tabular}{l" + "c" * len(MODELS) + "}", r"\toprule",
+             " & ".join([r"\emph{Conjunto}"]
+                        + [r"\rotatebox{90}{" + d + "}" for _, d in MODELS])
+             + r" \\", r"\midrule"]
+    for ds in sorted(pivot.index):
+        row = pivot.loc[ds]
+        present = {m: row.get(m) for m, _ in MODELS if pd.notna(row.get(m))}
+        best = max(present.values())
+        cells = [tex_dataset(ds)]
+        for m, _ in MODELS:
+            v = row.get(m)
+            if pd.isna(v):
+                cells.append("---")
+            elif v == best:
+                cells.append(r"\textbf{" + fmt(v) + "}")
+            else:
+                cells.append(fmt(v))
+        lines.append(" & ".join(cells) + r" \\")
+    lines += [r"\bottomrule", r"\end{tabular}", r"\end{sidewaystable}"]
+    return "\n".join(lines)
+
+
 def build_cohensd_table(which: str) -> str:
     """Matriz de d de Cohen pareado (linha - coluna) sobre a primária."""
     src = ROOT / "results" / "aggregated" / f"cohens_d_{which}.csv"
@@ -330,6 +369,7 @@ def main() -> None:
 
     for task in ("binary", "multiclass", "regression"):
         blocks.append(build_secondary_rank_table(df, task))
+    blocks.append(build_ks_table(df))
     blocks.append(build_cohensd_table("binary"))
     blocks.append(build_cohensd_table("regression"))
     blocks.append(build_ci_table())
