@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Measure inference latency (us/row) for all 11 models on the `adult` dataset.
+"""Measure inference latency (us/row) for all 14 models on the `adult` dataset.
 
 Loads each model's tuned best_params from results/raw/<model>_adult.json, fits
 on the training pool, and times predict() over the hold-out test set (median of
