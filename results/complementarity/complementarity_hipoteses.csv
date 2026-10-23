@@ -1,0 +1,9 @@
+hipotese,fm,estatistica,veredito
+H-C1,tabpfn,mediana concordancia 0.950,CONFIRMADA
+H-C1,tabfm,mediana concordancia 0.936,CONFIRMADA
+H-C2,tabpfn,5/10 conjuntos com net-win maior na margem baixa; sinal p=0.6230,REFUTADA
+H-C3,tabpfn,6/10 conjuntos com net-win maior na minoritaria; sinal p=0.3770,REFUTADA
+H-C4,tabpfn,"Spearman(n_pool, vantagem)=0.143 (p=0.585, N=17)",REFUTADA
+H-C2,tabfm,7/10 conjuntos com net-win maior na margem baixa; sinal p=0.1719,REFUTADA
+H-C3,tabfm,8/10 conjuntos com net-win maior na minoritaria; sinal p=0.0547,REFUTADA
+H-C4,tabfm,"Spearman(n_pool, vantagem)=0.260 (p=0.313, N=17)",REFUTADA

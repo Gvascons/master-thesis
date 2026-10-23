@@ -81,3 +81,27 @@ Artefatos: `results/complementarity/preds_<modelo>_<dataset>.parquet`,
 - Destilação (cap. 7): já respondeu o análogo em regressão distribucional
   (a vantagem transferível é a forma da incerteza, não a média); este desenho
   fecha o análogo em classificação/ponto sem tocar naqueles artefatos.
+
+## 5. Adendo de execução — 23/10/2026 (pós-execução; nada acima foi alterado)
+
+Execução concluída em 23/10/2026: **52/52 células dentro do gate**
+(|Δ| ≤ 10⁻³ na métrica primária; Δ = 0 exato em 49 delas). Três registros
+operacionais, sem efeito nos critérios:
+
+1. O custo real excedeu a estimativa da seção 3 (~20 h de parede vs. ~2 h
+   estimadas): o gargalo são os FMs nos conjuntos grandes multiclasse
+   (ensemble por classe), não contemplados na conta de ~43 ms/linha.
+2. `tabpfn × year_prediction` e `tabfm × year_prediction` falharam por
+   OOM de CUDA no processo longo (fragmentação de VRAM) e foram re-rodadas
+   em processos dedicados. Para o TabFM foi necessário reduzir o lote de
+   predição de 2.000 para 1.000 linhas (predições independentes por linha;
+   o gate verificou |Δ| = 4,8×10⁻⁴ contra a métrica salva, dentro da
+   tolerância; log em `results/logs/complementarity_rerun_tabfm_yp2.log`).
+3. Vereditos (de `complementarity_hipoteses.csv`): **H-C1 CONFIRMADA**
+   (concordância mediana 0,950 TabPFN / 0,936 TabFM > 0,85);
+   **H-C2, H-C3 e H-C4 REFUTADAS** nos critérios pré-registrados
+   (H-C2: 5/10 TabPFN, 7/10 TabFM, sinais n.s.; H-C3: 6/10 e 8/10
+   — TabFM marginal, p=0,0547; H-C4: Spearman +0,143 e +0,260, n.s. —
+   a vantagem NÃO decresce com o pool nesta população; descritivamente,
+   as maiores vantagens do TabFM estão nos conjuntos grandes).
+   Os negativos serão reportados com o mesmo estatuto dos positivos.
