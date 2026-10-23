@@ -566,6 +566,118 @@ conforme o contrato de conduta do estudo
 (Capítulo~\ref{chap:metodologia}): um benchmark neutro existe
 precisamente para que resultados assim venham a público.
 
+\section{Ato V --- por dentro do placar: complementaridade por instância}
+\label{sec:cap5-ato5}
+
+Os ranks médios dizem \emph{quem} vence; não dizem \emph{onde} nem
+\emph{por quê}. Para separar as duas perguntas --- o que o XGBoost já
+aprende sozinho e o que os \emph{foundation models} acrescentam ---,
+esta seção desce ao nível da instância: as predições caso a caso de
+XGBoost, TabPFN e TabFM no \emph{hold-out} intocado, nos 17 conjuntos em
+que os três coexistem. O desenho foi pré-registrado \emph{antes} da
+execução, com hipóteses e critérios de falsificação datados
+(\texttt{docs/\allowbreak desenho-\allowbreak analise-\allowbreak
+complementaridade.\allowbreak md}, 22/10/2026; adendo de execução de
+23/10/2026), e a geração das predições reconstruiu os modelos finais sob
+o protocolo exato do benchmark --- mesmos hiperparâmetros escolhidos,
+mesmo \emph{split}, mesma semente --- com um \emph{gate} de sanidade
+exigindo $|\Delta| \le 10^{-3}$ entre a métrica primária recomputada e a
+registrada: as 52 células passaram, 49 delas com $\Delta = 0$ exato
+(máximo observado: $4{,}8 \times 10^{-4}$, efeito numérico de
+\emph{bfloat16} sob lote de predição reduzido). O instrumento por par é
+o teste exato de McNemar sobre as instâncias discordantes, acompanhado
+da taxa de concordância e do saldo de vitórias por quintil de margem do
+XGBoost.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{images/complementarity_diss.pdf}
+\caption{Complementaridade por instância no \emph{hold-out}.
+\textbf{(a)}~Saldo de vitórias líquidas do \emph{foundation model}
+sobre o XGBoost por 1.000 instâncias, nos 12 conjuntos de classificação
+(asterisco: McNemar $p<0{,}01$). \textbf{(b)}~Saldo por quintil de
+margem do XGBoost nas 10 binárias (linhas finas: conjuntos; linha
+grossa: mediana). Fonte:
+\texttt{results/\allowbreak complementarity/\allowbreak
+complementarity\_\allowbreak pairs.\allowbreak csv} e
+\texttt{\ldots\allowbreak margens.\allowbreak csv}.}
+\label{fig:cap5-complementaridade}
+\end{figure}
+
+O primeiro resultado é a escala da concordância
+(hipótese~H-C1, \textbf{confirmada}): XGBoost e \emph{foundation
+models} dão a mesma resposta na vasta maioria dos casos --- concordância
+mediana de 0{,}950 com o TabPFN e 0{,}936 com o TabFM, acima do critério
+pré-registrado de 0{,}85. Toda a diferença de rank do Ato~IV nasce,
+portanto, de uma \emph{franja} de 2 a 15\% de instâncias disputadas. O
+que acontece dentro dessa franja é assimétrico e fortemente heterogêneo
+entre conjuntos (Figura~\ref{fig:cap5-complementaridade}a): em 14 dos
+24 pares o McNemar rejeita o empate a 1\%, e o saldo mediano é de
+$+6{,}6$ vitórias líquidas por 1.000 instâncias para o TabFM ($+2{,}8$
+para o TabPFN). Nos extremos, o TabFM converte a franja de forma
+esmagadora no \texttt{jannis} ($+59{,}6$ por mil, $p \sim 10^{-103}$),
+\texttt{magictelescope} ($+43{,}3$), \texttt{phoneme} ($+37{,}9$),
+\texttt{covertype} ($+33{,}7$, $p \sim 10^{-95}$) e \texttt{higgs}
+($+26{,}0$, $p \sim 10^{-25}$) --- mas \emph{perde} a franja no
+\texttt{telco\_\allowbreak customer\_\allowbreak churn} ($-29{,}8$,
+$p = 6 \times 10^{-4}$), assim como o TabPFN a perde no \texttt{adult}
+($-8{,}2$, $p = 1{,}2 \times 10^{-5}$). A vitória agregada dos
+\emph{foundation models} não é, portanto, um domínio uniforme: é uma
+soma de vitórias locais grandes e derrotas locais reais.
+
+As três hipóteses mecanicistas pré-registradas foram \textbf{refutadas}
+nos critérios datados --- e o registro honesto desses negativos é tão
+informativo quanto a confirmação. H-C2 (o ganho concentra-se na baixa
+margem do XGBoost) falha como padrão universal: 5/10 binárias para o
+TabPFN e 7/10 para o TabFM, sinais não significativos --- embora o
+retrato direcional exista
+(Figura~\ref{fig:cap5-complementaridade}b): no quintil mais incerto do
+XGBoost a mediana do TabFM é $+19{,}5$ por mil contra ${\sim}0$ nos
+demais quintis, com enorme dispersão entre conjuntos. H-C3 (ganho
+desproporcional na classe minoritária) fica em 6/10 e 8/10
+($p = 0{,}055$ para o TabFM --- marginal, não conclusivo); o caso
+extremo segue eloquente --- no \texttt{amazon\_\allowbreak employee},
+16{,}3:1 de desbalanceamento, o saldo do TabFM na classe minoritária é
+$+267$ por 1.000 instâncias minoritárias, contra $-10$ na majoritária
+--- mas não generaliza para a população. E H-C4 (a vantagem decresce
+com o tamanho do \emph{pool}, como sugeriria o prior de pré-treino com
+contexto de até 16\,384 linhas, Seção~\ref{sec:fund-fm}) é
+refutada com sinal \emph{contrário}: a correlação de Spearman entre
+tamanho do \emph{pool} e vantagem é $+0{,}14$ (TabPFN) e $+0{,}26$
+(TabFM), não significativas --- descritivamente, as maiores vantagens
+do TabFM estão justamente nos \emph{maiores} conjuntos da grade. O
+receio natural de que o \emph{foundation model} só brilhe no regime de
+poucos dados não encontra apoio aqui.
+
+Na regressão, a leitura por instância é descritiva e aponta na mesma
+direção dupla: o erro absoluto do \emph{foundation model} é menor que o
+do XGBoost em mais da metade das instâncias em 9 dos 10 pares, mas os
+erros dos dois são fortemente co-rankeados (Spearman de 0{,}33 a 0{,}95
+por conjunto) --- os dois modelos acham difíceis \emph{as mesmas}
+instâncias, e a vantagem do FM é um encolhimento quase uniforme do
+erro, não a resolução de uma classe distinta de casos.
+
+A síntese interpretativa deste ato corrige a explicação fácil. O que o
+\emph{foundation model} acrescenta \textbf{não} é um talento universal
+para ``os casos difíceis'': é um viés indutivo que casa com alguns
+conjuntos --- tipicamente os densos, numéricos e multiclasse, onde ele
+converte a franja de discordância quase inteira a seu favor --- e
+desajuda em outros, onde o XGBoost segue dono da franja. Para a decisão
+prática, a consequência é direta e alimenta o
+Capítulo~\ref{chap:framework}: com concordância mediana acima de 0{,}93
+e vantagem heterogênea \emph{entre} conjuntos (não \emph{dentro}
+deles), a escolha de modelo é uma decisão por conjunto/tarefa, não por
+instância --- e a validação cega do arcabouço é quem deve capturá-la.
+
+\emph{No nível da instância, XGBoost e \emph{foundation models}
+concordam em ${\ge}93{,}6\%$ dos casos (mediana; H-C1 confirmada); a
+diferença de rank nasce de uma franja disputada que o TabFM vence de
+forma esmagadora em alguns conjuntos e perde em outros, e as três
+explicações mecanicistas pré-registradas --- margem baixa, classe
+minoritária, poucos dados --- foram refutadas nos critérios datados,
+com a última refutada em sinal contrário: a vantagem não encolhe nos
+conjuntos grandes.}
+
 \section{Síntese do capítulo}
 \label{sec:cap5-sintese}
 
@@ -579,7 +691,12 @@ ordens de magnitude. \textbf{(ii)}~A geração 2026 quebra o empate em
 acurácia: o TabFM lidera as três tarefas e vence em 13 de 18 conjuntos,
 \emph{zero-shot} --- ao preço de quatro a cinco ordens de magnitude em latência
 de \emph{serving}, invertendo o eixo de custo (treino de segundos e ajuste
-zero; serviço proibitivo). A quebra não aposenta a leitura
+zero; serviço proibitivo). A camada por instância (Ato~V) qualifica a
+quebra: ela nasce de uma franja de discordância pequena (concordância
+mediana ${\ge}0{,}936$), convertida de forma heterogênea --- vitórias
+esmagadoras em alguns conjuntos, derrotas reais em outros --- e as
+explicações mecanicistas fáceis (margem baixa, minoritária, poucos
+dados) foram refutadas sob critérios pré-registrados. A quebra não aposenta a leitura
 multicritério: ela a torna mais necessária, porque a escolha ótima
 passa a depender de uma única restrição dominante. \textbf{(iii)}~Essa
 restrição é atacável: a latência do \emph{foundation model} não é uma lei, é um
