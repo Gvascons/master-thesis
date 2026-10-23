@@ -44,6 +44,7 @@ de decisão + contribuição de destilação. Documento-mestre do programa:
 | Análises AI-2 | `scripts/{pareto_strategies,ablation_*,mlp_student,extension_ctr23,paper_analysis,plot_*}.py` |
 | Errata diamonds/kin8nm | `docs/errata-diamonds-kin8nm.md` (registro canônico) |
 | Errata núcleo de regressão (online_news; california binarizado) | `docs/errata-datasets-core-regressao.md` (19/10/2026) |
+| Complementaridade por instância (E7, cap. 5 Ato V) | `docs/desenho-analise-complementaridade.md` + `scripts/complementarity_{analysis,report}.py` → `results/complementarity/` |
 | Entregas em LaTeX (Overleaf) | `latex/{ai1,ai2}/` — artigos autocontidos; pendências no `latex/README.md` |
 
 ## Hardware
