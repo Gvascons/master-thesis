@@ -157,11 +157,13 @@ resultado): se os \emph{dois} alunos recebem calibração
 sobrevive? Em 5 conjuntos (3 de retenção positiva, 2 reveses; 3
 sementes), a conformalização conserta a cobertura --- no critério de a
 distância ao nominal diminuir --- em 5 de 5 conjuntos no braço
-\emph{soft} e 4 de 5 no \emph{hard} (PICP90 de 0,77--0,93 para
+\emph{soft} e 3 de 5 no \emph{hard} (PICP90 de 0,77--0,93 para
 0,89--0,95 no \emph{hard} e de 0,71--0,89 para 0,88--0,91 no
-\emph{soft}; a exceção é o california-\emph{hard}, que já sobre-cobria
-e cuja cobertura ela afasta do nominal: distância de PICP80 de
-$8{,}06$ para $9{,}63$~p.p.), mas deixa o CRPS essencialmente
+\emph{soft}; as exceções são o california-\emph{hard}, que já
+sobre-cobria e cuja cobertura ela afasta do nominal, com distância de
+PICP80 de $8{,}06$ para $9{,}63$~p.p., e o cps88wages-\emph{hard},
+já a menos de 1~p.p.\ do nominal, que se move menos de
+1~p.p.), mas deixa o CRPS essencialmente
 intacto (movimentos inferiores a 1\% em todos os 10 braços). A
 vantagem de forma do destilado sobrevive integralmente
 (\texttt{cpu\_activity} 1,18 \emph{vs.} 1,29; \texttt{cps88wages}
@@ -231,7 +233,7 @@ linhas, e desaparece (ou inverte) a partir de 2~mil.
 \emph{Conjunto} & \emph{pool} 800 & \emph{pool} 2.000 & \emph{pool} 8.000 \\
 \midrule
 \texttt{california\_\allowbreak housing} & $-0{,}008$ & $+0{,}005$ & $-0{,}007$ \\
-\texttt{wine\_quality}       & $+0{,}026$ & $-0{,}079$ & $-0{,}081$ \\
+\texttt{wine\_quality}       & $+0{,}025$ & $-0{,}079$ & $-0{,}081$ \\
 \bottomrule
 \end{tabular}
 \end{table}

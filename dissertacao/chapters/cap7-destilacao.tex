@@ -362,7 +362,7 @@ exploratórios menores --- e o contraste entre execuções \emph{smoke} e
 piloto sugeriu a hipótese de que o ganho pontual é um fenômeno de
 poucos dados. Investigamos com uma varredura de tamanho de \emph{pool} (caps
 de 800, 2.000 e 8.000 linhas): há um ganho genuíno de poucos dados no
-\texttt{wine\_quality} ($\Delta = +0{,}026$ em $n{=}800$), que
+\texttt{wine\_quality} ($\Delta = +0{,}025$ em $n{=}800$), que
 desaparece a partir de $n{=}2.000$ e \emph{não} replica no
 \texttt{california\_\allowbreak housing}. Atribuímos o resquício, portanto, a um
 moderador de poucos dados dependente do conjunto, e o reportamos como
@@ -506,7 +506,7 @@ dos 5 centrais) --- de modo que H2 é confirmada apenas na cláusula de
 CRPS; o remédio é medido no piloto conformal
 (Seção~\ref{sec:destil-oof}), que conserta a cobertura --- no critério
 de a distância ao nominal diminuir --- em 5/5 conjuntos no braço
-\emph{soft} e 4/5 no \emph{hard}, sem mover o CRPS.
+\emph{soft} e 3/5 no \emph{hard}, sem mover o CRPS.
 
 \emph{A destilação distribucional retém mediana de 19\% da
 vantagem de CRPS do professor, positiva em 16 de 20 conjuntos.} A
@@ -684,10 +684,12 @@ uma correção conformal barata sobre o controle de rótulos verdadeiros
 o alcançaria. Um piloto declarado (5 conjuntos, 3 sementes,
 \emph{split-conformal} por quantil nos dois braços) responde que não:
 a conformalização conserta a cobertura --- no critério de a distância
-ao nominal diminuir --- em 5/5 conjuntos no braço \emph{soft} e 4/5 no
-\emph{hard} (a exceção é o california-\emph{hard}, que já sobre-cobria
-e cuja cobertura a conformalização afasta do nominal: distância de
-PICP80 de $8{,}06$ para $9{,}63$~p.p.), mas
+ao nominal diminuir --- em 5/5 conjuntos no braço \emph{soft} e 3/5 no
+\emph{hard} (as exceções: o california-\emph{hard}, que já sobre-cobria
+e cuja cobertura a conformalização afasta do nominal, com distância de
+PICP80 de $8{,}06$ para $9{,}63$~p.p., e o cps88wages-\emph{hard},
+que já estava a menos de 1~p.p.\ do nominal e se move menos de
+1~p.p.), mas
 move o CRPS em menos de 1\% --- a vantagem de forma do destilado
 sobrevive intacta à correção. Conformalização compra calibração;
 destilação compra forma (Apêndice~\ref{sec:app-pilot-conformal}).

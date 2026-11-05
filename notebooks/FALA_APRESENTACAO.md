@@ -1,5 +1,10 @@
 # Fala pro professor — texto corrido, informal e direto (estado: 14 modelos)
 
+> **NOTA (05/11/2026):** texto da fase pré-errata de 19/10. Onde cita
+> "Wilcoxon p=0,045" da destilação, a leitura vigente é "0,045, e 0,067 na
+> sensibilidade sem o california — sempre os dois juntos". A fala atualizada
+> para reuniões está em `~/Desktop/acompanhamento-05-11/`.
+
 > Pra ler falando numa conversa 1-a-1 com o orientador. As marcações
 > *(em itálico)* são dicas de quando abrir a figura — não se lê em voz alta.
 > Números conferidos contra `TABELA_RESULTADOS.md`, o deck e `paper_retention.csv` em 21/07/2026;

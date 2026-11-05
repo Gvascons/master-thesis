@@ -24,15 +24,17 @@ fixed ``foundation model first'' policy is regret-optimal on the primary
 metric (median regret of 0.000 in the 2026 generation), and a
 pre-registered multi-criteria regret experiment shows that shifting just
 10 to 20 percent of the weight from accuracy to latency (crossover
-between weights 0.9 and 0.8) flips the recommendation in favor of
-gradient boosting --- quantitatively justifying the flowchart of four
+between weights 0.9 and 0.8) flips the recommendation away from the
+foundation model --- quantitatively justifying the flowchart of four
 a priori verifiable constraints that consolidates the framework. Third,
 the distributional distillation of foundation models --- a scope verified
 as novel --- transfers the quantile curves of the TabPFN teacher to
 students that serve in microseconds: point distillation fails robustly at
 realistic data scales, but distributional distillation retains a median
 of 19 percent of the teacher's distributional advantage, positive on 16
-of 20 datasets (sign test with a p-value of 0.006), beats classical
+of 20 datasets (sign test with a p-value of 0.006; 15 of 19, p-value
+0.010, in the sensitivity analysis excluding the binarized-target
+dataset of the erratum), beats classical
 distributional baselines on 17 of 20 datasets in the pre-registered
 experiment E1, and condenses into a practical decision rule whose
 preconditions can be verified in minutes. Together --- evidence under a

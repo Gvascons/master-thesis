@@ -1,5 +1,11 @@
 # Roteiro da apresentação — benchmark tabular 2026 (14 modelos)
 
+> **NOTA (05/11/2026):** roteiro da fase pré-errata de 19/10. Onde ele cita
+> "Wilcoxon p=0,045" da destilação, a leitura vigente é "0,045, e 0,067 na
+> sensibilidade sem o california (alvo binarizado) — sempre os dois juntos";
+> e a manchete de retenção é "16/20 (p=0,006); 15/19 (p=0,010) sem o
+> california". Material de reunião atualizado: `~/Desktop/acompanhamento-05-11/`.
+
 > **Como usar:** roteiro estruturado seguindo o `00_presentation.ipynb` de
 > cima a baixo. **[FIGURA: nome.png]** = mostrar a imagem (mesmos `show()` do
 > deck). Números em **negrito** conferidos contra os artefatos em 21/07/2026 e

@@ -217,7 +217,12 @@ entre conjuntos, o que reforça a necessidade do protocolo de busca por
 conjunto; e (ii)~valores encostados na borda do espaço (por exemplo,
 \texttt{n\_estimators} próximo do teto) sinalizam onde um espaço mais
 largo poderia ajudar --- limitação discutida no
-Capítulo~\ref{chap:metodologia}. Notação: vírgula decimal;
-\mbox{$a{,}b\,$e$-n$} denota $a{,}b \times 10^{-n}$.
+Capítulo~\ref{chap:metodologia}. Uma nota de leitura: configurações
+vencedoras idênticas entre conjuntos distintos de um mesmo modelo
+(ocorre com STab, MLP e TabNet) são legítimas e esperadas --- o
+\texttt{TPESampler} com semente fixa 42 propõe a mesma sequência de
+candidatos por modelo, e quando o mesmo candidato vence em dois
+conjuntos os parâmetros coincidem; os JSONs brutos conferem. Notação:
+vírgula decimal; \mbox{$a{,}b\,$e$-n$} denota $a{,}b \times 10^{-n}$.
 
 \input{appendix/hiperparametros-escolhidos}

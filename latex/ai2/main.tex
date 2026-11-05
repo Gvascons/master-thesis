@@ -422,7 +422,7 @@ unchanged --- only
 california's two soft-target cells beat the hard-label control at all, with
 best within-pipeline retention 0.11 (california/mixed); the remaining eight
 cells are at or below the control. A pool-size sweep (caps 800/2k/8k) shows
-a genuine small-data gain on \texttt{wine\_quality} ($\Delta = +0.026$ at
+a genuine small-data gain on \texttt{wine\_quality} ($\Delta = +0.025$ at
 $n{=}800$) that vanishes by $n{=}2{,}000$ and does not replicate on
 \texttt{california\_\allowbreak housing}; we report it as an observation with a
 dataset-dependent moderator, not a general effect. Conclusion: at realistic
@@ -506,7 +506,7 @@ diagnosable and form the basis of \S\ref{sec:rule}'s decision rule:
 \texttt{wine\_quality} --- where the teacher trails the tuned baseline on
 RMSE (the axis of our pre-registered gate) and its small CRPS edge
 ($+0.04$) inverts under transfer --- and three price-scale, heavy-tailed
-targets (\texttt{fifa}, \texttt{diamonds}, \texttt{health\_\allowbreak insurance})
+targets (\texttt{fifa}, \texttt{diamonds\_\allowbreak real}, \texttt{health\_\allowbreak insurance})
 where \S\ref{sec:rule} shows the teacher's apparent edge is largely
 reproducible by a log transform.
 
@@ -658,10 +658,11 @@ would match it --- fails in a declared pilot (5 datasets, 3 seeds,
 split-conformal per quantile applied to \emph{both} arms):
 conformalization repairs coverage --- where ``repairs'' means the
 distance to nominal decreases --- in 5/5 datasets for the soft student
-and 4/5 for the hard one (PICP90 to 0.88--0.95; the exception is the
+and 3/5 for the hard one (PICP90 to 0.88--0.95; the exceptions are the
 california hard arm, which already over-covered and where
 conformalization moves coverage \emph{away} from nominal, PICP80
-distance 8.06${\to}$9.63~p.p.) but moves CRPS by under 1\% in every
+distance 8.06${\to}$9.63~p.p., and the cps88wages hard arm, already
+within 1~p.p.\ of nominal, which moves by under 1~p.p.) but moves CRPS by under 1\% in every
 arm, leaving the shape advantage intact. Conformal buys calibration; distillation buys
 shape. (A weak exchangeability asymmetry in the soft arm --- OOF
 labels generated over the full pool --- is declared; extending beyond

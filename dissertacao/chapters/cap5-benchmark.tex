@@ -121,7 +121,9 @@ largura dessas barras é a forma visual da cautela sobre o CD largo
 discutida na Seção~\ref{sec:cap5-ato4}. O diagrama é exibido já sobre a
 grade completa de 14 modelos para evitar duplicação de figura; as
 estatísticas do Ato~I são computadas sobre a restrição aos 11, cuja ordem
-relativa o diagrama preserva.
+relativa o diagrama preserva --- exceto por um trio adjacente
+estatisticamente inseparável (RealMLP/SAINT/FT-Transformer, ranks a
+0,1--0,3 um do outro), que se reordena entre as duas grades.
 
 \begin{figure}[htbp]
 \centering
@@ -664,7 +666,7 @@ desproporcional na classe minoritária) fica em 6/10 e 8/10
 ($p = 0{,}055$ para o TabFM --- marginal, não conclusivo); o caso
 extremo segue eloquente --- no \texttt{amazon\_\allowbreak employee},
 16{,}3:1 de desbalanceamento, o saldo do TabFM na classe minoritária é
-$+267$ por 1.000 instâncias minoritárias, contra $-10$ na majoritária
+$+266$ por 1.000 instâncias minoritárias, contra $-10$ na majoritária
 --- mas não generaliza para a população. E H-C4 (a vantagem decresce
 com o tamanho do \emph{pool}, como sugeriria o prior de pré-treino com
 contexto de até 16\,384 linhas, Seção~\ref{sec:fund-fm}) é
