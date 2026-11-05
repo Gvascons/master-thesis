@@ -304,6 +304,27 @@ mecânica que partimos; o que muda com os \emph{foundation models} é o
 \emph{professor} (um modelo de aprendizado em contexto, cujo custo é na
 inferência) e, no nosso caso, o alvo (curvas de quantis, não rótulos).
 
+Essa mecânica, vale registrar, vive um renascimento fora do tabular: a
+destilação é peça central das receitas de pós-treino dos grandes
+modelos de linguagem contemporâneos, em três variantes --- a clássica
+\emph{off-policy}, de professor maior para aluno menor, seja por
+distribuições (rótulos \emph{soft}, como no pré-treino da família
+Gemma, \citealp{gemma2025}), seja por texto gerado (rótulos
+\emph{hard}, como nos modelos destilados do DeepSeek-R1,
+\citealp{deepseek2025}); a \emph{on-policy}, em que o professor
+corrige as próprias gerações do aluno \citep{agarwal2024}; e a
+autodestilação, em que o professor é o próprio modelo em condição
+privilegiada\footnote{Um panorama praticante dessas três variantes nos
+modelos de fronteira de 2026 está em
+\url{https://huggingface.co/blog/sergiopaniego/distillation-2026}
+(acesso em 05/11/2026).}. A contribuição desta dissertação é uma
+instância da primeira variante --- professor caro, aluno barato,
+rótulos \emph{soft} --- transposta ao tabular com uma diferença de
+alvo: o que se transfere não é uma distribuição sobre \emph{tokens} ou
+classes, mas a distribuição preditiva de uma regressão, representada
+por quantis. Nenhum desses trabalhos de linguagem toca dados tabulares;
+o paralelo serve de contexto, não de concorrência.
+
 O trabalho que
 estabelece a destilação de \emph{foundation models} tabulares é o Pocket FM
 \citep{pocketfm2026}: alunos XGBoost/CatBoost/LightGBM/MLP treinados em

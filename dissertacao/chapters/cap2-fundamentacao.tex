@@ -769,8 +769,35 @@ calibrado produz a diagonal (o quantil 0,2 é excedido por 80\% dos alvos,
 o 0,8 por 20\%, e assim por diante); curvas acima da diagonal denunciam
 quantis altos demais (sobrecobertura), abaixo dela, baixos demais, e a
 forma em S em torno da diagonal é a assinatura de caudas mal calibradas
-com centro correto. É a leitura usada na avaliação da contribuição
-(Figura~\ref{fig:destil-calibration}). Quando a cobertura empírica foge
+com centro correto. A Figura~\ref{fig:quantis-cobertura} torna o
+mecanismo concreto com dados reais do próprio estudo de destilação: no
+painel~(a), a predição de \emph{uma} linha é uma curva de 19 quantis ---
+19 números na unidade do alvo, um por nível da grade --- e o alvo
+observado cai abaixo dos quantis de nível $\tau \geq 0{,}65$; no
+painel~(b), repetir essa contagem para todas as linhas produz a
+cobertura empírica de cada nível, e a curva resultante exibe exatamente
+a forma em S descrita acima (no nível nominal $0{,}20$ a cobertura é de
+$8{,}2\%$: caudas largas demais, centro quase perfeito). Vale sublinhar
+o que o eixo horizontal dessas curvas \emph{não} é: os níveis $\tau$
+não são probabilidades estimadas pelo modelo --- não há sigmoide nem
+\texttt{predict\_proba} de classificador envolvidos ---, e sim os
+níveis da grade, fixados pelo avaliador \emph{antes} de qualquer
+predição; o modelo responde com valores $q_\tau$ na unidade do alvo, e
+probabilidade só aparece na \emph{verificação}, como a frequência com
+que os alvos de teste caem abaixo de cada quantil prometido. É a
+leitura usada na avaliação da contribuição
+(Figura~\ref{fig:destil-calibration}).
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=\linewidth]{images/quantis_cobertura_diss.pdf}
+\caption{Da curva de quantis à cobertura (TabPFN, OOF do
+\texttt{fps\_benchmark}): (a)~a predição de uma linha; (b)~a cobertura
+empírica por nível. Fonte: \texttt{results/\allowbreak distillation/\allowbreak oof/}.}
+\label{fig:quantis-cobertura}
+\end{figure}
+
+Quando a cobertura empírica foge
 do nominal, existe um reparo pós-hoc com garantia formal: a
 \emph{calibração conformal} (\emph{split-conformal}) separa um conjunto
 de calibração, mede nele os resíduos do modelo e ajusta os limites dos
