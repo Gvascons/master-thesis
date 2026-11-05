@@ -226,3 +226,18 @@ sub-milissegundo do estudo.
 - Os resultados negativos (H1; ponto-com-TabFM) são robustos, replicados com
   dois teachers, e delimitam *quando destilar vale a pena* — contribuição em
   si, alinhada ao compromisso pré-registrado de reportar negativos.
+
+---
+
+## Adendo de fechamento — 05/11/2026
+
+O corpo acima registra o estado interino com N=15 (11/15, p=0,059,
+"sugestivo"). O programa foi **completado** com o pool elegível integral
+da CTR23 (regra pré-fixada) e os vereditos finais, auditados e vigentes
+na dissertação e no artigo AI-2, são: **retenção distribucional positiva
+em 16/20** (mediana +0,19; sinal p=0,0059; Wilcoxon 0,045), **15/19 com
+p=0,010 (Wilcoxon 0,067) na sensibilidade da errata de 19/10** (exclui o
+california de alvo binarizado); destilação pontual refutada (4/20); E1
+17/20 (p=0,0013); artefatos canônicos: `paper_retention.csv`,
+`paper_stats.csv`, `baselines_analysis.csv`. Este adendo existe para que
+nenhum leitor tome o interim N=15 como resultado final.

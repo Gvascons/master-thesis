@@ -1,5 +1,9 @@
 # Acompanhamento Individual 1 — Resumo para a reunião
 
+> **NOTA (05/11/2026):** registro histórico da fase de 11 modelos
+> (197/198). O estado vigente é 14 modelos × 18 conjuntos, 250/252 —
+> ver `programa-de-pesquisa.md` e `notebooks/TABELA_RESULTADOS.md`.
+
 **João Gabriel** · benchmark de 11 modelos × 18 datasets (OpenML) · nested CV (5×3) ·
 Optuna TPE · RTX 5080 · 197/198 experimentos (tabpfn×helena N/A: 100 classes > limite).
 

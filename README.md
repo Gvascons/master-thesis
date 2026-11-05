@@ -28,7 +28,7 @@ Fourteen models organized into three families, each receiving family-appropriate
 | | KAN | Liu et al., 2024 (ICLR 2025); vendored efficient-kan backbone |
 | | TabKAN | Eslamian, Aghaei & Cheng, 2025 (own reimplementation) |
 | **Foundation Model** | TabPFN v2.5 | Hollmann et al., 2025 |
-| | TabFM | Google Research, 2026 (blog + model card; no peer-reviewed paper as of Jul/2026) |
+| | TabFM | Google Research, 2026 (technical report arXiv:2609.37959, Sep/2026; not yet peer-reviewed) |
 
 **Preprocessing by family:**
 - **GBDT**: ordinal-encode categoricals, median-impute missing values
@@ -74,8 +74,8 @@ For each (model, dataset) pair:
   1. Hold out 20% of data as the final test set (stratified for classification)
   2. Hyperparameter tuning on the remaining 80% pool:
      - 3-fold inner cross-validation
-     - 100 Optuna TPE trials with MedianPruner
-     - TabPFN is zero-shot (no tuning)
+     - Optuna TPE trials with MedianPruner (100 for GBDTs, 25 for deep models)
+     - TabPFN and TabFM are zero-shot (no tuning)
   3. Outer evaluation with best hyperparameters:
      - 5-fold cross-validation on the pool (for variance estimation)
   4. Final evaluation:
@@ -108,7 +108,9 @@ For each (model, dataset) pair:
 │   ├── 03_statistical_tests.ipynb   # Friedman, Nemenyi, Wilcoxon, CD diagrams
 │   ├── 04_scaling_analysis.ipynb    # Performance vs dataset size and features
 │   ├── 05_cost_analysis.ipynb       # Training time and compute trade-offs
-│   └── 06_interpretability.ipynb    # Feature importance and model agreement
+│   ├── 06_interpretability.ipynb    # Feature importance and model agreement
+│   ├── 07-10_*.ipynb                # Learning curves, LODO, distillation analyses
+│   └── 00_presentation.ipynb        # Self-contained presentation deck
 ├── results/
 │   ├── raw/                    # Per-experiment JSON results (gitignored)
 │   ├── aggregated/             # Aggregated CSVs (gitignored)

@@ -5,7 +5,10 @@
 > cada frente, os critérios de conclusão e os riscos. Versionado no
 > repositório para que nada dependa de estado local. Campos entre [ ] exigem
 > confirmação do aluno/secretaria — não foram assumidos.
-> Última revisão: 19/10/2026 — ver "Estado em 19/10/2026" abaixo.
+> Última revisão: 05/11/2026 — ver "Estado em 05/11/2026 (revisão corrente)"
+> abaixo. Entregas de 04–05/11: métricas operacionais (Tabela A.13, Figura
+> 5.9), pedagogia dos quantis (Figura 2.5), onda 2026 de destilação no
+> cap. 3, dissertação em 163 pp.
 > Revisões anteriores: 06/10/2026 (dissertação COMPLETA em dissertacao/ —
 > 8 capítulos + pré-textuais + apêndices, 137 pp, auditada integralmente:
 > ~130 números recomputados sem divergência; artigos AI-1/AI-2 prontos

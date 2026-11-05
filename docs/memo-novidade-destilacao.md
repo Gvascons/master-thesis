@@ -204,3 +204,8 @@ Varredura de 15/10 (URLs e vereditos no registro da sessão):
   listagem arXiv confirmada — não toca o recorte tabular.
 - **As três lacunas (i)–(iii) do cap. 3 seguem abertas em 05/11/2026.**
   Registrado no cap. 3 (nota de método e parágrafo das datas).
+
+> Nota de rastreabilidade (05/11/2026): a varredura de **19/10/2026**
+> citada no cap. 3 está registrada em `docs/desenho-melhorias-finais.md`
+> (auditoria integral da errata), não neste memo; este memo cobre
+> 15/07, 20/07 (+ adendos 14--15/10), 04/10 e 05/11.
