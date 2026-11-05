@@ -13,7 +13,24 @@
 > FECHADO — 6 fases, N=20, ambos os testes significativos; paper draft v1
 > com 2 figuras; dissertação com caps. 2-7 em prosa).
 
-## Estado em 19/10/2026 (revisão corrente)
+## Estado em 05/11/2026 (revisão corrente)
+
+- **E7 — complementaridade por instância (22-23/10): EXECUTADO e
+  integrado** (pré-registro `docs/desenho-analise-complementaridade.md`;
+  cap. 5, Ato V, Figura 5.8). 52/52 células reproduzidas no gate de
+  sanidade (|Δ|≤1e-3; 42 com Δ=0 exato). Vereditos: H-C1 CONFIRMADA
+  (concordância mediana 0,950 TabPFN / 0,936 TabFM); H-C2, H-C3 e H-C4
+  REFUTADAS nos critérios pré-registrados — H-C4 com sinal contrário
+  (a vantagem do FM não decresce com o tamanho do conjunto; maiores
+  vitórias nos maiores conjuntos). Motivado pelas perguntas do
+  acompanhamento de 15/10 ("onde concordam/discordam; por que melhorou").
+- **Item "por que 80:20" no cap. 4** com evidência medida e versionada
+  (`results/aggregated/holdout_split_evidence.csv`); tabelas de KS por
+  conjunto (A.7) e de hiperparâmetros escolhidos (B.5–B.16) nos
+  apêndices; contexto de pré-treino do TabFM (16.384 linhas) declarado
+  no cap. 2 (fonte primária verificada em 22/10).
+
+## Estado em 19/10/2026 (revisão anterior)
 
 - **Cadeia experimental da fase final 7/7 FECHADA** (registro canônico:
   `docs/desenho-melhorias-finais.md`): E3 (utilidade de decisão,

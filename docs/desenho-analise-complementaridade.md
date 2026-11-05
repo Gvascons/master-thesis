@@ -85,7 +85,10 @@ Artefatos: `results/complementarity/preds_<modelo>_<dataset>.parquet`,
 ## 5. Adendo de execução — 23/10/2026 (pós-execução; nada acima foi alterado)
 
 Execução concluída em 23/10/2026: **52/52 células dentro do gate**
-(|Δ| ≤ 10⁻³ na métrica primária; Δ = 0 exato em 49 delas). Três registros
+(|Δ| ≤ 10⁻³ na métrica primária; Δ = 0 exato em 42 delas — retificado em
+05/11/2026: este adendo e a mensagem do commit `fadfbb0` diziam "49"; a
+contagem correta do `sanity_check.csv` é 42, com 9 células do TabPFN
+entre 2×10⁻⁷ e 6×10⁻⁶ e uma do TabFM em 4,8×10⁻⁴). Três registros
 operacionais, sem efeito nos critérios:
 
 1. O custo real excedeu a estimativa da seção 3 (~20 h de parede vs. ~2 h
