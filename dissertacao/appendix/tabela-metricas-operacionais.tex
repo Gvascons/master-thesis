@@ -1,0 +1,37 @@
+% ============================================================
+% ARQUIVO GERADO - NAO EDITAR A MAO.
+% Gerado por scripts/secondary_metrics_report.py a partir de
+% results/aggregated/secondary_metrics_holdout.csv.
+% Regenerar: uv run python scripts/secondary_metrics_report.py
+% ============================================================
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\caption[Métricas operacionais no \emph{hold-out} --- binárias]{Métricas operacionais no \emph{hold-out} (limiar 0,5; classe de interesse = minoritária). Fonte: \texttt{secondary\_metrics\_holdout.csv}.}
+\label{tab:app-operacionais}
+\begin{tabular}{lr ccc ccc ccc}
+\toprule
+ & & \multicolumn{3}{c}{Precisão (min.)} & \multicolumn{3}{c}{Recall (min.)} & \multicolumn{3}{c}{Acurácia balanceada} \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}\cmidrule(lr){9-11}
+\emph{Conjunto} & \%min. & XGB & PFN & FM & XGB & PFN & FM & XGB & PFN & FM \\
+\midrule
+\texttt{adult} & 23{,}9 & 0{,}795 & 0{,}783 & \textbf{0{,}803} & 0{,}648 & 0{,}618 & \textbf{0{,}651} & 0{,}798 & 0{,}782 & \textbf{0{,}800} \\
+\texttt{amazon\_\allowbreak employee} & 5{,}8 & \textbf{0{,}706} & 0{,}659 & 0{,}621 & 0{,}032 & 0{,}214 & \textbf{0{,}298} & 0{,}515 & 0{,}603 & \textbf{0{,}643} \\
+\texttt{bank\_\allowbreak marketing} & 11{,}7 & 0{,}647 & \textbf{0{,}676} & 0{,}660 & 0{,}466 & 0{,}526 & \textbf{0{,}568} & 0{,}716 & 0{,}747 & \textbf{0{,}765} \\
+\texttt{cardiovascular\_\allowbreak disease} & 50{,}0 & \textbf{0{,}754} & 0{,}751 & \textbf{0{,}754} & 0{,}693 & \textbf{0{,}700} & 0{,}698 & 0{,}734 & 0{,}734 & \textbf{0{,}735} \\
+\texttt{credit\_\allowbreak g} & 30{,}0 & \textbf{0{,}667} & 0{,}659 & 0{,}630 & 0{,}433 & 0{,}450 & \textbf{0{,}483} & 0{,}670 & 0{,}675 & \textbf{0{,}681} \\
+\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit} & 6{,}7 & \textbf{0{,}615} & 0{,}592 & 0{,}596 & 0{,}162 & \textbf{0{,}181} & 0{,}163 & 0{,}578 & \textbf{0{,}586} & 0{,}578 \\
+\texttt{higgs} & 47{,}1 & 0{,}716 & 0{,}715 & \textbf{0{,}746} & 0{,}708 & 0{,}700 & \textbf{0{,}732} & 0{,}729 & 0{,}725 & \textbf{0{,}755} \\
+\texttt{magictelescope} & 50{,}0 & 0{,}824 & 0{,}848 & \textbf{0{,}865} & 0{,}886 & 0{,}907 & \textbf{0{,}928} & 0{,}848 & 0{,}873 & \textbf{0{,}892} \\
+\texttt{phoneme} & 29{,}3 & 0{,}808 & 0{,}827 & \textbf{0{,}876} & 0{,}785 & 0{,}801 & \textbf{0{,}849} & 0{,}854 & 0{,}866 & \textbf{0{,}899} \\
+\texttt{telco\_\allowbreak customer\_\allowbreak churn} & 26{,}5 & 0{,}642 & \textbf{0{,}678} & 0{,}559 & 0{,}570 & 0{,}484 & \textbf{0{,}663} & 0{,}727 & 0{,}700 & \textbf{0{,}737} \\
+\midrule
+ & & \multicolumn{3}{c}{Precisão macro} & \multicolumn{3}{c}{Recall macro} & \multicolumn{3}{c}{F1 macro} \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}\cmidrule(lr){9-11}
+\texttt{covertype} & --- & 0{,}908 & 0{,}907 & \textbf{0{,}943} & 0{,}857 & 0{,}887 & \textbf{0{,}927} & 0{,}879 & 0{,}896 & \textbf{0{,}935} \\
+\texttt{jannis} & --- & 0{,}668 & 0{,}682 & \textbf{0{,}742} & 0{,}552 & 0{,}579 & \textbf{0{,}663} & 0{,}566 & 0{,}599 & \textbf{0{,}690} \\
+\bottomrule
+\end{tabular}
+\end{table}

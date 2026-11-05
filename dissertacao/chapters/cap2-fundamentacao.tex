@@ -3,7 +3,8 @@
 
 Este capítulo tem como objetivo construir, do concreto ao abstrato, o
 vocabulário técnico de que o restante da dissertação precisa: os dados
-tabulares e sua heterogeneidade constitutiva, as árvores de decisão e o
+tabulares e sua heterogeneidade constitutiva, as métricas que medem um
+classificador e os compromissos entre elas, as árvores de decisão e o
 \emph{gradient boosting}, as três linhagens do aprendizado profundo
 tabular, os \emph{foundation models} e o aprendizado em contexto, a
 destilação de conhecimento, o ferramental da regressão distribucional e
@@ -93,6 +94,108 @@ o modelo devolve uma distribuição preditiva completa --- quantis,
 intervalos, densidades --- da qual se exige calibração. A distinção parece
 sutil agora, mas é o eixo da contribuição do Capítulo~\ref{chap:destilacao}, e a
 Seção~\ref{sec:fund-distribucional} lhe dedica o ferramental próprio.
+
+\section{Medir um classificador: da matriz de confusão à ROC-AUC}
+\label{sec:fund-metricas-clf}
+
+Antes de apresentar os competidores, fixemos a régua. Toda a comparação
+dos Capítulos~\ref{chap:benchmark} e~\ref{chap:framework} depende de medir
+classificadores, e as métricas envolvidas não são intercambiáveis: cada
+uma responde a uma pergunta diferente, e escolher a errada pode consagrar
+um modelo inútil. Esta seção constrói as métricas de classificação a
+partir do objeto mais elementar da avaliação --- a matriz de confusão ---
+e justifica a escolha que ancora o benchmark.
+
+Num problema binário, convencione-se chamar de \emph{positiva} a classe
+de interesse --- no \texttt{adult}, renda acima de 50 mil dólares; num
+diagnóstico, a doença; em crédito, a inadimplência. Confrontada com o
+rótulo verdadeiro, cada predição cai em uma de quatro células:
+\emph{verdadeiro positivo} (VP, o modelo acusa e é), \emph{falso positivo}
+(FP, acusa e não é), \emph{falso negativo} (FN, não acusa e é) e
+\emph{verdadeiro negativo} (VN). A tabela $2\times 2$ dessas contagens é a
+\emph{matriz de confusão}, e toda métrica de decisão é uma razão entre
+suas células \citep{hastie2009,fawcett2006}.
+
+A razão mais imediata é a \emph{acurácia},
+$(\mathrm{VP}+\mathrm{VN})/n$ --- a fração de acertos. Ela é também a mais
+traiçoeira, porque ignora \emph{como} os erros se distribuem entre as
+classes. O exemplo não é hipotético: no conjunto
+\texttt{amazon\_employee} deste benchmark, em que apenas 5,8\% dos pedidos
+de acesso são negados, o XGBoost atinge 94,3\% de acurácia no
+\emph{hold-out} --- e detecta somente 3,2\% dos pedidos que deveriam ser
+negados. Um modelo que respondesse ``aprovado'' para todo pedido teria
+acurácia quase idêntica e utilidade nula. Sob desbalanceamento, a
+acurácia mede sobretudo a prevalência, não o modelo.
+
+As métricas que enxergam essa assimetria olham as classes em separado. O
+\emph{recall} (ou \emph{sensibilidade}),
+$\mathrm{VP}/(\mathrm{VP}+\mathrm{FN})$, pergunta: \emph{dos casos
+positivos que existem, quantos o modelo encontrou?} A \emph{precisão},
+$\mathrm{VP}/(\mathrm{VP}+\mathrm{FP})$, pergunta o inverso: \emph{dos
+alarmes que o modelo disparou, quantos eram verdadeiros?} A
+\emph{especificidade}, $\mathrm{VN}/(\mathrm{VN}+\mathrm{FP})$, é o
+recall da classe negativa; a \emph{acurácia balanceada} é a média entre
+sensibilidade e especificidade, imune à prevalência; e a média harmônica
+de precisão e recall, o \emph{F1}, resume o par em um número --- útil como
+síntese, opaco como diagnóstico, porque esconde \emph{qual} dos dois
+componentes falhou.
+
+Qual delas importa depende da assimetria de custos do problema, que é uma
+propriedade da aplicação, não do modelo. Num rastreamento de câncer, o
+falso negativo é o erro caro --- dizer ``está tudo bem'' a quem está
+doente adia o tratamento --- e a métrica de guarda é o recall, mesmo ao
+preço de mais alarmes falsos; num filtro de spam, o falso positivo é que é
+intolerável (um contrato legítimo na lixeira), e a precisão comanda. Por
+isso reportar uma única métrica de limiar, sem declarar o custo que a
+justifica, é contar meia história --- e por isso o benchmark as reporta em
+conjunto (Capítulo~\ref{chap:metodologia}).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{images/metricas_clf_diss.png}
+\caption{Curva ROC do XGBoost no \emph{hold-out} do \texttt{adult} (a) e
+precisão e recall em função do limiar (b). Fonte: elaboração própria.}
+\label{fig:roc-adult}
+\end{figure}
+
+Há, porém, um fato que a matriz de confusão esconde: ela não é propriedade
+do modelo, e sim do par modelo--limiar. Os classificadores deste trabalho
+devolvem uma \emph{probabilidade} $\hat p(\mathbf{x})$, e a matriz só
+nasce quando se escolhe o ponto de corte que converte probabilidade em
+decisão. Mover o corte desliza erros de um tipo para o outro: no
+\texttt{adult}, baixá-lo de 0,5 para 0,25 eleva o recall de 0,648 para
+0,860 ao custo de mais que triplicar a taxa de falsos positivos (de 0,052
+para 0,171); subi-lo a 0,75 faz o movimento oposto
+(Figura~\ref{fig:roc-adult}b). Nenhum desses pontos é ``o'' desempenho do
+modelo --- são pontos de operação distintos do mesmo modelo.
+
+A \emph{curva ROC} resolve a arbitrariedade varrendo todos os limiares de
+uma vez: para cada corte, marca a taxa de verdadeiros positivos (recall)
+contra a taxa de falsos positivos ($1-$ especificidade); o traçado
+resultante descreve tudo o que o modelo pode oferecer, de conservador a
+liberal (Figura~\ref{fig:roc-adult}a). A área sob essa curva, a
+\emph{ROC-AUC}, resume a qualidade do \emph{ranqueamento} em um número com
+interpretação exata: é a probabilidade de que um positivo sorteado ao
+acaso receba escore maior que um negativo sorteado ao acaso
+\citep{hanley1982}. O acaso vale 0,5; a perfeição, 1. Por não depender de
+limiar nem de prevalência \citep{fawcett2006}, a AUC compara modelos ---
+não pontos de operação --- e por isso ancora as conclusões do benchmark,
+com as métricas de limiar como leitura complementar
+(Seção~\ref{sec:met-metricas}).
+
+A AUC tem seu próprio ponto cego: mede a \emph{ordem} dos escores, não o
+seu valor --- um modelo pode ranquear perfeitamente dizendo 0,51 para
+todo positivo e 0,49 para todo negativo, com probabilidades inúteis como
+probabilidades. A grandeza que cobra esse acerto é a \emph{log-loss},
+$-\frac{1}{n}\sum_i \log \hat p_i(y_i)$, uma \emph{regra de pontuação
+própria}: seu valor esperado é minimizado por quem reporta a
+probabilidade verdadeira \citep{gneiting2007}, o que pune tanto o erro
+quanto a confiança mal calibrada --- e a torna a primária natural do caso
+multiclasse, onde ``positivo'' deixa de ser único e as taxas acima se
+leem por classe (macro-médias). Essa mesma exigência --- acertar a
+incerteza, não apenas a ordem --- reaparece em escala contínua na
+regressão distribucional, cujo ferramental a
+Seção~\ref{sec:fund-distribucional} desenvolve.
 
 \section{Das árvores de decisão ao \emph{gradient boosting}}
 \label{sec:fund-gbdt}
@@ -657,7 +760,17 @@ condição necessária e não suficiente: um intervalo absurdamente largo cobre
 sempre e não informa nada. Por isso a cobertura é lida junto com a
 \emph{afiação} (\emph{sharpness}) --- a largura média dos intervalos: entre
 modelos igualmente calibrados, o de intervalos mais estreitos é o mais
-informativo \citep{gneiting2007calib}. Quando a cobertura empírica foge
+informativo \citep{gneiting2007calib}. O diagnóstico análogo por quantil é
+a \emph{curva de confiabilidade}: para cada nível nominal $\tau$ da grade,
+mede-se a \emph{cobertura empírica} $\hat P(y \leq q_\tau)$ --- a fração
+dos alvos de teste que caem abaixo do quantil $\tau$ predito --- e
+plota-se o resultado contra o próprio $\tau$. Um modelo perfeitamente
+calibrado produz a diagonal (o quantil 0,2 é excedido por 80\% dos alvos,
+o 0,8 por 20\%, e assim por diante); curvas acima da diagonal denunciam
+quantis altos demais (sobrecobertura), abaixo dela, baixos demais, e a
+forma em S em torno da diagonal é a assinatura de caudas mal calibradas
+com centro correto. É a leitura usada na avaliação da contribuição
+(Figura~\ref{fig:destil-calibration}). Quando a cobertura empírica foge
 do nominal, existe um reparo pós-hoc com garantia formal: a
 \emph{calibração conformal} (\emph{split-conformal}) separa um conjunto
 de calibração, mede nele os resíduos do modelo e ajusta os limites dos

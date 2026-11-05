@@ -597,7 +597,27 @@ sob lote de predição reduzido no TabFM). O instrumento por par é
 o teste exato de McNemar \citep{mcnemar1947} sobre as instâncias
 discordantes, acompanhado
 da taxa de concordância e do saldo de vitórias por quintil de margem do
-XGBoost.
+XGBoost --- a \emph{margem} de uma instância binária é $|\hat p - 0{,}5|$,
+a distância da probabilidade prevista ao ponto de indecisão: margem baixa
+significa que a árvore hesita.
+
+As quatro hipóteses, todas direcionais e com critério de falsificação
+datado, merecem enunciado explícito, porque os vereditos abaixo se medem
+contra elas. \textbf{H-C1} (redundância dominante): os modelos
+compartilham a maior parte do sinal --- concordância de rótulo acima de
+85\% na mediana dos conjuntos; refutada se ficar abaixo. \textbf{H-C2} (o
+ganho vive na incerteza): as vitórias do FM concentram-se onde o XGBoost
+hesita --- saldo maior no quintil de menor margem que no de maior, na
+maioria das binárias (teste de sinal unilateral, $\alpha=0{,}05$).
+\textbf{H-C3} (classe minoritária): o saldo do FM é maior na classe rara
+que na majoritária, na maioria das binárias (mesmo teste). \textbf{H-C4}
+(eco das curvas de aprendizado): a vantagem do FM \emph{decresce} com o
+tamanho do \emph{pool} de treino --- como sugeriria o prior de pré-treino
+com contexto limitado --- isto é, Spearman negativo entre tamanho e
+vantagem nas 17 células. A interpretação foi comprometida de antemão no
+pré-registro: confirmar H-C1 com H-C2/H-C3 sustentaria ``o FM adiciona
+informação nas regiões de incerteza e minoria''; refutá-las deslocaria a
+explicação para outro lugar.
 
 \begin{figure}[htbp]
 \centering
@@ -654,6 +674,32 @@ tamanho do \emph{pool} e vantagem é $+0{,}14$ (TabPFN) e $+0{,}26$
 do TabFM estão justamente nos \emph{maiores} conjuntos da grade. O
 receio natural de que o \emph{foundation model} só brilhe no regime de
 poucos dados não encontra apoio aqui.
+
+As mesmas predições por instância permitem abrir a matriz de confusão dos
+três modelos e traduzir esses saldos na linguagem operacional da
+Seção~\ref{sec:fund-metricas-clf} --- precisão, recall e acurácia
+balanceada no limiar padrão, com a classe minoritária como classe de
+interesse (Tabela~\ref{tab:app-operacionais} do Apêndice~\ref{app:tabelas};
+artefato \texttt{secondary\_\allowbreak metrics\_\allowbreak holdout.csv}). A tradução é
+instrutiva duas vezes. No \texttt{amazon\_\allowbreak employee}, as acurácias são
+quase indistinguíveis (0{,}943 a 0{,}949), mas o recall da classe
+minoritária salta de 0{,}032 (XGBoost) para 0{,}214 (TabPFN) e 0{,}298
+(TabFM) --- o XGBoost detecta 3 em cada 100 pedidos que deveriam ser
+negados; o TabFM, 30 --- ao preço de alguma precisão (0{,}706 contra
+0{,}621): numa aplicação em que o falso negativo é o erro caro, a
+diferença que a acurácia não vê é a que importa. E no
+\texttt{telco\_\allowbreak customer\_\allowbreak churn} a escolha da métrica
+\emph{inverte o veredito}: o TabFM perde a franja no McNemar e perde em
+acurácia (0{,}771 contra 0{,}801), mas tem o maior recall de minoritária
+(0{,}663 contra 0{,}570) e a maior acurácia balanceada (0{,}737 contra
+0{,}727) --- o ``perdedor'' do saldo líquido é o modelo que mais clientes
+em risco de evasão encontra. Em acurácia balanceada, aliás, o TabFM é o
+melhor dos três em 9 das 10 binárias. Nenhum desses números ranqueia
+modelos --- o limiar não foi otimizado e o custo de cada erro pertence à
+aplicação ---, mas eles tornam concreto o que a tese multicritério do
+capítulo afirma em abstrato: qual modelo ``ganha'' depende da métrica que
+a aplicação tem razões para maximizar, e um benchmark honesto reporta as
+duas camadas em vez de escolher pela aplicação.
 
 Na regressão, a leitura por instância é descritiva e aponta na mesma
 direção dupla: o erro absoluto do \emph{foundation model} é menor que o

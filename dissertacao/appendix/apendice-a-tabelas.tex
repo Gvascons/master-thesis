@@ -84,4 +84,20 @@ consolidados} por modelo (Tabela~\ref{tab:app-custos}); e a
 (Tabela~\ref{tab:app-foldvar}), que sustenta a leitura de pior-caso do
 Capítulo~\ref{chap:benchmark}.
 
+Por fim, a Tabela~\ref{tab:app-operacionais} abre a matriz de confusão
+dos três protagonistas da pergunta central (XGBoost, TabPFN e TabFM) no
+\emph{hold-out}: precisão e recall da classe minoritária e acurácia
+balanceada, no limiar padrão de 0,5 (argmax), sem nenhuma otimização de
+corte --- o retrato operacional que complementa a leitura
+\emph{threshold-free} da AUC, conforme o trade-off discutido na
+Seção~\ref{sec:fund-metricas-clf} e declarado na
+Seção~\ref{sec:met-metricas}. A tabela é computada por
+\texttt{scripts/\allowbreak secondary\_\allowbreak metrics\_\allowbreak report.py} sobre as predições por
+instância do experimento de complementaridade (Seção~\ref{sec:cap5-ato5}),
+com um portão de sanidade próprio: a acurácia recomputada de cada célula
+reproduz a do agregado do benchmark (divergência $\leq 10^{-3}$ em todas
+as 37 células). F1 e especificidade por célula estão no artefato
+(\texttt{secondary\_\allowbreak metrics\_\allowbreak holdout.csv}).
+
 \input{appendix/tabelas-geradas}
+\input{appendix/tabela-metricas-operacionais}

@@ -429,7 +429,11 @@ caem majoritariamente fora da faixa original $[-1, 1]$ proposta em
 
 A regra geral: a métrica primária de cada tarefa é \emph{threshold-free} e
 sensível à qualidade probabilística do modelo; as secundárias cobrem os
-ângulos que a primária não vê. A Tabela~\ref{tab:metricas} resume o esquema.
+ângulos que a primária não vê. As definições e o racional pedagógico ---
+matriz de confusão, o trade-off precisão--recall e a leitura da ROC-AUC
+como qualidade de ranqueamento --- estão na
+Seção~\ref{sec:fund-metricas-clf}; a Tabela~\ref{tab:metricas} resume o
+esquema adotado.
 
 \begin{table}[htbp]
 \centering
@@ -459,7 +463,7 @@ Regressão (5) & RMSE ($\downarrow$) & MAE, $R^2$ &
 \end{tabular}
 \end{table}
 
-Três observações completam o quadro. Primeiro, a acurácia é enganosa sob
+Quatro observações completam o quadro. Primeiro, a acurácia é enganosa sob
 desbalanceamento --- um classificador trivial ``acerta'' 94\% em um conjunto
 16:1 --- e descarta toda a informação probabilística, que é precisamente um
 dos eixos que distinguem as famílias; por isso é reportada, mas nunca usada
@@ -469,6 +473,22 @@ padrão da indústria; e a comparação RMSE$\times$MAE expõe quando o erro é
 dominado por caudas. Terceiro, comparações de RMSE \emph{entre} conjuntos
 são evitadas por não serem comensuráveis --- o $R^2$ cumpre o papel de
 leitura livre de escala.
+
+Quarto, as métricas de \emph{limiar} --- precisão, recall, especificidade,
+acurácia balanceada --- não ranqueiam modelos neste estudo, porque
+dependem de um ponto de corte cuja escolha pertence à aplicação e à sua
+assimetria de custos, não ao benchmark
+(Seção~\ref{sec:fund-metricas-clf}); mas tampouco são omitidas, porque é
+nelas que o custo operacional de um erro aparece. Para os três
+protagonistas da pergunta central (XGBoost, TabPFN e TabFM), as predições
+por instância do experimento de complementaridade permitem abrir a matriz
+de confusão completa no \emph{hold-out}, no limiar padrão de 0,5 e com a
+classe minoritária como classe de interesse --- sem otimização de corte,
+com portão de sanidade contra o agregado do benchmark. A tabela resultante
+está no Apêndice~\ref{app:tabelas} (Tabela~\ref{tab:app-operacionais}), o
+artefato em \texttt{secondary\_\allowbreak metrics\_\allowbreak holdout.csv}, e a leitura
+substantiva --- o que o desbalanceamento esconde da acurácia e o que a
+escolha da métrica muda nos vereditos --- na Seção~\ref{sec:cap5-ato5}.
 
 \section{Protocolo de inferência estatística}
 \label{sec:met-estatistica}
