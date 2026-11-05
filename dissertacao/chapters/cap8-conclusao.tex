@@ -68,10 +68,12 @@ O terceiro movimento atacou o preço, e atacou-o seletivamente, porque a
 evidência mostrou que ele não é removível por inteiro. A destilação
 \emph{pontual} --- treinar um aluno rápido nas médias do professor ---
 falha em escala de \emph{pool} realista com qualquer um dos dois professores
-testados: o que o professor sabe sobre a média, um GBDT ajustado aprende
-sozinho dos rótulos brutos. O que o professor carrega e o aluno não
-aprende sozinho é a \emph{forma} da distribuição preditiva --- e é isso
-que se destila. A transferência das curvas de quantis do TabPFN para um
+testados: o essencial do que o professor sabe sobre a média, um GBDT
+ajustado aprende sozinho dos rótulos brutos --- a vantagem pontual que
+o líder retém existe, mas é uma franja pequena e heterogênea
+(Seção~\ref{sec:cap5-ato5}) que os rótulos pontuais não transferem. O
+que o professor carrega, o aluno não aprende sozinho e a destilação
+transfere de fato é a \emph{forma} da distribuição preditiva. A transferência das curvas de quantis do TabPFN para um
 aluno de microssegundos retém mediana de 19\% da vantagem de CRPS do
 professor, positiva em 16 de 20 conjuntos (teste de sinal unilateral
 $p=0{,}006$; 15 de 19 na sensibilidade que exclui o conjunto de alvo
@@ -91,14 +93,20 @@ enunciadas no Capítulo~\ref{chap:introducao} recebem, ao final do
 percurso, respostas diretas. \textbf{QP1} --- \emph{o empate de acurácia entre
 as famílias de modelos tabulares sobrevive a um protocolo rigoroso e à
 chegada da geração 2026 de foundation models?} O Capítulo~\ref{chap:benchmark} responde em
-dois tempos: dentro da geração anterior a 2026, não --- o topo é
+dois tempos: dentro da geração anterior a 2026, sim --- o topo é
 equivalência prática positivamente aferida (8/10 equivalentes sob ROPE
 $\pm0{,}01$; sensibilidade $0{,}005/0{,}01/0{,}02 \to 2/8/10$), com 80\%
-da variância de \emph{rank} intrafamília; entre gerações, sim --- o
+da variância de \emph{rank} intrafamília; entre gerações, não --- o
 paradigma pré-treinado separa-se do pelotão (TabFM com \emph{ranks}
 médios 2,7/1,0/1,2 nas três tarefas; TabPFN como vice consistente),
 sustentado pela consistência entre conjuntos e pelo instrumento
-bayesiano, não pelo \emph{post-hoc} frequentista de baixo poder.
+bayesiano, não pelo \emph{post-hoc} frequentista de baixo poder. A
+camada por instância (Seção~\ref{sec:cap5-ato5}) diz ainda \emph{onde}
+a quebra mora: XGBoost e \emph{foundation models} concordam em
+${\ge}93{,}6\%$ das instâncias (mediana), a franja disputada é
+convertida de forma fortemente heterogênea entre conjuntos, e as
+explicações fáceis --- margem baixa, classe minoritária, poucos dados
+--- foram refutadas sob critérios pré-registrados.
 \textbf{QP2} --- \emph{que artefato de decisão um benchmark com $N$
 realista de conjuntos consegue, honestamente, sustentar --- um roteador
 aprendido ou uma política por restrições --- e como essa resposta muda
@@ -106,8 +114,10 @@ quando a decisão pondera acurácia e custo?} As reversões
 condicionais são reais --- o aprendizado profundo recente toma o topo
 multiclasse (descritivo, $N{=}3$), os GBDTs ganham vantagem sob
 desbalanceamento severo, o TabPFN domina o regime de poucos dados
-($n \leq 4.000$), e o cruzamento GBDT$\leftrightarrow$DL por tamanho é
-específico por conjunto ---, mas o Capítulo~\ref{chap:framework} mostra
+($n \leq 4.000$; subamostragem intra-conjunto --- a vantagem dos
+\emph{foundation models} não se restringe a conjuntos pequenos,
+Seção~\ref{sec:cap5-ato5}), e o cruzamento GBDT$\leftrightarrow$DL por
+tamanho é específico por conjunto ---, mas o Capítulo~\ref{chap:framework} mostra
 que essa variação \emph{não é roteável} por meta-características no regime de
 $N$ pequeno: a forma validada de usá-la é um arcabouço de restrições
 verificáveis antes de qualquer treino (latência, limites arquiteturais,
@@ -148,6 +158,16 @@ conforme o contrato de conduta do programa
     TabPFN~$\times$~TabFM sob protocolo idêntico --- enquadrada como
     replicação inter-laboratórios do paradigma, com versões fixadas e
     políticas espelhadas.
+  \item \textbf{Análise de complementaridade por instância (evidência;
+    Capítulo~\ref{chap:benchmark}, Seção~\ref{sec:cap5-ato5}).}
+    Pré-registrada com critérios de falsificação datados e reprodução
+    exata dos modelos finais do benchmark (52/52 células em \emph{gate}
+    de sanidade), estabelece que XGBoost e \emph{foundation models}
+    concordam em ${\ge}93{,}6\%$ das instâncias (mediana), que a
+    vantagem do FM é fortemente heterogênea entre conjuntos (McNemar
+    exato por par) e --- como negativos informativos --- refuta as
+    explicações de margem baixa, classe minoritária e vantagem restrita
+    a poucos dados (esta última com sinal contrário).
   \item \textbf{Teste independente desfavorável da família
     Kolmogorov--Arnold (evidência negativa;
     Capítulo~\ref{chap:benchmark}).} No primeiro confronto da família
@@ -523,8 +543,9 @@ Ao fim, o que esta dissertação oferece não é um vencedor, e sim um mapa
 datado e verificável: a evidência de que a pergunta de uma década
 expirou, um arcabouço que converte essa evidência em decisões sob
 restrições explícitas, e uma regra --- testada também nos seus
-fracassos --- para transferir ao regime de microssegundos a única coisa
-que o novo líder sabe e os modelos baratos não aprendem sozinhos. Cada
+fracassos --- para transferir ao regime de microssegundos a parte
+destilável do que o novo líder sabe e os modelos baratos não aprendem
+sozinhos: a forma da sua distribuição preditiva. Cada
 número aqui citado rastreia a um artefato versionado, cada alegação de
 novidade carrega a data em que foi verificada, e cada limitação
 declarada é um convite concreto de continuação. Num campo que se move em

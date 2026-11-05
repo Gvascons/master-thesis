@@ -132,10 +132,13 @@ componente. Os mesmos alunos-quantil \emph{hard} e \emph{soft} dos 20
 conjuntos (3 sementes) foram avaliados com e sem a ordenação pós-hoc
 dos 19 quantis preditos. O cruzamento de quantis é a regra, não a
 exceção: a fração mediana de linhas do \emph{hold-out} com ao menos um
-cruzamento é de 96,2\% (mínimo 0, máximo 100\%). O reparo melhora o
-CRPS em 20 de 20 conjuntos no braço \emph{hard} (teste de sinal
-unilateral $p<10^{-5}$) e em 18 de 20 no \emph{soft} ($p=0{,}0002$,
-unilateral --- a mesma convenção direcional de todo o trabalho), e aproxima o
+cruzamento é de 96,2\% (mínimo 0, máximo 100\%). O reparo melhora ou
+empata o CRPS em 20 de 20 conjuntos nos dois braços; a melhora
+estrita é de 20 de 20 no braço \emph{hard} (teste de sinal
+unilateral $p<10^{-5}$) e de 18 de 20 no \emph{soft} ($p=0{,}0002$,
+unilateral --- a mesma convenção direcional de todo o trabalho ---,
+com dois empates exatos: \texttt{online\_news} e
+\texttt{pumadyn32nh}), e aproxima o
 PICP90 do nominal em 19 de 20 e 14 de 20, respectivamente. O efeito
 mediano, porém, é pequeno --- 0,7\% (\emph{hard}) e 0,3\% (\emph{soft})
 de CRPS relativo, com cauda até 28,8\% nos conjuntos em que o
@@ -152,9 +155,13 @@ resultado): se os \emph{dois} alunos recebem calibração
 \emph{split-conformal} por quantil (estilo CQR, com 10\% do
 \emph{pool} reservado para calibração), a vantagem do destilado
 sobrevive? Em 5 conjuntos (3 de retenção positiva, 2 reveses; 3
-sementes), a conformalização conserta a cobertura dos dois braços ---
-PICP90 de 0,77--0,93 para 0,89--0,95 no \emph{hard} e de 0,71--0,89
-para 0,88--0,91 no \emph{soft} --- mas deixa o CRPS essencialmente
+sementes), a conformalização conserta a cobertura --- no critério de a
+distância ao nominal diminuir --- em 5 de 5 conjuntos no braço
+\emph{soft} e 4 de 5 no \emph{hard} (PICP90 de 0,77--0,93 para
+0,89--0,95 no \emph{hard} e de 0,71--0,89 para 0,88--0,91 no
+\emph{soft}; a exceção é o california-\emph{hard}, que já sobre-cobria
+e cuja cobertura ela afasta do nominal: distância de PICP80 de
+$8{,}06$ para $9{,}63$~p.p.), mas deixa o CRPS essencialmente
 intacto (movimentos inferiores a 1\% em todos os 10 braços). A
 vantagem de forma do destilado sobrevive integralmente
 (\texttt{cpu\_activity} 1,18 \emph{vs.} 1,29; \texttt{cps88wages}

@@ -315,16 +315,16 @@ cruzada aninhada (seleção de hiperparâmetros restrita ao laço interno).}
     degradaria a precisão com a raiz de $n$; ampliá-lo roubaria treino.
     Do lado do \emph{treino}, as curvas de aprendizado medidas
     (Figura~\ref{fig:cap5-curvas}) mostram que, na região do corte, a
-    métrica primária já está quase plana --- da metade do \emph{pool}
-    para o \emph{pool} inteiro, a melhora relativa mediana é de 1{,}2\%
+    métrica primária já está quase plana --- do ponto medido da grade
+    mais próximo da metade do \emph{pool} (40--46\% na prática) para o
+    \emph{pool} inteiro, a melhora relativa mediana é de 1{,}2\%
     (máximo: 5{,}1\%, RealMLP no \texttt{jannis}) --- mas ainda crescente
     justamente para as redes famintas de amostra: ceder treino ao teste
     penalizaria seletivamente uma família, o que feriria a justiça da
-    comparação. A proporção foi fixada antes de qualquer resultado, é
-    idêntica para os 14 modelos e segue a convenção dominante da área;
-    dentro da faixa razoável (70:30 a 90:10), a leitura por postos é
-    insensível à escolha, pois todos os modelos ganham e perdem dados
-    juntos.
+    comparação. A proporção foi fixada antes de qualquer resultado e
+    segue a convenção dominante da área; por ser idêntica para os 14
+    modelos, todos ganham e perdem dados juntos, o que preserva o
+    pareamento das comparações por postos.
   \item \textbf{Validação cruzada aninhada --- por quê.} O laço externo
     (5 \emph{folds}) mede o modelo; o laço interno (3 \emph{folds})
     seleciona hiperparâmetros. Selecionar e medir nos mesmos \emph{folds}
@@ -364,7 +364,11 @@ cruzada aninhada (seleção de hiperparâmetros restrita ao laço interno).}
     assim não vencem os GBDTs ali) não toca nenhuma conclusão. Os GBDTs
     usam parada antecipada interna (50 rodadas sobre conjunto de
     validação), simétrica em espírito à parada dos modelos profundos. Os
-    espaços de busca por modelo estão no Apêndice~\ref{app:espacos-busca}.
+    espaços de busca por modelo estão no Apêndice~\ref{app:espacos-busca},
+    e os valores efetivamente escolhidos por conjunto, no
+    Apêndice~\ref{app:hp-escolhidos} --- alguns encostam na borda do
+    espaço (p.~ex., \texttt{n\_estimators} próximo do teto de 2\,000),
+    limitação declarada do desenho do espaço.
     A direção de otimização segue a métrica primária de cada tarefa
     (maximização de ROC-AUC; minimização de \emph{log-loss} e RMSE),
     verificada em auditoria de código
@@ -473,7 +477,10 @@ Os testes empregados --- Friedman, Nemenyi, Wilcoxon, a análise bayesiana
 com ROPE --- foram apresentados em profundidade no
 Capítulo~\ref{chap:fundamentacao}; esta seção declara \emph{o protocolo de
 aplicação}: quais testes, em que ordem, com que correções e com que análises
-de sensibilidade. A cadeia segue a prática canônica para comparação de
+de sensibilidade. A ela soma-se, no nível da instância, o teste exato de
+McNemar sobre os pares discordantes \citep{mcnemar1947} --- instrumento da
+análise de complementaridade pré-registrada que o
+Capítulo~\ref{chap:benchmark} reporta (Seção~\ref{sec:cap5-ato5}). A cadeia segue a prática canônica para comparação de
 múltiplos classificadores em múltiplos conjuntos \citep{demsar2006,
 benavoli2017}, acrescida de uma camada bayesiana e de uma decomposição de
 variância. Toda a cadeia foi submetida a auditoria de corretude (julho de

@@ -29,8 +29,10 @@ migra para custo, latência, robustez e estrutura da tarefa; a geração 2026
 quebra esse empate --- o TabFM, \emph{zero-shot}, lidera o rank médio nas
 três tarefas, ao custo de quatro a cinco ordens de magnitude em latência
 de inferência. Além disso, discutem-se o teste independente desfavorável
-da família Kolmogorov--Arnold e as reversões condicionais que alimentam o
-arcabouço de decisão do Capítulo~\ref{chap:framework}.
+da família Kolmogorov--Arnold, as reversões condicionais que alimentam o
+arcabouço de decisão do Capítulo~\ref{chap:framework} e, fechando o
+capítulo, a análise de complementaridade por instância que explica
+\emph{onde} a quebra do empate acontece.
 
 \section{Cobertura e organização da evidência}
 \label{sec:cap5-cobertura}
@@ -74,7 +76,8 @@ incorporados na extensão: o \emph{foundation model} TabFM
 núcleo de 11 --- é sobre ele que a máxima ``\emph{boosting} sempre
 vence'' \citep{grinsztajn2022,mcelfresh2023} foi formulada e é sobre ele
 que o empate se estabelece; o Ato~IV lê a grade completa e mostra o que a
-extensão muda.
+extensão muda; e o Ato~V desce ao nível da instância para localizar onde
+os \emph{foundation models} e os GBDTs divergem.
 
 Para a leitura autocontida deste capítulo, vale recapitular o essencial
 do Capítulo~\ref{chap:metodologia}: validação cruzada aninhada ($5$
@@ -93,9 +96,11 @@ Seção~\ref{sec:met-protocolo} --- o viés residual favorece o DL, que
 ainda assim não vence), e os \emph{foundation models} entram
 \emph{zero-shot} --- sem ajuste algum --- porque essa entrada é a
 própria alegação de paradigma sob teste; suas configurações de
-inferência (\emph{ensemble} de 8 membros, teto de contexto de 50 mil linhas)
-são políticas fixas de biblioteca, não quantidades ajustadas aos nossos
-dados.
+inferência são fixadas a priori, nunca ajustadas aos nossos dados: o
+teto de contexto de 50 mil linhas é o limite nativo do TabPFN,
+espelhado por nós no TabFM (cujo default de biblioteca é sem teto), e o
+\emph{ensemble} de 8 membros é igualmente escolha nossa fixa (o default
+do TabFM é 32), como declara a Seção~\ref{sec:met-protocolo}.
 
 \section{Ato I --- o empate estatístico do núcleo de 11 modelos}
 \label{sec:cap5-ato1}
@@ -426,7 +431,10 @@ ao praticante é que o cruzamento depende do conjunto, não apenas do
 tamanho. Segunda: o TabPFN
 tem a melhor métrica média de regime nos cinco conjuntos varridos para
 $n \leq 4.000$ (rank médio 1,0 nesse regime, contra 2,8 do XGBoost) ---
-a quantificação do nicho de poucos dados do paradigma \emph{zero-shot}.
+a quantificação da força do paradigma \emph{zero-shot} no regime de
+poucos dados (resultado de subamostragem \emph{dentro} de cada
+conjunto; ele não confina a vantagem dos \emph{foundation models} a
+conjuntos pequenos --- ver Seção~\ref{sec:cap5-ato5}).
 Terceira, a ressalva: a varredura cobre 6 dos 14 modelos e 5 dos 18
 conjuntos; ela qualifica o eixo do tamanho, não o reordena.
 
@@ -582,10 +590,12 @@ complementaridade.\allowbreak md}, 22/10/2026; adendo de execução de
 o protocolo exato do benchmark --- mesmos hiperparâmetros escolhidos,
 mesmo \emph{split}, mesma semente --- com um \emph{gate} de sanidade
 exigindo $|\Delta| \le 10^{-3}$ entre a métrica primária recomputada e a
-registrada: as 52 células passaram, 49 delas com $\Delta = 0$ exato
-(máximo observado: $4{,}8 \times 10^{-4}$, efeito numérico de
-\emph{bfloat16} sob lote de predição reduzido). O instrumento por par é
-o teste exato de McNemar sobre as instâncias discordantes, acompanhado
+registrada: as 52 células passaram, 42 delas com $\Delta = 0$ exato; as
+demais ficam entre $10^{-7}$ e $6 \times 10^{-6}$ (ruído numérico do
+TabPFN), com um único caso em $4{,}8 \times 10^{-4}$ (\emph{bfloat16}
+sob lote de predição reduzido no TabFM). O instrumento por par é
+o teste exato de McNemar \citep{mcnemar1947} sobre as instâncias
+discordantes, acompanhado
 da taxa de concordância e do saldo de vitórias por quintil de margem do
 XGBoost.
 
@@ -603,8 +613,9 @@ O primeiro resultado é a escala da concordância
 (hipótese~H-C1, \textbf{confirmada}): XGBoost e \emph{foundation
 models} dão a mesma resposta na vasta maioria dos casos --- concordância
 mediana de 0{,}950 com o TabPFN e 0{,}936 com o TabFM, acima do critério
-pré-registrado de 0{,}85. Toda a diferença de rank do Ato~IV nasce,
-portanto, de uma \emph{franja} de 2 a 15\% de instâncias disputadas. O
+pré-registrado de 0{,}85. A disputa de acerto concentra-se,
+portanto, numa \emph{franja} de 0{,}6 a 15{,}5\% de instâncias
+discordantes por conjunto. O
 que acontece dentro dessa franja é assimétrico e fortemente heterogêneo
 entre conjuntos (Figura~\ref{fig:cap5-complementaridade}a): em 14 dos
 24 pares o McNemar rejeita o empate a 1\%, e o saldo mediano é de
@@ -612,7 +623,7 @@ $+6{,}6$ vitórias líquidas por 1.000 instâncias para o TabFM ($+2{,}8$
 para o TabPFN). Nos extremos, o TabFM converte a franja de forma
 esmagadora no \texttt{jannis} ($+59{,}6$ por mil, $p \sim 10^{-103}$),
 \texttt{magictelescope} ($+43{,}3$), \texttt{phoneme} ($+37{,}9$),
-\texttt{covertype} ($+33{,}7$, $p \sim 10^{-95}$) e \texttt{higgs}
+\texttt{covertype} ($+33{,}7$, $p \sim 10^{-94}$) e \texttt{higgs}
 ($+26{,}0$, $p \sim 10^{-25}$) --- mas \emph{perde} a franja no
 \texttt{telco\_\allowbreak customer\_\allowbreak churn} ($-29{,}8$,
 $p = 6 \times 10^{-4}$), assim como o TabPFN a perde no \texttt{adult}
@@ -647,21 +658,23 @@ poucos dados não encontra apoio aqui.
 Na regressão, a leitura por instância é descritiva e aponta na mesma
 direção dupla: o erro absoluto do \emph{foundation model} é menor que o
 do XGBoost em mais da metade das instâncias em 9 dos 10 pares, mas os
-erros dos dois são fortemente co-rankeados (Spearman de 0{,}33 a 0{,}95
-por conjunto) --- os dois modelos acham difíceis \emph{as mesmas}
+erros dos dois são co-rankeados (Spearman de 0{,}33 a 0{,}95
+por conjunto; mediana 0{,}83) --- os dois modelos acham difíceis \emph{as mesmas}
 instâncias, e a vantagem do FM é um encolhimento quase uniforme do
 erro, não a resolução de uma classe distinta de casos.
 
 A síntese interpretativa deste ato corrige a explicação fácil. O que o
 \emph{foundation model} acrescenta \textbf{não} é um talento universal
 para ``os casos difíceis'': é um viés indutivo que casa com alguns
-conjuntos --- tipicamente os densos, numéricos e multiclasse, onde ele
+conjuntos --- tipicamente os densos, numéricos e multiclasse (leitura
+descritiva \emph{a posteriori}, não uma regra de roteamento), onde ele
 converte a franja de discordância quase inteira a seu favor --- e
 desajuda em outros, onde o XGBoost segue dono da franja. Para a decisão
 prática, a consequência é direta e alimenta o
 Capítulo~\ref{chap:framework}: com concordância mediana acima de 0{,}93
-e vantagem heterogênea \emph{entre} conjuntos (não \emph{dentro}
-deles), a escolha de modelo é uma decisão por conjunto/tarefa, não por
+e vantagem cujo sinal muda de conjunto para conjunto --- sem que margem
+ou classe a prevejam de forma estável ---, a escolha de modelo é, na
+prática, uma decisão por conjunto/tarefa, não por
 instância --- e a validação cega do arcabouço é quem deve capturá-la.
 
 \emph{No nível da instância, XGBoost e \emph{foundation models}
