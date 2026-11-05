@@ -679,9 +679,11 @@ As mesmas predições por instância permitem abrir a matriz de confusão dos
 três modelos e traduzir esses saldos na linguagem operacional da
 Seção~\ref{sec:fund-metricas-clf} --- precisão, recall e acurácia
 balanceada no limiar padrão, com a classe minoritária como classe de
-interesse (Tabela~\ref{tab:app-operacionais} do Apêndice~\ref{app:tabelas};
+interesse (Figura~\ref{fig:cap5-operacionais};
+Tabela~\ref{tab:app-operacionais} do Apêndice~\ref{app:tabelas};
 artefato \texttt{secondary\_\allowbreak metrics\_\allowbreak holdout.csv}). A tradução é
-instrutiva duas vezes. No \texttt{amazon\_\allowbreak employee}, as acurácias são
+instrutiva duas vezes. No \texttt{amazon\_\allowbreak employee}
+(Figura~\ref{fig:cap5-operacionais}a), as acurácias são
 quase indistinguíveis (0{,}943 a 0{,}949), mas o recall da classe
 minoritária salta de 0{,}032 (XGBoost) para 0{,}214 (TabPFN) e 0{,}298
 (TabFM) --- o XGBoost detecta 3 em cada 100 pedidos que deveriam ser
@@ -693,13 +695,30 @@ diferença que a acurácia não vê é a que importa. E no
 acurácia (0{,}771 contra 0{,}801), mas tem o maior recall de minoritária
 (0{,}663 contra 0{,}570) e a maior acurácia balanceada (0{,}737 contra
 0{,}727) --- o ``perdedor'' do saldo líquido é o modelo que mais clientes
-em risco de evasão encontra. Em acurácia balanceada, aliás, o TabFM é o
+em risco de evasão encontra. O painel~(b) da
+Figura~\ref{fig:cap5-operacionais} situa os dois casos no conjunto das
+10 binárias: nos conjuntos balanceados os três modelos praticamente
+coincidem em recall da minoritária, e as maiores separações aparecem em
+conjuntos desbalanceados (\texttt{amazon\_\allowbreak employee},
+\texttt{telco}, \texttt{bank\_\allowbreak marketing}) --- embora não em
+todos: no \texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak
+credit}, com 6{,}7\% de minoritária, os três recalls diferem por menos
+de 0{,}02. Em acurácia balanceada, aliás, o TabFM é o
 melhor dos três em 9 das 10 binárias. Nenhum desses números ranqueia
 modelos --- o limiar não foi otimizado e o custo de cada erro pertence à
 aplicação ---, mas eles tornam concreto o que a tese multicritério do
 capítulo afirma em abstrato: qual modelo ``ganha'' depende da métrica que
 a aplicação tem razões para maximizar, e um benchmark honesto reporta as
 duas camadas em vez de escolher pela aplicação.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{images/metricas_operacionais_diss.pdf}
+\caption{Leitura operacional: (a)~acurácia e recall da minoritária no
+\texttt{amazon\_employee}; (b)~recall da minoritária nas 10 binárias.
+Fonte: \texttt{results/aggregated/}.}
+\label{fig:cap5-operacionais}
+\end{figure}
 
 Na regressão, a leitura por instância é descritiva e aponta na mesma
 direção dupla: o erro absoluto do \emph{foundation model} é menor que o
