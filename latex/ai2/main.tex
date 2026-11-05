@@ -61,14 +61,16 @@ CRPS (continuous ranked probability score) advantage (positive in 16/20
 datasets, including one born-again case where the student surpasses its
 teacher; one-sided sign test $p = 0.006$, one-sided Wilcoxon $p = 0.045$, Bayesian
 $P(\mathrm{ret}>0) = 0.70$ at a region of practical equivalence of
-$\pm$0.05; 15/19 with sign test $p = 0.010$ under the sensitivity that
+$\pm$0.05; under the sensitivity that
 excludes one dataset whose target a dated identity erratum found to be
-binarized) at microsecond latency --- on our three-strategy Pareto
+binarized, the sign test holds at 15/19, $p = 0.010$, while the
+Wilcoxon moves to $p = 0.067$, above the 5\% level) at microsecond latency --- on our three-strategy Pareto
 frontier (distillation vs.\ context compression vs.\ ensemble
 shrinking; three datasets, measured end-to-end), the distilled student
-is the CRPS-optimal system below the teacher's cheapest competitive
+is the CRPS-optimal teacher-derived system below the teacher's cheapest competitive
 configuration on the two large-edge datasets (2.5$\times$ and
-27$\times$ its latency), while on the small-edge one ensemble shrinking
+27$\times$ its latency; the 2.5$\times$ case is the erratum dataset
+with binarized target), while on the small-edge one ensemble shrinking
 already matches student latency;
 (3) out-of-fold (OOF) labeling matters for the student's
 \textbf{calibration}, not its accuracy --- a deconfounded refinement of prior classification findings;
@@ -138,16 +140,19 @@ answer RQ1, \S\ref{sec:frontier} RQ2, and
     and agreement across instruments (one-sided sign test $p = 0.006$;
     one-sided Wilcoxon
     $p = 0.045$; Bayesian signed-rank $P(\mathrm{retention}>0) = 0.70$ at
-    ROPE $\pm 0.05$; robust to the dataset-identity sensitivity of
-    \S\ref{sec:setup}: 15/19, sign $p = 0.010$), at
-    microsecond latency.
+    ROPE $\pm 0.05$; under the dataset-identity sensitivity of
+    \S\ref{sec:setup} the sign test survives --- 15/19, $p = 0.010$ ---
+    while the Wilcoxon moves from $0.045$ to $0.067$, above the 5\%
+    cut), at microsecond latency.
   \item \textbf{The first (to our knowledge) three-strategy Pareto
     frontier} for TFM serving
     in regression --- distillation vs.\ context compression vs.\ ensemble
     reduction --- measured end-to-end on the same hold-outs; the
-    distilled student is CRPS-optimal below the cheapest teacher
+    distilled student is CRPS-optimal among the teacher-derived
+    systems below the cheapest teacher
     configuration that beats it (2.5$\times$ its latency on
-    california\_housing, 27$\times$ on year\_prediction), while on
+    california\_housing --- the binarized-target erratum dataset of
+    \S\ref{sec:setup} --- and 27$\times$ on year\_prediction), while on
     kin8nm --- whose teacher edge is small --- a single-member teacher
     already matches student latency, and
     side-findings show ensemble reduction is underrated (1 member $\approx$
@@ -505,15 +510,21 @@ targets (\texttt{fifa}, \texttt{diamonds}, \texttt{health\_\allowbreak insurance
 where \S\ref{sec:rule} shows the teacher's apparent edge is largely
 reproducible by a log transform.
 
-Calibration accompanies the transfer --- and exceeds it. Reliability curves
+Calibration accompanies the transfer, though the pre-registered
+coverage clause is not met in absolute terms: PICP80 falls within
+$\pm 5$~p.p.\ of nominal on only 10/20 datasets (2/5 core), so the
+calibration gain is comparative. Reliability curves
 (Fig.~\ref{fig:calibration}) show the distilled student closest to the
-diagonal on both panels; on \texttt{california\_\allowbreak housing} it is better
+diagonal on both panels; on \texttt{california\_\allowbreak housing} --- the
+binarized-target erratum dataset, so the calibration in question is of
+a Bernoulli --- it is better
 calibrated than the hard control \emph{and} than its own teacher, whose
 per-level quantile calibration is imperfect (S-shaped). Curve transfer plus
 sorting acts as a calibration regularizer, not a mere copy. A dedicated
 ablation isolates the repair: quantile crossing affects a median 96\% of
-hold-out rows before sorting, and the repair improves CRPS on 20/20
-(hard) and 18/20 (soft) datasets --- yet its median effect is below
+hold-out rows before sorting, and the repair improves or ties CRPS on
+20/20 datasets in both arms --- strict improvement on 20/20 (hard) and
+18/20 (soft; two exact ties) --- yet its median effect is below
 1\%, so no conclusion depends on it.
 % results/distillation/distill.csv + extension.csv;
 % results/figures/calibration_distill.pdf
@@ -612,8 +623,10 @@ row, distributional accuracy) vs.\ serving latency (\us/row, log scale).
 Down-left is better; the x-axis is logarithmic, so horizontal gaps are
 multiplicative. The vertical gap between the distilled student (star) and
 the teacher's context-compression curve at the nearest measured latency
-is the quantity discussed in \S\ref{sec:frontier}. In the CRPS row, the distilled student is CRPS-optimal below the
-teacher's cheapest competitive configuration on california\_housing and
+is the quantity discussed in \S\ref{sec:frontier}. In the CRPS row, the distilled student is CRPS-optimal among the
+teacher-derived systems below the
+teacher's cheapest competitive configuration on california\_housing
+(erratum dataset: binarized-target variant) and
 year\_prediction; on kin8nm, whose teacher edge is small, the
 single-member teacher already sits at student latency.
 Source: \texttt{results/\allowbreak distillation/\allowbreak pareto.\allowbreak csv}.}
@@ -643,9 +656,13 @@ The symmetric objection --- that the distilled edge is ``just
 calibration'', so a cheap conformal correction of the hard control
 would match it --- fails in a declared pilot (5 datasets, 3 seeds,
 split-conformal per quantile applied to \emph{both} arms):
-conformalization repairs coverage for both students (PICP90 to
-0.88--0.95) but moves CRPS by under 1\% in every arm, leaving the
-shape advantage intact. Conformal buys calibration; distillation buys
+conformalization repairs coverage --- where ``repairs'' means the
+distance to nominal decreases --- in 5/5 datasets for the soft student
+and 4/5 for the hard one (PICP90 to 0.88--0.95; the exception is the
+california hard arm, which already over-covered and where
+conformalization moves coverage \emph{away} from nominal, PICP80
+distance 8.06${\to}$9.63~p.p.) but moves CRPS by under 1\% in every
+arm, leaving the shape advantage intact. Conformal buys calibration; distillation buys
 shape. (A weak exchangeability asymmetry in the soft arm --- OOF
 labels generated over the full pool --- is declared; extending beyond
 the pilot would regenerate OOF labels within the proper split.)
@@ -758,12 +775,17 @@ cheapest competitive configuration, the distilled quantile student is
 the CRPS-optimal occupant of that regime \emph{among teacher-derived
 strategies} (E1 later measured that a native QRF also inhabits it ---
 and surpasses the student on \texttt{california\_\allowbreak housing} --- which is
-why the rule puts ``try a strong native student'' first) --- and when
+why the rule puts ``try a strong native student'' first; overall the
+distilled student wins 17/20, $p=0.0013$, and the 22.4$\times$-faster
+QRF wins only 3/20) --- and when
 the teacher's edge is small, ensemble reduction alone may close the case.
+% results/distillation/baselines_analysis.csv
 
 \section{Limitations}
 
-Twenty datasets support significance at the 5\% level on both instruments,
+Twenty datasets support significance at the 5\% level on both
+instruments (on the 19-dataset sensitivity population only the sign
+test keeps that level; Wilcoxon $p = 0.067$),
 but magnitudes remain heterogeneous (retention $-1.3$ to $+1.1$) and the
 Bayesian posterior leaves ${\sim}25\%$ mass on negative retention --- the
 decision rule of \S\ref{sec:rule}, not a universal claim, is the honest
@@ -806,7 +828,10 @@ refer to the pinned v1.0.1 release (July 2026); the official technical
 report \citep{kong2026} appeared only in late September 2026 and remains
 unreviewed. Classical distributional baselines (NGBoost, QRF) enter
 only in documented default configuration, via the pre-registered E1
-comparison and the five-system Friedman test of \S\ref{sec:dist}; the
+comparison (17/20, $p=0.0013$; the 22.4$\times$-faster QRF wins only
+3/20)
+% results/distillation/baselines_analysis.csv
+and the five-system Friedman test of \S\ref{sec:dist}; the
 reading is ``strong default'', not ``tuned classical'', and the
 hard-label quantile students remain the native distributional
 baselines within the compared families. All central $p$-values are
