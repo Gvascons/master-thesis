@@ -185,3 +185,22 @@ Varredura de 15/10 (URLs e vereditos no registro da sessão):
   controles pareados, de que a vantagem distribucional de um TFM é
   transferível a um aluno GBDT de microssegundos — com o negativo
   robusto (a média não transfere) e a regra de quando destilar".
+
+## Re-varredura final pré-depósito — 05/11/2026
+
+- **Método**: buscas dirigidas na web (motor com índice atualizado;
+  consultas: "tabular foundation models distillation 2026" e "quantile
+  distillation CRPS tabular foundation model regression Oct/Nov 2026")
+  + conferência direta das páginas do arXiv dos trabalhos centrais.
+  A varredura primária pela API do arXiv não pôde ser repetida nesta
+  data (HTTP "Rate exceeded"/503 persistente no egress utilizado, em
+  três tentativas espaçadas); as buscas dirigidas cobrem o período.
+- **Resultado**: nenhum trabalho novo que altere o posicionamento.
+  \citet{jeong2026} (arXiv:2610.01435) segue na v1 de 01/10/2026,
+  estritamente pontual (verificado na página do abstract em 05/11);
+  nada novo em quantis/CRPS/cobertura para TFMs em regressão; o
+  vizinho temático novo encontrado (nano-pupil, destilação
+  quantílica/CRPS) é de SÉRIES TEMPORAIS para microcontroladores, sem
+  listagem arXiv confirmada — não toca o recorte tabular.
+- **As três lacunas (i)–(iii) do cap. 3 seguem abertas em 05/11/2026.**
+  Registrado no cap. 3 (nota de método e parágrafo das datas).
