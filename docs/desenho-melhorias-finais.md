@@ -647,3 +647,27 @@ comercial de derivados E SAÍDAS — alcança o aluno destilado; declarada
 como limitação de deployment), e enriquecimento do Apêndice A (métricas
 secundárias em ranks, d de Cohen, IC bootstrap, custos consolidados,
 variabilidade entre folds — fechando as promessas do cap. 4).
+
+### Adendo datado (12/11/2026) — R-TUNE estendido aos 20 conjuntos (preparado, a disparar)
+
+A auditoria externa pré-reunião de 12/11 apontou o piloto de 3 conjuntos
+do R-TUNE como a objeção mais provável de um revisor de congresso ("o
+ganho da destilação vem de um controle sub-tunado?"). Decisão: estender
+o R-TUNE aos 20 conjuntos de `paper_retention.csv`, com protocolo
+IDÊNTICO ao piloto de 15/10 (Optuna 25 trials/braço, TPESampler seed 0,
+validação interna 80/20 do pool, objetivo pinball médio na grade de 19
+com quantis ordenados, refit 3 sementes no pool completo, avaliação no
+hold-out). Nada muda no desenho: só a população. H-T1 permanece a
+hipótese; o critério de leitura para a extensão é o mesmo do veredito
+principal: contagem de retenções positivas com controle re-tunado e
+mediana, lado a lado com a base herdada.
+
+Preflight de 12/11: 20/20 conjuntos com OOF alinhado, params herdados e
+pool carregável. Runner: `scripts/retune_students.py` (resumível; pula
+as linhas do piloto já em `retune_students.csv`; ordem leves→pesados,
+year_prediction por último — custo estimado total ~17–27h de CPU, ~12h
+só do year). Caveat do braço soft (exchangeability pool-interna, adendo
+de 15/10) segue valendo e declarado. Execução condicionada ao aval do
+orientador na reunião de 12/11; resultados entram no cap. 7 (§7.11.2)
+substituindo a leitura de piloto por leitura de população completa, com
+retificação datada se algum veredito mudar.

@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
 """R-TUNE (pré-registrado em docs/desenho-melhorias-finais.md,
-14/10/2026 23h30): teto de capacidade dos alunos — re-tuning por alvo.
+14/10/2026 23h30; ESTENDIDO aos 20 conjuntos por adendo datado de
+12/11/2026 no mesmo documento): teto de capacidade dos alunos —
+re-tuning por alvo.
 
-Nos 3 conjuntos de maior vantagem genuína com retenção positiva
-(california_housing, cpu_activity, cps88wages): Optuna 25 trials por
+Protocolo identico ao piloto de 3 conjuntos: Optuna 25 trials por
 braço (hard: quantílico nativo em y; soft: MSE multi-saída nos quantis
 OOF), validação interna 80/20 do pool, objetivo = pinball média na
-grade de 19 (CRPS/2) com quantis ordenados. HPs vencedores refitados
-no pool completo, 3 sementes, avaliação no hold-out.
+grade de 19 (CRPS/2) com quantis ordenados, TPESampler(seed=0). HPs
+vencedores refitados no pool completo, 3 sementes, avaliação no
+hold-out. Resumível: linhas já presentes no CSV (incluindo o piloto de
+15/10) são puladas. Ordem: conjuntos leves primeiro; year_prediction
+por último (domina o custo, ~12h).
 
 H-T1: retenção com re-tuning >= retenção com HPs herdados.
 Saída: results/distillation/retune_students.csv
-Uso: uv run python scripts/retune_students.py
+Uso:  setsid uv run python scripts/retune_students.py \\
+        > results/logs/retune_students_full.log 2>&1 & disown
+Marcador de saída: linha final "RETUNE DONE" no log.
 """
 import csv
 import sys
@@ -34,7 +40,16 @@ from src.utils.config import load_experiment_config
 from src.utils.reproducibility import set_seed
 
 CSV_PATH = REPO / "results" / "distillation" / "retune_students.csv"
-DATASETS = ["california_housing", "cpu_activity", "cps88wages"]
+# Os 20 conjuntos de paper_retention.csv, dos alunos mais baratos para os
+# mais caros (fit_time_s medio em extension.csv/distill.csv); o piloto de
+# 15/10 (california/cpu/cps88) ja esta no CSV e e pulado pela resumao.
+DATASETS = [
+    "space_ga", "abalone", "pumadyn32nh", "fps_benchmark",
+    "grid_stability", "kings_county", "cpu_activity", "health_insurance",
+    "miami_housing", "cps88wages", "fifa", "kin8nm", "wine_quality",
+    "california_housing", "online_news", "diamonds_real", "sarcos",
+    "physiochemical_protein", "video_transcoding", "year_prediction",
+]
 SEEDS = [0, 1, 2]
 N_TRIALS = 25
 FIELDS = ["dataset", "target", "hp_source", "seed", "crps", "picp80",
