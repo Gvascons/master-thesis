@@ -449,8 +449,8 @@ próprio professor) e sequência de sucessos grandes em
 rejeitam a hipótese nula ao nível de 5\%, ambos unilaterais conforme a
 hipótese direcional pré-registrada (teste de sinal
 $p = 0{,}006$; Wilcoxon $p = 0{,}045$ --- limítrofe, e na versão
-bilateral não rejeitaria: por isso a manchete repousa no teste de
-sinal e na mediana) e o teste bayesiano de postos
+bilateral ($p = 0{,}090$) não rejeitaria: por isso a manchete repousa
+no teste de sinal e na mediana) e o teste bayesiano de postos
 sinalizados \citep{benavoli2017} coloca 0,70 de massa posterior em
 retenção positiva com região de equivalência prática (ROPE) de
 $\pm 0{,}05$ --- estável em 0,63--0,71 na varredura de ROPE de 0,02 a
@@ -1092,7 +1092,11 @@ a refutação de H-T1 é conservadora. \textbf{Sementes:} o protocolo usa
 3 sementes por aluno; uma re-execução completa com 10 sementes
 (critério de estabilidade pré-fixado: contagem em $[14,18]$, mediana
 $\pm 0{,}10$) deixou a contagem em 16/20 e a mediana em 0,191 (contra
-0,192), com deslocamento máximo de retenção individual de 0,013 ---
+0,192), com deslocamento máximo de retenção individual de 0,013; na
+vitrine, os CRPS médios das 10 sementes são 0,467/0,388/0,313
+(controle/destilado/professor) no \texttt{fps\_benchmark} --- retenção
+$0{,}51 \pm 0{,}02$ entre sementes --- e 1,295/1,178/1,061 no
+\texttt{cpu\_activity} (retenção 0,50) ---
 a variância entre sementes é desprezível face à variância entre
 conjuntos; a sensibilidade à errata espelha a das 3 sementes (15/19,
 mediana 0,166). \textbf{Hardware:} medições em uma única GPU
@@ -1116,7 +1120,10 @@ transferir. O eixo distribucional --- o recorte sem trabalho público
 anterior --- é positivo em 16 de 20 conjuntos (mediana de 19\% de
 retenção do gap de CRPS, chegando ao \emph{born-again}), a até três
 ordens de magnitude menos latência conforme o conjunto ($7{,}4\times$
-a $880\times$), e sobrevive ao teste contra nativos
+a $880\times$ frente ao professor de contexto cheio; frente à
+configuração competitiva mais barata dele, $2{,}5\times$ e $27\times$
+onde a vantagem é grande --- Seção~\ref{sec:destil-fronteira}), e
+sobrevive ao teste contra nativos
 clássicos fortes (17/20 no E1 pré-registrado).
 % results/distillation/pareto.csv A fronteira de três
 estratégias localiza quando cada alavanca vence, a ablação OOF mostra

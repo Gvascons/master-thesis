@@ -447,8 +447,9 @@ otimização).}
 Tarefa & Primária & Secundárias & Justificativa da primária \\
 \midrule
 Binária (10) & ROC-AUC ($\uparrow$) & KS, \emph{log-loss}, F1, acurácia &
-  \begin{tabular}[t]{@{}l@{}}independente de limiar e de prevalência;\\
-  robusta ao desbalanceamento (até 16:1)\end{tabular} \\
+  \begin{tabular}[t]{@{}l@{}}independente de limiar e de prevalência\\
+  (grade até 16:1); o que o limiar esconde\\
+  fica com a Seção~\ref{sec:fund-metricas-clf}\end{tabular} \\
 \addlinespace
 Multiclasse (3) & \emph{log-loss} ($\downarrow$) &
   \begin{tabular}[t]{@{}l@{}}F1-macro, F1-ponderado,\\AUC-OvR, acurácia\end{tabular} &

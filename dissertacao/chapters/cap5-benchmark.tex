@@ -306,7 +306,12 @@ cada predição. A ressalva de regime merece ênfase: essas razões
 descrevem o serviço em lote amortizado no
 hardware declarado no Capítulo~\ref{chap:metodologia}; o serviço online
 de linha única estreita as diferenças --- mas não as ordens de
-magnitude.
+magnitude. Registre-se ainda que o subtítulo embutido na própria
+imagem (``$\sim$1000x+ slower to serve'') é um arredondamento
+editorial da geração da figura e nomeia apenas TabPFN e STab ---
+o TabFM, a barra mais lenta da própria imagem, fica fora do rótulo;
+os fatores medidos são TabPFN $22.473\times$ e TabFM $131.097\times$
+o XGBoost.
 
 Nenhum dos eixos isolados decide; o instrumento de decisão é o
 cruzamento desempenho $\times$ custo. Sobre rank médio $\times$ custo
@@ -388,10 +393,7 @@ A tendência é monotônica e na direção que a intuição de praticantes
 sugere --- árvores lidam melhor com classes raras do que redes treinadas
 por gradiente sobre perda média --- mas uma ressalva é parte do
 resultado: com poucos conjuntos por faixa, trata-se de direção
-descritiva, não de teste. Registre-se ainda que o subtítulo embutido na
-figura (``$\sim$1000x+ slower to serve'') é um arredondamento editorial
-conservador da geração dela; os fatores medidos são os reportados neste
-capítulo (TabPFN 22.473$\times$, TabFM 131.097$\times$). Duas observações
+descritiva, não de teste. Duas observações
 completam o quadro
 condicional: no extremo de cardinalidade categórica, a codificação
 one-hot penaliza os modelos de atenção (o caso
@@ -672,8 +674,11 @@ com o tamanho do \emph{pool}, como sugeriria o prior de pré-treino com
 contexto de até 16\,384 linhas, Seção~\ref{sec:fund-fm}) é
 refutada com sinal \emph{contrário}: a correlação de Spearman entre
 tamanho do \emph{pool} e vantagem é $+0{,}14$ (TabPFN) e $+0{,}26$
-(TabFM), não significativas --- descritivamente, as maiores vantagens
-do TabFM estão justamente nos \emph{maiores} conjuntos da grade. O
+(TabFM), não significativas --- descritivamente, o maior saldo está no
+maior conjunto da grade (\texttt{jannis}), mas os postos seguintes são
+de um conjunto médio e um pequeno (\texttt{magictelescope},
+\texttt{phoneme}): a leitura que os dados sustentam é que a vantagem
+\emph{não encolhe} com o tamanho, não que cresça com ele. O
 receio natural de que o \emph{foundation model} só brilhe no regime de
 poucos dados não encontra apoio aqui.
 
