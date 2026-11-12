@@ -44,8 +44,8 @@ LABELS = {
            "xlabel": "quantil nominal \u03c4",
            "ylabel": "cobertura emp\u00edrica P(y \u2264 q_\u03c4)",
            "suptitle": ("Calibra\u00e7\u00e3o no hold-out: o aluno destilado \u00e9 o mais "
-                        "pr\u00f3ximo da diagonal \u2014 melhor que o controle e, no "
-                        "california, que o pr\u00f3prio teacher"),
+                        "pr\u00f3ximo da diagonal \u2014 mas no california promete 80% "
+                        "e cobre 60% (PICP80 0,596); o passo conformal corrige"),
            "suffix": ""},
     "en": {"teacher": "TabPFN (teacher)",
            "distilled": "Distilled quantile student",
