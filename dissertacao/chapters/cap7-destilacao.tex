@@ -170,7 +170,8 @@ contexto do professor, espelhando a política do benchmark; predição em
 blocos por restrição de VRAM; encadeamento tolerante a falhas; e, por
 adendo de 19/10/2026, três desvios do desenho original apontados em
 auditoria: hiperparâmetros herdados em lugar do Optuna por aluno ---
-cujo custo o piloto de re-tuning desta seção mede ---, a variante
+cujo custo o re-tuning deste capítulo mede, estendido do piloto de 3
+aos 20 conjuntos por adendo de 12/11/2026 ---, a variante
 mista executada só em $\lambda{=}0{,}8$ e o \emph{transfer set} MUNGE
 não executado). Três erros de rotulagem/identidade de dataset foram
 tratados por retificação registrada, nunca por reescrita de histórico
@@ -1024,30 +1025,36 @@ condicionante usa a versão oráculo do \emph{gate}
 hiperparâmetros ajustados do benchmark, sem re-tuning por alvo de
 destilação (o pré-registro original previa Optuna por aluno; o desvio
 está registrado em adendo datado de 19/10/2026 no documento de
-desenho, e este piloto mede exatamente o seu custo). Um piloto de
-re-tuning (15/10/2026; 3 conjuntos de
-retenção positiva, Optuna com 25 \emph{trials} por braço, validação
-interna no \emph{pool}) quantifica a limitação --- e a hipótese de que
-a herança seria piso foi refutada em 2 de 3: quando o \emph{controle}
-ganha capacidade própria, a retenção aparente cai (de 0,64 para 0,19
-no \texttt{california\_\allowbreak housing}, onde o controle herdado estava
-sub-provisionado; de 0,50 para 0,40 no \texttt{cpu\_activity}; sobe de
-0,47 para 0,61 no \texttt{cps88wages}). Três leituras sobrevivem ao
-re-tuning: o \emph{sinal} persiste nos três (o destilado retunado segue
-melhor que o controle retunado), destilação e re-tuning \emph{compõem}
-(o destilado também melhora ao ser retunado), e o destilado herdado,
-sem nenhum \emph{trial}, empata com o controle retunado no
-\texttt{california\_\allowbreak housing} --- a destilação entrega de graça o que o
-re-tuning entrega ao controle. Com a errata do
-\texttt{california\_\allowbreak housing} (alvo binarizado), o caso mais dramático
-do piloto está no conjunto degenerado: restam \texttt{cpu\_activity}
-(refuta: 0,50${\to}$0,40) e \texttt{cps88wages} (não refuta:
-0,47${\to}$0,61), e a lição --- retenção
-individual depende do orçamento de tuning --- fica qualitativa, não
-mais ancorada naquele número. A retenção por conjunto deve, portanto,
-ser lida como dependente do orçamento de tuning; as conclusões
-agregadas (sinal, mediana, comparação pareada) não se apoiam em
-nenhuma retenção individual (\texttt{retune\_\allowbreak students.\allowbreak csv}). \textbf{Estimador de CRPS:} a grade de 19 quantis
+desenho, e o re-tuning abaixo mede exatamente o seu custo). Um piloto
+de re-tuning (15/10/2026; 3 conjuntos de retenção positiva, Optuna com
+25 \emph{trials} por braço, validação interna no \emph{pool}) já havia
+refutado em 2 de 3 a hipótese de que a herança seria piso (de 0,64
+para 0,19 no \texttt{california\_\allowbreak housing}; de 0,50 para 0,40 no
+\texttt{cpu\_activity}; sobe de 0,47 para 0,61 no
+\texttt{cps88wages}), e a extensão pré-registrada em adendo de
+12/11/2026 --- protocolo idêntico, os 20 conjuntos do veredito
+principal --- confirmou a refutação em escala (executada em
+17/11/2026): a retenção com re-tuning iguala ou supera a herdada em
+apenas 9 de 20 conjuntos, e a mediana cai de 0,192 para 0,124 quando
+os dois braços ganham capacidade própria. O veredito agregado, porém,
+sobrevive intacto ao controle re-tunado: \textbf{16 de 20 retenções
+positivas} (mesma contagem da base herdada, com uma troca de
+composição: \texttt{health\_\allowbreak insurance} entra,
+\texttt{miami\_\allowbreak housing} sai), teste de sinal unilateral
+$p{=}0{,}0059$ e Wilcoxon unilateral $p{=}0{,}035$; na sensibilidade
+sem o conjunto binarizado da errata, 15 de 19, mediana 0,098, sinal
+$p{=}0{,}0096$ e Wilcoxon $p{=}0{,}048$. Duas leituras do piloto
+generalizam de forma desigual: destilação e re-tuning \emph{compõem}
+(o aluno destilado também melhora ao ser re-tunado, em 17 de 20
+conjuntos), mas o empate ``sem nenhum \emph{trial}'' do destilado
+herdado com o controle re-tunado vale em 12 de 20 --- na população
+completa, ``a destilação entrega de graça o que o re-tuning entrega ao
+controle'' é maioria, não regra. A retenção por conjunto deve,
+portanto, ser lida como dependente do orçamento de tuning; as
+conclusões agregadas (sinal, mediana, comparação pareada) sobrevivem
+com o controle re-tunado e não se apoiam em nenhuma retenção
+individual (\texttt{retune\_\allowbreak students.\allowbreak csv};
+leitura em \texttt{retune\_\allowbreak analysis.\allowbreak csv}). \textbf{Estimador de CRPS:} a grade de 19 quantis
 sobre-estima o CRPS exato em ${\sim}4$--5\% quase constantes ---
 comparações internas preservadas, valores absolutos não comparáveis
 entre trabalhos. Ablação dedicada (15/10/2026,
@@ -1083,8 +1090,8 @@ aleatório i.i.d.\ ignora estrutura de grupo em alguns conjuntos
 mesmo imóvel no \texttt{kings\_county}): as métricas absolutas inflam
 para todos os sistemas igualmente, e o gap professor--controle no
 denominador da retenção pode distorcer-se nesses conjuntos, sem afetar
-a direção das comparações pareadas. O braço \emph{soft} do piloto de
-re-tuning carrega ainda a assimetria fraca de \emph{exchangeability}
+a direção das comparações pareadas. O braço \emph{soft} do re-tuning
+(piloto e extensão aos 20) carrega ainda a assimetria fraca de \emph{exchangeability}
 pool-interna análoga à do piloto conformal (as linhas de validação do
 Optuna participaram, via contexto do professor, dos alvos OOF);
 sua direção favorece o destilado, que perdeu terreno mesmo assim ---
