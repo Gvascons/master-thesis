@@ -464,36 +464,47 @@ jannis,multiclass,1.0,Tree (LODO),0.0
 kin8nm,regression,0.0,Always-GBDT,0.0
 kin8nm,regression,0.0,Always-DL,0.153846
 kin8nm,regression,0.0,Always-FM,0.846154
+kin8nm,regression,0.0,Tree (LODO),0.846154
 kin8nm,regression,0.1,Always-GBDT,0.0
 kin8nm,regression,0.1,Always-DL,0.065421
 kin8nm,regression,0.1,Always-FM,0.859813
+kin8nm,regression,0.1,Tree (LODO),0.859813
 kin8nm,regression,0.2,Always-GBDT,0.06383
 kin8nm,regression,0.2,Always-DL,0.0
 kin8nm,regression,0.2,Always-FM,0.851064
+kin8nm,regression,0.2,Tree (LODO),0.851064
 kin8nm,regression,0.3,Always-GBDT,0.208791
 kin8nm,regression,0.3,Always-DL,0.0
 kin8nm,regression,0.3,Always-FM,0.824176
+kin8nm,regression,0.3,Tree (LODO),0.824176
 kin8nm,regression,0.4,Always-GBDT,0.340909
 kin8nm,regression,0.4,Always-DL,0.0
 kin8nm,regression,0.4,Always-FM,0.795455
+kin8nm,regression,0.4,Tree (LODO),0.795455
 kin8nm,regression,0.5,Always-GBDT,0.470588
 kin8nm,regression,0.5,Always-DL,0.0
 kin8nm,regression,0.5,Always-FM,0.705882
+kin8nm,regression,0.5,Tree (LODO),0.705882
 kin8nm,regression,0.6,Always-GBDT,0.568182
 kin8nm,regression,0.6,Always-DL,0.0
 kin8nm,regression,0.6,Always-FM,0.568182
+kin8nm,regression,0.6,Tree (LODO),0.568182
 kin8nm,regression,0.7,Always-GBDT,0.618557
 kin8nm,regression,0.7,Always-DL,0.0
 kin8nm,regression,0.7,Always-FM,0.412371
+kin8nm,regression,0.7,Tree (LODO),0.412371
 kin8nm,regression,0.8,Always-GBDT,0.648148
 kin8nm,regression,0.8,Always-DL,0.0
 kin8nm,regression,0.8,Always-FM,0.277778
+kin8nm,regression,0.8,Tree (LODO),0.277778
 kin8nm,regression,0.9,Always-GBDT,0.672269
 kin8nm,regression,0.9,Always-DL,0.0
 kin8nm,regression,0.9,Always-FM,0.168067
+kin8nm,regression,0.9,Tree (LODO),0.168067
 kin8nm,regression,1.0,Always-GBDT,0.692308
 kin8nm,regression,1.0,Always-DL,0.0
 kin8nm,regression,1.0,Always-FM,0.076923
+kin8nm,regression,1.0,Tree (LODO),0.076923
 magictelescope,binary,0.0,Always-GBDT,0.0
 magictelescope,binary,0.0,Always-DL,0.153846
 magictelescope,binary,0.0,Always-FM,0.846154
@@ -538,50 +549,6 @@ magictelescope,binary,1.0,Always-GBDT,0.461538
 magictelescope,binary,1.0,Always-DL,0.153846
 magictelescope,binary,1.0,Always-FM,0.0
 magictelescope,binary,1.0,Tree (LODO),0.0
-phoneme,binary,0.0,Always-GBDT,0.0
-phoneme,binary,0.0,Always-DL,0.153846
-phoneme,binary,0.0,Always-FM,0.846154
-phoneme,binary,0.0,Tree (LODO),0.846154
-phoneme,binary,0.1,Always-GBDT,0.0
-phoneme,binary,0.1,Always-DL,0.13913
-phoneme,binary,0.1,Always-FM,0.834783
-phoneme,binary,0.1,Tree (LODO),0.834783
-phoneme,binary,0.2,Always-GBDT,0.0
-phoneme,binary,0.2,Always-DL,0.109091
-phoneme,binary,0.2,Always-FM,0.745455
-phoneme,binary,0.2,Tree (LODO),0.745455
-phoneme,binary,0.3,Always-GBDT,0.0
-phoneme,binary,0.3,Always-DL,0.07619
-phoneme,binary,0.3,Always-FM,0.647619
-phoneme,binary,0.3,Tree (LODO),0.647619
-phoneme,binary,0.4,Always-GBDT,0.0
-phoneme,binary,0.4,Always-DL,0.04
-phoneme,binary,0.4,Always-FM,0.54
-phoneme,binary,0.4,Tree (LODO),0.54
-phoneme,binary,0.5,Always-GBDT,0.0
-phoneme,binary,0.5,Always-DL,0.0
-phoneme,binary,0.5,Always-FM,0.421053
-phoneme,binary,0.5,Tree (LODO),0.421053
-phoneme,binary,0.6,Always-GBDT,0.021277
-phoneme,binary,0.6,Always-DL,0.0
-phoneme,binary,0.6,Always-FM,0.319149
-phoneme,binary,0.6,Tree (LODO),0.319149
-phoneme,binary,0.7,Always-GBDT,0.043011
-phoneme,binary,0.7,Always-DL,0.0
-phoneme,binary,0.7,Always-FM,0.204301
-phoneme,binary,0.7,Tree (LODO),0.204301
-phoneme,binary,0.8,Always-GBDT,0.065217
-phoneme,binary,0.8,Always-DL,0.0
-phoneme,binary,0.8,Always-FM,0.065217
-phoneme,binary,0.8,Tree (LODO),0.065217
-phoneme,binary,0.9,Always-GBDT,0.138889
-phoneme,binary,0.9,Always-DL,0.064815
-phoneme,binary,0.9,Always-FM,0.0
-phoneme,binary,0.9,Tree (LODO),0.0
-phoneme,binary,1.0,Always-GBDT,0.230769
-phoneme,binary,1.0,Always-DL,0.153846
-phoneme,binary,1.0,Always-FM,0.0
-phoneme,binary,1.0,Tree (LODO),0.0
 online_news,regression,0.0,Always-GBDT,0.0
 online_news,regression,0.0,Always-DL,0.153846
 online_news,regression,0.0,Always-FM,0.846154
@@ -626,6 +593,50 @@ online_news,regression,1.0,Always-GBDT,0.153846
 online_news,regression,1.0,Always-DL,0.384615
 online_news,regression,1.0,Always-FM,0.0
 online_news,regression,1.0,Tree (LODO),0.0
+phoneme,binary,0.0,Always-GBDT,0.0
+phoneme,binary,0.0,Always-DL,0.153846
+phoneme,binary,0.0,Always-FM,0.846154
+phoneme,binary,0.0,Tree (LODO),0.846154
+phoneme,binary,0.1,Always-GBDT,0.0
+phoneme,binary,0.1,Always-DL,0.13913
+phoneme,binary,0.1,Always-FM,0.834783
+phoneme,binary,0.1,Tree (LODO),0.834783
+phoneme,binary,0.2,Always-GBDT,0.0
+phoneme,binary,0.2,Always-DL,0.109091
+phoneme,binary,0.2,Always-FM,0.745455
+phoneme,binary,0.2,Tree (LODO),0.745455
+phoneme,binary,0.3,Always-GBDT,0.0
+phoneme,binary,0.3,Always-DL,0.07619
+phoneme,binary,0.3,Always-FM,0.647619
+phoneme,binary,0.3,Tree (LODO),0.647619
+phoneme,binary,0.4,Always-GBDT,0.0
+phoneme,binary,0.4,Always-DL,0.04
+phoneme,binary,0.4,Always-FM,0.54
+phoneme,binary,0.4,Tree (LODO),0.54
+phoneme,binary,0.5,Always-GBDT,0.0
+phoneme,binary,0.5,Always-DL,0.0
+phoneme,binary,0.5,Always-FM,0.421053
+phoneme,binary,0.5,Tree (LODO),0.421053
+phoneme,binary,0.6,Always-GBDT,0.021277
+phoneme,binary,0.6,Always-DL,0.0
+phoneme,binary,0.6,Always-FM,0.319149
+phoneme,binary,0.6,Tree (LODO),0.319149
+phoneme,binary,0.7,Always-GBDT,0.043011
+phoneme,binary,0.7,Always-DL,0.0
+phoneme,binary,0.7,Always-FM,0.204301
+phoneme,binary,0.7,Tree (LODO),0.204301
+phoneme,binary,0.8,Always-GBDT,0.065217
+phoneme,binary,0.8,Always-DL,0.0
+phoneme,binary,0.8,Always-FM,0.065217
+phoneme,binary,0.8,Tree (LODO),0.065217
+phoneme,binary,0.9,Always-GBDT,0.138889
+phoneme,binary,0.9,Always-DL,0.064815
+phoneme,binary,0.9,Always-FM,0.0
+phoneme,binary,0.9,Tree (LODO),0.0
+phoneme,binary,1.0,Always-GBDT,0.230769
+phoneme,binary,1.0,Always-DL,0.153846
+phoneme,binary,1.0,Always-FM,0.0
+phoneme,binary,1.0,Tree (LODO),0.0
 telco_customer_churn,binary,0.0,Always-GBDT,0.0
 telco_customer_churn,binary,0.0,Always-DL,0.153846
 telco_customer_churn,binary,0.0,Always-FM,0.846154

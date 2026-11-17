@@ -209,3 +209,26 @@ Varredura de 15/10 (URLs e vereditos no registro da sessão):
 > citada no cap. 3 está registrada em `docs/desenho-melhorias-finais.md`
 > (auditoria integral da errata), não neste memo; este memo cobre
 > 15/07, 20/07 (+ adendos 14--15/10), 04/10 e 05/11.
+
+## Adendo (17/11/2026) — registro canônico das re-varreduras de 12/11 e 17/11
+
+Auditoria de 17/11 apontou que a re-varredura de 12/11/2026 (citada no
+cap. 3 e no commit 0ad5339) não tinha registro neste memo — corrigido
+aqui, junto com a varredura nova de hoje.
+
+- **12/11/2026** (pré-reunião final de acompanhamento): verificação
+  direta de arXiv:2610.01435 (jeong2026) — seguia v1 de 01/10,
+  destilação PONTUAL em regressão, sem quantis/CRPS/distribucional;
+  buscas dirigidas por destilação de TFMs tabulares não retornaram
+  trabalho novo no recorte. Veredito: lacunas (i)–(iii) abertas.
+- **17/11/2026** (auditoria integral, agente dedicado ao cap. 3): 3
+  consultas amplas + verificação direta das páginas arXiv. jeong2026
+  SEGUE v1 (01/10), estritamente pontual. Vizinhos novos encontrados e
+  descartados com justificativa: MaskTab (2605.11408 — destilação no
+  pré-treino, classificação industrial) e TabKD (2603.15481 — KD
+  tabular genérico, professor não-FM). Pocket FM (2605.18654),
+  GEAR, shallow-blocks, ActAlign, MemEff, TACO reconferidos: todos
+  classificação/ponto. **As três lacunas (i)–(iii) seguem abertas em
+  17/11/2026**: (i) destilação distribucional (quantis/CRPS/cobertura)
+  de TFMs tabulares em regressão; (ii) fronteira custo-fidelidade de
+  serving avaliada cruzadamente; (iii) TabFM como professor.

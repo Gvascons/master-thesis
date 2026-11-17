@@ -5,7 +5,18 @@
 > cada frente, os critérios de conclusão e os riscos. Versionado no
 > repositório para que nada dependa de estado local. Campos entre [ ] exigem
 > confirmação do aluno/secretaria — não foram assumidos.
-> Última revisão: 05/11/2026 — ver "Estado em 05/11/2026 (revisão corrente)"
+> Última revisão: 17/11/2026 — marcos posteriores a 05/11, registrados em
+> `desenho-melhorias-finais.md` e `memo-novidade-destilacao.md`: auditoria
+> externa de 12/11 (apontamentos "Study", ~22 itens verificados; figuras de
+> deck regeneradas com geradores versionados; dissertação em 164 pp);
+> reunião final de acompanhamento em 12/11 com aval para o R-TUNE
+> estendido; R-TUNE-20 EXECUTADO em 17/11 (16/20 positivas com controle
+> re-tunado, mediana 0,124 vs 0,192, sinal p=0,0059 — veredito agregado
+> intacto, integrado ao cap. 7/AI-2 sem retificação); re-varreduras de
+> novidade de 12/11 e 17/11 registradas (recorte segue inédito);
+> auditoria integral de 17/11 (10 agentes, dissertação + entregas +
+> código: zero fabricação; correções pontuais em commit da mesma data).
+> Revisão anterior (05/11/2026) — ver "Estado em 05/11/2026"
 > abaixo. Entregas de 04–05/11: métricas operacionais (Tabela A.13, Figura
 > 5.9), pedagogia dos quantis (Figura 2.5), onda 2026 de destilação no
 > cap. 3, dissertação em 163 pp.

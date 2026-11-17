@@ -28,6 +28,12 @@ from src.evaluation.enrichments import bayesian_signed_rank
 def retention_table():
     rows = []
     e = pd.read_csv(REPO / "results/distillation/extension.csv")
+    # Base canonica = 3 sementes (0,1,2). Os CSVs ganharam 10 sementes no
+    # SEEDS-10 (05/11); sem este filtro, regenerar sobrescreveria a base
+    # pareada de paper_retention.csv (0,1918) pela de 10 sementes (0,1906).
+    # Filtro adicionado na auditoria de 17/11/2026; reproduz o canonico
+    # com |delta| = 0,0 nos 20 conjuntos.
+    e = e[e.seed.isin([0, 1, 2])]
     ge = e.groupby(["dataset", "cell"]).agg(crps=("crps", "mean"))
     for ds in e.dataset.unique():
         t = ge.loc[(ds, "teacher"), "crps"]
@@ -39,6 +45,7 @@ def retention_table():
                      "teacher_edge": gap})
     d = pd.read_csv(REPO / "results/distillation/distill.csv")
     d = d[d.teacher == "tabpfn"]
+    d = d[d.seed.isin([0, 1, 2])]  # base canonica; ver nota acima
     t5 = pd.read_csv(REPO / "results/distillation/teacher_eval.csv")
     t5 = t5[t5.teacher == "tabpfn"].set_index("dataset")
     gd = d.groupby(["dataset", "student", "target"]).agg(crps=("crps", "mean"))

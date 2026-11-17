@@ -9,8 +9,8 @@ n_optuna_trials_dl: 25  # DL/FM models: 25 TPE trials (expensive per trial)
                         # 25 trials with TPE captures most of the optimization
                         # landscape (Akiba et al. 2019); consistent with
                         # Gioia (UFPE 2025) and standard practice for costly models.
-                        # The 14 already-completed experiments (100 trials) serve
-                        # as a validation anchor.
+                        # The 11 already-completed Phase-1 experiments (100
+                        # trials) serve as a validation anchor.
 optuna_sampler: tpe      # TPE sampler
 optuna_pruner: median    # MedianPruner
 
