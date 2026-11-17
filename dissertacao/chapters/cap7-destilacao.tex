@@ -363,7 +363,7 @@ exploratórios menores --- e o contraste entre execuções \emph{smoke} e
 piloto sugeriu a hipótese de que o ganho pontual é um fenômeno de
 poucos dados. Investigamos com uma varredura de tamanho de \emph{pool} (caps
 de 800, 2.000 e 8.000 linhas): há um ganho genuíno de poucos dados no
-\texttt{wine\_quality} ($\Delta = +0{,}025$ em $n{=}800$), que
+\texttt{wine\_quality} ($\Delta = +0{,}026$ em $n{=}800$), que
 desaparece a partir de $n{=}2.000$ e \emph{não} replica no
 \texttt{california\_\allowbreak housing}. Atribuímos o resquício, portanto, a um
 moderador de poucos dados dependente do conjunto, e o reportamos como
@@ -435,7 +435,7 @@ miami\_housing         & CTR23  & 11.145 & $+0{,}016$ & 4.117,4 & $+67{,}7$ \\
 health\_insurance      & CTR23  & 17.817 & $-0{,}255$ & 0,150  & $-0{,}038$ \\
 diamonds\_real         & CTR23  & 43.152 & $-0{,}315$ & 9,422  & $-2{,}97$ \\
 wine\_quality          & núcleo & 5.197  & $-0{,}970$ & 0,039  & $-0{,}037$ \\
-fifa                   & CTR23  & 15.342 & $-1{,}287$ & 42,96  & $-55{,}3$ \\
+fifa                   & CTR23  & 15.342 & $-1{,}287$ & 42,95  & $-55{,}3$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -470,7 +470,7 @@ A honestidade da leitura exige quatro ressalvas, e elas estão embutidas
 na própria tabela. Primeiro, a retenção é uma \emph{razão}, e fica
 instável quando a vantagem absoluta do professor é pequena: o caso
 \emph{born-again} do \texttt{pumadyn32nh} cavalga uma vantagem de
-apenas ${\sim}0{,}001$ de CRPS (e \texttt{online\_news} e
+apenas $0{,}0006$ de CRPS (e \texttt{online\_news} e
 \texttt{grid\_\allowbreak stability} são análogos) --- por isso a tabela reporta a
 melhoria absoluta ao lado da razão, e por isso a manchete do capítulo
 se apoia no \textbf{teste de sinal e na mediana}, que são livres de
@@ -519,7 +519,7 @@ sem o alvo binarizado da errata, o Wilcoxon vai a $p=0{,}067$, acima
 do corte de 5\%, enquanto o teste de sinal mantém 15/19,
 $p=0{,}010$; massa posterior bayesiana 0,70 em ROPE $\pm 0{,}05$), com
 máximo de $+1{,}06$ --- um aluno \emph{born-again}, com a ressalva de
-que esse caso repousa sobre vantagem absoluta de ${\sim}0{,}001$ de
+que esse caso repousa sobre vantagem absoluta de $0{,}0006$ de
 CRPS --- a latências de microssegundos. As quatro falhas têm
 diagnóstico comum e verificável, convertido em regra de decisão na
 Seção~\ref{sec:destil-regra}.
@@ -1016,7 +1016,8 @@ descritiva pós-hoc declarada condiciona a retenção à vantagem
 acima da mediana a retenção é positiva em 10 de 10, e as quatro falhas
 concentram-se todas na metade de vantagem baixa (Fisher exato
 unilateral $p{=}0{,}043$; $p{=}0{,}033$ sem o conjunto binarizado da
-errata) --- o \emph{gate} da regra prediz o \emph{sinal} do
+errata, com ``regime alto'' definido por vantagem relativa maior ou
+igual à mediana dos 19) --- o \emph{gate} da regra prediz o \emph{sinal} do
 efeito, não sua magnitude (Spearman não significativo), com dois
 caveats registrados: condicionante e desfecho compartilham o
 $\mathrm{CRPS}_{\text{hard}}$ do mesmo \emph{hold-out}, e o

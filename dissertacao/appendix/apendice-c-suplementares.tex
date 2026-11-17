@@ -38,8 +38,9 @@ do professor TabPFN rotulados em três regimes --- \emph{out-of-fold}
 (OOF), \emph{in-sample} com contexto fixado em 80\% do \emph{pool}
 (\emph{ctx-80}, que isola o efeito do vazamento mantendo o tamanho de
 contexto do OOF) e \emph{in-sample} pleno. O padrão documentado no
-capítulo é legível nas colunas: RMSE e CRPS \emph{não} degradam com o
-vazamento (chegam a melhorar levemente), mas a cobertura dos
+capítulo é legível nas colunas: o RMSE \emph{não} degrada com o
+vazamento (chega a melhorar levemente) e o CRPS move no máximo
+$0{,}002$ em qualquer direção, mas a cobertura dos
 intervalos (PICP~80\%, nominal $0{,}80$) cai de forma consistente nos
 quatro conjuntos quando se passa de OOF para \emph{ctx-80} --- o
 efeito puro do vazamento sobre a calibração do aluno.
@@ -92,7 +93,8 @@ métricas são medidas no espaço logarítmico. A coluna de retenção usa a
 definição do Capítulo~\ref{chap:destilacao},
 $(\mathrm{CRPS}_{\text{hard}} - \mathrm{CRPS}_{\text{soft}}) /
 (\mathrm{CRPS}_{\text{hard}} - \mathrm{CRPS}_{\text{professor}})$,
-calculada sobre as médias exibidas. A leitura documentada: o log
+calculada sobre as médias antes do arredondamento. A leitura
+documentada: o log
 \emph{não} recupera as falhas (\texttt{fifa} segue fortemente
 negativo) e os gaps professor--aluno colapsam para a casa de
 $0{,}004$--$0{,}025$ --- boa parte da vantagem distribucional do
@@ -234,7 +236,7 @@ linhas, e desaparece (ou inverte) a partir de 2~mil.
 \emph{Conjunto} & \emph{pool} 800 & \emph{pool} 2.000 & \emph{pool} 8.000 \\
 \midrule
 \texttt{california\_\allowbreak housing} & $-0{,}008$ & $+0{,}005$ & $-0{,}007$ \\
-\texttt{wine\_quality}       & $+0{,}025$ & $-0{,}079$ & $-0{,}081$ \\
+\texttt{wine\_quality}       & $+0{,}026$ & $-0{,}079$ & $-0{,}081$ \\
 \bottomrule
 \end{tabular}
 \end{table}

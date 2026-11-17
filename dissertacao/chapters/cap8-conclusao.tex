@@ -207,7 +207,7 @@ conforme o contrato de conduta do programa
     quantis \emph{de um professor foundation model tabular} para um
     aluno GBDT, avaliando por CRPS e cobertura --- foi verificado como
     sem trabalho público anterior nas varreduras datadas de 15--20/07,
-    04/10, 15/10 e 05/11/2026 (a de 15/10 cobrindo também a linhagem não tabular
+    04/10, 15/10, 05/11 e 12/11/2026 (a de 15/10 cobrindo também a linhagem não tabular
     de destilação distribucional, citada como antecedente na
     Seção~\ref{sec:rel-destilacao}). A evidência: retenção mediana de 19\% do gap de CRPS,
     positiva em 16 de 20 conjuntos ($p=0{,}006$; massa posterior
@@ -375,8 +375,12 @@ interpretação autorizada é ``\emph{default} forte'', não ``clássico
 ajustado ao limite'' (Seção~\ref{sec:destil-e1}). Nos alunos de
 destilação, a capacidade é herdada do \emph{tuning} do benchmark, sem
 re-ajuste por alvo de destilação --- um controle deliberado que isola o
-efeito do alvo, mas deixa aberto o teto do método com capacidade
-re-otimizada (Seção~\ref{sec:destil-limitacoes}).
+efeito do alvo; o teto com capacidade re-otimizada foi medido pelo
+re-tuning pré-registrado nos 20 conjuntos (executado em 17/11/2026): o
+veredito agregado sobrevive ao controle re-tunado (16 de 20, mediana
+0,124 contra 0,192 herdada, queda declarada), restando a retenção por
+conjunto como dependente do orçamento de \emph{tuning}
+(Seção~\ref{sec:destil-limitacoes}).
 
 \textbf{A errata \texttt{diamonds}/\texttt{kin8nm} --- registro de
 processo.} Um erro de rotulagem presente desde a origem (a chave
@@ -436,7 +440,7 @@ famílias tendem a transferir; os valores absolutos, não.
 da validação LODO é a demonstração interna de quão rápido as conclusões
 datam. Por isso toda afirmação de novidade e toda caracterização de
 lacuna carrega data de verificação (13--20/07/2026; re-varreduras em 04/10,
-14/10, 19/10 e 05/11/2026), e deve ser lida como ``aberta até onde verificamos, nas
+14/10, 19/10, 05/11 e 12/11/2026), e deve ser lida como ``aberta até onde verificamos, nas
 datas declaradas'' --- nunca como certeza atemporal
 (Capítulo~\ref{chap:related}).
 

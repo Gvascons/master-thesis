@@ -17,6 +17,12 @@ caminho do artefato de origem.
 
 ## Pendências antes da entrega
 
+0. **Figuras EN do AI-2** (auditoria 17/11/2026): `figures/{calibration,
+   pareto}_distill.pdf` são gerações de 04/10 — sem claims embutidas
+   (strings extraídas: só eixos/legendas; os caveats vivem nas legendas
+   do main.tex, que estão corretas), mas a variante PT canônica ganhou
+   supratítulo honesto em 12/11. Regenerar a variante EN com
+   `plot_calibration.py` por simetria antes do upload final.
 1. **Formato oficial** da entrega (a confirmar com a secretaria): se houver
    template obrigatório (ex.: SBC/ABNT/CIn), portar o conteúdo — a prosa e
    as tabelas transferem direto. Não há norma pública do CIn para entregas

@@ -130,7 +130,8 @@ gerações de modelos (0,11 vs.\ 0,44 com 11 modelos; 0,72 vs.\ 0,78 com
 pré-registrado de robustez (14/10/2026), árvore de profundidade 3,
 $k$NN ($k{=}3$, meta-características padronizadas) e regressão
 logística multinomial, sob o mesmo protocolo LODO, também não superam o
-\emph{baseline} em nenhuma das duas grades --- 0 de 8 células
+\emph{baseline} em nenhuma das duas grades --- 0 de 8 células,
+incluída a réplica da árvore de profundidade 2 como sanidade
 (\texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak routers.\allowbreak csv}). O arcabouço de decisão
 não deve conter um preditor de família vencedora --- conclusão
 corroborada por evidência independente \citep{herre2026}.
@@ -149,7 +150,8 @@ Tabela~\ref{tab:regret-lodo} resume o \emph{regret} das quatro políticas ---
 a árvore sob LODO e as três políticas fixas --- nos dois estudos; as
 linhas da árvore e da política sempre-FM agregam sobre os 17 conjuntos em
 que a família FM participa (\texttt{helena} é excluída por limite
-arquitetural de 100 classes), e as linhas sempre-GBDT e sempre-DL, sobre
+arquitetural: suas 100 classes excedem o teto dos FMs), e as linhas
+sempre-GBDT e sempre-DL, sobre
 todos os 18.
 
 \begin{table}[htb]
@@ -232,9 +234,12 @@ quatro políticas do pré-registro estão no artefato
 (\texttt{lodo\_\allowbreak validation\_\allowbreak 14.\allowbreak csv}), sem reajuste --- ela foi treinada
 para prever o vencedor de \emph{acurácia} e aqui é pontuada sob o score
 ponderado. O resultado antecipa a Seção~\ref{sec:resultado-negativo}:
-em mediana, a árvore nunca supera a melhor política fixa em nenhum $w$
-(pela média, cruza a sempre-FM num único ponto, $w{=}0{,}8$ --- sobre
-$N$s distintos: o artefato pontua a árvore em 16 conjuntos) e colapsa na
+em mediana, a árvore nunca supera a melhor política fixa em nenhum $w$;
+pela média, fica abaixo da sempre-FM até $w{=}0{,}7$ e acima a partir de
+$w{=}0{,}8$ (um único cruzamento) --- sobre $N$s distintos: a árvore é
+pontuada em 17 conjuntos (artefato regenerado em 17/11/2026 para
+incorporar a célula \texttt{kin8nm} ausente por herança pré-errata; as
+políticas fixas são idênticas às da geração original) --- e colapsa na
 política sempre-FM nos pesos altos (mediana 0{,}000 apenas em
 $w \geq 0{,}9$).}
 Os $N$s espelham os da Tabela~\ref{tab:regret-lodo}: 18 conjuntos para
@@ -273,8 +278,8 @@ os conjuntos.
 \begin{figure}[htb]
 \centering
 \includegraphics[width=\linewidth]{images/lodo_weighted_regret.pdf}
-\caption{Regret multicritério ponderado das três políticas fixas em
-função do peso da acurácia $w$ (Eq.~\ref{eq:score-ponderado}; experimento
+\caption{Regret multicritério ponderado das três políticas fixas e da
+árvore-LODO em função do peso da acurácia $w$ (Eq.~\ref{eq:score-ponderado}; experimento
 E2, estudo com 14 modelos). Fonte:
 \texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak weighted\_\allowbreak regret.\allowbreak csv}.}
 \label{fig:lodo-weighted}

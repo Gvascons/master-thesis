@@ -422,7 +422,7 @@ unchanged --- only
 california's two soft-target cells beat the hard-label control at all, with
 best within-pipeline retention 0.11 (california/mixed); the remaining eight
 cells are at or below the control. A pool-size sweep (caps 800/2k/8k) shows
-a genuine small-data gain on \texttt{wine\_quality} ($\Delta = +0.025$ at
+a genuine small-data gain on \texttt{wine\_quality} ($\Delta = +0.026$ at
 $n{=}800$) that vanishes by $n{=}2{,}000$ and does not replicate on
 \texttt{california\_\allowbreak housing}; we report it as an observation with a
 dataset-dependent moderator, not a general effect. Conclusion: at realistic
@@ -777,8 +777,9 @@ the CRPS-optimal occupant of that regime \emph{among teacher-derived
 strategies} (E1 later measured that a native QRF also inhabits it ---
 and surpasses the student on \texttt{california\_\allowbreak housing} --- which is
 why the rule puts ``try a strong native student'' first; overall the
-distilled student wins 17/20, $p=0.0013$, and the 22.4$\times$-faster
-QRF wins only 3/20) --- and when
+distilled student wins 17/20, $p=0.0013$, and the QRF --- which shares
+the students' latency tier, at 4.1--21.4~\textmu s/row across datasets
+--- wins only 3/20) --- and when
 the teacher's edge is small, ensemble reduction alone may close the case.
 % results/distillation/baselines_analysis.csv
 
@@ -834,9 +835,9 @@ refer to the pinned v1.0.1 release (July 2026); the official technical
 report \citep{kong2026} appeared only in late September 2026 and remains
 unreviewed. Classical distributional baselines (NGBoost, QRF) enter
 only in documented default configuration, via the pre-registered E1
-comparison (17/20, $p=0.0013$; the 22.4$\times$-faster QRF wins only
-3/20)
-% results/distillation/baselines_analysis.csv
+comparison (17/20, $p=0.0013$; the QRF, at 4.1--21.4~\textmu s/row
+across datasets, wins only 3/20)
+% results/distillation/baselines_analysis.csv + classical_baselines.csv
 and the five-system Friedman test of \S\ref{sec:dist}; the
 reading is ``strong default'', not ``tuned classical'', and the
 hard-label quantile students remain the native distributional

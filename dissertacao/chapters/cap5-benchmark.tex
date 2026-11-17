@@ -8,7 +8,9 @@
 % FIGURAS USADAS (copiar para dissertacao/images/):
 %   cd_diagram_binary.pdf      <- latex/ai1/figures/cd_diagram_binary.pdf
 %   pareto_binary.pdf          <- latex/ai1/figures/pareto_binary.pdf
-%   learning_curves.pdf        <- latex/ai1/figures/learning_curves.pdf
+%   learning_curves_diss.pdf   <- scripts/fig_learning_curves_diss.py
+%   complementarity_diss.pdf   <- scripts/fig_complementarity_diss.py
+%   metricas_operacionais_diss.pdf <- scripts/fig_metricas_operacionais_diss.py
 %   average_ranks.pdf          <- latex/ai1/figures/average_ranks.pdf
 %   dataset_landscape.pdf      <- results/figures/dataset_landscape.pdf
 %   heatmap_classification.pdf <- results/figures/heatmap_classification.pdf
@@ -250,7 +252,8 @@ seção percorre os três eixos de custo medidos pelo protocolo (tempo de
 treino, custo de ajuste de hiperparâmetros e latência de inferência) e os
 cruza com o desempenho na fronteira de Pareto.
 
-O tempo de treino mediano varia cerca de $300\times$ dentro da grade:
+O tempo de treino mediano varia cerca de $300\times$ entre os modelos
+efetivamente treinados da grade:
 LightGBM e XGBoost ajustam o modelo final em ${\sim}0{,}7$~s, enquanto
 SAINT e STab consomem ${\sim}200$~s por ajuste --- e a diferença se
 multiplica pelo número de tentativas de ajuste de hiperparâmetros e de

@@ -162,8 +162,10 @@ condicional da QP1.
 
 Conjuntos com mais de 100~mil amostras
 (\texttt{covertype}, \texttt{year\_\allowbreak prediction},
-\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit}) são subamostrados de forma estratificada
-para 100~mil amostras \emph{antes de qualquer particionamento}. A prática é
+\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit}) são subamostrados
+para 100~mil amostras \emph{antes de qualquer particionamento}
+(estratificadamente em classificação; amostra aleatória simples na
+regressão, caso do \texttt{year\_\allowbreak prediction}). A prática é
 padrão em benchmarks tabulares por viabilidade computacional
 \citep{gorishniy2021, mcelfresh2023} e, no nosso caso, é também uma
 delimitação honesta de escopo: com 14 modelos $\times$ 18 conjuntos sob
@@ -262,8 +264,9 @@ Três decisões de composição merecem justificativa explícita:
     teste, e seus parâmetros de inferência (conjunto de 8 membros de
     \emph{ensemble} --- o \emph{default} do TabPFN, espelhado no TabFM,
     cujo \emph{default} de biblioteca é 32, para comparabilidade e custo;
-    teto de contexto de 50~mil amostras, com política de
-    subamostragem idêntica entre os dois modelos) são
+    teto de contexto de 50~mil amostras por membro nos dois modelos,
+    via \emph{ensemble} de subamostras --- externo, de 4 membros, no
+    TabPFN; interno à biblioteca no TabFM) são
     políticas fixas, não quantidades ajustadas aos nossos
     dados.
 \end{itemize}
@@ -630,7 +633,9 @@ experimentos complementares completam o protocolo:
 
 Todos os experimentos executam em uma única máquina: GPU NVIDIA RTX 5080
 (16~GB de VRAM) e 32~GB de RAM. O TabFM opera com \emph{backend} PyTorch em
-precisão bf16, com pesos fixados na versão v1.0.1 \citep{tabfm2026}; o
+precisão bf16, com a biblioteca fixada por \emph{commit} na
+\emph{release} v1.0.1 e pesos do \emph{checkpoint}
+\texttt{tabfm-1.0.0-pytorch} \citep{tabfm2026}; o
 hardware é declarado porque delimita o regime estudado (o teto de 100~mil
 amostras e o teto de 50 categorias no \emph{one-hot} decorrem, em parte,
 dele) e porque medições de custo só são interpretáveis com a máquina
@@ -736,7 +741,9 @@ conhecidas e as decisões tomadas diante delas.
     eixo de custo --- imune a contaminação --- participa de toda conclusão
     prática.
   \item \textbf{Versão fixada e não revisada do TabFM.} O TabFM é avaliado
-    na versão v1.0.1 fixada por commit \citep{tabfm2026}; seu relatório
+    na \emph{release} v1.0.1 da biblioteca, fixada por commit
+    (\emph{checkpoint} de pesos \texttt{tabfm-1.0.0-pytorch})
+    \citep{tabfm2026}; seu relatório
     técnico oficial \citep{kong2026} apareceu apenas no fim de setembro de
     2026 e não passou por revisão por pares. Os resultados referem-se a essa
     versão, e isso é declarado onde quer que o modelo apareça.
