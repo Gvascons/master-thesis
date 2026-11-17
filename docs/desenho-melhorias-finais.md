@@ -671,3 +671,36 @@ de 15/10) segue valendo e declarado. Execução condicionada ao aval do
 orientador na reunião de 12/11; resultados entram no cap. 7 (§7.11.2)
 substituindo a leitura de piloto por leitura de população completa, com
 retificação datada se algum veredito mudar.
+
+### R-TUNE estendido — EXECUTADO (disparado após o aval; concluído 17/11/2026 ~04h; `retune_students.csv` 240 linhas + `retune_analysis.csv`)
+
+Execução com duas retomadas por reinício da máquina (16/11); runner
+resumível por linha — tunings interrompidos refeitos do zero, zero
+duplicatas/NaNs na auditoria do CSV final. Script de leitura:
+`scripts/retune_analysis.py` (reproduz exatamente o piloto 0,644→0,185 /
+0,500→0,396 / 0,465→0,607 e a manchete herdada 16/20, sinal p=0,0059).
+
+**H-T1 REFUTADA em escala, mas o veredito agregado sobrevive intacto ao
+controle re-tunado:**
+
+- H-T1 (retenção re-tunada >= herdada) vale em só **9/20** conjuntos;
+  mediana cai de 0,192 (herdada) para **0,124** (re-tunada).
+- Critério pré-registrado do adendo: **16/20 retenções positivas**
+  (mesma contagem da base herdada; troca de composição:
+  health_insurance entra, miami_housing sai), sinal unilateral
+  p=0,0059, Wilcoxon unilateral p=0,0348.
+- Sensibilidade sem california_housing (errata do alvo binarizado):
+  15/19, mediana 0,098, sinal p=0,0096, Wilcoxon p=0,0478.
+- Leituras do piloto na população: destilação e re-tuning **compõem**
+  (soft re-tunado melhora o CRPS em 17/20); o empate "sem nenhum trial"
+  do destilado herdado com o controle re-tunado vale em **12/20** —
+  maioria, não regra (perde em diamonds_real, fifa, health_insurance,
+  kings_county, miami_housing, online_news, space_ga, wine_quality).
+- Caveat do braço soft (exchangeability pool-interna) segue declarado;
+  direção favorece o destilado, que perdeu terreno mesmo assim — a
+  refutação de H-T1 permanece conservadora.
+
+Textos atualizados em 17/11: cap. 7 (Limitações, bloco "Capacidade
+herdada" + menção metodológica + caveat de exchangeability), apêndice C
+(legenda R-TUNE), AI-2 (passagem de limitações). Nenhum veredito
+principal mudou — integração sem retificação.
