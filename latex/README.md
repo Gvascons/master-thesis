@@ -17,12 +17,14 @@ caminho do artefato de origem.
 
 ## Pendências antes da entrega
 
-0. **Figuras EN do AI-2** (auditoria 17/11/2026): `figures/{calibration,
-   pareto}_distill.pdf` são gerações de 04/10 — sem claims embutidas
-   (strings extraídas: só eixos/legendas; os caveats vivem nas legendas
-   do main.tex, que estão corretas), mas a variante PT canônica ganhou
-   supratítulo honesto em 12/11. Regenerar a variante EN com
-   `plot_calibration.py` por simetria antes do upload final.
+0. ~~**Figuras EN do AI-2**~~ **RESOLVIDO (23/11/2026):** a variante EN
+   de `calibration_distill` foi regenerada com `plot_calibration.py
+   --lang en` e saiu **pixel-idêntica** à geração de 04/10 (PNG
+   byte-idêntico; PDF difere só no timestamp embutido) — o supratítulo
+   honesto de 12/11 é exclusivo da variante PT por desenho (`suptitle:
+   None` no EN; a legenda LaTeX carrega o título e os caveats). Ou
+   seja: as figuras do AI-2 e do cap. 7 já estavam atuais; nada a
+   trocar. Log: `results/logs/plot_calibration_en_2311.log`.
 1. **Formato oficial** da entrega (a confirmar com a secretaria): se houver
    template obrigatório (ex.: SBC/ABNT/CIn), portar o conteúdo — a prosa e
    as tabelas transferem direto. Não há norma pública do CIn para entregas
