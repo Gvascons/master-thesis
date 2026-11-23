@@ -75,8 +75,7 @@ def build_model_table(model: str, disp: str) -> str:
              r"\setlength{\tabcolsep}{4pt}",
              r"\caption[Hiperparâmetros escolhidos --- " + disp + r"]{"
              + disp + r": configuração vencedora do Optuna em cada "
-             r"conjunto (consumida pelo refit final e pelos \emph{folds} "
-             r"externos). Fonte: \texttt{results/raw/"
+             r"conjunto. Fonte: \texttt{results/raw/"
              + model.replace("_", r"\_")
              + r"\_<conjunto>.json}, campo \texttt{best\_params}.}",
              r"\label{tab:app-hp-" + model.replace("_", "-") + "}",
