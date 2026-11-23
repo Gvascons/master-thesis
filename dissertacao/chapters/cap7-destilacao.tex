@@ -874,6 +874,35 @@ destilado a entrega, em microssegundos}
 (\texttt{results/\allowbreak distillation/\allowbreak decision\_\allowbreak utility.\allowbreak csv};
 análise em \texttt{decision\_\allowbreak utility\_\allowbreak analysis.\allowbreak csv}).
 
+Três leituras aplicadas, com linhas reais do artefato de rotulagem OOF
+(o mesmo da Figura~\ref{fig:quantis-cobertura}), aterram o que a
+identidade entre a razão de custos e o nível~$\tau$ significa na
+prática. No \texttt{cps88wages}, uma linha com previsão pontual de
+953~dólares semanais seria aprovada com folga por uma política de
+corte de renda em 500; o quantil~0,10 da mesma linha é 338 --- e o
+salário realizado, 356. A pergunta do subscritor não é ``quanto este
+perfil ganha em média?'', é ``quanto ganha com 90\% de confiança?''
+--- e, entre as linhas que a média aprova no corte, 51,3\% têm
+quantil~0,10 abaixo de 350: a decisão muda em metade da carteira, não
+numa curiosidade. No \texttt{fps\_\allowbreak benchmark}, duas
+configurações com a mesma previsão pontual (${\sim}108$ contra
+${\sim}107$~FPS) têm intervalos centrais de 80\% de 1,1 e 8,7~FPS: a
+garantia honesta de desempenho mínimo --- o quantil~0,10 --- distingue
+o que a média não vê (108 contra 102). No
+\texttt{video\_\allowbreak transcoding}, provisionar o \emph{slot} pela
+previsão pontual estoura em 53,2\% dos \emph{jobs} --- a média é
+próxima da mediana, e metade fica acima por construção ---, enquanto a
+provisão pelo quantil~0,90 estoura em 5,2\%, com a folga mínima que
+ainda cumpre o serviço, que é exatamente o que a \emph{pinball}
+otimiza. O contraponto fecha a leitura: onde o custo do erro é
+simétrico e a decisão consome só o centro da distribuição, o ganho
+mediano de ${\sim}1\%$ do perfil em~U não paga a complexidade --- o
+aluno de rótulos pontuais, mais simples e tipicamente mais rápido (no
+\texttt{california\_\allowbreak housing}, 50 contra 99~\us/linha), é a
+ferramenta certa, e a regra da Seção~\ref{sec:destil-regra} existe
+para dizer isso antes de qualquer custo ser pago. Fonte:
+\texttt{results/\allowbreak distillation/\allowbreak oof/\allowbreak tabpfn\_\allowbreak <conjunto>.parquet}.
+
 \section{Quando destilar: duas hipóteses refutadas e a regra de
 decisão}
 \label{sec:destil-regra}
@@ -955,7 +984,13 @@ opiniões do professor sobre a média --- enquanto a informação
 portada pelo professor e transferível. Não a média: a \textbf{forma}. E
 a forma é exatamente o componente que um aluno de rótulos pontuais não
 pode aprender do dado bruto na mesma medida, e o componente mais caro
-de servir em contexto.
+de servir em contexto. Vale explicitar, por isso, o que a contribuição
+\emph{não} é: devolver quantis um GBDT já faz sozinho --- o controle
+deste capítulo é precisamente o objetivo \emph{pinball} nativo, e o E1
+mede os clássicos QRF e NGBoost. A contribuição é o mesmo aluno
+quantílico extrair da distribuição destilada do \emph{professor} o que
+o rótulo escalar não contém: a forma da incerteza, com o ganho
+concentrado nas caudas.
 
 O corolário institucional é direto: líder pontual não é líder
 distribucional. O TabFM vence todas as tabelas de acurácia do

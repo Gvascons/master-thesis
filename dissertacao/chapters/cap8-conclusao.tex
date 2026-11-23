@@ -344,6 +344,136 @@ e~\ref{chap:destilacao}, na ordem em que as perguntas devem ser feitas
     completo para processamento em lote.
 \end{itemize}
 
+A lista acima ordena as perguntas; falta nomear os cenários. A
+Tabela~\ref{tab:conc-perfis} consolida os mesmos resultados como
+\emph{perfis de uso}: para cada condição verificável antes de qualquer
+treino, a recomendação que os dados sustentam, a evidência medida que a
+sustenta e --- a coluna que os \emph{benchmarks} usuais omitem --- o que
+se aceita perder em troca. A coluna final é o ponto: em vários perfis, a
+recomendação é deliberadamente um modelo \emph{pior na métrica
+primária}, e a troca é defensável porque foi medida. Dois resultados
+tornam essa contabilidade barata de um lado e cara do outro: dentro do
+pelotão do núcleo, 8 dos 10 não-líderes são praticamente equivalentes
+ao líder sob ROPE de $\pm 0{,}01$ de AUC (Seção~\ref{sec:cap5-ato2})
+--- de modo que abrir mão do topo de acurácia custa, tipicamente, menos
+de um ponto percentual --- enquanto as diferenças de latência (até
+$131.097\times$ por linha), de recall da classe minoritária (até
+$9{,}3\times$ no \texttt{amazon\_\allowbreak employee}) e de custo de
+cauda (${\sim}8\%$ em $\tau{=}0{,}90$) são ordens de magnitude ou
+fatores inteiros. Quando a métrica em que os modelos diferem é a que a
+aplicação paga, é ela que decide --- e o quadro diz qual é, caso a
+caso.
+
+\begin{table}[htbp]
+\centering
+\caption{Perfis de uso: condição verificável, recomendação, evidência e
+custo aceito em troca. Fonte: Capítulos~\ref{chap:benchmark}--\ref{chap:destilacao}, seções indicadas.}
+\label{tab:conc-perfis}
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{p{0.21\linewidth}p{0.17\linewidth}p{0.33\linewidth}p{0.19\linewidth}}
+\toprule
+\textbf{Perfil (condição)} & \textbf{Recomendação} & \textbf{Evidência} &
+\textbf{Aceita-se em troca} \\
+\midrule
+Nenhuma restrição ativa; latência tolerante &
+\emph{Foundation model} primeiro (TabPFN maduro; TabFM fronteira) &
+\emph{Regret} mediano 0,000 @14 sob LODO; melhor absoluto em 13 de 18
+(Seções~\ref{sec:resultado-positivo}, \ref{sec:cap5-ato4}) &
+Custo de serviço ($10^3$--$10^4\times$ um GBDT); licença não comercial
+do TabPFN-2.5 \\
+\addlinespace
+Poucos dados ($n \lesssim 4.000$) &
+TabPFN &
+Rank médio 1,0 no regime, contra 2,8 do XGBoost, nos 5 conjuntos
+varridos (Seção~\ref{sec:cap5-ato3}) &
+Latência de inferência; a liderança com $n$ grande depende do conjunto \\
+\addlinespace
+Classe rara com falso negativo caro &
+FM (TabFM/TabPFN), \emph{mesmo sem ganho de acurácia} &
+\texttt{amazon\_employee}: acurácias 0,943--0,949 indistinguíveis;
+recall da minoritária 0,032 $\to$ 0,298; $+266$/mil na minoritária;
+balanceada melhor em 9 de 10 binárias (Seção~\ref{sec:cap5-ato5}) &
+Precisão (0,706 $\to$ 0,621) e latência; a vantagem é frequente, não
+lei (\texttt{give\_me\_some\_credit}: recalls a $<$0,02) \\
+\addlinespace
+Regressão com decisão de cauda e orçamento de \us &
+Aluno destilado $+$ passo conformal &
+Retenção positiva em 16 de 20 ($p{=}0{,}006$), mantida com controle
+re-tunado; em $\tau{=}0{,}90$, 18 de 20 ($p{=}0{,}0002$), ganho
+${\sim}8\%$ nas caudas (Seções~\ref{sec:destil-dist},
+\ref{sec:destil-e3}) &
+Nada no eixo pontual (4 de 20); latência acima do controle
+(tier de ${\sim}10^2$~\us); \emph{pipeline} OOF \\
+\addlinespace
+A métrica da aplicação inverte o vencedor &
+Decidir pela métrica que a aplicação paga; reportar as duas camadas &
+\texttt{telco}: TabFM perde acurácia (0,771 vs.\ 0,801) e a franja no
+McNemar ($-29{,}8$/mil), mas vence recall (0,663 vs.\ 0,570) e
+balanceada (0,737 vs.\ 0,727) (Seção~\ref{sec:cap5-ato5}) &
+O ``vencedor'' da métrica primária; limiar não otimizado, declarado \\
+\addlinespace
+Vantagem heterogênea por conjunto (franja do E7) &
+Escolha por conjunto/tarefa, nunca por instância; sem roteador
+aprendido &
+Concordância $\geq$0,936; TabFM converte a franja no \texttt{jannis}
+($+59{,}6$/mil) e a perde no \texttt{telco}; roteador LODO abaixo do
+trivial (Seções~\ref{sec:cap5-ato5}, \ref{sec:resultado-negativo}) &
+A promessa de ``um vencedor universal''; a vantagem não encolhe com o
+tamanho \\
+\addlinespace
+Latência de microssegundos (serviço \emph{online}) &
+GBDT nativo; destilação recupera parte da vantagem distribucional &
+0,33~\us/linha (XGBoost) vs.\ 43.262 (TabFM), $131.097\times$;
+recomendação FM inverte com 10--20\% de peso na latência (E2)
+(Seções~\ref{sec:cap5-ato2}, \ref{sec:regret-ponderado}) &
+Rank do topo --- perda tipicamente $<$1~p.p.\ de AUC no pelotão (ROPE
+8/10) \\
+\addlinespace
+Interpretabilidade intrínseca exigida (regulação) &
+GBDT &
+Única família forte em latência \emph{e} interpretabilidade na matriz
+multicritério; portão 3 do fluxograma
+(Seção~\ref{sec:arcabouco-resultante}) &
+Rank do topo, sob a mesma contabilidade ROPE; sem destilação (o aluno
+herda rótulos de um professor opaco) \\
+\addlinespace
+Limite arquitetural ($>$10 classes; contexto estourado) &
+GBDT ou DL recente conforme a tarefa &
+\texttt{helena} (100 classes) exclui os dois FMs; topo multiclasse
+descritivo: STab/TabM 3,67 vs.\ XGBoost 6,0, $N{=}3$
+(Seções~\ref{sec:cap5-ato3}, \ref{sec:arcabouco-resultante}) &
+Nada: a exclusão é estrutural, não preferência \\
+\addlinespace
+Vantagem pequena do professor; alvo de preço; nativo forte disponível &
+\emph{Não} destilar: QRF primeiro, $\log(1{+}y)$, redução de
+\emph{ensemble} &
+E1: QRF vence o destilado em 3 de 20 (no \texttt{wine\_quality},
+até o professor); \texttt{kin8nm}: 1 membro à latência do aluno; o log
+reproduz parte da vantagem de graça (Seções~\ref{sec:destil-e1},
+\ref{sec:destil-fronteira}, \ref{sec:destil-regra}) &
+O \emph{pipeline} de destilação inteiro --- e é ganho, não perda \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Três leituras fecham o quadro. Primeiro, os perfis em que a
+recomendação contraria a métrica primária (latência,
+interpretabilidade, classe rara) não pedem fé: pedem a contabilidade
+explícita das duas colunas finais, e em todos eles a perda na primária
+é limitada por medição --- pelo ROPE no pelotão, pelo limiar declarado
+nas operacionais --- enquanto o ganho na métrica da aplicação é de
+fatores inteiros a ordens de magnitude. Segundo, os perfis negativos
+são tão informativos quanto os positivos: o quadro diz quando
+\emph{não} usar o \emph{foundation model} (microssegundos, 100
+classes, regulação) e quando \emph{não} destilar (\texttt{kin8nm},
+\texttt{wine\_\allowbreak quality}) --- com os conjuntos do próprio
+\emph{benchmark} como testemunhas. Terceiro, nenhuma linha é um
+\emph{ranking}: cada uma é uma condição verificável antes de qualquer
+treino, na forma que o Capítulo~\ref{chap:framework} validou ---
+restrições, não predições.
+
 \section{Limitações e ameaças à validade}
 \label{sec:conc-limitacoes}
 

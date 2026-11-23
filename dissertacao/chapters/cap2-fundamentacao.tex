@@ -94,6 +94,13 @@ o modelo devolve uma distribuição preditiva completa --- quantis,
 intervalos, densidades --- da qual se exige calibração. A distinção parece
 sutil agora, mas é o eixo da contribuição do Capítulo~\ref{chap:destilacao}, e a
 Seção~\ref{sec:fund-distribucional} lhe dedica o ferramental próprio.
+Vale fixar desde já uma distinção que evita um mal-entendido comum: o
+escore que um classificador devolve (um número em $[0,1]$, como a
+probabilidade estimada de a linha pertencer à classe positiva) é uma
+afirmação sobre um alvo \emph{discreto}, e não guarda relação com a
+distribuição preditiva de um alvo contínuo --- esta vive na unidade do
+próprio alvo, e é dela que tratam os quantis da
+Seção~\ref{sec:fund-distribucional}.
 
 \section{Medir um classificador: da matriz de confusão à ROC-AUC}
 \label{sec:fund-metricas-clf}
@@ -821,7 +828,11 @@ ponderada desses valores, da qual se lê qualquer quantil
 O \emph{NGBoost} segue a rota paramétrica: um \emph{gradient boosting} cujas
 saídas são os \emph{parâmetros} de uma distribuição (por exemplo, média e
 variância de uma gaussiana), treinado por gradientes naturais sobre uma
-regra de pontuação própria \citep{duan2020}. QRF representa a via não-paramétrica; NGBoost, a
+regra de pontuação própria \citep{duan2020}. A rota paramétrica tem
+ainda a família LSS --- \emph{XGBoostLSS} e afins \citep{marz2019} ---,
+que leva o mesmo \emph{boosting} a modelar todos os parâmetros da
+distribuição; o NGBoost a representa neste trabalho por ser o expoente
+treinado por regra de pontuação própria. QRF representa a via não-paramétrica; NGBoost, a
 paramétrica --- e ambos aparecem como competidores no Capítulo~\ref{chap:destilacao}.
 
 \section{Comparação estatística de algoritmos}
