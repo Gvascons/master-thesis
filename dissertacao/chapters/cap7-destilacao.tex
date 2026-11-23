@@ -34,7 +34,9 @@ esse obstáculo por destilação de conhecimento, com um recorte
 verificado como inédito --- a \emph{regressão distribucional}:
 transferir não a média, mas a distribuição preditiva completa do
 \emph{professor} (\emph{teacher}) para um aluno de microssegundos.
-Além disso, sob desenho pré-registrado em 20 conjuntos de dados,
+Além disso, sob desenho registrado em duas etapas e auditado com a
+correção sequencial correspondente (Seção~\ref{sec:destil-desenho}),
+em 20 conjuntos de dados,
 confronta-se a destilação com as alternativas de engenharia de
 \emph{serving} e com \emph{baselines} distribucionais clássicos, e os
 sucessos e fracassos convertem-se na regra de decisão prática que
@@ -128,24 +130,33 @@ alunos neurais e de árvore \emph{incluindo regressão} --- porém apenas
 com alvos pontuais (transferência por erro quadrático das médias do
 professor) e avaliação restrita a RMSE, sem CRPS, quantis, calibração ou
 fronteira de custo. A reconciliação entre os ganhos pontuais que eles
-reportam e o nosso resultado negativo é tratada na
-Seção~\ref{sec:destil-ponto}, onde a varredura de tamanho de \emph{pool}
-isola exatamente o moderador sob o qual tais ganhos aparecem. A mesma
+reportam e o nosso resultado negativo é discutida na
+Seção~\ref{sec:destil-ponto}: a varredura de tamanho de \emph{pool}
+oferece uma \emph{hipótese} de moderação (ganho residual em
+\emph{pools} pequenos), mas a receita deles difere da nossa em eixos
+que não replicamos --- rotulagem com contexto completo, expansão com
+consultas sintéticas e aluno treinado só em predições do professor ---,
+de modo que a reconciliação é proposta, não demonstrada. A mesma
 re-varredura registrou que o TabFM ganhou relatório técnico oficial em
 29/09/2026 \citep{kong2026} --- ainda não revisado por pares ---, que
 confirma a verificação arquitetural feita meses antes neste estudo
 (Seção~\ref{sec:destil-professores}). O pilar distribucional e a
-fronteira de três estratégias permanecem, até a data desta escrita,
-sem trabalho público anterior.
+fronteira de três estratégias permanecem, até a re-varredura de
+23/11/2026, sem trabalho acadêmico anterior --- um repositório público
+de set/2026 destila o TabFM em XGBoost para classe e regressão
+pontual, sem tocar o recorte distribucional.
 
-\section{Desenho pré-registrado: hipóteses, critérios e conduta}
+\section{Desenho registrado em duas etapas: hipóteses, critérios e conduta}
 \label{sec:destil-desenho}
 
-Todo o desenho experimental foi registrado \emph{antes} da execução,
-em julho de 2026
+O desenho experimental foi registrado em \textbf{duas etapas}, e a
+distinção importa para o estatuto confirmatório de cada número. A
+primeira etapa é o pré-registro de 15/07/2026
 (\texttt{docs/}\allowbreak\texttt{desenho-experimental-destilacao.md}),
-com hipóteses falsificáveis, critérios de decisão pós-piloto e o
-compromisso explícito de reportar resultados negativos com a mesma
+anterior a qualquer execução: as três hipóteses falsificáveis H1--H3
+sobre os cinco conjuntos centrais de regressão, os critérios de
+decisão pós-piloto, a previsão de uma extensão de 8 a 10 conjuntos e
+o compromisso explícito de reportar resultados negativos com a mesma
 proeminência dos positivos. As três hipóteses:
 
 \begin{itemize}
@@ -183,6 +194,33 @@ episódio do \texttt{diamonds} reproduziu o \emph{pipeline} de
 ponta a ponta com
 resultados idênticos --- uma verificação involuntária, e por isso
 valiosa, de reprodutibilidade exata.
+
+A \textbf{segunda etapa} exige o mesmo rigor de relato, e este
+parágrafo existe porque a auditoria externa de 23/11/2026 mostrou que
+o texto anterior dizia mais do que o registro sustenta. O instrumento
+confirmatório da manchete --- o teste de sinal --- e a regra de
+elegibilidade da extensão (conjuntos da suíte CTR23 com 3 a 100 mil
+linhas) foram fixados em 20/07/2026, \emph{após} uma leitura
+intermediária do quadro em 15 conjuntos (11 retenções positivas,
+sinal $p=0{,}059$), e a população foi então completada para 20. Um
+desenho com leitura intermediária paga imposto estatístico, e nós o
+pagamos explicitamente: tratando as duas leituras como um desenho
+sequencial em dois estágios (nível nominal de 5\% em cada), o erro
+tipo~I global do procedimento é 0{,}028 e o $p$-valor ajustado por
+ordenação de estágios para o resultado final de 16/20 é
+$p \approx 0{,}019$ --- contra $p=0{,}0059$ da leitura ingênua; a
+extensão isolada deu 5 positivas em 5 ($p=0{,}031$) e o limite
+superior de Bonferroni com duas leituras é $0{,}0118$
+(\texttt{scripts/\allowbreak interim\_\allowbreak sequencial.py}). A
+manchete sobrevive, portanto, à correção sequencial, e é o $p$
+ajustado que deve acompanhá-la em leitura confirmatória. Daqui em
+diante, ``pré-registrado'' designa apenas o que foi fixado antes de
+qualquer resultado --- H1--H3, H-T1, H-C1 a H-C4, H-B1, o protocolo
+SEEDS-10 e os critérios do E1 (estes registrados com o executor já
+disparado, mas antes de qualquer leitura); os demais desenhos deste
+capítulo são \emph{registrados}
+(hipóteses e critérios escritos e versionados, mas não anteriores a
+toda leitura), e cada seção declara o seu caso.
 
 \section{Método}
 \label{sec:destil-metodo}
@@ -230,9 +268,17 @@ rotulada por um professor que a tenha em contexto. Os rótulos são
 mantidos em cache uma única vez por par (conjunto, professor) e reutilizados por
 todas as variantes de aluno --- o custo dominante do \emph{pipeline} é pago
 uma vez. Todos os alunos herdam os hiperparâmetros ajustados do \emph{baseline}
-correspondente no benchmark: a capacidade fica fixa e \emph{apenas o
-alvo de treino muda}, isolando o efeito da destilação de qualquer
-efeito de tuning. São três famílias:
+correspondente no benchmark: a capacidade fica fixa. É preciso dizer
+com precisão o que esse controle iguala e o que não iguala: entre o
+controle quantílico e o aluno destilado mudam o alvo \emph{e a função
+de perda} (\emph{pinball} nativa no controle; erro quadrático
+multissaída sobre as curvas do professor no destilado), e os
+hiperparâmetros herdados foram buscados para erro quadrático --- uma
+assimetria de configuração cujo custo o re-tuning dos dois braços
+mede adiante (Seção~\ref{sec:destil-limitacoes}): com ambos re-ajustados, o
+sinal se mantém (16/20) e a magnitude cai de 2,8\% para 1,4\% de ganho
+mediano de CRPS, a estimativa conservadora que o resumo adota. São
+três famílias:
 
 \begin{itemize}
   \item \textbf{XGBoost ponto} \citep{chen2016}: treinado nos rótulos
@@ -298,8 +344,11 @@ intervalos. A métrica-síntese é a \textbf{retenção do gap de CRPS},
 em que 1 significa que o aluno destilado recupera toda a vantagem do
 professor sobre o seu próprio controle de rótulos verdadeiros, valores
 negativos significam que a destilação prejudicou, e valores acima de 1
-caracterizam o efeito \emph{born-again} \citep{breiman1996,vidal2020}:
-o aluno supera o próprio professor. A latência é medida em \us/linha no
+caracterizam o efeito \emph{born-again} --- o aluno supera o próprio
+professor, o fenômeno que \citet{furlanello2018} documentam em redes;
+o termo vem da compressão de \emph{ensembles} em árvores
+\citep{breiman1996,vidal2020}, na qual o aluno apenas \emph{imita} o
+comitê. A latência é medida em \us/linha no
 \emph{hold-out} do benchmark (mediana de 5 passadas para os alunos; passada
 única cronometrada para os professores, cujo custo por passada é de
 minutos).
@@ -311,16 +360,44 @@ minutos).
 O estudo usa os cinco conjuntos de regressão do benchmark
 (\texttt{wine\_quality}, \texttt{california\_\allowbreak housing},
 \texttt{online\_news}, \texttt{kin8nm}, \texttt{year\_\allowbreak prediction};
-pools de 5,2 mil a 80 mil linhas) mais o \textbf{pool elegível
-completo de quinze conjuntos} da suíte OpenML-CTR23
-\citep{fischer2023}, sob restrições verificadas e fixadas por regra:
+pools de 5,2 mil a 80 mil linhas) mais \textbf{quinze conjuntos} da
+suíte OpenML-CTR23
+\citep{fischer2023}, selecionados sob regra declarada ---
 3 mil a 100 mil linhas, ids de versão fixados, e dois conjuntos da
 suíte excluídos por vazamento de alvo descoberto na verificação (o
 alvo é soma de atributos em \texttt{brazilian\_\allowbreak houses} e
-\texttt{wave\_energy}); a trajetória exata da fixação do pool ---
-incluindo um corte interino não significativo com $N{=}15$ (teste de
-sinal $p{=}0{,}059$) antes de a grade ser completada para o pool
-elegível integral --- é a registrada no artigo auditado e vale aqui.
+\texttt{wave\_energy}). Uma versão anterior deste texto chamava os
+quinze de ``pool elegível completo''; a auditoria externa de
+23/11/2026 recontou a regra e encontrou \textbf{dezenove} elegíveis.
+Os quatro ausentes, nomeados e com o status de cada um:
+\texttt{white\_\allowbreak wine} (44971; subconjunto do
+\texttt{wine\_\allowbreak quality} do núcleo),
+o \texttt{california\_\allowbreak housing} \emph{contínuo} (44977;
+versão não binarizada do conjunto do núcleo),
+\texttt{superconductivity} (44964; à época da seleção
+acreditava-se sobreposto ao núcleo, crença que a errata de 19/10
+desfez --- e a omissão não foi revisitada) e
+\texttt{naval\_\allowbreak propulsion\_\allowbreak plant} (44969; sem
+justificativa registrada). A sensibilidade foi medida sob o mesmo
+protocolo (um split, sementes $\{0,1,2\}$) e re-executada por nós: o
+placar vai de 16/20 ($p=0{,}0059$) para \textbf{17/24}
+($p=0{,}032$) com os quatro --- o destilado \emph{ganha} no
+california contínuo ($+3{,}7\%$ de CRPS) e perde nos outros três ---
+e para \textbf{16/22} ($p=0{,}026$) no recorte conservador que
+exclui os dois de sobreposição real com o núcleo
+(\texttt{white\_\allowbreak wine} e o próprio california contínuo,
+que é uma \emph{vitória} do destilado); as duas derrotas grandes
+(\texttt{white\_\allowbreak wine}, \texttt{superconductivity}) têm
+29--36\% do teste com gêmeo exato no \emph{pool}, o mesmo mecanismo
+de memorização de duplicatas do \texttt{wine\_\allowbreak quality},
+enquanto a derrota no \texttt{naval} é genuína
+(\texttt{results/\allowbreak distillation/\allowbreak
+ctr23\_\allowbreak sensitivity.csv}; proveniência e limites em
+\texttt{ctr23\_\allowbreak omitidos/\allowbreak PROVENANCE.md}). A
+trajetória da fixação do pool ---
+incluindo o corte interino não significativo com $N{=}15$ (teste de
+sinal $p{=}0{,}059$) --- está na Seção~\ref{sec:destil-desenho}, com a
+correção sequencial que ela exige.
 Duas notas de identidade (errata de 19/10/2026, Seção~\ref{sec:met-datasets}):
 o conjunto historicamente rotulado ``superconduct'' é o
 \texttt{online\_news} (OnlineNewsPopularity; regressão contínua
@@ -373,12 +450,16 @@ Essa varredura é também a chave da reconciliação com a colisão
 parcial da Seção~\ref{sec:destil-novidade}: \citet{jeong2026} reportam
 ganhos de destilação pontual em regressão com professores mais novos
 (TabPFN~v3 e TabICLv2), transferência por erro quadrático e avaliação
-apenas de RMSE, sob protocolo e suítes distintos. Nossa varredura
-isola exatamente o regime em que tais ganhos aparecem, e o nosso
+apenas de RMSE, sob protocolo e suítes distintos --- e com uma receita
+que difere da nossa em eixos que não replicamos (rotulagem com
+contexto completo, expansão por consultas sintéticas, aluno treinado
+só em predições do professor). Nossa varredura
+oferece uma hipótese de moderação para o contraste --- ganho residual
+restrito a \emph{pools} pequenos ---, e o nosso
 negativo é escopado com precisão: tamanhos de \emph{pool} realistas (3 mil a
 100 mil linhas), capacidade do aluno fixada pelo tuning do benchmark.
-As duas leituras são compatíveis; a nossa delimita onde a deles deixa
-de valer.
+As duas leituras são compatíveis; a reconciliação exata é proposta,
+não demonstrada.
 
 \emph{A destilação pontual falha em escala de \emph{pool} realista,
 independentemente do professor.} O aluno pontual destilado supera o
@@ -448,13 +529,20 @@ próprio professor) e sequência de sucessos grandes em
 ($+0{,}59$), \texttt{fps\_benchmark} ($+0{,}52$) e
 \texttt{cpu\_activity} ($+0{,}50$). Os dois instrumentos frequentistas
 rejeitam a hipótese nula ao nível de 5\%, ambos unilaterais conforme a
-hipótese direcional pré-registrada (teste de sinal
-$p = 0{,}006$; Wilcoxon $p = 0{,}045$ --- limítrofe, e na versão
+hipótese direcional (teste de sinal
+$p = 0{,}006$ na leitura ingênua e $p \approx 0{,}019$ sob a correção
+sequencial do desenho em duas etapas --- o instrumento foi fixado após
+a leitura intermediária, Seção~\ref{sec:destil-desenho};
+Wilcoxon $p = 0{,}045$ --- limítrofe, e na versão
 bilateral ($p = 0{,}090$) não rejeitaria: por isso a manchete repousa
 no teste de sinal e na mediana) e o teste bayesiano de postos
-sinalizados \citep{benavoli2017} coloca 0,70 de massa posterior em
-retenção positiva com região de equivalência prática (ROPE) de
-$\pm 0{,}05$ --- estável em 0,63--0,71 na varredura de ROPE de 0,02 a
+sinalizados \citep{benavoli2017} coloca 0,96 da probabilidade
+posterior na região de retenção positiva (fração de amostras
+posteriores em que a região é a mais provável, a convenção de
+Benavoli et al.; a massa posterior esperada, $E[\theta]$, é 0,70) com
+região de equivalência prática (ROPE) de
+$\pm 0{,}05$ --- estável em 0,95--0,96 (e $E[\theta]$ em 0,63--0,71)
+na varredura de ROPE de 0,02 a
 0,10. A sensibilidade à errata do \texttt{california\_\allowbreak housing} (alvo
 binarizado; Seção~\ref{sec:met-datasets}) é reportada com a mesma
 proeminência: excluído o conjunto degenerado, a retenção fica positiva
@@ -474,26 +562,61 @@ apenas $0{,}0006$ de CRPS (e \texttt{online\_news} e
 \texttt{grid\_\allowbreak stability} são análogos) --- por isso a tabela reporta a
 melhoria absoluta ao lado da razão, e por isso a manchete do capítulo
 se apoia no \textbf{teste de sinal e na mediana}, que são livres de
-escala, e nos sucessos de vantagem grande (\texttt{cps88wages}
-$+0{,}160$, \texttt{year\_\allowbreak prediction} $+0{,}130$,
-\texttt{cpu\_activity} $+0{,}117$). Segundo, o segundo maior sucesso
+escala. O rótulo de ``sucesso grande'', por sua vez, exige leitura
+relativa: o \texttt{cps88wages}, cuja melhoria absoluta de $+0{,}160$
+parece expressiva, opera sobre CRPS de ${\sim}160$ --- o ganho
+relativo é de $0{,}1\%$ e o \emph{bootstrap} pareado por linhas do
+teste não o distingue de zero;
+entre os sucessos absolutos ficam \texttt{year\_\allowbreak prediction}
+($+0{,}130$; vitória clara no \emph{bootstrap}, $+2{,}9\%$ com IC95
+$[2{,}6;\,3{,}2]$) e \texttt{cpu\_activity} ($+0{,}117$). O
+\emph{bootstrap} por linhas, aliás, é a análise de incerteza por
+conjunto que o pré-registro de 15/07 prometia e que faltava: refeita
+em 23/11 (B=10.000, alunos re-treinados nas três sementes, CRPS por
+linha do \emph{hold-out}), ela dá à manchete a sua leitura mais
+honesta --- \textbf{13 vitórias claras} (IC95 inteiramente positivo),
+\textbf{4 empates} (\texttt{cps88wages}, \texttt{miami\_\allowbreak housing},
+\texttt{space\_ga}, \texttt{health\_\allowbreak insurance}) e
+\textbf{3 derrotas claras}: o teste de sinal conta empates ruidosos
+como vitórias, e o 16/20 deve ser lido como ``13 claras $+$ 3
+limítrofes''
+(\texttt{results/\allowbreak distillation/\allowbreak bootstrap\_\allowbreak lines.csv}).
+Segundo, o segundo maior sucesso
 da tabela, o \texttt{california\_\allowbreak housing} ($+0{,}64$; $+0{,}072$ de
 CRPS), é exatamente o conjunto de alvo binarizado da errata: ali o
 ``ganho distribucional'' é calibração de uma Bernoulli, não regressão
-contínua --- a análise de sensibilidade acima o exclui por isso, e
-nenhuma frase deste capítulo o usa como vitrine. Terceiro, nenhuma retenção é exatamente zero, mas
+contínua --- a análise de sensibilidade acima o exclui por isso;
+onde o conjunto reaparece em exemplos (a fronteira de \emph{serving},
+os custos por linha), o rótulo da errata o acompanha, e nenhuma
+manchete repousa sobre ele. Terceiro, nenhuma retenção é exatamente zero, mas
 positivos quase nulos como o \texttt{miami\_housing} ($+0{,}016$)
 contam como sucesso sob o teste de sinal --- a varredura de ROPE acima
-delimita o efeito de tratá-los como equivalências. Quarto, as quatro
-falhas são diagnosticáveis, e o diagnóstico alimenta a regra de
-decisão da Seção~\ref{sec:destil-regra}: no \texttt{wine\_quality}, o
-professor fica atrás do \emph{baseline} ajustado em RMSE (o eixo do
-critério pré-registrado) e sua pequena vantagem de CRPS ($+0{,}04$) inverte na
-transferência; \texttt{fifa}, \texttt{diamonds\_real} e
-\texttt{health\_\allowbreak insurance} são alvos de escala de preço com cauda
-pesada, para os quais a Seção~\ref{sec:destil-regra} mostra que a
-vantagem aparente do professor é, em grande parte, reproduzível por uma
-transformação logarítmica.
+delimita o efeito de tratá-los como equivalências. Quarto, as
+falhas são diagnosticáveis --- mas cada uma pela própria causa, e a
+auditoria externa de 23/11/2026 derrubou o diagnóstico ``comum'' que
+uma versão anterior deste texto oferecia. No \texttt{wine\_quality},
+a causa é um artefato do conjunto: 27,6\% do teste tem gêmeo exato de
+covariáveis no \emph{pool} (o conjunto original traz 1.179 linhas
+duplicadas), o controle \emph{pinball} memoriza os gêmeos e o aluno,
+treinado nas curvas suavizadas do professor, não --- nas linhas
+\emph{sem} gêmeo o destilado vence por $+3{,}0\%$ de CRPS, e no
+conjunto deduplicado ($n=5.318$, professor re-rotulado OOF) o
+destilado vence nas três sementes, com ganho de $+0{,}85\%$ e
+retenção $+0{,}10$
+(\texttt{results/\allowbreak distillation/\allowbreak wine\_\allowbreak dedup.csv});
+a ``derrota'' publicada é memorização de duplicatas, não limitação da
+destilação, e permanece na tabela porque o conjunto original é o da
+população registrada. O \texttt{health\_\allowbreak insurance}, descrito em
+versão anterior como alvo de escala de preço, tem na verdade por alvo
+\texttt{whrswk} --- horas trabalhadas por semana, com 29,9\% de zeros
+e assimetria \emph{negativa} ($-0{,}34$) --- e sua retenção vai de
+$-0{,}26$ (herdado) a $+0{,}65$ (re-tunado): uma falha sensível à
+configuração, não um efeito de escala
+(\texttt{results/\allowbreak distillation/\allowbreak retune\_\allowbreak analysis.csv}).
+Restam \texttt{fifa} e \texttt{diamonds\_\allowbreak real} como as falhas
+genuínas em alvos de escala de preço --- e, para elas, a
+Seção~\ref{sec:destil-regra} mostra que a hipótese da cauda pesada
+não se confirma.
 
 A qualidade transferida não é só o CRPS agregado: a calibração
 acompanha --- e, num caso, excede --- a transferência, como as curvas
@@ -512,17 +635,22 @@ de a distância ao nominal diminuir --- em 5/5 conjuntos no braço
 \emph{A destilação distribucional retém mediana de 19\% da
 vantagem de CRPS do professor, positiva em 16 de 20 conjuntos.} A
 transferência das 19 curvas de quantis para um aluno multiquantil é
-positiva em 16/20 conjuntos (teste de sinal unilateral $p=0{,}006$;
+positiva em 16/20 conjuntos (teste de sinal unilateral $p=0{,}006$,
+$p \approx 0{,}019$ sob a correção sequencial da
+Seção~\ref{sec:destil-desenho};
 Wilcoxon unilateral
 $p=0{,}045$ na população de 20 --- na sensibilidade de 19 conjuntos,
 sem o alvo binarizado da errata, o Wilcoxon vai a $p=0{,}067$, acima
 do corte de 5\%, enquanto o teste de sinal mantém 15/19,
-$p=0{,}010$; massa posterior bayesiana 0,70 em ROPE $\pm 0{,}05$), com
+$p=0{,}010$; probabilidade posterior bayesiana 0,96 em ROPE
+$\pm 0{,}05$, com $E[\theta]=0{,}70$), com
 máximo de $+1{,}06$ --- um aluno \emph{born-again}, com a ressalva de
 que esse caso repousa sobre vantagem absoluta de $0{,}0006$ de
-CRPS --- a latências de microssegundos. As quatro falhas têm
-diagnóstico comum e verificável, convertido em regra de decisão na
-Seção~\ref{sec:destil-regra}.
+CRPS --- a latências de microssegundos. As quatro falhas são
+discutidas uma a uma na
+Seção~\ref{sec:destil-regra}, com os diagnósticos que a análise por
+linhas e o teste de deduplicação sustentam --- e sem o diagnóstico
+comum que uma versão anterior deste texto alegava.
 
 \section{A fronteira de \emph{serving}: destilar, comprimir ou reduzir
 ensemble}
@@ -588,6 +716,20 @@ Seção~\ref{sec:destil-regra} --- quando a vantagem do professor é
 pequena, o menu de engenharia barata resolve antes que a destilação
 entre em cena.
 
+O veredito de H3, que uma versão anterior deixava implícito, fica
+explícito: \textbf{confirmada com escopo estreito}. No
+\texttt{year\_\allowbreak prediction} o aluno destilado é
+Pareto-dominante no sentido forte --- CRPS melhor que o do professor
+mais subamostrado (4,43 contra 4,70) a $7{,}8\times$ menos latência;
+no \texttt{california\_\allowbreak housing} a faixa existe, mas é a
+banda abaixo de 245~\us\ em que nenhuma configuração do professor
+opera (e que a QRF nativa ocupa com CRPS melhor, como o E1 mediria);
+no \texttt{kin8nm} a hipótese \emph{falha} --- a redução de
+\emph{ensemble} entrega a latência do aluno com CRPS muito melhor.
+H3 vale, portanto, onde a vantagem do professor é grande, e é
+substituída pela engenharia barata onde é pequena --- a mesma
+condição da regra de decisão.
+
 Dois achados colaterais têm valor independente. Primeiro, reduzir o
 \emph{ensemble} do TabPFN de 8 para 1 membro \emph{melhorou} o RMSE no
 \texttt{california\_\allowbreak housing} (conjunto da errata; 0,2521 contra
@@ -646,8 +788,15 @@ A Figura~\ref{fig:destil-calibration} fecha o eixo da calibração com
 as curvas de confiabilidade dos sistemas distribucionais ---
 prometidas na Seção~\ref{sec:destil-dist}: para cada nível nominal
 $\tau$, a fração empírica de alvos abaixo do quantil $\tau$ predito,
-com a diagonal como calibração perfeita (curvas acima dela
-sobre-cobrem; abaixo dela, sub-cobrem). No \texttt{california\_\allowbreak housing},
+com a diagonal como calibração perfeita. A regra de leitura correta
+--- a mesma da Figura~\ref{fig:quantis-cobertura} --- é por nível:
+curva acima da diagonal num $\tau$ significa quantil predito
+\emph{alto} demais naquele nível; a cobertura de um intervalo central
+$[q_{0{,}10}, q_{0{,}90}]$ é a \emph{diferença} entre as frações nos
+dois níveis, de modo que uma curva mais íngreme que a diagonal no
+centro indica intervalos estreitos demais (subcobertura) --- não
+existe um atalho ``acima = sobre-cobre'' válido para a curva inteira,
+como uma versão anterior desta legenda sugeria. No \texttt{california\_\allowbreak housing},
 o controle de rótulos verdadeiros satura em sobrecobertura extrema e o
 professor exibe a forma em S de caudas mal calibradas, enquanto o
 aluno destilado é o mais próximo da diagonal; no \texttt{cpu\_activity},
@@ -675,9 +824,14 @@ não sua acurácia.} Com contexto idêntico, rótulos \emph{in-sample} não
 degradam RMSE nem CRPS, mas erodem a cobertura de intervalos em 0,5 a
 5,1~p.p.\ de PICP80 nos quatro conjuntos testados: a superconfiança
 em contexto do professor transfere-se ao aluno. E a destilação chega a
-\emph{melhorar} a calibração: no \texttt{california\_\allowbreak housing}, o aluno
-destilado é mais bem calibrado que o controle e que o próprio professor
-(com a ressalva da errata: ali o alvo é binarizado, e ``calibração''
+\emph{melhorar} a calibração num dos dois critérios: no
+\texttt{california\_\allowbreak housing}, o aluno
+destilado tem o menor desvio médio da diagonal entre os três sistemas
+--- mas, no critério de cobertura do intervalo central, ele
+\emph{subcobre} (PICP80 de 0,596, contra sobrecobertura de
+${\sim}0{,}94$ do professor): ``mais bem calibrado'' vale no primeiro
+critério, não no segundo, e é o passo conformal que fecha a cobertura
+(com as ressalvas da errata: ali o alvo é binarizado, e ``calibração''
 é a de uma Bernoulli).
 
 Resta a objeção simétrica: se o ganho fosse \emph{apenas} calibração,
@@ -806,11 +960,27 @@ continua funcionando no seu próprio recorte (retenções $+0{,}64$ ---
 no conjunto de alvo binarizado da errata --- e
 $+0{,}09$ sobre o controle da mesma família); o que o E1 acrescenta é
 que, nesses conjuntos, uma família nativa diferente chega mais longe
-sem professor algum. Terceiro, o clássico vence o \emph{controle} de
-rótulos verdadeiros (o XGBoost-pinball) em apenas 5 dos 20 conjuntos:
-o controle usado em todo o capítulo segue sendo um \emph{baseline}
-representativo, e a vantagem do aluno destilado não é um artefato de
-controle fraco.
+sem professor algum. Terceiro, a leitura sobre a força do controle
+precisa das duas metades --- e uma versão anterior deste texto só
+dava a primeira. O melhor clássico vence o \emph{controle} de
+rótulos verdadeiros (o XGBoost-\emph{pinball}) em 5 dos 20 conjuntos;
+mas o próprio \emph{workaround} gaussiano do E3 (ponto $+$ resíduo
+gaussiano global) o vence em 7 --- com ${\sim}21\%$ no
+\texttt{fps\_\allowbreak benchmark} e no conjunto binarizado da errata
+--- e, em união, alguma alternativa sem professor bate o controle em
+9 dos 20
+(\texttt{results/\allowbreak distillation/\allowbreak decision\_\allowbreak utility.csv}).
+O controle segue sendo a comparação pareada certa --- mesma família,
+mesmo objetivo quantílico, só o rótulo muda de origem --- mas não é o
+teto sem professor: contra a \emph{melhor} alternativa sem professor
+de cada conjunto (controle, gaussiana, QRF ou NGBoost --- uma seleção
+por oráculo, favorável demais à alternativa), o destilado vence em 12
+de 20 ($p=0{,}25$). A vantagem sobre o controle, portanto, não é
+artefato de um controle mal construído, mas a pergunta prática
+``alguém pagaria o professor?'' é respondida pela regra de decisão
+--- teste as alternativas baratas primeiro --- e pelo eixo que nenhuma
+alternativa cobre: latência de microssegundos \emph{com} forma
+distribucional transferida.
 
 O saldo interpretativo segue o critério pré-fixado: a vantagem da
 destilação \textbf{não é redundante} com nativos distribucionais
@@ -836,7 +1006,11 @@ unidades do problema}
 \label{sec:destil-e3}
 
 O CRPS é uma régua de estatístico; decisões reais são tomadas sob
-custos assimétricos. O experimento E3, pré-registrado em 14/10/2026
+custos assimétricos. O experimento E3, registrado em 14/10/2026 ---
+hipóteses e o nível focal $\tau{=}0{,}90$ fixados antes de qualquer
+leitura de resultado, mas no mesmo commit em que o executor entrou em
+operação, pelo que o rótulo honesto é \emph{registrado}, não
+pré-registrado (Seção~\ref{sec:destil-desenho}) ---
 com a natureza declarada de antemão --- o custo ótimo do problema do
 jornaleiro com razão de custos $\tau$ \emph{é} a perda \emph{pinball}
 em $\tau$, de modo que E3 não é evidência independente do CRPS, e sim
@@ -877,24 +1051,40 @@ análise em \texttt{decision\_\allowbreak utility\_\allowbreak analysis.\allowbr
 Três leituras aplicadas, com linhas reais do artefato de rotulagem OOF
 (o mesmo da Figura~\ref{fig:quantis-cobertura}), aterram o que a
 identidade entre a razão de custos e o nível~$\tau$ significa na
-prática. No \texttt{cps88wages}, uma linha com previsão pontual de
-953~dólares semanais seria aprovada com folga por uma política de
-corte de renda em 500; o quantil~0,10 da mesma linha é 338 --- e o
-salário realizado, 356. A pergunta do subscritor não é ``quanto este
-perfil ganha em média?'', é ``quanto ganha com 90\% de confiança?''
---- e, entre as linhas que a média aprova no corte, 51,3\% têm
-quantil~0,10 abaixo de 350: a decisão muda em metade da carteira, não
-numa curiosidade. No \texttt{fps\_\allowbreak benchmark}, duas
-configurações com a mesma previsão pontual (${\sim}108$ contra
-${\sim}107$~FPS) têm intervalos centrais de 80\% de 1,1 e 8,7~FPS: a
-garantia honesta de desempenho mínimo --- o quantil~0,10 --- distingue
-o que a média não vê (108 contra 102). No
+prática. Três avisos de seleção, primeiro, porque ilustração não é
+estatística: as curvas são saídas do \emph{professor} em rotulagem
+OOF (não do aluno destilado --- o aluno aprende exatamente estas
+curvas, com a retenção que a Tabela~\ref{tab:destil-retencao} mede);
+as linhas individuais foram \emph{escolhidas} por legibilidade, não
+sorteadas; e cada escolha vem declarada com a estatística da carteira
+inteira ao lado. No \texttt{cps88wages}, uma política de corte de
+renda em 500~dólares semanais aprovaria pela média, com folga, uma
+linha com previsão pontual de 953; o quantil~0,10 da mesma linha é
+338. O conjunto tem duas linhas com exatamente essas covariáveis e
+exatamente essa curva --- uma realizou 356, a outra, 1.132 --- e é
+isso que uma distribuição preditiva larga \emph{significa}: dois
+indivíduos idênticos para o modelo, desfechos a $3{,}2\times$ de
+distância, e um intervalo $[338;\,1.587]$ que cobre ambos enquanto o
+ponto 953 erra os dois (a linha está no percentil ${\sim}99$ da
+discrepância média--realizado; o gêmeo é o contraexemplo que a média
+esconde). Na carteira inteira, com o \emph{mesmo} corte de 500 dos
+dois lados, 86,6\% das linhas que a média aprova (12.247 de 14.141)
+têm quantil~0,10 abaixo do corte: para um subscritor que pergunta
+``quanto ganha com 90\% de confiança?'', a decisão muda na maior
+parte da carteira, não numa curiosidade. No
+\texttt{fps\_\allowbreak benchmark}, entre as 326 configurações com
+previsão pontual na faixa 107--109~FPS, os intervalos centrais de
+80\% vão de 1,1 a 8,7~FPS --- o par exibido aqui são as duas pontas
+dessa faixa, declaradamente: mesma média, e a garantia honesta de
+desempenho mínimo (o quantil~0,10) distingue o que a média não vê
+(108 contra 102). No
 \texttt{video\_\allowbreak transcoding}, provisionar o \emph{slot} pela
 previsão pontual estoura em 53,2\% dos \emph{jobs} --- a média é
 próxima da mediana, e metade fica acima por construção ---, enquanto a
-provisão pelo quantil~0,90 estoura em 5,2\%, com a folga mínima que
-ainda cumpre o serviço, que é exatamente o que a \emph{pinball}
-otimiza. O contraponto fecha a leitura: onde o custo do erro é
+provisão pelo quantil~0,90 estoura em 5,2\%: abaixo dos 10\% nominais
+(o professor sobrecobre neste conjunto), e com folga muito menor do
+que qualquer margem fixa que entregasse a mesma garantia. O
+contraponto fecha a leitura: onde o custo do erro é
 simétrico e a decisão consome só o centro da distribuição, o ganho
 mediano de ${\sim}1\%$ do perfil em~U não paga a complexidade --- o
 aluno de rótulos pontuais, mais simples e tipicamente mais rápido (no
@@ -911,8 +1101,11 @@ As condições de valor da destilação emergem de duas hipóteses
 testadas e refutadas --- e é da refutação que sai a regra prática.
 
 \textbf{A família do aluno importa?} Muito. O objetivo \emph{pinball}
-do XGBoost é um aprendiz distribucional fraco, e a destilação o
-conserta de forma consistente --- esse é, em parte, o espaço que ela
+do XGBoost, sob os hiperparâmetros herdados deste desenho, deixa
+espaço mensurável em vários conjuntos --- a
+Seção~\ref{sec:destil-e1-resultados} quantifica: alguma alternativa
+sem professor o vence em 9 de 20 --- e a destilação preenche parte
+desse espaço de forma consistente; esse é, em parte, o espaço que ela
 ocupa. Um aluno MLP-quantil de rótulos verdadeiros, por contraste,
 iguala o XGBoost destilado \emph{sem professor algum} em conjuntos
 pequenos e numéricos (CRPS 0,110 contra 0,109 no
@@ -924,17 +1117,30 @@ $\to 4{,}91$). Nenhuma família de aluno domina; o que a destilação
 oferece é robustez entre regimes
 (\texttt{results/\allowbreak distillation/\allowbreak mlp\_\allowbreak students.\allowbreak csv}).
 
-\textbf{A cauda pesada é o moderador de falha?} Não --- e a refutação
-é mais informativa que a hipótese. Re-executamos professor e alunos sob
-$y' = \log(1+y)$ nos três conjuntos de falha em escala de preço, mais
+\textbf{A cauda pesada é o moderador de falha?} Não --- mas a leitura
+correta é mais modesta do que a que uma versão anterior deste texto
+extraiu, e o reparo foi apontado pela auditoria de 23/11/2026.
+Re-executamos professor e alunos sob
+$y' = \log(1+y)$ nos três conjuntos então diagnosticados como falha
+em escala de preço, mais
 dois controles positivos. A transformação \emph{não} resgata as
-falhas (\texttt{fifa} persiste em $-1{,}69$); o que ela faz é
-colapsar a própria vantagem do professor --- os gaps de CRPS encolhem
-para 0,004--0,025 em espaço logarítmico --- e encolher também os
-sucessos. A conclusão inverte a hipótese: boa parte da vantagem
-distribucional do \emph{foundation model} sobre alvos de escala de preço
-\emph{é} tratamento de escala, reproduzível de graça por uma
-transformação de uma linha
+falhas (\texttt{fifa} persiste em $-1{,}69$). Os gaps absolutos de
+CRPS de fato encolhem para 0,004--0,025 em espaço logarítmico --- mas
+isso é, antes de tudo, mudança de escala da própria métrica, e a
+comparação honesta é adimensional: em vantagem \emph{relativa} do
+professor sobre o controle, o log não colapsa nada --- a vantagem
+sobe de 1,5\% para 2,7\% no \texttt{fifa}, de 4,9\% para 8,6\% no
+\texttt{diamonds\_\allowbreak real} e de 2,1\% para 4,2\% no
+\texttt{health\_\allowbreak insurance}, recuando apenas nos dois
+controles positivos ($14{,}4\%\!\to\!9{,}1\%$ no
+\texttt{kings\_\allowbreak county}; $12{,}9\%\!\to\!11{,}1\%$ no
+\texttt{miami\_\allowbreak housing}). A frase que aqui constava ---
+``boa parte da vantagem distribucional é tratamento de escala,
+reproduzível de graça'' --- comparava lacunas em unidades diferentes
+e não se sustenta. O que a ablação estabelece é um par mais fraco e
+ainda assim útil: a transformação é gratuita, muda o regime de erro
+em que professor e alunos operam, e não elimina a vantagem relativa
+do professor
 (\texttt{results/\allowbreak distillation/\allowbreak ablation\_\allowbreak logtarget.\allowbreak csv}).
 
 Das duas refutações, do E1 e da fronteira, a regra de decisão final
@@ -942,8 +1148,8 @@ Das duas refutações, do E1 e da fronteira, a regra de decisão final
 
 \begin{quote}
 \textbf{Antes de destilar: (i)~aplique transformações baratas de alvo
-(um log em alvos de escala de preço reproduz de graça boa parte da
-vantagem do professor); (ii)~teste um aluno distribucional nativo forte
+(um log em alvos de escala de preço é gratuito, muda o regime de erro
+e o quanto move o seu conjunto mede-se em minutos); (ii)~teste um aluno distribucional nativo forte
 --- uma QRF \emph{default} custa segundos, e um MLP-quantil cobre os
 conjuntos pequenos e numéricos. Destile quando uma vantagem genuína do
 professor persistir após ambos --- uma única rotulagem OOF, de custo de
@@ -1113,8 +1319,11 @@ documentada, sem tuning específico, com imputação por mediana no
 caminho da QRF; a interpretação é ``\emph{default} forte'', não ``clássico
 ajustado ao limite''. \textbf{Unilateralidade e multiplicidade:} todos
 os $p$-valores centrais são unilaterais, conforme as hipóteses
-direcionais pré-registradas; a manchete sobrevive à leitura bilateral
-(sinal $p=0{,}012$), mas o Wilcoxon suplementar (bilateral $0{,}090$) e
+direcionais declaradas (o estatuto de registro de cada uma está na
+Seção~\ref{sec:destil-desenho}); a manchete sobrevive à leitura
+bilateral
+(sinal $p=0{,}012$) e à correção sequencial do desenho em duas etapas
+($p\approx0{,}019$), mas o Wilcoxon suplementar (bilateral $0{,}090$) e
 o Fisher pós-hoc (bilateral $0{,}087$) não rejeitariam --- coerente com
 os papéis suplementar e pós-hoc que já lhes são atribuídos. Nenhuma
 correção de multiplicidade é aplicada entre experimentos; sob correção
@@ -1144,14 +1353,30 @@ a variância entre sementes é desprezível face à variância entre
 conjuntos; a sensibilidade à errata espelha a das 3 sementes (15/19,
 mediana 0,166). \textbf{Hardware:} medições em uma única GPU
 delimitam, não mapeiam, o espaço de hardware. \textbf{Licença dos
-pesos do professor:} a licença dos pesos do TabPFN-2.5
-(\texttt{tabpfn-2.5-license-v1.1}, verificada em 19/10/2026) proíbe
-uso comercial ou de produção do modelo, \emph{de seus derivados e de
-suas saídas} --- o que alcança um aluno treinado nas saídas do
-professor. O argumento de \emph{serving} barato deste capítulo vale,
-portanto, para pesquisa e avaliação interna; implantação comercial do
+pesos do professor:} a licença dos pesos do TabPFN-2.5 (TABPFN-2.5
+Non-Commercial License v1.1, reverificada na fonte em 23/11/2026) tem
+três camadas que importam aqui --- e uma versão anterior deste
+parágrafo as comprimia numa só. Primeira: saídas \emph{não} são
+derivados (``\emph{Outputs are not considered Derivatives under this
+License}'', §1) --- o aluno destilado não é um ``derivado'' no sentido
+da licença. Segunda: o uso licenciado é o não comercial --- treinar,
+afinar ou destilar outros modelos \emph{para uso comercial} está
+explicitamente fora da definição de \emph{Non-Commercial Purpose}, e a
+licença veda uso comercial ou de produção do modelo, de derivados e de
+quaisquer dados produzidos por ele; este estudo é pesquisa, e é só
+nesse regime que opera. Terceira, a mais específica: o §2(d) veda usar
+as saídas para ``\emph{train, fine-tune, or distill a model that is
+competitive with the TABPFN-2.5 Model}''. O aluno deste capítulo retém
+12--19\% da vantagem distribucional do professor e não compete com ele
+em qualidade --- o nicho é latência ---, mas a palavra final sobre
+``competitivo'' é do licenciante. O argumento de \emph{serving} barato
+vale, portanto, para pesquisa e avaliação interna; implantação
+comercial do
 aluno destilado exige a licença \emph{enterprise} do fornecedor do
-professor (ou um professor de licença permissiva).
+professor (ou um professor de licença permissiva). Os pesos do TabFM
+estão sob licença análoga (TabFM Non-Commercial License v1.0,
+verificada em 23/11/2026; sem cláusula de modelo competitivo) ---
+igualmente não comerciais, o que o texto anterior não dizia.
 
 \section{Síntese do capítulo}
 \label{sec:destil-sintese}
@@ -1159,7 +1384,7 @@ professor (ou um professor de licença permissiva).
 O capítulo delimita com precisão o espaço em que destilar foundation
 models tabulares para regressão funciona. O eixo pontual é um negativo
 robusto e independente do professor: em \emph{pool} realista, não há o que
-transferir. O eixo distribucional --- o recorte sem trabalho público
+transferir. O eixo distribucional --- o recorte sem trabalho acadêmico
 anterior --- é positivo em 16 de 20 conjuntos (mediana de 19\% de
 retenção do gap de CRPS, chegando ao \emph{born-again}), a até três
 ordens de magnitude menos latência conforme o conjunto ($7{,}4\times$
@@ -1168,7 +1393,8 @@ configuração competitiva mais barata dele, $2{,}5\times$ e $27\times$
 onde a vantagem é grande --- Seção~\ref{sec:destil-fronteira}), e
 sobrevive ao teste contra nativos
 clássicos fortes (17/20 no E1 pré-registrado).
-% results/distillation/pareto.csv A fronteira de três
+% fonte: results/distillation/pareto.csv
+A fronteira de três
 estratégias localiza quando cada alavanca vence, a ablação OOF mostra
 que a salvaguarda certa protege calibração, e as três refutações ---
 ponto, cauda pesada, redundância com clássicos --- convertem-se numa

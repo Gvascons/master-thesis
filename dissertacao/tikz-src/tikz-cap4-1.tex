@@ -22,8 +22,7 @@
 \node[destaque, below right=9mm and -14mm of dados] (hold)
   {\emph{Hold-out} final (20\%)\\intocado por toda a seleção};
 \node[caixa, below=of dev] (nested)
-  {Validação cruzada aninhada\\laço externo: 5 \emph{folds} (medição)\\
-   laço interno: 3 \emph{folds} (seleção)};
+  {Seleção: CV interna de 3 \emph{folds}\\sobre o \emph{pool} (uma única vez);\\reavaliação em 5 \emph{folds} externos\\com os hiperparâmetros fixados};
 \node[caixa, below=of nested] (optuna)
   {Optuna TPE + MedianPruner\\100 \emph{trials} (GBDT) / 25 (DL)\\
    \emph{foundation models}: \emph{zero-shot}};

@@ -30,12 +30,15 @@ terminou respondendo a uma pergunta diferente, porque a evidência
 coletada mostrou que a original expirou. O primeiro movimento do
 trabalho estabeleceu isso em duas etapas. Na geração de modelos anterior
 a 2026, a disputa de acurácia termina em empate positivo, não em
-vitória: sob protocolo uniforme com validação cruzada aninhada e
-\emph{hold-out} intocado, 8 dos 10 modelos não-líderes do núcleo de 11
+vitória: sob protocolo uniforme com \emph{hold-out} intocado pela
+seleção, 8 dos 10 modelos não-líderes do núcleo de 11
 são praticamente equivalentes ao líder sob uma região de equivalência
-prática (ROPE) de $\pm0{,}01$ de AUC \citep{benavoli2017}, conclusão
-robusta à variação do limiar, e 80\% da variância de \emph{rank} é
-intrafamília ($\eta^2 = 0{,}20$) --- o eixo ``GBDT vs.\ aprendizado
+prática (ROPE) de $\pm0{,}01$ de AUC \citep{benavoli2017} no critério
+declarado no Capítulo~\ref{chap:benchmark} (3 dos 10 no corte estrito
+de 0,95), conclusão
+robusta à variação do limiar, e a interação modelo$\times$conjunto
+domina a variância de \emph{rank} (0,69, contra 0,20 da família e
+0,11 do modelo-dentro-da-família) --- o eixo ``GBDT vs.\ aprendizado
 profundo'' é uma abstração fraca para esses dados
 (Capítulo~\ref{chap:benchmark}). Na etapa seguinte, a geração 2026
 quebrou o empate pelo flanco que a controvérsia não previa: não foi o
@@ -95,8 +98,9 @@ as famílias de modelos tabulares sobrevive a um protocolo rigoroso e à
 chegada da geração 2026 de foundation models?} O Capítulo~\ref{chap:benchmark} responde em
 dois tempos: dentro da geração anterior a 2026, sim --- o topo é
 equivalência prática positivamente aferida (8/10 equivalentes sob ROPE
-$\pm0{,}01$; sensibilidade $0{,}005/0{,}01/0{,}02 \to 2/8/10$), com 80\%
-da variância de \emph{rank} intrafamília; entre gerações, não --- o
+$\pm0{,}01$; sensibilidade $0{,}005/0{,}01/0{,}02 \to 2/8/10$ no
+critério $E[\theta]>0{,}5$), com a interação modelo$\times$conjunto
+dominando a variância de \emph{rank}; entre gerações, não --- o
 paradigma pré-treinado separa-se do pelotão (TabFM com \emph{ranks}
 médios 2,7/1,0/1,2 nas três tarefas; TabPFN como vice consistente),
 sustentado pela consistência entre conjuntos e pelo instrumento
@@ -150,7 +154,7 @@ conforme o contrato de conduta do programa
   \item \textbf{Benchmark multicritério neutro da geração 2026
     (evidência; Capítulo~\ref{chap:benchmark}).} 14 modelos $\times$ 18
     conjuntos (250 das 252 células; duas exclusões estruturais), com
-    validação cruzada aninhada, inferência frequentista \emph{e}
+    \emph{hold-out} intocado pela seleção, inferência frequentista \emph{e}
     bayesiana com ROPE e análise de sensibilidade, e três eixos de custo
     sob o mesmo protocolo. Dele saem o empate positivo da geração
     anterior, a quebra pela geração 2026 e --- até onde alcançam as verificações
@@ -175,8 +179,10 @@ conforme o contrato de conduta do programa
     multicritério --- até onde alcançam as verificações datadas ---, KAN
     e TabKAN terminam no último terço nas três tarefas
     (\emph{ranks} 11,0/12,0/9,8 e 11,4/13,3/11,8), em linha com a
-    literatura crítica \citep{kancritical2024,poeta2024} e contra as
-    alegações dos proponentes; a contraparte registrada é que ambas são
+    crítica de paridade de custo \citep{kancritical2024} e contra as
+    alegações dos proponentes --- e contra o resultado favorável ao
+    KAN de \citet{poeta2024}, obtido sem \emph{baselines} GBDT e sob
+    treino curto, que o protocolo uniforme não reproduz; a contraparte registrada é que ambas são
     baratas de servir (2,3--3,1~\us/linha) --- o problema é desempenho,
     não custo.
   \item \textbf{Resultado negativo do roteamento por meta-características
@@ -206,12 +212,17 @@ conforme o contrato de conduta do programa
     Capítulo~\ref{chap:destilacao}).} O recorte --- transferir curvas de
     quantis \emph{de um professor foundation model tabular} para um
     aluno GBDT, avaliando por CRPS e cobertura --- foi verificado como
-    sem trabalho público anterior nas varreduras datadas de 15--20/07,
-    04/10, 15/10, 05/11 e 12/11/2026 (a de 15/10 cobrindo também a linhagem não tabular
+    sem trabalho \emph{acadêmico} anterior nas varreduras datadas de
+    15--20/07, 04/10, 15/10, 05/11, 12/11, 17/11 e 23/11/2026 --- um
+    repositório público de set/2026 destila o TabFM em XGBoost para
+    classe e regressão \emph{pontual}, sem tocar o recorte
+    distribucional --- (a de 15/10 cobrindo também a linhagem não tabular
     de destilação distribucional, citada como antecedente na
     Seção~\ref{sec:rel-destilacao}). A evidência: retenção mediana de 19\% do gap de CRPS,
-    positiva em 16 de 20 conjuntos ($p=0{,}006$; massa posterior
-    bayesiana de 0,70 em retenção positiva), incluindo um aluno
+    positiva em 16 de 20 conjuntos ($p=0{,}006$, $p\approx0{,}019$ sob
+    a correção sequencial; probabilidade posterior
+    bayesiana de 0,96 em retenção positiva, com massa posterior
+    esperada 0,70), incluindo um aluno
     \emph{born-again}, a latências de microssegundos.
   \item \textbf{Refutação da destilação pontual em \emph{pool} realista
     (evidência negativa; Capítulo~\ref{chap:destilacao}).} O aluno
@@ -219,9 +230,11 @@ conforme o contrato de conduta do programa
     com qualquer dos dois professores --- inclusive um com gap de âncora
     quase $6\times$ maior ---, e a varredura de tamanho de \emph{pool} isola o
     moderador (ganho residual restrito a $n \leq 800$, dependente do
-    conjunto), o que reconcilia o negativo com os ganhos pontuais
-    contemporâneos de \citet{jeong2026} delimitando onde eles deixam de
-    valer.
+    conjunto) --- uma hipótese de reconciliação com os ganhos pontuais
+    contemporâneos de \citet{jeong2026}, cuja receita difere da nossa
+    em eixos que não replicamos (rotulagem com contexto completo,
+    consultas sintéticas, aluno treinado só em predições do
+    professor).
   \item \textbf{Fronteira de três estratégias de \emph{serving}
     (evidência; Capítulo~\ref{chap:destilacao}).} Destilar, comprimir
     contexto e reduzir \emph{ensemble} medidos pela primeira vez nos
@@ -311,8 +324,10 @@ e~\ref{chap:destilacao}, na ordem em que as perguntas devem ser feitas
     detalhes (Seção~\ref{sec:arcabouco-resultante}).
   \item \textbf{Em regressão com incerteza: transforme antes de
     destilar.} Em alvos de escala de preço, uma transformação
-    logarítmica de uma linha reproduz de graça boa parte da vantagem
-    distribucional do professor (Seção~\ref{sec:destil-regra}).
+    logarítmica de uma linha é gratuita e muda o regime de erro de
+    todos os sistemas --- ela não elimina a vantagem relativa do
+    professor, mas é o primeiro teste a fazer, e custa minutos
+    (Seção~\ref{sec:destil-regra}).
   \item \textbf{Teste a QRF antes de destilar.} Um nativo distribucional
     \emph{default} custa segundos de treino, serve a microssegundos e,
     numa minoria previsível de conjuntos, resolve o problema antes que
@@ -354,7 +369,9 @@ recomendação é deliberadamente um modelo \emph{pior na métrica
 primária}, e a troca é defensável porque foi medida. Dois resultados
 tornam essa contabilidade barata de um lado e cara do outro: dentro do
 pelotão do núcleo, 8 dos 10 não-líderes são praticamente equivalentes
-ao líder sob ROPE de $\pm 0{,}01$ de AUC (Seção~\ref{sec:cap5-ato2})
+ao líder sob ROPE de $\pm 0{,}01$ de AUC, no critério declarado no
+Ato~I --- 3 dos 10, os GBDTs, no corte estrito de 0,95
+(Seção~\ref{sec:cap5-ato1})
 --- de modo que abrir mão do topo de acurácia custa, tipicamente, menos
 de um ponto percentual --- enquanto as diferenças de latência (até
 $131.097\times$ por linha), de recall da classe minoritária (até
@@ -381,7 +398,8 @@ Nenhuma restrição ativa; latência tolerante &
 \emph{Foundation model} primeiro (TabPFN maduro; TabFM fronteira) &
 \emph{Regret} mediano 0,000 @14 sob LODO; melhor absoluto em 13 de 18
 (Seções~\ref{sec:resultado-positivo}, \ref{sec:cap5-ato4}) &
-Custo de serviço ($10^3$--$10^4\times$ um GBDT); licença não comercial
+Custo de serviço (de ${\sim}3.900\times$ o GBDT mais lento a
+$131.097\times$ o XGBoost); licença não comercial
 do TabPFN-2.5 \\
 \addlinespace
 Poucos dados ($n \lesssim 4.000$) &
@@ -391,21 +409,31 @@ varridos (Seção~\ref{sec:cap5-ato3}) &
 Latência de inferência; a liderança com $n$ grande depende do conjunto \\
 \addlinespace
 Classe rara com falso negativo caro &
-FM (TabFM/TabPFN), \emph{mesmo sem ganho de acurácia} &
+FM a limiar fixo --- \emph{ou} re-otimizar o limiar do GBDT; medir
+recall a precisão igualada antes de trocar &
 \texttt{amazon\_employee}: acurácias 0,943--0,949 indistinguíveis;
-recall da minoritária 0,032 $\to$ 0,298; $+266$/mil na minoritária;
-balanceada melhor em 9 de 10 binárias (Seção~\ref{sec:cap5-ato5}) &
+recall da minoritária 0,032 $\to$ 0,298 no limiar 0,5; $+266$/mil na
+minoritária;
+balanceada melhor em 9 de 10 binárias (Seção~\ref{sec:cap5-ato5}).
+Contrapesos declarados: a H-C3 do E7 (vitória sistemática do FM nos
+casos difíceis) foi \emph{refutada}, e no mesmo conjunto o melhor AUC
+é de um GBDT (CatBoost 0,887 vs.\ 0,860) --- a vantagem medida é de
+posicionamento de probabilidades a limiar fixo, em um conjunto &
 Precisão (0,706 $\to$ 0,621) e latência; a vantagem é frequente, não
 lei (\texttt{give\_me\_some\_credit}: recalls a $<$0,02) \\
 \addlinespace
 Regressão com decisão de cauda e orçamento de \us &
 Aluno destilado $+$ passo conformal &
-Retenção positiva em 16 de 20 ($p{=}0{,}006$), mantida com controle
+Retenção positiva em 16 de 20 ($p{=}0{,}006$; $0{,}019$ sequencial),
+mantida com controle
 re-tunado; em $\tau{=}0{,}90$, 18 de 20 ($p{=}0{,}0002$), ganho
-${\sim}8\%$ nas caudas (Seções~\ref{sec:destil-dist},
+${\sim}8\%$ nas caudas; a \emph{combinação} destilado$+$conformal não
+foi medida de ponta a ponta nos 20 (conformal pilotado em 5 conjuntos;
+E3 sem o passo conformal) (Seções~\ref{sec:destil-dist},
 \ref{sec:destil-e3}) &
 Nada no eixo pontual (4 de 20); latência acima do controle
-(tier de ${\sim}10^2$~\us); \emph{pipeline} OOF \\
+(tier de ${\sim}10^2$~\us); \emph{pipeline} OOF; a licença não
+comercial do professor alcança o aluno destilado \\
 \addlinespace
 A métrica da aplicação inverte o vencedor &
 Decidir pela métrica que a aplicação paga; reportar as duas camadas &
@@ -428,13 +456,15 @@ GBDT nativo; destilação recupera parte da vantagem distribucional &
 0,33~\us/linha (XGBoost) vs.\ 43.262 (TabFM), $131.097\times$;
 recomendação FM inverte com 10--20\% de peso na latência (E2)
 (Seções~\ref{sec:cap5-ato2}, \ref{sec:regret-ponderado}) &
-Rank do topo --- perda tipicamente $<$1~p.p.\ de AUC no pelotão (ROPE
-8/10) \\
+Rank do topo --- perda tipicamente $<$1~p.p.\ de AUC no pelotão do
+núcleo (ROPE 8/10 vs.\ TabPFN, critério $E[\theta]>0{,}5$); contra o
+TabFM a equivalência é incerta ($P(\mathrm{equiv})$ do XGBoost: 0,40) \\
 \addlinespace
 Interpretabilidade intrínseca exigida (regulação) &
 GBDT &
 Única família forte em latência \emph{e} interpretabilidade na matriz
-multicritério; portão 3 do fluxograma
+multicritério --- atribuição qualitativa por família, declarada, não
+medida; portão 3 do fluxograma
 (Seção~\ref{sec:arcabouco-resultante}) &
 Rank do topo, sob a mesma contabilidade ROPE; sem destilação (o aluno
 herda rótulos de um professor opaco) \\
@@ -451,7 +481,8 @@ Vantagem pequena do professor; alvo de preço; nativo forte disponível &
 \emph{ensemble} &
 E1: QRF vence o destilado em 3 de 20 (no \texttt{wine\_quality},
 até o professor); \texttt{kin8nm}: 1 membro à latência do aluno; o log
-reproduz parte da vantagem de graça (Seções~\ref{sec:destil-e1},
+muda o regime de erro de graça, sem eliminar a vantagem relativa do
+professor (Seções~\ref{sec:destil-e1},
 \ref{sec:destil-fronteira}, \ref{sec:destil-regra}) &
 O \emph{pipeline} de destilação inteiro --- e é ganho, não perda \\
 \bottomrule
@@ -486,9 +517,14 @@ resultados (Seção~\ref{sec:met-limitacoes}).
 \subsection{Validade interna}
 
 \textbf{Priors cientes de benchmarks --- o risco residual não
-endereçável.} Ambos os \emph{foundation models} declaram pré-treino
-exclusivamente sintético, o que exclui por construção a memorização dos
-conjuntos OpenML; permanece, porém, o risco mais fraco de
+endereçável.} O TabFM declara pré-treino exclusivamente sintético; o
+\emph{checkpoint} padrão do classificador TabPFN v2.5, porém, é
+afinado em 43 conjuntos reais que incluem o \texttt{higgs} deste
+benchmark --- correção factual da auditoria de 23/11/2026, com a
+sensibilidade medida (no \texttt{higgs}, o checkpoint só-sintético é
+até ligeiramente melhor: 0,8113 contra 0,8111 de AUC;
+Seção~\ref{sec:met-limitacoes}); o regressor padrão é sintético puro,
+preservando a parte distribucional. Permanece, além disso, o risco mais fraco de
 \emph{priors} e políticas de inferência iterativamente ajustados, ao
 longo das versões, ao desempenho em benchmarks públicos --- uma forma
 branda de sobreajuste da comunidade da qual nenhum benchmark público
@@ -618,6 +654,25 @@ restrições regulatórias com pesos não lineares. O arcabouço mantém os
 eixos separados em vez de agregá-los prematuramente, mas qualquer
 recomendação escalar herda essa compressão
 (Seções~\ref{sec:met-limitacoes} e~\ref{sec:limitacoes-framework}).
+
+Três limitações já declaradas nos capítulos de origem merecem ecoar
+nesta consolidação, porque tocam o uso prático dos resultados.
+\textbf{Licença dos professores:} os pesos do TabPFN-2.5 e do TabFM
+são não comerciais, e a licença do TabPFN veda ainda destilar das
+suas saídas um modelo ``competitivo'' --- o aluno destilado deste
+estudo opera em regime de pesquisa, e implantação comercial exigiria
+licenciamento próprio (Seção~\ref{sec:destil-limitacoes}).
+\textbf{Subcobertura do aluno destilado puro:} a cláusula
+pré-registrada de cobertura (PICP80 a $\pm5$~p.p.\ do nominal) é
+cumprida em só 10 dos 20 conjuntos; o ganho de calibração é
+comparativo, e o fechamento da cobertura vem do passo conformal,
+pilotado em 5 conjuntos (Seção~\ref{sec:destil-dist}).
+\textbf{Multiplicidade:} nenhuma correção é aplicada \emph{entre}
+experimentos; sob correção de Holm na família confirmatória, as
+conclusões primárias sobrevivem e os instrumentos suplementares não
+--- e a manchete da QP3 carrega a correção sequencial do seu desenho
+em duas etapas ($p\approx0{,}019$;
+Seção~\ref{sec:destil-desenho}).
 
 \section{Trabalhos futuros}
 \label{sec:conc-futuros}

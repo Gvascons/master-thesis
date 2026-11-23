@@ -41,3 +41,5 @@ Thumbs.db
 .env
 
 # uv cache (uv.lock is committed for reproducibility)
+results/ckpt/
+results/distillation/ctr23_omitidos/openml_cache/

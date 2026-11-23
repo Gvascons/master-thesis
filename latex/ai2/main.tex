@@ -59,8 +59,11 @@ teacher's quantile curves into a multi-quantile student --- retains a
 median 19\%, and in one case more than the entirety, of the teacher's
 CRPS (continuous ranked probability score) advantage (positive in 16/20
 datasets, including one born-again case where the student surpasses its
-teacher; one-sided sign test $p = 0.006$, one-sided Wilcoxon $p = 0.045$, Bayesian
-$P(\mathrm{ret}>0) = 0.70$ at a region of practical equivalence of
+teacher; one-sided sign test $p = 0.006$ at face value and
+$p \approx 0.019$ under the sequential correction of the two-stage
+design (declared in the methods), one-sided Wilcoxon $p = 0.045$, Bayesian
+posterior probability of positive retention $0.96$ (expected posterior
+mass $0.70$) at a region of practical equivalence of
 $\pm$0.05; under the sensitivity that
 excludes one dataset whose target a dated identity erratum found to be
 binarized, the sign test holds at 15/19, $p = 0.010$, while the
@@ -76,9 +79,15 @@ already matches student latency;
 \textbf{calibration}, not its accuracy --- a deconfounded refinement of prior classification findings;
 and (4) failures are diagnosable, yielding a practical decision rule: try
 target transforms and a strong native student first, and distill when a
-genuine teacher edge persists --- cheaply verifiable via OOF labeling. All
-experiments are pre-registered, seed-controlled, and publicly reproducible
-on a single 16\,GB GPU.
+genuine teacher edge persists --- cheaply verifiable via OOF labeling.
+Hypotheses and gates were registered in advance --- the confirmatory
+sign test and the extension's eligibility rule were fixed at an interim
+look, and headline $p$-values carry the corresponding two-stage
+sequential correction --- and all
+experiments are seed-controlled and publicly reproducible
+on a single 16\,GB GPU. With both arms re-tuned, the median CRPS gain
+is 1.4\% (vs.\ 2.8\% inherited) and median retention 0.124 --- the
+conservative estimate.
 \end{abstract}
 
 \section{Introduction}
@@ -131,15 +140,21 @@ answer RQ1, \S\ref{sec:frontier} RQ2, and
     gain is a small-data phenomenon on some datasets only.
   \item \textbf{A positive on the open axis:} distributional distillation
     via quantile-curve transfer is positive in 16/20 datasets --- the
-    five core datasets plus the complete CTR23 pool eligible under an
-    objective size/leakage/overlap rule; the extension was completed to
-    the full eligible pool after a non-significant interim read at
-    $N{=}15$ (sign test $p = 0.059$), so the final population is the
-    entire eligible suite, leaving no selection margin ---
+    five core datasets plus fifteen CTR23 datasets selected under a
+    declared size/leakage/overlap rule. An external audit (Nov 23,
+    2026) recounted the rule: it reaches nineteen datasets, so the run
+    pool was \emph{not} the complete eligible suite; the four omitted
+    sets are named, justified and measured in \S\ref{sec:setup}, and
+    the verdict survives the sensitivity (17/24, $p=0.032$; 16/22
+    excluding the two with real core overlap, $p=0.026$). The
+    extension followed a non-significant interim read at
+    $N{=}15$ (sign test $p = 0.059$), so headline $p$-values carry a
+    two-stage sequential correction ($p \approx 0.019$; \S\ref{sec:method}) ---
     with median retention 19\%, maximum above 100\% (a born-again student),
     and agreement across instruments (one-sided sign test $p = 0.006$;
     one-sided Wilcoxon
-    $p = 0.045$; Bayesian signed-rank $P(\mathrm{retention}>0) = 0.70$ at
+    $p = 0.045$; Bayesian signed-rank posterior probability of positive
+    retention $0.96$ --- expected posterior mass $E[\theta] = 0.70$ --- at
     ROPE $\pm 0.05$; under the dataset-identity sensitivity of
     \S\ref{sec:setup} the sign test survives --- 15/19, $p = 0.010$ ---
     while the Wilcoxon moves from $0.045$ to $0.067$, above the 5\%
@@ -291,8 +306,13 @@ teacher) and reused by all student variants.
 
 \paragraph{Students and targets.} All students inherit the tuned
 hyperparameters of the corresponding baseline from the companion benchmark
---- capacity is held fixed and only the target changes, isolating the
-distillation effect.
+--- capacity is held fixed. Precision about what this control equalizes:
+between the quantile control and the distilled student both the target
+\emph{and the loss} change (native pinball vs.\ multi-output squared
+error), and the inherited hyperparameters were tuned for squared error
+--- a configuration asymmetry whose cost the re-tuning of both arms
+measures (\S\ref{sec:limitations}): the sign holds (16/20) and the median
+CRPS gain drops from 2.8\% to 1.4\%, the conservative estimate.
 \begin{itemize}
   \item \emph{XGBoost point}, trained on true labels (control), on the
     teacher's OOF mean (soft), or on a 0.8/0.2 mixture.
@@ -369,8 +389,23 @@ hard-label control and negative values mean distillation hurt. Latency is
 \us/row on the benchmark hold-out (median of 5 passes for students; single
 timed pass for teachers, whose per-pass cost is minutes).
 
-\paragraph{Pre-registration and conduct.} Hypotheses, gates, and decision
-criteria were registered before execution; deviations are dated addenda;
+\paragraph{Registration and conduct --- in two stages.} The design was
+registered in two stages, and the distinction matters for the
+confirmatory status of each number. The Jul~15, 2026 pre-registration
+fixed, before any execution, hypotheses H1--H3 on the five core
+datasets, post-pilot gates, a planned extension of 8--10 datasets, and
+the commitment to report negatives with full prominence. The
+confirmatory instrument of the headline --- the sign test --- and the
+extension's eligibility rule (CTR23, 3k--100k rows) were fixed on
+Jul~20, \emph{after} an interim look at 15 datasets (11 positive, sign
+$p=0.059$); the population was then completed to 20. We pay the
+statistical tax explicitly: treating the two looks as a two-stage
+sequential design (nominal 5\% at each), the global type-I error is
+0.028 and the stage-wise adjusted $p$-value for the final 16/20 is
+$p \approx 0.019$ (naive $p=0.0059$; the extension alone, 5/5,
+$p=0.031$; Bonferroni upper bound $0.0118$). ``Pre-registered''
+hereafter designates only what preceded any result. Deviations are
+dated addenda;
 negative results are reported with the same prominence as positives; and
 one labeling erratum discovered mid-study (a config key pointing to the
 wrong OpenML id) is documented with its full rectification trail --- the
@@ -394,12 +429,30 @@ classification suite --- mechanically valid for paired comparisons
 (CRPS on a Bernoulli target is well defined and identical across the
 compared systems) but degenerate for distributional claims, so every
 headline below carries a sensitivity analysis with it excluded. To
-these we add the complete eligible pool of fifteen from the OpenML-CTR23
+these we add fifteen datasets from the OpenML-CTR23
 suite \citep{fischer2023} (a curated benchmark suite of tabular
-regression tasks) under verified constraints (3k--100k rows; two
+regression tasks) under a declared rule (3k--100k rows; two
 suite datasets excluded for target leakage discovered during verification
 --- the target is a sum of features in \texttt{brazilian\_\allowbreak houses} and
-\texttt{wave\_energy}; version-pinned dataset ids). Splits are identical to
+\texttt{wave\_energy}; version-pinned dataset ids). An earlier version
+called the fifteen ``the complete eligible pool''; an external audit
+(Nov 23, 2026) recounted the rule and found \textbf{nineteen} eligible.
+The four absent, named: \texttt{white\_wine} (44971; a subset of the
+core \texttt{wine\_quality}), continuous \texttt{california\_housing}
+(44977; the non-binarized variant of the core set),
+\texttt{superconductivity} (44964; believed at selection time to
+overlap the core --- a belief the Oct 19 erratum dissolved, and the
+omission was not revisited) and \texttt{naval\_propulsion\_plant}
+(44969; no recorded justification). Measured under the same protocol
+(one split, seeds \{0,1,2\}), the scoreboard moves from 16/20
+($p=0.0059$) to 17/24 ($p=0.032$) --- the distilled student \emph{wins}
+on continuous california (+3.7\% CRPS) and loses on the other three ---
+and to 16/22 ($p=0.026$) under the conservative cut that excludes the
+two with real core overlap (\texttt{white\_wine} and continuous
+california itself, which is a \emph{win}); the
+two large defeats have 29--36\% of test rows with exact covariate twins
+in the pool, the same duplicate-memorization mechanism as
+\texttt{wine\_quality}, while the \texttt{naval} defeat is genuine. Splits are identical to
 the companion benchmark: a fixed 20\% hold-out (seed 42) that no selection
 step ever observes; three student seeds throughout. All datasets are
 public (OpenML); no personal or otherwise sensitive data are processed
@@ -448,13 +501,26 @@ positive in 16 (median $+0.19$), topping at $+1.06$ (\texttt{pumadyn32nh}
 (\texttt{california\_\allowbreak housing}), $+0.59$ (\texttt{abalone}), $+0.52$
 (\texttt{fps\_benchmark}) and $+0.50$ (\texttt{cpu\_activity}). Both
 frequentist instruments reject at the 5\% level, both one-sided per the
-directional pre-registered hypothesis (sign test
-$p = 0.006$; Wilcoxon $p = 0.045$ --- borderline, and two-sided it
+directional hypothesis (sign test
+$p = 0.006$ at face value, $p \approx 0.019$ under the two-stage
+sequential correction --- the confirmatory instrument was fixed at the
+interim look, as declared in \S\ref{sec:method}; Wilcoxon $p = 0.045$ --- borderline, and two-sided it
 would not reject, which is why the headline rests on the sign test and
 the median) and the Bayesian signed-rank
-\citep{benavoli2017} places 0.70 posterior mass on positive retention at
-a ROPE (region of practical equivalence) of $\pm 0.05$ (0.63--0.71
-across ROPE 0.02--0.10). The sensitivity to the \texttt{california}
+\citep{benavoli2017} places 0.96 posterior probability on positive
+retention (Benavoli convention: fraction of posterior samples where the
+region is most probable; the expected posterior mass $E[\theta]$ is
+0.70) at a ROPE (region of practical equivalence) of $\pm 0.05$
+(0.95--0.96, with $E[\theta]$ 0.63--0.71,
+across ROPE 0.02--0.10). The per-dataset uncertainty analysis promised
+in the pre-registration --- a paired per-row bootstrap of the test set
+(B=10{,}000, students retrained on all three seeds) --- gives the
+headline its most honest reading: \textbf{13 clear wins} (95\% CI
+entirely positive), \textbf{4 ties} (\texttt{cps88wages},
+\texttt{miami\_housing}, \texttt{space\_ga},
+\texttt{health\_insurance}) and \textbf{3 clear losses}; the sign
+test counts noisy ties as wins, so 16/20 reads as ``13 clear $+$ 3
+borderline'' (\texttt{bootstrap\_lines.csv}). The sensitivity to the \texttt{california}
 erratum is reported with equal prominence: excluding the
 binarized-target dataset, retention is positive in 15 of 19 (median
 $+0.17$; sign test $p = 0.010$; bootstrap CI still entirely positive,
@@ -491,7 +557,7 @@ QRF, NGBoost) on the 20 datasets rejects equality
 3.6, 4.9), with the distilled student the only system not separated
 from the teacher by the Nemenyi test ($\mathrm{CD}{=}1.36$) --- though
 the distilled--hard gap (0.8) also falls short of the CD in this
-conservative five-system test, so the pre-registered paired
+conservative five-system test, so the declared paired
 instruments remain primary for that pair
 (\texttt{friedman\_\allowbreak systems.\allowbreak csv}); and a declared post-hoc conditioning
 on the teacher's \emph{relative} edge shows the decision gate predicts
@@ -502,13 +568,20 @@ with magnitude unpredicted (Spearman n.s.) and two recorded caveats
 --- the conditioner and the outcome share the same hold-out
 $\mathrm{CRPS}_{\text{hard}}$, and the gate is used in oracle form
 (\texttt{retention\_\allowbreak conditional.\allowbreak csv}). The four failures are
-diagnosable and form the basis of \S\ref{sec:rule}'s decision rule:
-\texttt{wine\_quality} --- where the teacher trails the tuned baseline on
-RMSE (the axis of our pre-registered gate) and its small CRPS edge
-($+0.04$) inverts under transfer --- and three price-scale, heavy-tailed
-targets (\texttt{fifa}, \texttt{diamonds\_\allowbreak real}, \texttt{health\_\allowbreak insurance})
-where \S\ref{sec:rule} shows the teacher's apparent edge is largely
-reproducible by a log transform.
+diagnosable --- each by its own cause; an external audit (Nov 23, 2026)
+overturned the ``common diagnosis'' an earlier version offered. On
+\texttt{wine\_quality} the cause is a dataset artifact: 27.6\% of the
+test set has an exact covariate twin in the pool, the pinball control
+memorizes the twins and the distilled student does not --- on twin-free
+rows the student wins by $+3.0\%$ CRPS, and on the deduplicated set
+($n{=}5{,}318$, teacher re-labeled OOF) it wins on all three seeds
+($+0.85\%$, retention $+0.10$). \texttt{health\_insurance}, described
+earlier as a price-scale target, actually predicts \texttt{whrswk} ---
+hours worked per week, 29.9\% zeros, \emph{negative} skew --- and its
+retention moves from $-0.26$ (inherited) to $+0.65$ (re-tuned): a
+configuration-sensitive failure, not a scale effect. That leaves
+\texttt{fifa} and \texttt{diamonds\_\allowbreak real} as the genuine
+price-scale failures (\S\ref{sec:rule}).
 
 Calibration accompanies the transfer, though the pre-registered
 coverage clause is not met in absolute terms: PICP80 falls within
@@ -688,7 +761,7 @@ tails (erratum caveat: that panel's target is binarized, so its
 \label{sec:decision-utility}
 
 CRPS is a statistician's ruler; real decisions face asymmetric costs.
-A pre-registered follow-up (E3, Oct~14, 2026) translates the effect
+A registered follow-up (E3, Oct~14, 2026; hypotheses and the focal level fixed before any reading, in the same commit that started the runner) translates the effect
 into decision units, with its nature declared up front: the optimal
 newsvendor cost at cost ratio $\tau$ \emph{is} the pinball loss at
 $\tau$, so E3 is not independent evidence --- it is the CRPS
@@ -696,7 +769,7 @@ $\tau$, so E3 is not independent evidence --- it is the CRPS
 we measure the realized cost of acting on each system's
 $\tau$-quantile on the hold-out, adding the realistic point-model
 workaround (point student plus a global Gaussian residual, with scale
-fit on an internal 10\% validation split). Both pre-registered
+fit on an internal 10\% validation split). Both registered
 hypotheses confirm: at $\tau{=}0.90$ the distilled student's realized
 cost is lower than or equal to the hard control's on \textbf{18 of
 20} datasets (one-sided sign test $p{=}0.0002$) and lower than or
@@ -728,12 +801,20 @@ near-total overcoverage), where distillation rescues it ($\to$4.91).
 % results/distillation/mlp_students.csv
 
 \emph{Is heavy tail the failure moderator?} We re-ran teacher and students
-under $y' = \log(1+y)$ on the three failing price-scale datasets plus two
+under $y' = \log(1+y)$ on the three datasets then diagnosed as
+price-scale failures plus two
 positive controls. The transform does \textbf{not} rescue the failures
-(\texttt{fifa} persists at $-1.69$) --- instead it collapses the teacher's
-own edge (CRPS gaps shrink to 0.004--0.025 in log space) and shrinks the
-successes too. Much of the TFM's distributional advantage on raw
-price-scale targets \emph{is} scale handling, reproducible for free.
+(\texttt{fifa} persists at $-1.69$). Absolute CRPS gaps do shrink to
+0.004--0.025 in log space --- but that is first of all a change of the
+metric's scale, and the honest comparison is dimensionless: in
+\emph{relative} teacher-over-control edge, the log collapses nothing
+(fifa $1.5\%\!\to\!2.7\%$, diamonds $4.9\%\!\to\!8.6\%$,
+health\_insurance $2.1\%\!\to\!4.2\%$; it recedes only on the two
+positive controls). An earlier claim here --- that much of the advantage
+is scale handling, reproducible for free --- compared gaps across units
+and does not hold; what the ablation establishes is weaker and still
+useful: the transform is free, changes the error regime for every
+system, and does not remove the teacher's relative edge.
 % results/distillation/ablation_logtarget.csv
 
 Together these yield the paper's practical rule:
@@ -784,6 +865,7 @@ the teacher's edge is small, ensemble reduction alone may close the case.
 % results/distillation/baselines_analysis.csv
 
 \section{Limitations}
+\label{sec:limitations}
 
 Twenty datasets support significance at the 5\% level on both
 instruments (on the 19-dataset sensitivity population only the sign
@@ -842,7 +924,7 @@ and the five-system Friedman test of \S\ref{sec:dist}; the
 reading is ``strong default'', not ``tuned classical'', and the
 hard-label quantile students remain the native distributional
 baselines within the compared families. All central $p$-values are
-one-sided, matching the directional pre-registered hypotheses; the
+one-sided, matching the declared directional hypotheses (each design's registration status is stated in \S\ref{sec:method}); the
 headline survives a two-sided reading (sign test $p=0.012$), while the
 supplementary Wilcoxon (two-sided $p=0.090$) and the post-hoc Fisher
 (two-sided $p=0.087$) would not reject --- consistent with their
@@ -881,8 +963,8 @@ the vendor's enterprise license (or a permissively licensed teacher).
 
 \section{Reproducibility}
 
-All code, configs, seeds, per-experiment artifacts, the pre-registered
-design with dated addenda, and two public corrections (a measurement-claim
+All code, configs, seeds, per-experiment artifacts, the two-stage
+registered design with dated addenda, and two public corrections (a measurement-claim
 retraction and a dataset-labeling erratum whose accidental duplicate run
 reproduced the pipeline exactly) are in the public repository
 (\url{https://github.com/Gvascons/master-thesis}). Weights of both teachers

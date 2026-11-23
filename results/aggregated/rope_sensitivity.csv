@@ -1,4 +1,4 @@
-rope,n_equiv_of_10,mean_P_equiv
-0.005,2,0.378
-0.01,8,0.608
-0.02,10,0.8
+rope,n_equiv_of_10,mean_P_equiv,n_equiv_Etheta_05,n_equiv_P_05,n_equiv_P_95
+0.005,2,0.378,2,3,0
+0.01,8,0.609,8,8,3
+0.02,10,0.8,10,10,5

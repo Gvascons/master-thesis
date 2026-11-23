@@ -64,7 +64,7 @@ vizinhança entre \texttt{idade} e \texttt{ocupação}. Essa ausência de
 estrutura compartilhada é a explicação usual para um fato empírico
 persistente: por mais de uma década, o estado da arte em tabelas pertenceu
 a outra família de modelos, os \emph{ensembles} de árvores de decisão
-\citep{grinsztajn2022,mcelfresh2023}. As Seções~\ref{sec:fund-gbdt}
+\citep{grinsztajn2022}. As Seções~\ref{sec:fund-gbdt}
 e~\ref{sec:fund-dl} desenvolvem os dois lados dessa disputa.
 
 Formalizemos o mínimo necessário do problema da aprendizagem
@@ -321,8 +321,11 @@ escalas heterogêneas; a seleção gulosa de cortes ignora com naturalidade
 atributos irrelevantes; e o \emph{boosting} compõe essas virtudes num
 redutor sistemático de viés. O resultado é um desempenho consistente, com
 pouco ajuste, exatamente no regime de dados heterogêneos de tamanho pequeno
-a médio --- diagnóstico corroborado por avaliações independentes em larga
-escala \citep{grinsztajn2022,mcelfresh2023}. Por isso, nesta dissertação os
+a médio --- diagnóstico corroborado pela avaliação de
+\citet{grinsztajn2022}, com a ressalva registrada de que
+\citet{mcelfresh2023}, na grade mais larga, concluem que a escolha do
+conjunto de dados importa mais do que a do modelo e consideram o
+debate superestimado. Por isso, nesta dissertação os
 GBDTs cumprem o papel de \emph{hipótese nula}: toda proposta nova em dados
 tabulares deve ser medida contra eles.
 
@@ -496,9 +499,11 @@ A promessa das KANs --- mais
 expressividade por parâmetro e interpretabilidade das curvas aprendidas ---
 encontrou ceticismo empírico: sob comparação com paridade de parâmetros e
 de FLOPs, o MLP vence as KANs na maioria das tarefas de aprendizado de
-máquina \citep{kancritical2024}, e avaliações independentes em tabelas
-chegaram a quadro semelhante \citep{poeta2024}. Nenhuma dessas avaliações,
-porém, inclui GBDTs e \emph{foundation models} no mesmo protocolo --- a
+máquina \citep{kancritical2024}; a avaliação tabular independente de
+\citet{poeta2024}, por sua vez, chegou a resultados \emph{favoráveis}
+ao KAN em acurácia --- mas sem \emph{baselines} GBDT e sob treino de
+dez épocas. Nenhuma dessas avaliações, de um lado ou do outro,
+inclui GBDTs e \emph{foundation models} no mesmo protocolo --- a
 lacuna que o Capítulo~\ref{chap:benchmark} preenche, adjudicando a controvérsia sob protocolo
 neutro.
 
@@ -810,9 +815,10 @@ do nominal, existe um reparo pós-hoc com garantia formal: a
 de calibração, mede nele os resíduos do modelo e ajusta os limites dos
 intervalos pelo quantil empírico desses resíduos --- o que garante, sob
 trocabilidade dos dados, cobertura marginal no nível nominal,
-qualquer que seja o modelo por baixo; a variante por quantis
+qualquer que seja o modelo por baixo \citep{vovk2005}; a variante por
+quantis
 (CQR, \emph{conformalized quantile regression}) aplica o mesmo ajuste
-diretamente aos quantis previstos. O Capítulo~\ref{chap:destilacao}
+diretamente aos quantis previstos \citep{romano2019}. O Capítulo~\ref{chap:destilacao}
 usa essa ferramenta como piloto declarado.
 
 \subsection{Dois \emph{baselines} distribucionais nativos}
@@ -929,6 +935,18 @@ conjuntos de dados, o menor p-valor bilateral que o Wilcoxon pode produzir
 é $2 \cdot (1/2^N)$ --- com $N = 5$, o piso é $0{,}0625$, e rejeitar a
 $0{,}05$ é \emph{matematicamente impossível}, antes de qualquer correção. O
 Capítulo~\ref{chap:metodologia} declara as consequências protocolares desse piso.
+
+Um parente mais simples do Wilcoxon merece registro próprio, porque é
+o instrumento da manchete do Capítulo~\ref{chap:destilacao}: o
+\textbf{teste de sinal} \citep{conover1999} ignora as magnitudes e
+pergunta apenas quantas das $N$ diferenças pareadas são positivas ---
+sob a hipótese nula de mediana zero, o número de positivas segue uma
+Binomial$(N, 1/2)$, e o p-valor é exato. O preço da simplicidade é
+menos poder; o ganho é robustez total a escala e a \emph{outliers}
+(uma diferença de $+0{,}001$ e uma de $+1{,}0$ contam o mesmo), o que
+o torna o teste natural quando as diferenças vivem em escalas
+incomensuráveis entre conjuntos --- exatamente o caso das retenções
+do Capítulo~\ref{chap:destilacao}.
 
 \subsection{O teste bayesiano com região de equivalência prática}
 

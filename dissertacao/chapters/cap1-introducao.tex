@@ -57,8 +57,9 @@ justifica o esforço, porque contraria a máxima duas vezes. Primeiro, na
 geração de modelos anterior a 2026, o topo da acurácia é um \emph{empate
 estatístico}: sob região de equivalência prática de um ponto percentual de
 AUC, 8 dos 10 modelos não-líderes são praticamente equivalentes ao líder,
-e 80\% da variância de desempenho está \emph{dentro} das famílias, não
-entre elas --- ``\emph{boosting} sempre vence'' não encontra margem de
+e a variância de desempenho é dominada pela interação
+modelo$\times$conjunto --- o vencedor depende do conjunto, não da
+família ---; ``\emph{boosting} sempre vence'' não encontra margem de
 acurácia que a sustente (Capítulo~\ref{chap:benchmark}). Segundo, a
 geração 2026 quebra o empate em direção inesperada: não foi o aprendizado
 profundo ajustado que alcançou as árvores, foi o pré-treino que atropelou
@@ -250,20 +251,28 @@ o recorte e a evidência que faltavam. Em ordem de apresentação:
     trivial no estudo com 11 modelos; 0,72 contra 0,78 com 14); a política
     fixa ``\emph{foundation model} primeiro'' é \emph{regret}-ótima na
     métrica primária, com \emph{regret} mediano zero na geração 2026; e o
-    experimento pré-registrado E2, contribuição exclusiva desta
+    experimento E2, contribuição exclusiva desta
     dissertação, localiza o ponto de inversão --- basta deslocar 10 a 20\%
-    do peso da acurácia para a latência para a recomendação virar ---,
+    do peso da acurácia para a latência, na normalização por postos
+    adotada, para a recomendação virar ---,
     justificando quantitativamente a arquitetura do fluxograma
     (Capítulo~\ref{chap:framework}).
   \item \textbf{A destilação distribucional de foundation models
     tabulares} --- o recorte verificado como inédito: sob desenho
-    pré-registrado em 20 conjuntos, a destilação \emph{pontual} falha de
+    registrado em duas etapas (hipóteses e pilotos pré-registrados em
+    julho; instrumento confirmatório e elegibilidade da extensão
+    fixados após leitura intermediária, com a correção sequencial
+    correspondente --- Capítulo~\ref{chap:destilacao}), em 20
+    conjuntos, a destilação \emph{pontual} falha de
     forma robusta com qualquer professor (um resultado negativo reportado
     com proeminência integral), enquanto a transferência das curvas de
-    quantis retém mediana de 19\% da vantagem distribucional do professor,
+    quantis retém mediana de 19\% da vantagem distribucional do professor
+    com hiperparâmetros herdados --- 12\% com os dois braços
+    re-ajustados, a estimativa conservadora ---,
     positiva em 16 de 20 conjuntos (teste de sinal unilateral
-    $p=0{,}006$; 15 de 19 na sensibilidade que exclui o conjunto de alvo
-    binarizado da errata --- Capítulo~\ref{chap:destilacao}), a
+    $p=0{,}006$; $p\approx0{,}019$ sob a correção sequencial; 15 de 19
+    na sensibilidade que exclui o conjunto de alvo
+    binarizado da errata), a
     latências de microssegundos; a primeira fronteira medida de ponta a
     ponta entre destilar, comprimir contexto e reduzir \emph{ensemble}; a
     ablação que mostra que a rotulagem \emph{out-of-fold} protege

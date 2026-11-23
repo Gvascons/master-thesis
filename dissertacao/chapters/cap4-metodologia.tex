@@ -4,8 +4,9 @@
 Este capítulo tem como objetivo especificar o protocolo experimental que
 sustenta toda a parte empírica da dissertação: 14 modelos de três famílias
 (gradient boosting, aprendizado profundo e \emph{foundation models})
-avaliados em 18 conjuntos de dados públicos do OpenML sob validação cruzada
-aninhada, com \emph{hold-out} separado antes de qualquer seleção e jamais
+avaliados em 18 conjuntos de dados públicos do OpenML sob um protocolo
+de seleção por validação cruzada interna e reavaliação em \emph{folds}
+externos, com \emph{hold-out} separado antes de qualquer seleção e jamais
 observado pelo \emph{tuning}. Além de justificar cada decisão de desenho ---
 orçamentos de otimização, assimetria \emph{zero-shot} dos \emph{foundation
 models}, pré-processamento por família e métricas primárias
@@ -35,8 +36,10 @@ princípios atravessam todas as decisões deste capítulo:
   \item \textbf{Separação estrita entre seleção e medição.} Nenhum dado
     usado para escolher hiperparâmetros, arquiteturas ou pré-processadores
     participa da estimativa final de desempenho. Este princípio materializa-se
-    no \emph{hold-out} prévio e na validação cruzada aninhada
-    (Seção~\ref{sec:met-protocolo}).
+    no \emph{hold-out} prévio --- a garantia forte do protocolo --- e na
+    separação declarada entre o laço de seleção e o de medição
+    (Seção~\ref{sec:met-protocolo}, que também declara o viés residual
+    dos \emph{folds} externos).
   \item \textbf{Paridade de condições entre modelos.} Todos os modelos veem
     as mesmas partições, as mesmas sementes e orçamentos de otimização
     fixados por família (100/25 tentativas), com a assimetria de custo
@@ -166,10 +169,10 @@ Conjuntos com mais de 100~mil amostras
 para 100~mil amostras \emph{antes de qualquer particionamento}
 (estratificadamente em classificação; amostra aleatória simples na
 regressão, caso do \texttt{year\_\allowbreak prediction}). A prática é
-padrão em benchmarks tabulares por viabilidade computacional
-\citep{gorishniy2021, mcelfresh2023} e, no nosso caso, é também uma
+adotada em benchmarks tabulares por viabilidade computacional
+\citep{mcelfresh2023} e, no nosso caso, é também uma
 delimitação honesta de escopo: com 14 modelos $\times$ 18 conjuntos sob
-validação cruzada aninhada em uma única GPU
+o protocolo de ajuste e validação descrito adiante, em uma única GPU
 (Seção~\ref{sec:met-reprodutibilidade}), o regime estudado é o de dados
 tabulares de pequeno a médio porte --- exatamente o regime em que a disputa
 entre famílias permanece aberta. A integridade de cada conjunto é registrada
@@ -292,8 +295,10 @@ marcam os dados e a etapa que nenhum estágio de seleção observa.
 % Diagrama pré-compilado (fonte editável: tikz-src/tikz-cap4-1.tex;
 % recompilar com: tectonic tikz-src/tikz-cap4-1.tex && mv tikz-cap4-1.pdf images/)
 \includegraphics{images/tikz-cap4-1.pdf}
-\caption{Protocolo experimental: \emph{hold-out} prévio de 20\% e validação
-cruzada aninhada (seleção de hiperparâmetros restrita ao laço interno).}
+\caption{Protocolo experimental: \emph{hold-out} prévio de 20\%; seleção
+de hiperparâmetros por validação cruzada interna (3 \emph{folds}) sobre o
+\emph{pool}, executada uma única vez, seguida de reavaliação em 5
+\emph{folds} externos com os hiperparâmetros fixados.}
 \label{fig:protocolo}
 \end{figure}
 
@@ -328,14 +333,24 @@ cruzada aninhada (seleção de hiperparâmetros restrita ao laço interno).}
     segue a convenção dominante da área; por ser idêntica para os 14
     modelos, todos ganham e perdem dados juntos, o que preserva o
     pareamento das comparações por postos.
-  \item \textbf{Validação cruzada aninhada --- por quê.} O laço externo
-    (5 \emph{folds}) mede o modelo; o laço interno (3 \emph{folds})
-    seleciona hiperparâmetros. Selecionar e medir nos mesmos \emph{folds}
-    produz estimativas otimistas --- o viés clássico de seleção; o
-    aninhamento elimina esse viés por construção, ao custo computacional de
-    multiplicar o número de ajustes. Pagamos esse custo deliberadamente: o
-    benchmark prioriza profundidade de protocolo sobre largura de $N$
-    (discussão na Seção~\ref{sec:met-limitacoes}).
+  \item \textbf{Ajuste e medição: o desenho real, com o viés
+    declarado.} A seleção de hiperparâmetros usa validação cruzada
+    \emph{interna} (3 \emph{folds}) sobre o \emph{pool} completo,
+    executada \textbf{uma única vez} por par (modelo, conjunto); os 5
+    \emph{folds} externos reavaliam o modelo com os hiperparâmetros já
+    fixados, e o \emph{early stopping} das redes usa o próprio
+    \emph{fold} em avaliação. Este desenho \emph{não} é a validação
+    cruzada aninhada clássica --- nela, a busca se repetiria dentro de
+    cada \emph{fold} externo ---, e uma versão anterior deste texto
+    usava o termo indevidamente (correção apontada pela auditoria
+    externa de 23/11/2026). A consequência é circunscrita, e vale
+    dizê-la com precisão: as métricas dos \emph{folds} externos são
+    otimistas como estimativa de generalização, porque a seleção
+    observou esses mesmos dados; elas cumprem aqui apenas papéis
+    internos (estabilidade entre \emph{folds},
+    Apêndice~\ref{app:tabelas}) e \textbf{nenhum resultado reportado
+    sai delas} --- todos provêm do \emph{hold-out} prévio, que nenhum
+    estágio de seleção jamais observa.
   \item \textbf{Estratificação em todas as partições de classificação.}
     \emph{Hold-out}, \emph{folds} externos, \emph{folds} internos e a
     divisão 90/10 treino/validação do ajuste final; em regressão, K-Fold
@@ -346,14 +361,19 @@ cruzada aninhada (seleção de hiperparâmetros restrita ao laço interno).}
     100 \emph{trials} para gradient boosting e 25 para aprendizado profundo.
     A assimetria nominal \emph{atenua} a disparidade de custo: a premissa
     de desenho estimava um \emph{trial} de aprendizado profundo em cerca de
-    4$\times$ um \emph{trial} de GBDT, e 25 \emph{trials} de TPE (o
-    amostrador \emph{Tree-structured Parzen Estimator} do Optuna) capturam
-    a maior parte do \emph{landscape} de
-    otimização \citep{akiba2019}. As medições realizadas mostraram
+    4$\times$ um \emph{trial} de GBDT, e assumia que 25 \emph{trials} de
+    TPE (o
+    amostrador \emph{Tree-structured Parzen Estimator} do Optuna
+    \citep{akiba2019}) bastariam para a maior parte do \emph{landscape}
+    --- uma premissa de orçamento nossa, aferida \emph{a posteriori}
+    pelas configurações vencedoras e pela estabilidade entre sementes
+    do Apêndice~\ref{app:hp-escolhidos}, não uma afirmação da
+    literatura. As medições realizadas mostraram
     disparidade maior que a premissa (o custo mediano por \emph{trial}
     do aprendizado profundo ficou uma ordem de grandeza acima do dos
-    GBDTs, e o tempo total de busca, 2--30$\times$ acima, conforme o
-    par de modelos); o viés residual favorece o aprendizado profundo em
+    GBDTs, e o tempo total de busca, 1,1--140$\times$ acima, conforme o
+    par de modelos --- faixa recomputada em 23/11 sobre as medianas por
+    modelo, excluído o \texttt{adult}); o viés residual favorece o aprendizado profundo em
     tempo de busca --- que, ainda assim, não vence --- e a leitura
     correta é ``orçamentos assimétricos por desenho, paridade imperfeita
     medida e declarada'', não equalização. Uma
@@ -456,8 +476,10 @@ Binária (10) & ROC-AUC ($\uparrow$) & KS, \emph{log-loss}, F1, acurácia &
 \addlinespace
 Multiclasse (3) & \emph{log-loss} ($\downarrow$) &
   \begin{tabular}[t]{@{}l@{}}F1-macro, F1-ponderado,\\AUC-OvR, acurácia\end{tabular} &
-  \begin{tabular}[t]{@{}l@{}}única \emph{proper scoring rule} que escala\\
-  a $K$ classes sem agregação arbitrária\end{tabular} \\
+  \begin{tabular}[t]{@{}l@{}}\emph{proper scoring rule} que escala a $K$\\
+  classes sem agregação arbitrária (Brier\\
+  multiclasse e escore esférico também são\\
+  próprias; o \emph{log-loss} é a convenção da área)\end{tabular} \\
 \addlinespace
 Regressão (5) & RMSE ($\downarrow$) & MAE, $R^2$ &
   \begin{tabular}[t]{@{}l@{}}na escala em que a suíte distribui o alvo\\
@@ -713,17 +735,50 @@ conhecidas e as decisões tomadas diante delas.
     multiclasse ($N=3$) já foram declarados. A mitigação é tripla: não
     afirmar vencedor único, sustentar \emph{equivalências} pela análise
     bayesiana com ROPE e explicitar o limite sempre que ele morde. A escolha
-    de desenho subjacente é deliberada: profundidade de protocolo (validação
-    cruzada aninhada honesta, \emph{hold-out} intocado) sobre largura de
+    de desenho subjacente é deliberada: profundidade de protocolo
+    (seleção separada da medição, \emph{hold-out} intocado) sobre largura de
     $N$.
+  \item \textbf{Uma idiossincrasia de pré-processamento declarada.} No
+    \texttt{telco\_customer\_churn}, a coluna \texttt{TotalCharges}
+    chega do OpenML como texto e o \emph{pipeline} a trata como
+    categórica de 6.531 níveis --- na codificação ordinal ajustada no
+    treino, a grande maioria do \emph{hold-out} recebe o código de
+    categoria desconhecida. O tratamento é idêntico para os 14
+    modelos, mas o efeito por modelo não foi medido para os
+    \emph{foundation models} (uma verificação externa de 23/11/2026
+    estimou efeito de milésimos de AUC nos GBDTs) --- e o conjunto é
+    exatamente o pior caso da política ``sempre-TabFM''
+    (Capítulo~\ref{chap:framework}), leitura que fica com esta
+    ressalva.
   \item \textbf{Potencial contaminação do pré-treino dos \emph{foundation
     models}.} Os 18 conjuntos são públicos e amplamente usados --- e
     \emph{foundation models} são pré-treinados antes e fora do nosso
     protocolo, de modo que o \emph{hold-out} intocado protege contra o nosso
     vazamento, não contra o deles. O risco é heterogêneo entre os dois
-    modelos: o TabPFN é pré-treinado exclusivamente em dados sintéticos
-    amostrados de um \emph{prior} \citep{hollmann2025}, o que exclui a
-    memorização direta dos conjuntos, mas não o ajuste iterativo do
+    modelos --- e aqui uma correção factual da auditoria externa de
+    23/11/2026 substitui a afirmação de versões anteriores. O
+    \emph{modelo-base} TabPFN é pré-treinado em dados sintéticos
+    amostrados de um \emph{prior} \citep{hollmann2025}; o
+    \emph{checkpoint} \textbf{padrão do classificador} v2.5 que o
+    pacote carrega sem \texttt{model\_path} (o nosso caso), porém, é o
+    \emph{Real-TabPFN-2.5}, descrito no \emph{model card} oficial como
+    ``\emph{finetuned on real-data}'' sobre 43 conjuntos do
+    OpenML/Kaggle --- lista (Apêndice C.1 de \citealp{priorlabs2025})
+    que \textbf{inclui o \texttt{higgs}} (OpenML 23512), presente neste
+    benchmark. O checkpoint padrão do \emph{regressor} é sintético
+    puro, de modo que toda a parte distribucional
+    (Capítulo~\ref{chap:destilacao}) fica fora do alcance deste risco.
+    Medimos a consequência repetindo o ajuste final com o
+    \emph{checkpoint} alternativo só-sintético
+    (\texttt{v2.5\_default-2}) em cinco conjuntos de classificação: no
+    próprio \texttt{higgs} --- o único com sobreposição documentada ---
+    o checkpoint sintético é \emph{ligeiramente melhor} (AUC 0,8113
+    contra 0,8111), sem qualquer sinal de memorização, e nos demais a
+    diferença fica em milésimos
+    (\texttt{results/\allowbreak aggregated/\allowbreak
+    tabpfn\_\allowbreak checkpoint\_\allowbreak sensitivity.csv};
+    cinco de doze conjuntos, uma semente --- limite declarado). Resta,
+    de toda forma, o ajuste iterativo do
     \emph{prior} e das políticas de inferência ao desempenho em benchmarks
     públicos ao longo das versões --- uma forma branda de
     sobreajuste da comunidade ao OpenML da qual nenhum benchmark público
@@ -753,6 +808,11 @@ conhecidas e as decisões tomadas diante delas.
     (Seção~\ref{sec:met-estatistica}). A alternativa --- remover o
     \texttt{helena} do benchmark --- esconderia precisamente o tipo de
     restrição arquitetural que um estudo de decisão prática deve expor.
+    Uma precisão de termo: trata-se de \emph{limite nativo}, não de
+    impossibilidade --- o TabPFN-2.5 oferece um
+    \texttt{ManyClassClassifier} oficial que contorna o teto por
+    decomposição ---, e a exclusão preserva a comparação dos modelos
+    na forma nativa \emph{zero-shot}, sem \emph{wrappers} de extensão.
   \item \textbf{Latência medida em um único regime.} O protocolo de
     latência (Seção~\ref{sec:met-custo}) usa o regime amortizado em lote,
     com cada modelo em seu dispositivo natural, e o \texttt{adult} como

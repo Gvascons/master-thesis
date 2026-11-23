@@ -45,10 +45,15 @@ from src.utils.reproducibility import set_seed
 
 EXT_DIR = REPO / "results" / "distillation" / "extension"
 OUT = REPO / "results" / "distillation" / "extension.csv"
-# Pool elegivel COMPLETO da CTR23 (regra de elegibilidade fixada antes de
-# qualquer resultado: 3k-100k linhas, sem leakage, sem sobreposicao com o
-# core). A segunda leva (space_ga..sarcos) completa a populacao elegivel —
-# decisao principiada, nao adicao seletiva pos-resultado.
+# Pool de 15 conjuntos da CTR23 sob a regra 3k-100k linhas, sem leakage.
+# CORRECAO DATADA (23/11/2026, auditoria externa): este comentario dizia
+# "pool elegivel COMPLETO" — a regra alcanca 19; os 4 ausentes (white_wine
+# 44971, california continuo 44977, superconductivity 44964, naval 44969)
+# estao nomeados, justificados e medidos em
+# results/distillation/ctr23_omitidos/PROVENANCE.md e ctr23_sensitivity.csv
+# (placar 17/24, p=0,032; 17/22 sem os 2 sobrepostos ao nucleo, p=0,0085).
+# A segunda leva (space_ga..sarcos) foi adicao principiada sob a regra,
+# nao selecao pos-resultado — mas a regra nao foi exaurida.
 DATASETS = ["abalone", "cpu_activity", "diamonds_real", "grid_stability",
             "miami_housing", "fifa", "kings_county", "health_insurance",
             "physiochemical_protein", "video_transcoding",

@@ -40,7 +40,10 @@ do professor TabPFN rotulados em três regimes --- \emph{out-of-fold}
 contexto do OOF) e \emph{in-sample} pleno. O padrão documentado no
 capítulo é legível nas colunas: o RMSE \emph{não} degrada com o
 vazamento (chega a melhorar levemente) e o CRPS move no máximo
-$0{,}002$ em qualquer direção, mas a cobertura dos
+${\sim}0{,}003$ em três dos quatro conjuntos --- a exceção é o
+\texttt{wine\_quality}, onde o CRPS \emph{melhora} $0{,}028$ com o
+vazamento pleno, coerente com o mecanismo de memorização de
+duplicatas documentado no Capítulo~7 ---, mas a cobertura dos
 intervalos (PICP~80\%, nominal $0{,}80$) cai de forma consistente nos
 quatro conjuntos quando se passa de OOF para \emph{ctx-80} --- o
 efeito puro do vazamento sobre a calibração do aluno.
@@ -304,8 +307,8 @@ Capítulo~\ref{chap:framework},
 \emph{O que era:} durante a medição da fronteira de Pareto,
 afirmou-se que o ponto professor TabPFN com contexto de 50~mil linhas no
 \texttt{year\_\allowbreak prediction} era imensurável na GPU de 16~GB por OOM
-determinístico. \emph{O que aconteceu:} a análise forense da sessão
-mostrou que a claim estava errada --- o culpado era a estimativa do
+determinístico. \emph{O que aconteceu:} a reanálise dos registros de
+execução mostrou que a claim estava errada --- o culpado era a estimativa do
 modo automático de memória; com \texttt{memory\_\allowbreak saving\_\allowbreak mode} forçado,
 o ponto foi medido ($148{,}6$~ms/linha, $\sim$3,3$\times$ a latência
 do ponto de 25~mil, por um ganho de RMSE de apenas

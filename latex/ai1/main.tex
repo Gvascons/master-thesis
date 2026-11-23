@@ -46,16 +46,18 @@ The maxim ``on tabular data, gradient boosting always wins'' was formed
 before the 2024--2026 generation of tabular deep learning and of tabular
 foundation models. We re-test it in a neutral, uniform-protocol benchmark:
 14 models $\times$ 18 OpenML datasets (250 of 252 cells; two structural
-exclusions), with nested cross-validation, Bayesian tuning under declared
+exclusions), with a pool-level model-selection/evaluation split, Bayesian tuning under declared
 per-family budgets (asymmetric by design), a fixed untouched hold-out, and both
 frequentist and Bayesian statistical inference. The answer has two
 movements. \textbf{(1)} Restricted to the study's 11-model core slate (the models predating the
 2026 benchmark extension), top-end accuracy is a statistical tie --- 8 of the 10 non-leader models practically
 equivalent to the leader under a region of practical equivalence (ROPE) of
 $\pm$0.01 AUC, with the threshold sensitivity reported (2/8/10 equivalents
-at 0.005/0.01/0.02) --- and 80\% of rank variance is intra-family
-($\eta^2 = 0.20$, the share of rank variance explained by family
-membership): the specific model matters more than the family. The
+at 0.005/0.01/0.02, under the declared criterion $E[\theta]>0.5$;
+3 of 10, the GBDTs, at the strict 0.95 cut) --- and rank variance is
+dominated by the model$\times$dataset interaction (0.69, vs.\ 0.20
+family and 0.11 model-within-family): the winner depends on the
+dataset. The
 decision therefore migrates to cost, latency, robustness, and task
 structure. \textbf{(2)} The 2026 generation breaks the tie: TabFM (Google,
 2026), zero-shot (no per-dataset tuning or training), leads the mean rank
@@ -68,7 +70,9 @@ Kolmogorov--Arnold family against the full GBDT/DL/foundation-model slate
 in a multi-criteria benchmark --- as far as our dated verification reaches
 --- is unfavorable (KAN and TabKAN in the bottom third on all three
 tasks); and the decision framework
-derived from the benchmark is validated by leave-one-dataset-out ---
+derived from the benchmark is assessed by leave-one-dataset-out
+(negative validation of the learned router; comparative assessment of
+fixed policies) ---
 meta-feature routing does \emph{not} generalize (hit rate 0.11 vs.\ a 0.44
 baseline in the 11-model study), while the policy ``foundation model first, deviate on
 constraints'' achieves median normalized regret 0.000 with 14 models. The
@@ -99,14 +103,15 @@ benchmark support --- and which one can it \emph{not} support?
 \paragraph{Contributions.}
 \begin{enumerate}
   \item A benchmark of \textbf{14 models $\times$ 18 datasets} (250/252
-    cells) under a single protocol --- nested cross-validation, declared
+    cells) under a single protocol --- selection separated from
+    measurement, declared
     per-family tuning budgets, untouched hold-out --- with frequentist inference
     (Friedman/Iman--Davenport, corrected post-hoc) and Bayesian inference
     (signed-rank with ROPE), including ROPE sensitivity analysis and
     per-family variance decomposition.
   \item The two-movement reading: the \textbf{statistical tie} of the
-    11-model core slate (and its anatomy: 80\% of variance is
-    intra-family) and the \textbf{break of the tie} by the 2026
+    11-model core slate (and its anatomy: the model$\times$dataset
+    interaction dominates rank variance) and the \textbf{break of the tie} by the 2026
     generation, with the cost inversion quantified (4--5 orders of
     magnitude in serving latency).
   \item The first \textbf{independent test} --- to our dated verification
@@ -116,7 +121,9 @@ benchmark support --- and which one can it \emph{not} support?
     original papers' claims not holding under a uniform protocol ---
     consistent with the earlier, narrower independent evaluations
     \citep{poeta2024,kancritical2024}.
-  \item A \textbf{decision framework validated} by leave-one-dataset-out:
+  \item A \textbf{decision framework assessed} by leave-one-dataset-out
+    (negative validation of the learned router; comparative assessment
+    of fixed policies):
     negative for learned meta-feature routing, positive for the fixed
     policy ``FM first, deviate on constraints'' (median regret 0.000 @14
     models).
@@ -218,9 +225,15 @@ readings; dropping it leaves the regression leaders unchanged (TabFM
 all artifacts by a dated rectification.
 \end{table}
 
-\paragraph{Protocol.} Nested cross-validation (5 outer $\times$ 3 inner
-folds: hyperparameters are selected only on the inner folds, so outer-fold
-estimates are untouched by tuning), stratified in all classification
+\paragraph{Protocol.} Hyperparameters are selected by a single inner
+cross-validation (3 folds) over the full training pool, then re-evaluated
+on 5 outer folds with the selected configuration held fixed (not classical
+nested CV --- the search is not repeated inside each outer fold, so
+outer-fold estimates are optimistic as generalization estimates and serve
+only stability analyses; every headline number comes from the fixed
+hold-out, which no selection stage ever observes). Early stopping for the
+neural models uses the evaluated fold itself. Stratified in all
+classification
 splits; Bayesian Optuna/TPE
 tuning \citep{akiba2019} with per-family budgets fixed a priori (100 trials
 for GBDTs, 25 for DL); a fixed 20\%
@@ -232,7 +245,7 @@ on this asymmetry: the 100/25-trial budgets partially offset the
 per-trial cost asymmetry (the design-time assumption was a DL trial
 costing roughly 4$\times$ a GBDT trial; measured, the per-trial cost
 runs an order of magnitude above, and total search wall-clock
-2--30$\times$ by model pair, a residual bias
+1.1--140$\times$ by model pair, a residual bias
 that favors DL --- which still does not win; one declared exception
 --- on \texttt{adult}, eleven legacy Phase-1 runs are kept as a
 validation anchor; the seven DL runs among them predate the budget
@@ -243,7 +256,8 @@ inference-time settings are fixed a priori and never fitted to our data:
 the 50k-row context cap is TabPFN's native limit, which we mirror on
 TabFM (whose library default is uncapped), and the 8-member inference
 ensemble is likewise our fixed choice (the TabFM library default is 32).
-% src/models/tabfm_model.py (DEFAULT_MAX_ROWS, n_estimators), tabpfn_model.py The two
+% src/models/tabfm_model.py (DEFAULT_MAX_ROWS, n_estimators), tabpfn_model.py
+The two
 missing cells (250/252) are structural exclusions: the \texttt{helena}
 dataset (100 classes) exceeds the architectural class limit of both TabPFN
 and TabFM.
@@ -283,16 +297,26 @@ not separate the leading pack (Fig.~\ref{fig:cd}; the diagram shows all
 whose relative order the figure preserves, except for one statistically
 inseparable adjacent trio, RealMLP/SAINT/FT-Transformer, within 0.1--0.3
 rank points, which reorders between the two grids). Two finer instruments support
-the tie reading: the Bayesian test with a ROPE of $\pm$0.01 AUC declares
-\textbf{8 of the 10} non-leader models practically equivalent to the rank
-leader (TabPFN), and the threshold sensitivity analysis
-($0.005/0.01/0.02 \to 2/8/10$ equivalents) shows the conclusion holds at
-the one-AUC-point margin --- reading posterior mass above 0.5 as ``more
-likely equivalent than not'', XGBoost ($P(\mathrm{equiv}) = 0.65$) clears
-that bar even at the strict threshold, with CatBoost borderline (0.54). Variance
-decomposition closes the structural argument: $\eta^2 = 0.20$ ---
-\textbf{80\% of rank variance is intra-family}, so ``GBDT vs.\ DL'' is a
-weak abstraction; the specific model matters more than the family. The
+the tie reading: the Bayesian signed-rank with a ROPE of $\pm$0.01 AUC
+puts the expected posterior mass in the ROPE above 0.5 for
+\textbf{8 of the 10} non-leader models vs.\ the rank
+leader (TabPFN) --- the criterion we use, declared: $E[\theta]>0.5$
+(one of the eight, the MLP, sits exactly at the bar, 0.508); under the
+Benavoli convention (fraction of posterior samples where the region is
+most probable) the count at the 0.5 cut is the same, but only
+\textbf{3 of 10} --- XGBoost 0.999, LightGBM 0.992, CatBoost 0.957 ---
+reach the conventional 0.95 cut, and no model reaches 0.95 practical
+\emph{superiority} over the leader. The threshold sensitivity
+($0.005/0.01/0.02 \to 2/8/10$ equivalents on $E[\theta]>0.5$; $0/3/5$
+at the strict cut) shows the tie is strongest for the GBDTs ---
+reading expected posterior mass above 0.5, XGBoost (0.65) clears
+the bar even at the strict threshold, with CatBoost borderline (0.54). Variance
+decomposition closes the structural argument, in three parts, not two:
+family 0.20, model-within-family 0.11, model$\times$dataset
+interaction \textbf{0.69} --- family explains 64.5\% of what model
+identity explains, and both are small against the interaction;
+``GBDT vs.\ DL'' is a weak abstraction because the winner depends on
+the dataset. The
 only robust raw-performance signal sits at the bottom: TabNet is
 consistently the generation's worst.
 % notebooks/03_statistical_tests.ipynb + 00_presentation.ipynb; rope_sensitivity.csv
@@ -396,8 +420,12 @@ tie is correctly re-scoped as a portrait of the previous generation: it
 was not tuned DL that caught up with GBDTs; it was pre-training that
 overtook both. The statistical caution remains stated: with $k{=}14$ and
 $N{=}10$, the Nemenyi CD is wide --- TabFM's separation rests on
-cross-dataset consistency and on the Bayesian instrument, not on the
-post-hoc.
+cross-dataset consistency (13 wins of 18) and on paired effect sizes
+($d=0.68$ vs.\ XGBoost), not on the post-hoc \emph{nor} on the
+Bayesian instrument: against XGBoost the Benavoli convention puts 0.67
+posterior probability on TabFM superiority, and against CatBoost the
+modal region is equivalence --- consistency, without decisive
+statistical separation.
 
 \begin{table}[t]
 \centering
@@ -536,7 +564,9 @@ decision's real informative content.
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.88\linewidth]{figures/decision_flowchart_14.pdf}
-\caption{The validated practitioner flowchart (14-model study). Each
+\caption{The practitioner flowchart (14-model study), assessed under
+LODO (negative for the learned router; comparative for fixed
+policies). Each
 question is a constraint verifiable before any training; only when none
 is active does the regret-optimal default --- foundation model first ---
 apply. Generated by \texttt{scripts/\allowbreak figures\_\allowbreak ai1\_\allowbreak display.\allowbreak py}.}
@@ -580,11 +610,12 @@ apply. Generated by \texttt{scripts/\allowbreak figures\_\allowbreak ai1\_\allow
 \section{Conclusion}
 
 The rule ``boosting always wins'' is not false --- it expired. It held as
-a portrait of the generation up to 2025, where the top ties and 80\% of
-variance is intra-family; in 2026, pre-training broke the accuracy tie and
+a portrait of the generation up to 2025, where the top ties and the
+model$\times$dataset interaction dominates rank variance; in 2026,
+pre-training broke the accuracy tie and
 inverted the cost axis: the best model in accuracy is the worst in
 latency, by 4--5 orders of magnitude. The multi-criteria framework emerges
-from the LODO validation with a clearer role --- not predicting the winner
+from the LODO assessment with a clearer role --- not predicting the winner
 (infeasible), but encoding the constraints that actually decide --- and
 the policy ``FM first, deviate on constraints'' has median regret zero.
 The only obstacle to the optimal policy is serving cost; removing it by

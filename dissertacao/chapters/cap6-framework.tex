@@ -30,7 +30,7 @@ conjuntos de dados do benchmark: um resultado negativo, em que o
 roteamento por meta-características não generaliza sob validação
 \emph{leave-one-dataset-out}; um resultado positivo, em que a política
 fixa ``\emph{foundation model} primeiro'' é regret-ótima na métrica
-primária; e um experimento pré-registrado de \emph{regret} multicritério
+primária; e um experimento registrado de \emph{regret} multicritério
 ponderado, que localiza o peso de latência em que essa recomendação se
 inverte --- basta deslocar 10--20\% do peso da acurácia para a latência.
 O arcabouço resultante é um fluxograma de quatro restrições verificáveis
@@ -76,7 +76,7 @@ atinge parte da literatura de recomendação de algoritmos. Este capítulo
 eleva o arcabouço de descritivo a \textbf{validado} com dois resultados
 complementares --- um negativo (o que o arcabouço \emph{não} deve tentar
 fazer) e um positivo (a política que os dados sustentam) --- e, em
-seguida, com um terceiro estudo, pré-registrado, que estende a validação
+seguida, com um terceiro estudo, registrado, que estende a validação
 ao cenário multicritério.
 
 \section{O resultado negativo: roteamento por meta-características não
@@ -158,7 +158,9 @@ todos os 18.
 \centering
 \caption{Regret normalizado das políticas de recomendação sob LODO, nos
 estudos com 11 e com 14 modelos (\textbf{negrito} = melhor política da
-coluna). Fonte: \texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak validation\{,\allowbreak \_\allowbreak 14\}.\allowbreak csv}.}
+coluna). ``Sempre-FM'' toma o \emph{melhor} FM de cada conjunto --- um
+oráculo intrafamília, não uma política executável; as políticas de
+modelo único estão no texto. Fonte: \texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak validation\{,\allowbreak \_\allowbreak 14\}.\allowbreak csv}.}
 \label{tab:regret-lodo}
 \small
 \begin{tabular}{lcccc}
@@ -189,10 +191,27 @@ mas mantendo taxa de acerto \emph{abaixo} do \emph{baseline} de classe majoritá
 \emph{regret} sem esse modo de falha; o colapso da árvore é mais um sintoma de
 que não há estrutura aprendível, não uma vitória do roteador.
 
+Uma quarta leitura é obrigatória, e a auditoria externa de 23/11/2026
+exigiu que ela viesse com destaque: a linha ``Sempre-FM'' escolhe, em
+cada conjunto, o \emph{melhor} dos dois \emph{foundation models}
+olhando o resultado --- é um \textbf{oráculo intrafamília}, que mede o
+teto da família, não uma política que um praticante consiga executar.
+As políticas executáveis de modelo único, pela mesma régua:
+\textbf{sempre-TabFM} tem \emph{regret} médio 0,080, mediano 0,000 e
+pior caso \textbf{1,000} (o \texttt{telco\_customer\_churn}, onde o
+TabFM é o último de 14 na métrica primária);
+\textbf{sempre-TabPFN}, média 0,261. A mediana zero, portanto,
+sobrevive na política executável ``TabFM por padrão'' --- mas a média
+0,080 e o pior caso 1,000 são dela, e é por isso que a recomendação
+prática do arcabouço nunca é ``use o FM às cegas'', e sim ``FM
+primeiro, com as verificações baratas de contorno''
+(Seção~\ref{sec:arcabouco-resultante}).
+
 \emph{``Foundation model primeiro'' é a política regret-ótima na
-métrica primária.} Na geração 2026, a política fixa sempre-FM atinge
+métrica primária.} Na geração 2026, o teto da família FM atinge
 \emph{regret} médio 0,021 e mediano 0,000 sob LODO --- nenhuma política
-aprendida ou fixa a supera. A recomendação de desempenho deixou de
+aprendida ou fixa o supera, e a executável sempre-TabFM preserva a
+mediana zero. A recomendação de desempenho deixou de
 depender do conjunto de dados; a ressalva é que esse resultado vale
 para a métrica primária isolada, questão que a próxima seção enfrenta.
 
@@ -207,12 +226,16 @@ mostrou que o líder de acurácia custa 4--5 ordens de magnitude mais
 para servir que um GBDT; um praticante cuja função de utilidade pondere
 acurácia \emph{e} custo de inferência pode, legitimamente, chegar a
 outra recomendação. Esta seção fecha essa lacuna com o experimento E2,
-pré-registrado em \texttt{docs/\allowbreak desenho-\allowbreak melhorias-\allowbreak finais.\allowbreak md}
-(05/10/2026, antes da execução, conforme o contrato de conduta do
-programa de pesquisa): a política ``FM primeiro'' continua regret-ótima
+registrado em \texttt{docs/\allowbreak desenho-\allowbreak melhorias-\allowbreak finais.\allowbreak md}
+(05/10/2026) --- com uma precisão de relato que a auditoria externa de
+23/11/2026 exigiu: o commit que registra as hipóteses do E2 já carrega
+o seu resultado, de modo que o rótulo honesto é \emph{análise
+registrada}, não pré-registro; o desenho (grade de pesos, políticas e
+métrica) estava escrito antes da leitura, mas não há carimbo
+independente que o prove: a política ``FM primeiro'' continua regret-ótima
 quando a métrica de decisão pondera acurácia e custo?
 
-\subsection{Desenho pré-registrado}
+\subsection{Desenho registrado}
 \label{sec:e2-desenho}
 
 O desenho define um score multicritério por modelo$\times$conjunto:
@@ -228,12 +251,12 @@ varre o espectro de preferências --- de ``só acurácia importa''
 calcula-se o \emph{regret} normalizado de cada política fixa exatamente como
 no estudo original: 0 se a família recomendada contém o modelo de
 melhor score $S$ no conjunto; 1 se contém apenas o pior.\footnote{As
-quatro políticas do pré-registro estão no artefato
+quatro políticas do registro estão no artefato
 (\texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak weighted\_\allowbreak regret.\allowbreak csv}): a árvore-LODO
 é avaliada pela recomendação por conjunto armazenada no estudo original
 (\texttt{lodo\_\allowbreak validation\_\allowbreak 14.\allowbreak csv}), sem reajuste --- ela foi treinada
 para prever o vencedor de \emph{acurácia} e aqui é pontuada sob o score
-ponderado. O resultado antecipa a Seção~\ref{sec:resultado-negativo}:
+ponderado. O resultado reitera, agora sob o score ponderado, o que a Seção~\ref{sec:resultado-negativo} estabeleceu:
 em mediana, a árvore nunca supera a melhor política fixa em nenhum $w$;
 pela média, fica abaixo da sempre-FM até $w{=}0{,}7$ e acima a partir de
 $w{=}0{,}8$ (um único cruzamento) --- sobre $N$s distintos: a árvore é
@@ -245,12 +268,12 @@ $w \geq 0{,}9$).}
 Os $N$s espelham os da Tabela~\ref{tab:regret-lodo}: 18 conjuntos para
 as políticas sempre-GBDT e sempre-DL, 17 para sempre-FM
 (\texttt{helena} excluída por limite arquitetural). A hipótese
-pré-registrada H-W1 afirma: existe $w^{*} < 1$ a partir do qual
+registrada H-W1 afirma: existe $w^{*} < 1$ a partir do qual
 ``sempre-GBDT'' passa a ter \emph{regret} mediano menor que ``sempre-FM'' ---
 o que tornaria o fluxograma (pergunta 1 = latência) a forma correta da
 política, e não um refinamento cosmético.
 
-Uma limitação do desenho foi declarada no próprio pré-registro e deve
+Uma limitação do desenho foi declarada no próprio registro e deve
 ser repetida aqui: a latência usa como \emph{proxy} a medição
 padronizada no conjunto \texttt{adult} --- a única disponível para os 14
 modelos sob protocolo idêntico. A latência relativa entre modelos é
@@ -369,9 +392,15 @@ amostras) e no \texttt{cardiovascular\_\allowbreak disease} (70~mil) em lugar do
 regret-ótima apenas em $w \geq 0{,}9$); só a extensão da zona em que
 sempre-GBDT tem mediana zero desloca-se em $\pm 0{,}1$ ($w \leq 0{,}7$
 com o proxy do conjunto pequeno, $w \leq 0{,}5$ com o do grande),
-exatamente na direção do viés declarada no pré-registro. A inversão da
+exatamente na direção do viés declarada no registro. A inversão da
 recomendação com 10--20\% de peso na latência não depende, portanto, do
-conjunto em que a latência foi medida.
+conjunto em que a latência foi medida. Uma segunda dependência fica
+declarada: a faixa é medida na \textbf{normalização por postos} do
+desenho --- escolhida deliberadamente pela robustez às seis ordens de
+magnitude que separam as latências --- e normalizações alternativas
+(logarítmica, linear) deslocam o ponto exato do cruzamento sem mudar a
+leitura qualitativa, que é a que o arcabouço usa: existe um peso
+minoritário de latência a partir do qual a recomendação vira.
 
 \section{O arcabouço resultante: decisão por restrições}
 \label{sec:arcabouco-resultante}

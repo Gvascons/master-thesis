@@ -36,6 +36,16 @@ FAMILY_SHORT = {"gbdt": "GBDT", "deep_learning": "DL", "foundation_model": "FM"}
 def bayesian_signed_rank(diff, rope, prior=0.6, nsamples=30000, seed=0):
     """Bayesian counterpart to the Wilcoxon signed-rank test.
 
+    IMPORTANT (correção de 23/11/2026, auditoria externa): esta função
+    devolve a MASSA POSTERIOR ESPERADA E[theta] de cada região, não a
+    convenção do baycomp/Benavoli (fração de amostras posteriores em que
+    a região é a mais provável — essa está em
+    `bayesian_signed_rank_probs`). As duas grandezas coincidem em
+    ordenação, mas não em valor; todo texto que cite esta saída deve
+    nomeá-la E[theta]. Nota: o prior default do baycomp é 0.5; o 0.6
+    daqui é escolha nossa, declarada (a contagem de equivalências é
+    estável a 0.5/0.6/1.0).
+
     Parameters
     ----------
     diff : array of per-dataset differences (score_A - score_B) for a
@@ -44,11 +54,12 @@ def bayesian_signed_rank(diff, rope, prior=0.6, nsamples=30000, seed=0):
     rope : half-width of the Region Of Practical Equivalence. Two models whose
         typical difference falls within +-rope are "practically the same".
     prior : strength of the Dirichlet prior pseudo-observation placed at 0
-        (inside the rope); 0.6 is the baycomp default.
+        (inside the rope).
 
     Returns
     -------
-    (p_A_worse, p_rope, p_A_better) : posterior probabilities, summing to 1.
+    (E_A_worse, E_rope, E_A_better) : expected posterior mass per region,
+    summing to 1.
     """
     rng = np.random.default_rng(seed)
     d = np.asarray(diff, dtype=float)
@@ -64,6 +75,35 @@ def bayesian_signed_rank(diff, rope, prior=0.6, nsamples=30000, seed=0):
     p_right = np.einsum("si,ij,sj->s", W, right, W).mean()
     p_rope = np.einsum("si,ij,sj->s", W, ropem, W).mean()
     return float(p_left), float(p_rope), float(p_right)
+
+
+def bayesian_signed_rank_probs(diff, rope, prior=0.6, nsamples=30000, seed=0):
+    """Benavoli/baycomp convention: P(each region is the most probable).
+
+    Same posterior as `bayesian_signed_rank`, but the returned triple is
+    the fraction of Dirichlet posterior samples in which each region has
+    the LARGEST theta — the quantity baycomp reports and the one the
+    conventional 0.95 decision cut applies to (Benavoli et al., 2017).
+    Added 23/11/2026 (external audit): the text's "8/10 equivalentes"
+    reproduces at the 0.5 cut under both conventions; at the strict 0.95
+    cut this convention yields 3/10 (the three GBDTs).
+    """
+    rng = np.random.default_rng(seed)
+    d = np.asarray(diff, dtype=float)
+    d = np.concatenate(([0.0], d))
+    m = len(d)
+    avg = (d[:, None] + d[None, :]) / 2.0
+    left = (avg < -rope).astype(float)
+    right = (avg > rope).astype(float)
+    ropem = 1.0 - left - right
+    alpha = np.concatenate(([prior], np.ones(m - 1)))
+    W = rng.dirichlet(alpha, size=nsamples)
+    tl = np.einsum("si,ij,sj->s", W, left, W)
+    tr = np.einsum("si,ij,sj->s", W, right, W)
+    tm = np.einsum("si,ij,sj->s", W, ropem, W)
+    wins = np.argmax(np.stack([tl, tm, tr], axis=1), axis=1)
+    return (float((wins == 0).mean()), float((wins == 1).mean()),
+            float((wins == 2).mean()))
 
 
 def bayesian_pairwise_table(pivot, higher_is_better, rope, ref=None, **kw):
