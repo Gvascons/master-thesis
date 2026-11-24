@@ -24,11 +24,11 @@ consulting the sources.
 
 Let us start with the object. A \emph{tabular dataset} is a table in
 which each row is an observation and each column an attribute --- the
-format of a bank statement, a medical record or a customer registry.
+format of a bank statement, a medical record, or a customer registry.
 Table~\ref{tab:adult-exemplo} illustrates the format with rows in the
 style of the \texttt{adult} dataset, a classic of the field in which
 the goal is to predict, from sociodemographic census attributes,
-whether a person's annual income exceeds 50 thousand dollars
+whether a person's annual income exceeds \$50{,}000
 \citep{kohavi1996}.
 
 \begin{table}[htb]
@@ -58,7 +58,7 @@ and \texttt{hours/week} are numbers on different scales;
 nor distance between values, and of arbitrary cardinality; and the
 ``?'' is a missing value whose absence may itself carry information.
 A single table therefore mixes continuous variables, counts,
-categories and gaps --- and each column is an independent semantic
+categories, and gaps --- and each column is an independent semantic
 axis: swapping two columns does not change the problem, but swapping
 two pixels of an image does.
 
@@ -75,7 +75,7 @@ art on tables belonged to another family of models, the ensembles of
 decision trees \citep{grinsztajn2022}. Sections~\ref{sec:fund-gbdt}
 and~\ref{sec:fund-dl} develop the two sides of that dispute.
 
-Let us formalize the minimum needed of the supervised-learning
+Let us formalize the bare minimum of the supervised-learning
 problem. Given a training set
 $D = \{(\mathbf{x}_i, y_i)\}_{i=1}^{n}$ of observation--target pairs,
 assumed to be independent samples from an unknown distribution, the
@@ -127,7 +127,7 @@ object of evaluation --- the confusion matrix --- and justifies the
 choice that anchors the benchmark.
 
 In a binary problem, call \emph{positive} the class of interest ---
-in \texttt{adult}, income above 50 thousand dollars; in a diagnosis,
+in \texttt{adult}, income above \$50{,}000; in a diagnosis,
 the disease; in credit, the default. Confronted with the true label,
 each prediction falls into one of four cells: \emph{true positive}
 (TP, the model flags it and it is), \emph{false positive} (FP, flags
@@ -213,7 +213,7 @@ AUC has its own blind spot: it measures the \emph{order} of the
 scores, not their value --- a model can rank perfectly by saying
 0.51 for every positive and 0.49 for every negative, with
 probabilities that are useless as probabilities. The quantity that
-charges for that is the \emph{log-loss},
+penalizes this is the \emph{log-loss},
 $-\frac{1}{n}\sum_i \log \hat p_i(y_i)$, a \emph{proper scoring
 rule}: its expected value is minimized by reporting the true
 probability \citep{gneiting2007}, which punishes both error and
@@ -409,8 +409,8 @@ Before any layer, there is an awkward decision: how to hand
 \emph{One-hot} encoding --- one binary column per category ---
 explodes the dimensionality when cardinality is high: in this
 dissertation's benchmark, the \texttt{amazon\_\allowbreak employee}
-dataset would reach on the order of 7 to 16 thousand columns
-(depending on the split) without a cardinality cap, penalizing
+dataset would reach on the order of 11{,}000 to 16{,}000 columns in
+the training splits without a cardinality cap, penalizing
 especially the attention models, whose cost grows with the number of
 columns. The standard alternative is learned \emph{embeddings}: each
 category is mapped to a dense low-dimensional vector, trained
@@ -450,9 +450,9 @@ comparison student.
 
 The second lineage imports the mechanism that revolutionized
 language processing: \emph{attention} \citep{vaswani2017}. Here the
-mathematical depth is justified: half the models of the benchmark
-and all the foundation models of Section~\ref{sec:fund-fm} are built
-on these equations.
+mathematical depth is justified: over a third of the benchmark's
+models and all the foundation models of Section~\ref{sec:fund-fm}
+are built on these equations.
 
 Given a sequence of $n$ input vectors stacked in
 $\mathbf{X} \in \mathbb{R}^{n \times d}$, attention projects each
@@ -596,17 +596,20 @@ prediction by a single forward pass. Source: the author.}
 \emph{Where does the ability to ``learn'' without gradients come
 from?} From pre-training. \emph{Prior-fitted networks} (PFNs) are
 pre-trained on millions of small \emph{synthetic} datasets, sampled
-from a prior over generating mechanisms --- typically structural
-causal models (SCMs): random causal graphs whose variables relate
-through drawn functions and noises \citep{muller2022pfn}. On each
+from a prior over generating mechanisms \citep{muller2022pfn}; in
+TabPFN, that prior is built from structural causal models (SCMs):
+random causal graphs whose variables relate through randomly drawn
+functions and noise terms \citep{hollmann2025}. On each
 synthetic task, the network sees a labeled context and is trained to
 predict the held-out labels; doing so at scale, it learns a generic
 inference algorithm: the output of the forward pass approximates the
 \emph{posterior predictive distribution} under the synthetic prior,
-given the context \citep{nagler2023}. \textbf{TabPFN}
-\citep{hollmann2025} and its v2/v2.5 versions \citep{priorlabs2025}
+given the context \citep{muller2022pfn}; \citet{nagler2023}
+complements this Bayesian reading with a frequentist analysis of
+PFNs as pre-tuned but untrained predictors. \textbf{TabPFN}, in its
+v2 \citep{hollmann2025} and v2.5 \citep{priorlabs2025} versions,
 established the paradigm in practice, with a native context limit
-(50 thousand rows in v2.5) inherited from the quadratic cost of
+(50{,}000 rows in v2.5) inherited from the quadratic cost of
 attention.
 
 One architectural detail of TabPFN is central to
@@ -663,10 +666,10 @@ yardstick.
 If an expensive model is too good to discard and too expensive to
 serve, the classical answer is \emph{knowledge distillation}:
 training a fast model (the \emph{student}) to imitate the outputs of
-an expensive one (the \emph{teacher}). The idea is born as
+an expensive one (the \emph{teacher}). The idea originated as
 \emph{model compression} \citep{bucila2006} --- a bulky ensemble
 labels a large mass of unlabeled data, and a small network is
-trained on those labels --- and gains its modern formulation with
+trained on those labels --- and acquired its modern formulation with
 \citet{hinton2015}.
 
 The central observation of \citet{hinton2015} is that the
@@ -736,17 +739,17 @@ state of the art.
 Predicting a number is useful; predicting a number \emph{with the
 uncertainty around it} is what risk decisions demand. Consider a
 model that appraises real estate: saying ``this property is worth
-500 thousand'' and saying ``it is worth 500 thousand, and with 80\%
-probability between 430 and 580 thousand'' are different products
+500{,}000'' and saying ``it is worth 500{,}000, and with 80\%
+probability between 430{,}000 and 580{,}000'' are different products
 --- the second allows pricing risk, setting margins and declining
 decisions when the uncertainty is too large. Two models with the
 same average point error can differ radically in the quality of that
 second answer, and the point metrics (RMSE, MAE) are blind to the
 difference. This section presents the instruments that see it ---
-quantiles and the pinball loss, CRPS, calibration and sharpness ---
+quantiles and the pinball loss, CRPS, calibration, and sharpness ---
 at the depth Chapter~\ref{chap:destilacao} presupposes: here the
 mathematics is deliberately detailed, because these are the
-quantities of the contribution.
+quantities in which the contribution is measured.
 
 Before the distributions, the point yardstick. For a model that
 returns $\hat y_i$ on each of the $n$ test rows, the three measures
@@ -827,8 +830,8 @@ $\tau$, the teacher provides the number
 $q^{\text{teach}}_\tau(\mathbf{x}_i)$, and the student can learn it
 by ordinary regression, with squared error, one output per level.
 The two arms thus differ in the target \emph{and} in the loss --- an
-asymmetry that Chapter~\ref{chap:destilacao} declares and fences on
-the configuration side, re-tuning the hyperparameters of the two
+asymmetry that Chapter~\ref{chap:destilacao} declares and mitigates
+on the configuration side, re-tuning the hyperparameters of the two
 arms separately (the effect of the loss difference itself is not
 isolated).
 
@@ -958,8 +961,8 @@ trained by natural gradients on a proper scoring rule
 \citep{duan2020}. The parametric route also includes the LSS family
 --- \emph{XGBoostLSS} and relatives \citep{marz2019} --- which
 takes the same boosting to model all the parameters of the
-distribution; NGBoost represents it in this work as the exponent
-trained by a proper scoring rule. QRF represents the
+distribution; NGBoost represents it in this work as its member
+trained on a proper scoring rule. QRF represents the
 non-parametric path; NGBoost, the parametric one --- and both
 appear as competitors in Chapter~\ref{chap:destilacao}.
 
@@ -1065,7 +1068,7 @@ correction. Chapter~\ref{chap:metodologia} declares the protocol
 consequences of this floor.
 
 A simpler relative of the Wilcoxon deserves its own note, because
-it is the instrument of the headline of
+it is the instrument behind the headline result of
 Chapter~\ref{chap:destilacao}: the \textbf{sign test}
 \citep{conover1999} ignores the magnitudes and asks only how many
 of the $N$ paired differences are positive --- under the null
@@ -1202,14 +1205,14 @@ the set of models that no other dominates.
 Chapters~\ref{chap:benchmark} and~\ref{chap:destilacao} present
 their multi-criteria results in this form.
 
-\section{Chapter closing}
+\section{Chapter summary}
 
 The chapter assembled four toolboxes: the families of models that
 compete (GBDTs, deep networks, in-context-learning foundation
 models), the distributional yardstick (quantiles, pinball, CRPS,
 calibration) by which the distillation is judged, the statistical
-framework that authorizes affirming both differences and
-equivalences, and the decision vocabulary (router, fixed policy,
+framework that licenses claims of both difference and
+equivalence, and the decision vocabulary (router, fixed policy,
 LODO, regret, dominance) with which a benchmark becomes a
 recommendation. With it in place, Chapter~\ref{chap:related} maps
 the state of the art and demarcates, with dated checks, the gaps

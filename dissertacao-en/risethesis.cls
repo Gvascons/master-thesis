@@ -375,7 +375,7 @@ grau de \@degree\ em \@majorfieldpt.
 % \vskip\baselineskip
 % \vskip\baselineskip
 A \@texttype{} presented to the \if\@showdepartment1\@departmenten\
-\else\@instituteen\ \fi of \@universityen\ in partial fulfillment of the
+\else\@instituteen\ \fi of the \@universityen\ in partial fulfillment of the
 requirements for the degree of \@degree\ in \@majorfielden.
 \fi
 }

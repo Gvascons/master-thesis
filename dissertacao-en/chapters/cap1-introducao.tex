@@ -12,7 +12,7 @@
 
 ``On tabular data, gradient boosting always wins.'' Few maxims of
 machine-learning practice have been repeated as often over the last
-decade, and, unlike most, this one even received quantitative form: in
+decade, and, unlike most, this one even acquired a quantitative form: in
 2022, a systematic study identified the inductive biases that explain
 why tree ensembles beat neural networks on typical tables
 \citep{grinsztajn2022}, and subsequent larger-scale evaluations nuanced
@@ -73,13 +73,13 @@ The obstacle to adopting the leader is an architectural cost (the
 training set travels with the model on every prediction), and
 architectural costs can, in principle, be transferred away: knowledge
 distillation \citep{hinton2015} trains, on the expensive teacher's
-outputs, a student that serves in the hundred-microseconds-per-row
-range. For tabular foundation models, the literature established this
+outputs, a student that serves predictions in about a hundred
+microseconds per row. For tabular foundation models, the literature established this
 route for classification \citep{pocketfm2026}. What it transfers in
 \emph{regression}, in particular when the preservation target is the
 full predictive distribution, with quantiles and calibrated
-intervals, remained without an academic answer up to the dated checks
-of this study. The answer found is selective: \emph{point}
+intervals, had no academic answer as of the dated checks of this
+study. The answer found is selective: \emph{point}
 distillation fails robustly, \emph{distributional} distillation works
 where the teacher has a genuine advantage, and the boundary between
 the two conditions can be checked in minutes
@@ -92,12 +92,12 @@ The problem this dissertation confronts can be stated in three layers,
 each inheriting the previous one. In the first layer there is a
 \emph{vacuum of comparable evidence}: the families of tabular models
 available in 2026 (gradient boosting; deep learning in its three
-lineages --- dense networks, attention architectures and
+lineages --- dense networks, attention architectures, and
 Kolmogorov--Arnold networks --- and in-context-learning foundation
 models) had not been measured under a single protocol combining
 hyperparameter selection strictly separated from measurement,
 statistical inference able to \emph{affirm} equivalences rather than
-only reject them, and cost axes (training time, tuning cost and
+only reject them, and cost axes (training time, tuning cost, and
 serving latency) measured under the same conditions as accuracy. The
 reference benchmarks predate the 2026 generation
 \citep{grinsztajn2022,mcelfresh2023}, and that generation's numbers
@@ -131,9 +131,9 @@ To establish, under a single experimental protocol, with selection
 separated from measurement and inference able to affirm equivalences,
 the comparative evidence on the three families of tabular models in
 the era of foundation models, and to convert it into evaluated
-decision instruments --- the learned component, out of sample ---,
-including the assessment, through knowledge distillation, of how far
-the leading family's main operational obstacle can be removed.
+decision instruments (the learned component out of sample), including
+the assessment, through knowledge distillation, of how far the
+leading family's main operational obstacle can be removed.
 
 \subsection{Specific objectives}
 
@@ -228,16 +228,18 @@ lines of work.
 % recompile with: tectonic tikz-src/tikz-cap1-1-en.tex && mv tikz-cap1-1-en.pdf images/)
 \includegraphics{images/tikz-cap1-1-en.pdf}
 \caption[Research questions and chapters]{Research questions and the
-chapters that answer them. Source: the author.}
+chapters that answer them (the shift of the top is a consistent
+lead, not a statistically confirmed separation). Source: the
+author.}
 \label{fig:intro-qps}
 \end{figure}
 
 \section{Summary of contributions}
 \label{sec:intro-contribuicoes}
 
-The contributions of this dissertation are of measurement under a
-uniform protocol and of disclosed evaluation --- out of sample
-wherever there is learning. No new learning mechanism is claimed;
+The contributions of this dissertation lie in measurement under a
+uniform protocol and in openly reported evaluation --- out of sample
+wherever something is learned. No new learning mechanism is claimed;
 what is claimed, with dated novelty checks, is the framing and the
 evidence that were missing. In order of presentation:
 
@@ -312,8 +314,8 @@ evidence that were missing. In order of presentation:
 \section{Publications}
 \label{sec:intro-producao}
 
-Up to the deposit of this dissertation, the research produced two
-technical reports of the graduate program, corresponding to its
+As of the submission of this dissertation, the research had produced
+two technical reports of the graduate program, corresponding to its
 individual-coursework requirements, both in English and available in
 the project's public repository:
 
@@ -322,14 +324,15 @@ the project's public repository:
     Multi-Criteria Benchmark of 14 Tabular Models --- From a
     Statistical Tie to the 2026 Break --- and a Validated Decision
     Framework} \citep{companion2026}: technical report of the
-    Trabalho Individual coursework (\texttt{latex/ai1/} in the
-    repository), condensing the material of
+    \emph{Trabalho Individual} (individual project) coursework
+    (\texttt{latex/ai1/} in the repository), condensing the material of
     Chapters~\ref{chap:benchmark} and~\ref{chap:framework}.
   \item \textbf{AI-2} --- \emph{Distilling Tabular Foundation Models
     Beyond Classification: Distributional Regression and the
     Distill/Compress/Shrink Pareto Frontier}
-    \citep{companion-ai2-2026}: technical report of the Atividade de
-    Orientação Individual (\texttt{latex/ai2/}), condensing the
+    \citep{companion-ai2-2026}: technical report of the
+    \emph{Atividade de Orientação Individual} (individual supervised
+    research activity) (\texttt{latex/ai2/}), condensing the
     material of Chapter~\ref{chap:destilacao}; a preprint derived
     from it is being prepared for submission to arXiv.
 \end{itemize}
@@ -345,7 +348,7 @@ classical baselines; the distillation report incorporates the E1
 data only through the five-system Friedman test); and the
 instance-level complementarity analysis
 (Section~\ref{sec:cap5-ato5}), pre-registered and executed after the
-reports, which answers \emph{where} and \emph{on which cases}
+reports, which answers \emph{where} and \emph{in which cases}
 foundation models beat GBDTs.
 
 \section{How to read this dissertation}

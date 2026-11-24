@@ -86,11 +86,12 @@ swept directly. The arrival of foundation models displaces the
 entire controversy: the new axis is not tree vs.\ network, but
 pre-trained vs.\ trained from scratch. It is worth recording that
 the two reference benchmarks predate the second generation of
-tabular foundation models --- not a methodological defect, but
-dating: neither could have included models that did not yet exist.
+tabular foundation models --- not a methodological defect, but a
+matter of timing: neither could have included models that did not
+yet exist.
 
 The gap we occupy on this axis is not one of breadth: our benchmark
-does not compete there (18 datasets is less than TabArena covers);
+does not compete there (it covers fewer datasets than TabArena);
 it differs on three fronts that remained open. First, protocol depth
 per cell: hyperparameter selection separated from measurement, with
 uniform tuning per family, and frequentist \emph{and} Bayesian
@@ -103,12 +104,13 @@ currency: simultaneous inclusion of the 2026 generation of
 foundation models (TabFM, measured weeks after release) and of the
 Kolmogorov--Arnold family, both absent from the neutral benchmarks
 at the dates of our checks (record in
-Appendix~\ref{app:suplementares}). Two cast exclusions are
-disclosed: the study compares individual models, not
+Appendix~\ref{app:suplementares}). Two exclusions from the model
+roster are disclosed: the study compares individual models, not
 model-combination AutoML systems such as AutoGluon
 \citep{erickson2020}, whose ensembling layer answers a different
 question from ours; and the releases after the version freeze
-(TabICLv2, TabPFN-3/3.5) are excluded by dating, not by judgment.
+(TabICLv2, TabPFN-3/3.5) are excluded because of their release
+dates, not by judgment.
 Chapter~\ref{chap:benchmark} executes this design.
 
 \section{Tabular foundation models and their evaluation}
@@ -119,8 +121,9 @@ TabPFN v2 \citep{hollmann2025} and its v2.5 update
 prior-fitted networks for tabular data: a network pre-trained on
 synthetic datasets conditions on the training set as a prompt at
 prediction time, with no gradient updates on the target task. The
-line evolved quickly --- TabPFN-3 and, more recently, TabPFN-3.5
-\citep{tabpfn3-2026} --- and inspired variants exploring scale and
+line evolved quickly --- TabPFN-3 \citep{tabpfn3-2026} and, more
+recently, TabPFN-3.5 \citep{tabpfn35tr2026} --- and inspired
+variants exploring scale and
 speed: TabICL \citep{tabicl2025} extends the paradigm to large
 datasets; TabFlex \citep{tabflex2025} uses linear attention to scale
 to millions of rows; MotherNet \citep{mothernet2023} amortizes the
@@ -172,7 +175,7 @@ preprocessing, same context-subsampling policy. The demand is not
 bureaucratic: in a field where models receive monthly updates and
 published results mix versions, a comparison is only interpretable
 with pinned versions and mirrored policies (in our case, the same
-50-thousand-row context cap and the same structural exclusion of
+50{,}000-row context cap and the same structural exclusion of
 the 100-class dataset for both models).
 Chapter~\ref{chap:benchmark} provides that comparison, framed as an
 inter-laboratory replication of the paradigm; and the
@@ -210,9 +213,9 @@ investigation, but two scope limitations matter here --- there are
 no GBDT baselines and training uses only ten epochs --- so the
 study does not answer the question the practitioner asks (``does
 KAN compete with XGBoost?''). As for TabKAN, three limitations of
-the evidence matter here: six of the ten datasets have fewer than 8
-thousand samples, there is no regression, and the comparison
-XGBoost appears undertuned (an AUC of 0.726 on \texttt{credit\_g},
+the evidence matter here: six of the ten datasets have fewer than
+8{,}000 samples, there is no regression, and the XGBoost baseline
+used for comparison appears undertuned (an AUC of 0.726 on \texttt{credit\_g},
 when our own tuning obtains ${\approx}0.77$ on the same dataset ---
 0.767 on the hold-out, 0.786 in cross-validation).
 
@@ -258,12 +261,13 @@ model --- it is the representative method of the ``compress the
 context'' arm that we use as a conceptual reference (our frontier
 measures the simplest variant, by subsampling). In the same general
 direction, there are proposals for memory-efficient tabular
-foundation models \citep{memeff2026}. The arm kept populating at a
-monthly pace: in October 2026 alone appeared the replacement of up
-to 96\% of the transformer's blocks by a closed-form affine
-translator \citep{shallow2026}, activation alignment to operate
-with reduced contexts \citep{actalign2026} and the \emph{Fast}
-variant of TabPFN-3.5 \citep{tabpfn35tr2026} --- all, as far as we
+foundation models \citep{memeff2026}. The arm kept growing at a
+monthly pace: between September and October 2026 came the
+replacement of up to 96\% of the transformer's blocks by a
+closed-form affine translator \citep{shallow2026}, activation
+alignment to operate with reduced contexts \citep{actalign2026},
+and the \emph{Fast} variant of TabPFN-3.5
+\citep{tabpfn35tr2026} --- all, as far as we
 checked, evaluated only on classification or point prediction: the
 TabPFN-3.5 report evaluates distributionally (on ScoringBench) only
 the full model, not the \emph{Fast} variant --- and distributional
@@ -277,10 +281,10 @@ eliminates the re-conditioning cost by trading it for a generator
 network; MotherTree \citep{mothertree2026} takes the same idea to a
 symbolic student, emitting a standalone decision tree --- fast
 predictors with neither teacher nor distillation, conceptual
-neighbors that attest to the demand for the microsecond regime.
+neighbors that attest to the demand for sub-millisecond prediction.
 TL-ANDI \citep{tlandi2026} combines distilled labels and anchoring
 for transfer to restricted-context tasks --- a goal orthogonal to
-ours (it produces neither fast students nor touches the
+ours (it neither produces fast students nor addresses the
 distributional axis), cited for completeness of the map.
 
 FP8 quantization of attention \citep{kubler2026} is a fourth
@@ -314,16 +318,16 @@ doubling of context is disproportionately expensive on 16~GB GPUs.
 The mechanics of training a small model on the outputs of a large
 one is established literature: model compression via soft labels
 and transfer sets goes back to \citet{bucila2006}, the modern
-formulation with temperature is \citet{hinton2015}'s, and the
+formulation with temperature is due to \citet{hinton2015}, and the
 transposition to trees has its own lineage --- \citet{breiman1996},
 the born-again trees of \citet{vidal2020} and the distillation into
-soft decision trees of \citet{frosst2017}. It is from this
-mechanics that we start; what changes with foundation models is the
+soft decision trees of \citet{frosst2017}. This is the machinery we
+start from; what changes with foundation models is the
 \emph{teacher} (an in-context-learning model, whose cost is at
 inference) and, in our case, the target (quantile curves, not
 labels).
 
-That mechanics, it is worth recording, is enjoying a renaissance
+This machinery, it is worth recording, is enjoying a renaissance
 outside the tabular world: distillation is a central piece of the
 post-training recipes of contemporary large language models, in
 three variants --- the classical \emph{off-policy} one, from a
@@ -370,7 +374,7 @@ Around this line orbit variants and neighbors. GEAR \citep{gear2026}
 adds a two-stage variant with synthetic expansion of the transfer
 set --- classification only; in the same family, \citet{dey2026}
 distill a TabPFN teacher into a compact feed-forward network
-(${\sim}6$~thousand times smaller) for credit decisioning,
+(${\sim}6{,}000$ times smaller) for credit decisioning,
 evaluated on accuracy and AUC --- also classification only.
 TabDistill \citep{tabdistill2025} distills transformers into tiny
 MLPs in the few-shot classification regime (and occupies the name,
@@ -414,8 +418,9 @@ multi-quantile objectives --- which makes a quantile GBDT a natural
 student body for receiving quantile curves. On the \emph{teacher}
 side, TabPFN v2.5 exposes arbitrary quantiles of the predictive
 distribution through its native API. The pieces were all on the
-table; no academic work had connected them in a distillation
-protocol evaluated by CRPS and coverage (and no public repository,
+table; no academic work had connected them, for a tabular
+foundation-model teacher, in a distillation protocol evaluated by
+CRPS and coverage (and no public repository,
 in the distributional framing --- the September 2026 one that
 distills TabFM into XGBoost stays at the point
 level\footnote{TabFMKD,
@@ -424,9 +429,10 @@ accessed 2026-11-23): OOF soft labels for classification and a
 convex teacher--label combination for point regression.}).
 
 Contemporary with this work (2026-10-01, when our experiments were
-already concluded), \citet{jeong2026} extend distillation to
-\textbf{point targets} of regression: squared-error transfer of
-the teacher's means, evaluated only on RMSE, with stronger
+already concluded), \citet{jeong2026} extend distillation, on the
+regression side, to \textbf{point targets}: squared-error transfer
+of the teacher's means, evaluated on RMSE (their classification
+experiments use soft cross-entropy and AUC/log-loss), with stronger
 teachers (TabPFN~v3 and TabICLv2) and a different protocol,
 reporting point gains. Chapter~\ref{chap:destilacao} discusses the
 reconciliation between those gains and our scoped negative result
@@ -442,7 +448,7 @@ found no public work covering, \textbf{for tabular foundation
 models}: (i) \emph{distributional} distillation in regression ---
 transfer of quantile curves, evaluated by CRPS and interval
 coverage; (ii) a frontier between serving strategies measured on
-the same hold-outs. A third point is narrower: TabFM already
+the same hold-out sets. A third point is narrower: TabFM already
 appears as a teacher in the September 2026 public repository cited
 above, restricted to classification and point regression; what
 Chapter~\ref{chap:destilacao} adds is the test of TabFM as a
@@ -532,7 +538,7 @@ TFM acceleration/serving &
 Strategies evaluated in isolation: TACO, CRUMB, MotherNet, FP8
 quantization \citep{taco2026,crumb2026,mothernet2023,kubler2026} &
 Crossed frontier distill $\times$ compress $\times$ shrink ensemble
-on the same hold-outs &
+on the same hold-out sets &
 Ch.~\ref{chap:destilacao} \\
 \addlinespace
 TFM distillation &
@@ -563,7 +569,7 @@ kind of contribution a neutral benchmark with reusable
 infrastructure can make. Second, two of the gaps were partially
 eroded during the project's execution --- \citet{poeta2024}
 anticipated the independent KAN test in a narrow scope, and
-\citet{jeong2026} reached point regression days before our delivery
+\citet{jeong2026} reached point regression shortly before our delivery
 --- and both erosions are recorded with dates and explicit
 rescoping, rather than silenced; the distributional pillar and the
 strategy frontier remained unclaimed up to the last recorded

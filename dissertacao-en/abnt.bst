@@ -1,6 +1,6 @@
 %==============================================================================
 % abnt.bst
-% Estilo BibTeX de formatação de referências bibliográficas no padrão ABNT
+% Estilo ABNT com strings geradas em ingles (versao EN da dissertacao; fallback "Anais"->"Proceedings", teses em ingles). Base: abnt.bst do projeto.
 %
 % UFRGS TeX Users Group
 % Informatics Institute --- UFRGS
@@ -83,8 +83,8 @@ MACRO {dec} {"Dec."}
 %==============================================================================
 % Definicao de strings usados na elaboracao das referencias
 %==============================================================================
-FUNCTION {str:mastersthesis} {"Disserta{\c{c}}{\~a}o (Mestrado em Ci{\^e}ncia da Computa{\c{c}}{\~a}o)"}
-FUNCTION {str:phdthesis} {"Tese (Doutorado em Ci{\^e}ncia da Computa{\c{c}}{\~a}o)"}
+FUNCTION {str:mastersthesis} {"Master's thesis (Computer Science)"}
+FUNCTION {str:phdthesis} {"PhD thesis (Computer Science)"}
 FUNCTION {str:chapter} {"Cap."}
 
 %==============================================================================
@@ -818,7 +818,7 @@ FUNCTION {extract.proceedings.type}
 		{s #23 global.max$ substring$}{
 	pop$ s #1 #11 substring$ duplicate$ "Tagungsband" =
 		{s #12 global.max$ substring$}
-		{pop$ "Anais" s} if$
+		{pop$ "Proceedings" s} if$
 	} if$
 	} if$
 	} if$
