@@ -58,10 +58,12 @@ que os ameaça e quando usar cada coisa.
 \label{sec:destil-preco}
 
 O Capítulo~\ref{chap:benchmark} estabeleceu que a geração 2026 de
-\emph{foundation models} tabulares quebra o empate histórico de acurácia; o
+\emph{foundation models} tabulares desloca o topo histórico de
+acurácia --- liderança consistente, sem confirmação como separação
+estatística; o
 Capítulo~\ref{chap:framework}, que a política fixa ``\emph{foundation model}
-primeiro'' é regret-ótima na métrica primária, com \emph{regret} mediano
-0,000 sob validação \emph{leave-one-dataset-out}. O único obstáculo a
+primeiro'' é regret-ótima na métrica primária, com \emph{regret}
+mediano 0,000 na avaliação descritiva sobre os 18 conjuntos. O único obstáculo a
 essa política é o custo de servir --- e ele não é um detalhe de
 implementação, mas uma propriedade constitutiva do paradigma: modelos
 de aprendizado em contexto (\emph{in-context learning}) carregam o
@@ -344,7 +346,20 @@ duas dessas derrotas pelo mesmo mecanismo de memorização de
 duplicatas do \texttt{wine\_quality} (29--36\% do teste com gêmeo
 exato no \emph{pool}), e a do \texttt{naval\_\allowbreak
 propulsion\_\allowbreak plant} genuína
-(\texttt{ctr23\_\allowbreak sensitivity.csv}). A trajetória da fixação
+(\texttt{ctr23\_\allowbreak sensitivity.csv}). A medição dos quatro
+foi repetida em mais quatro splits de dados (43--46; regra de relato
+fixada antes de qualquer leitura: todos os splits, sem recorte
+posterior): o quadro é estável --- \texttt{california} contínuo
+positivo nos cinco splits, \texttt{white\_wine} e
+\texttt{superconductivity} negativos nos cinco, e o
+\texttt{naval} cruza o zero uma vez ($+0{,}02$ no split 45, negativo
+nos demais) ---, de modo que o placar ampliado é 17/24 ($p=0{,}032$)
+em quatro splits e 18/24 ($p=0{,}011$) em um, com agregado pelo sinal
+da retenção média de \textbf{17/24} ($p=0{,}032$); no recorte
+conservador, 16/22 ($p=0{,}026$) em quatro splits e 17/22 em um, com
+agregado \textbf{16/22} (tabela por split no
+Apêndice~\ref{app:suplementares};
+\texttt{ctr23\_\allowbreak omitidos/\allowbreak multisplit.csv}). A trajetória da fixação
 do \emph{pool} está na Seção~\ref{sec:destil-desenho}, com a correção
 sequencial que ela exige.
 
@@ -670,8 +685,8 @@ Sem o binarizado & 15/19 & 0,17 & 0,010 & 0,067 \\
 Dois braços re-ajustados & 16/20 & 0,12 & 0,006 & 0,035 \\
 Re-ajustados, sem o binarizado & 15/19 & 0,10 & 0,010 & 0,048 \\
 Dez sementes de aluno & 16/20 & 0,19 & --- & --- \\
-Com os 4 elegíveis omitidos & 17/24 & --- & 0,032 & --- \\
-Sem os 2 sobrepostos ao núcleo & 16/22 & --- & 0,026 & --- \\
+Com os 4 elegíveis omitidos (5 splits) & 17/24 & --- & 0,032 & --- \\
+Sem os 2 sobrepostos ao núcleo (5 splits) & 16/22 & --- & 0,026 & --- \\
 \bottomrule
 \end{tabular}
 \end{table}

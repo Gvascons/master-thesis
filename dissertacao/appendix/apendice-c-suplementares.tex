@@ -479,3 +479,39 @@ split, sementes $\{0,1,2\}$), está na tabela de robustez do
 Capítulo~\ref{chap:destilacao}; proveniência e limites em
 \texttt{results/\allowbreak distillation/\allowbreak
 ctr23\_\allowbreak omitidos/\allowbreak PROVENANCE.md}.
+
+\textbf{Multisplit dos conjuntos elegíveis omitidos.} A medição dos
+quatro omitidos foi repetida em quatro splits adicionais de dados
+(43--46; o split 42 é o do registro original), sob regra de relato
+fixada antes de qualquer leitura: todos os splits reportados, placar
+por split e agregado por conjunto pelo sinal da retenção média, sem
+recorte posterior. Retenção por conjunto e split (3 sementes de
+aluno):
+
+\begin{table}[htbp]
+\centering
+\caption[Multisplit dos omitidos da CTR23]{Retenção de CRPS por
+conjunto omitido e split (sementes de aluno \{0, 1, 2\}). Fonte:
+\texttt{results/\allowbreak distillation/\allowbreak
+ctr23\_\allowbreak omitidos/\allowbreak multisplit.csv} (splits
+43--46) e \texttt{resultados.csv} (split 42).}
+\label{tab:app-multisplit}
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+Conjunto & 42 & 43 & 44 & 45 & 46 \\
+\midrule
+california contínuo & $+$0,212 & $+$0,332 & $+$0,294 & $+$0,320 & $+$0,232 \\
+naval\_propulsion\_plant & $-$0,098 & $-$0,087 & $-$0,022 & $+$0,022 & $-$0,104 \\
+superconductivity & $-$0,788 & $-$0,001 & $-$0,152 & $-$0,156 & $-$0,254 \\
+white\_wine & $-$1,582 & $-$1,087 & $-$1,000 & $-$1,524 & $-$1,343 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Placar da população ampliada por split: 17/24 ($p=0{,}032$) nos splits
+42, 43, 44 e 46; 18/24 ($p=0{,}011$) no split 45 (o único em que o
+\texttt{naval} cruza o zero). Agregado pelo sinal da retenção média
+entre splits: 17/24 ($p=0{,}032$). Recorte conservador (sem
+\texttt{white\_wine} e \texttt{california} contínuo): 16/22
+($p=0{,}026$) em quatro splits, 17/22 em um; agregado 16/22.

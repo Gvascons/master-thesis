@@ -72,8 +72,10 @@ chegam a confirmar como separação estatística
 (Capítulo~\ref{chap:benchmark}). O preço, contudo, muda a natureza da
 decisão: o
 líder de acurácia custa cerca de \textbf{43 milissegundos por linha} para
-servir predições, contra \textbf{0,33 microssegundos} do XGBoost
-(quatro a cinco ordens de magnitude; aproximadamente 131~mil
+servir predições, contra \textbf{0,33 microssegundos} do XGBoost ---
+latências de serviço em lote amortizado, com cada modelo em seu
+dispositivo natural (quatro a cinco ordens de magnitude;
+aproximadamente 131~mil
 vezes no conjunto de referência, com a razão variando por conjunto). A
 pergunta prática passa a ser outra: a latência do líder cabe no caso de
 uso e, se não cabe, o que fazer?
@@ -398,9 +400,10 @@ sua heterogeneidade constitutiva, árvores e \emph{gradient boosting}, as
 três linhagens do aprendizado profundo tabular, os \emph{foundation
 models} e o mecanismo de aprendizado em contexto, a destilação de
 conhecimento, o ferramental da regressão distribucional (quantis, CRPS,
-calibração) e a teoria dos testes estatísticos para comparação de
-algoritmos, com profundidade matemática proporcional à proximidade das
-contribuições. O \textbf{Capítulo~\ref{chap:related}} posiciona o trabalho
+calibração), a teoria dos testes estatísticos para comparação de
+algoritmos e o vocabulário de decisão (seleção de algoritmos,
+\emph{regret}, dominância de Pareto), com profundidade proporcional
+ao uso que os capítulos seguintes fazem de cada conceito. O \textbf{Capítulo~\ref{chap:related}} posiciona o trabalho
 em seis eixos da literatura, de benchmarks tabulares à destilação de
 \emph{foundation models}, fechando com uma tabela-síntese que liga cada
 lacuna, caracterizada por verificações \emph{online} datadas, ao capítulo

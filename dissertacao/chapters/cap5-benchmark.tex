@@ -137,7 +137,8 @@ que a Seção~\ref{sec:cap5-ato4} retoma na grade completa.
 \includegraphics[width=0.9\linewidth]{images/cd_diagram_binary_11.pdf}
 \caption[Diagrama de distância crítica (núcleo de 11)]{Diagrama de
 distância crítica (Nemenyi) para a classificação binária no núcleo de
-11 modelos ($N{=}10$ conjuntos, $\mathrm{CD}=4{,}77$). O que olhar: o
+11 modelos ($N{=}10$ conjuntos, $\mathrm{CD}=4{,}77$; rótulos
+internos com ponto decimal). O que olhar: o
 TabPFN lidera o rank médio (3,2), mas a barra superior conecta do
 TabPFN ao MLP --- o post-hoc não separa o pelotão, e é por isso que a
 leitura de equivalência vem do instrumento bayesiano, não daqui.}
@@ -382,7 +383,8 @@ menor tempo mediano de treino.
 \includegraphics[width=\linewidth]{images/pareto_binary_pt.pdf}
 \caption[Fronteiras de Pareto: rank $\times$ custo]{Fronteiras de
 Pareto no plano rank binário médio $\times$ custo: (a) tempo mediano
-de treino sobre os 18 conjuntos (a mesma base da
+de treino sobre os 18 conjuntos --- 17 para os \emph{foundation
+models} --- (a mesma base da
 Tabela~\ref{tab:app-custos}); (b) latência de inferência no
 \texttt{adult}. O eixo de rank é invertido (acima-à-esquerda é
 melhor); estrelas marcam a fronteira da grade completa de 14, e a
@@ -391,8 +393,8 @@ decidida nos ranks recomputados do recorte. O que olhar: no painel
 (a) o TabFM domina a grade sozinho e o núcleo resolve-se em
 \{LightGBM, XGBoost, TabPFN\}; no painel (b) a imagem inverte-se ---
 a fronteira passa a \{XGBoost, TabPFN, TabFM\}, com os
-\emph{foundation models} pagando quatro ordens de magnitude de
-latência pelo rank.}
+\emph{foundation models} pagando quatro a cinco ordens de magnitude
+de latência pelo rank.}
 \label{fig:cap5-pareto}
 \end{figure}
 
@@ -462,10 +464,11 @@ condicional. No extremo de cardinalidade categórica
 no fundo da tabela (Figura~\ref{fig:cap5-heatmap}); a codificação
 \emph{one-hot} e o teto de 50 categorias por coluna
 (Capítulo~\ref{chap:metodologia}) são candidatos a explicação, não
-causas testadas. E o TabPFN combina, dentro do núcleo, o melhor rank
-médio com o melhor pior rank entre conjuntos --- em nenhum conjunto
-ele cai ao fundo da tabela, um atributo que o rank médio sozinho não
-captura.
+causas testadas. E o TabPFN combina, dentro do núcleo e considerando as três tarefas
+em conjunto, o melhor rank médio com o melhor pior rank entre os 17
+conjuntos em que opera --- em nenhum deles cai ao fundo da tabela, um
+atributo que o rank médio sozinho não captura (em classificação
+isolada, o pior caso do XGBoost é igual ou melhor).
 
 Nenhuma das análises anteriores responde à pergunta mais frequente do
 praticante: ``com \emph{meu} volume de dados, quem vence?''. As curvas

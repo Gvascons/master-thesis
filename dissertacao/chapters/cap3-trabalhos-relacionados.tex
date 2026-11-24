@@ -236,7 +236,10 @@ resultado é desfavorável às alegações fortes --- KAN e TabKAN terminam no
 último terço nas três tarefas, com o TabKAN atrás do próprio TabNet em
 multiclasse e regressão --- em linha com a literatura crítica e
 consistente com a hipótese de \emph{baselines} subajustados nos artigos
-originais.
+originais, com a ressalva, declarada no
+Capítulo~\ref{chap:metodologia}, de que o TabKAN é reimplementação
+própria e o KAN teve o regime de treino adaptado: a conclusão vale
+para o protocolo desta grade.
 
 \section{Aceleração e \emph{serving} de \emph{foundation models} tabulares}
 \label{sec:rel-serving}
@@ -404,7 +407,11 @@ expõe quantis arbitrários da distribuição preditiva pela API nativa.
 As peças estavam todas sobre a mesa; nenhum trabalho acadêmico as havia
 conectado num protocolo de destilação avaliado por CRPS e cobertura
 (e nenhum repositório público, no recorte distribucional ---
-o de set/2026 que destila o TabFM em XGBoost fica no pontual).
+o de setembro de 2026 que destila o TabFM em XGBoost fica no
+pontual\footnote{TabFMKD,
+\url{https://github.com/gegen07/TabFMKD} (último commit em
+14/09/2026; acesso em 23/11/2026): soft labels OOF para classe e
+combinação convexa professor--rótulo para regressão pontual.}).
 
 Contemporâneo a este trabalho
 (01/10/2026, quando nossos experimentos já estavam concluídos),

@@ -112,8 +112,10 @@ benchmark support --- and which one can it \emph{not} support?
     per-family variance decomposition.
   \item The two-movement reading: the \textbf{statistical tie} of the
     11-model core slate (and its anatomy: the model$\times$dataset
-    interaction dominates rank variance) and the \textbf{break of the tie} by the 2026
-    generation, with the cost inversion quantified (4--5 orders of
+    interaction dominates rank variance) and the \textbf{shift of the
+    top} by the 2026
+    generation --- consistent, not confirmed as statistical
+    separation --- with the cost inversion quantified (4--5 orders of
     magnitude in serving latency).
   \item The first \textbf{independent test} --- to our dated verification
     --- of the Kolmogorov--Arnold family (KAN \citep{kan2024}, TabKAN
@@ -409,7 +411,7 @@ on all five panels.}
 \label{fig:curves}
 \end{figure}
 
-\subsection{Act IV --- the break of the tie (2026 generation)}
+\subsection{Act IV --- the shift of the top (2026 generation)}
 \label{sec:act4}
 
 Expanding to 14 models reorganizes the narrative (Table~\ref{tab:ranks},
@@ -519,7 +521,8 @@ only the worst; Table~\ref{tab:regret}):
 
 \begin{table}[h]
 \centering
-\caption{Normalized regret of fixed policies under LODO.
+\caption{Normalized regret of the recommendation policies (the tree
+under LODO; the fixed policies are descriptive on the same datasets).
 Tree and FM columns average over the 17 datasets where the FM family
 participates (\texttt{helena} excluded); GBDT and DL columns over all 18.
 Source: \texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak validation\{,\allowbreak \_\allowbreak 14\}.\allowbreak csv}.}
@@ -571,7 +574,8 @@ in native form (recovering it by distillation is the object of our second
 activity, AI-2); (2) \textbf{architectural limits} ($>$10 classes, context
 limit); (3) \textbf{intrinsic interpretability required} $\to$ GBDTs; (4)
 \textbf{no active constraint} $\to$ foundation model, with TabPFN as the
-mature option and TabFM as the frontier. The regret validation confirms
+mature option and TabFM as the frontier. The regret evaluation
+indicates
 that these four questions capture the essential: the constraints are the
 decision's real informative content.
 

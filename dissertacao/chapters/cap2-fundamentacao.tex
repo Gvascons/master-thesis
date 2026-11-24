@@ -521,8 +521,9 @@ máquina \citep{kancritical2024}; a avaliação tabular independente de
 ao KAN em acurácia --- mas sem \emph{baselines} GBDT e sob treino de
 dez épocas. Nenhuma dessas avaliações, de um lado ou do outro,
 inclui GBDTs e \emph{foundation models} no mesmo protocolo --- a
-lacuna que o Capítulo~\ref{chap:benchmark} preenche, adjudicando a controvérsia sob protocolo
-neutro.
+lacuna que o Capítulo~\ref{chap:benchmark} preenche sob protocolo
+neutro, com as ressalvas de reimplementação declaradas no
+Capítulo~\ref{chap:metodologia}.
 
 \section{\emph{Foundation models} tabulares e aprendizado em contexto}
 \label{sec:fund-fm}
@@ -771,8 +772,10 @@ Com professor, o quantil já vem pronto: para cada linha e cada nível
 $\tau$, o professor fornece o número $q^{\text{prof}}_\tau(\mathbf{x}_i)$,
 e o aluno pode aprendê-lo por regressão comum, com erro quadrático,
 uma saída por nível. Os dois braços diferem, assim, no alvo \emph{e}
-na perda --- diferença que o Capítulo~\ref{chap:destilacao} declara e
-cujo efeito mede.
+na perda --- assimetria que o Capítulo~\ref{chap:destilacao} declara
+e cerca pelo lado da configuração, re-ajustando os hiperparâmetros dos
+dois braços separadamente (o efeito da diferença de perda em si não é
+isolado).
 
 \subsection{CRPS: uma régua para distribuições}
 
@@ -925,7 +928,8 @@ dados compartilham a maior parte dos exemplos e não são independentes;
 usá-los como réplicas inflaria artificialmente o $N$ efetivo e, com ele, o
 poder aparente dos testes (\emph{pseudo-replicação}). A unidade correta é
 o \emph{conjunto de dados}: cada um contribui com um único número por
-modelo (a média entre folds), e os folds alimentam apenas a descrição da
+modelo (neste estudo, a medição no \emph{hold-out} fixo), e os
+\emph{folds} alimentam apenas a descrição da
 variabilidade intra-conjunto. Todos os testes a seguir pressupõem essa
 escolha.
 
@@ -1018,7 +1022,7 @@ desempenho entre dois modelos é considerada irrelevante. As $N$
 diferenças pareadas, uma por conjunto de dados, são tratadas como
 amostra de uma distribuição desconhecida, sobre a qual se põe um prior
 não paramétrico (um processo de Dirichlet com uma pseudo-observação em
-zero). O objeto de interesse é o vetor
+zero, de peso 0,6 neste estudo). O objeto de interesse é o vetor
 $\theta = (\theta_{\text{esq}}, \theta_{\text{ROPE}},
 \theta_{\text{dir}})$, com soma 1: as probabilidades de que a
 diferença típica entre os dois modelos (formalmente, a média de duas

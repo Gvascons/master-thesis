@@ -138,7 +138,8 @@ answer RQ1, \S\ref{sec:frontier} RQ2, and
 \begin{enumerate}
   \item \textbf{A robust negative:} point distillation of TFMs fails as a
     rule at realistic pool sizes (soft targets beat the hard-label control
-    in only 4/20 datasets), replicated with a second, far stronger teacher
+    in only 4/20 datasets), replicated with a second teacher on the
+    five core datasets
     on the five core datasets, with a pool-size sweep showing the residual
     gain is a small-data phenomenon on some datasets only.
   \item \textbf{A positive on the open axis:} distributional distillation
@@ -467,11 +468,13 @@ ceilings are treated as measurements, not nuisances
 
 \section{Results}
 
-\subsection{Point distillation fails at scale --- with any teacher}
+\subsection{Point distillation fails at scale --- with both teachers
+tested}
 \label{sec:point}
 
 Across all 20 datasets, the point student trained on teacher means beats
-its hard-label control in only 4; with the far stronger TabFM teacher ---
+its hard-label control in only 4; with the TabFM teacher --- whose
+anchor gap, measured on one dataset, is almost $6\times$ larger ---
 whose hold-out advantage over the shared hard-label control (the anchor
 gap that retention normalizes against) is almost 6$\times$ TabPFN's on
 \texttt{california\_\allowbreak housing}: 0.028 vs.\ 0.005 RMSE --- the picture is
@@ -1000,7 +1003,8 @@ as part of the method.
 
 \section{Conclusion}
 
-Tabular foundation models ended the accuracy tie; their serving cost is now
+Tabular foundation models shifted the top of the accuracy race;
+their serving cost is now
 the binding constraint, and distillation attacks it selectively. In
 regression, what survives the transfer is the distribution --- a median
 12--19\% (depending on tuning of the arms), and in one case more than

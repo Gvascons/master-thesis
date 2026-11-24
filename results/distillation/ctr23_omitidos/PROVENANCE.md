@@ -31,8 +31,13 @@ O recorte adotado na dissertação é o conservador, por sobreposição
 REAL com o núcleo (white_wine + california contínuo, este uma vitória
 do destilado): 16/22, p = 0,026 (ctr23_sensitivity.csv).
 
-Limite declarado: um único split por conjunto (como na auditoria); repetir em
-5 splits custa ≈ 9 h e fica registrado como extensão possível, não executada.
+Limite original: um único split por conjunto (como na auditoria). A
+extensão de 5 splits FOI executada na madrugada de 24→25/11/2026
+(runner `scripts/ctr23_omitted_multisplit.py`, splits 43–46; artefato
+`multisplit.csv`); resultados integrados pela regra abaixo — todos os
+splits reportados, agregado 17/24 (p=0,032) e, no recorte conservador,
+16/22 (p=0,026); 18/24 apenas no split 45 (naval +0,022, único
+cruzamento de zero).
 
 ## Regra de relato dos splits adicionais (fixada em 24/11/2026, ANTES de qualquer leitura dos splits 43–46)
 
