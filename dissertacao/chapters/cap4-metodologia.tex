@@ -793,17 +793,21 @@ conhecidas e as decisões tomadas diante delas.
     (Capítulo~\ref{chap:destilacao}) fica fora do alcance deste risco.
     Medimos a consequência repetindo o ajuste final com o
     \emph{checkpoint} alternativo só-sintético
-    (\texttt{v2.5\_default-2}) em cinco conjuntos de classificação: no
-    próprio \texttt{higgs} --- um dos conjuntos com sobreposição
-    documentada: a lista da fonte traz ainda um ``Cardio Disease'' do
-    Kaggle, provável origem do \texttt{cardiovascular\_disease}
-    (correspondência por nome, não verificada linha a linha) ---
-    o checkpoint sintético é \emph{ligeiramente melhor} (AUC 0,8113
-    contra 0,8111), sem qualquer sinal de memorização, e nos demais a
-    diferença fica em milésimos
+    (\texttt{v2.5\_default-2}) nos \textbf{doze} conjuntos de
+    classificação em que o TabPFN opera neste benchmark (uma semente).
+    A diferença de AUC (sintético $-$ padrão) vai de $-0{,}0051$ a
+    $+0{,}0003$, com mediana $-0{,}0002$: no próprio \texttt{higgs}
+    --- um dos conjuntos com sobreposição documentada; a lista da
+    fonte traz ainda um ``Cardio Disease'' do Kaggle, provável origem
+    do \texttt{cardiovascular\_disease} (correspondência por nome, não
+    verificada linha a linha) --- o checkpoint sintético é
+    \emph{ligeiramente melhor} (AUC 0,8113 contra 0,8111), sem sinal
+    de memorização, e os dois únicos desvios acima de um milésimo
+    ficam em conjuntos \emph{sem} sobreposição documentada
+    (\texttt{amazon\_\allowbreak employee} e \texttt{credit\_g},
+    $-0{,}005$ cada)
     (\texttt{results/\allowbreak aggregated/\allowbreak
-    tabpfn\_\allowbreak checkpoint\_\allowbreak sensitivity.csv};
-    cinco de doze conjuntos, uma semente --- limite declarado). Resta,
+    tabpfn\_\allowbreak checkpoint\_\allowbreak sensitivity.csv}). Resta,
     de toda forma, o ajuste iterativo do
     \emph{prior} e das políticas de inferência ao desempenho em benchmarks
     públicos ao longo das versões --- uma forma branda de
