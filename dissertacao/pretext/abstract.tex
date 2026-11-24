@@ -28,7 +28,8 @@ third on all three tasks. For the decision, a router learned from
 meta-features is less accurate than the trivial rule (0.11 vs.\ 0.44);
 the fixed ``foundation model first'' policy has median regret of zero on
 the primary metric, but stops being the recommendation once 10 to 20
-percent of the decision weight shifts from accuracy to latency.
+percent of the decision weight shifts from accuracy to latency, under
+the rank normalization adopted.
 In distillation, the student trained on the teacher's means beats the
 control on only 4 of 20 datasets; the student trained on the quantile
 curves retains, at the median, 12 to 19 percent of the teacher's

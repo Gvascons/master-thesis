@@ -142,7 +142,8 @@ Estabelecer, sob protocolo experimental único, com seleção separada da
 medição e inferência capaz de afirmar equivalências, a evidência
 comparativa das três famílias de
 modelos tabulares na era dos \emph{foundation models}, e convertê-la em
-instrumentos de decisão avaliados fora da amostra, incluindo a avaliação, por
+instrumentos de decisão avaliados --- o componente aprendido, fora da
+amostra ---, incluindo a avaliação, por
 destilação de conhecimento, de até que ponto o principal obstáculo
 operacional da família líder pode ser removido.
 
@@ -249,7 +250,8 @@ protocolo comuns às três frentes.
 \label{sec:intro-contribuicoes}
 
 As contribuições desta dissertação são de medição sob protocolo
-uniforme e de avaliação fora da amostra. Não se reivindica mecanismo
+uniforme e de avaliação declarada --- fora da amostra onde há
+aprendizado. Não se reivindica mecanismo
 novo de aprendizado, e sim, com verificações de novidade datadas,
 o recorte e a evidência que faltavam. Em ordem de apresentação:
 
@@ -279,10 +281,11 @@ o recorte e a evidência que faltavam. Em ordem de apresentação:
     último terço nas três tarefas, embora baratas de servir: sob protocolo
     uniforme com ajuste em condições pareadas, as alegações dos artigos originais não
     se sustentam (Capítulo~\ref{chap:benchmark}).
-  \item \textbf{Um arcabouço de decisão avaliado fora da amostra, não
+  \item \textbf{Um arcabouço de decisão avaliado, não
     apenas descrito.}
-    Três estudos sob \emph{leave-one-dataset-out} submetem o fluxograma
-    a teste: o roteamento por meta-características
+    Três estudos submetem o fluxograma a teste --- o componente
+    aprendido sob \emph{leave-one-dataset-out}: o roteamento por
+    meta-características
     não generaliza (taxa de acerto 0,11 contra 0,44 do \emph{baseline}
     trivial no estudo com 11 modelos; 0,72 contra 0,78 com 14); a política
     fixa ``\emph{foundation model} primeiro'' é \emph{regret}-ótima na
@@ -297,8 +300,9 @@ o recorte e a evidência que faltavam. Em ordem de apresentação:
     registradas antes dos experimentos
     (Capítulo~\ref{chap:destilacao}), mostra-se que: (a) a destilação
     \emph{pontual} não funciona --- o aluno treinado nas médias do
-    professor supera o controle em 4 de 20 conjuntos, com qualquer dos
-    dois professores testados (um resultado negativo reportado com
+    professor supera o controle em 4 de 20 conjuntos com o TabPFN, e
+    a réplica com o TabFM como professor, nos cinco conjuntos
+    centrais, mantém o negativo (um resultado reportado com
     proeminência integral); (b) a destilação das curvas de quantis
     funciona em parte --- retenção mediana de 12\% a 19\% da vantagem
     distribucional do professor, conforme o ajuste dos alunos,
@@ -409,8 +413,10 @@ desenho declaradas antes de qualquer resultado. O
 \textbf{Capítulo~\ref{chap:benchmark}} apresenta o benchmark em cinco
 atos (o empate estatístico do núcleo de 11 modelos, os eixos de custo
 em que os empatados diferem por ordens de magnitude, as reversões
-condicionais e o eixo do tamanho amostral, a quebra do empate pela
-geração 2026, com o resultado negativo das redes de Kolmogorov--Arnold,
+condicionais e o eixo do tamanho amostral, o deslocamento do topo
+pela geração 2026 --- liderança consistente, sem confirmação como
+separação estatística ---, com o resultado negativo das redes de
+Kolmogorov--Arnold,
 e a complementaridade por instância entre \emph{foundation models} e
 GBDTs), respondendo à QP1. O \textbf{Capítulo~\ref{chap:framework}} submete o
 arcabouço de decisão a três estudos sob

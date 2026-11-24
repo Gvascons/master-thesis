@@ -30,8 +30,9 @@
 O Capítulo~\ref{chap:framework} terminou com uma política ---
 \emph{foundation model} primeiro --- e um obstáculo: o custo de
 servi-la. Este capítulo mede quanto desse obstáculo a destilação de
-conhecimento remove em regressão, onde isso ainda não havia sido
-estudado, em 20 conjuntos de dados. Convém dizer de saída o que a
+conhecimento remove na saída \emph{distribucional} de regressão ---
+o recorte sem estudo acadêmico anterior (Seção~\ref{sec:destil-novidade}) ---,
+em 20 conjuntos de dados. Convém dizer de saída o que a
 contribuição \emph{não} é: devolver quantis, um GBDT já faz sozinho
 --- o controle deste capítulo é exatamente esse GBDT quantílico
 nativo. A pergunta é se o mesmo aluno aprende \emph{mais} da
@@ -228,8 +229,8 @@ controle quantílico e o aluno destilado mudam o alvo \emph{e a função
 de perda} (\emph{pinball} nativa no controle; erro quadrático
 multissaída sobre as curvas do professor no destilado), e os
 hiperparâmetros herdados foram buscados para erro quadrático --- uma
-assimetria de configuração cujo custo o re-tuning dos dois braços
-mede adiante (Seção~\ref{sec:destil-limitacoes}): com ambos re-ajustados, o
+assimetria de configuração cujo custo o re-ajuste dos dois braços
+mede adiante (Seção~\ref{sec:destil-retune}): com ambos re-ajustados, o
 sinal se mantém (16/20) e a magnitude cai de 2,8\% para 1,4\% de ganho
 mediano de CRPS --- a Seção~\ref{sec:destil-dist} apresenta as duas
 estimativas juntas. São
@@ -325,7 +326,7 @@ minutos).
 
 \begin{sloppypar}
 O estudo usa os cinco conjuntos de regressão do benchmark
-(\texttt{wine\_quality}, \texttt{california\_\allowbreak housing},
+(\texttt{wine\_quality}, \texttt{california\_\allowbreak housing}$^\dagger$,
 \texttt{online\_news}, \texttt{kin8nm}, \texttt{year\_\allowbreak prediction};
 pools de 5,2 mil a 80 mil linhas) mais \textbf{quinze conjuntos} da
 suíte OpenML-CTR23 \citep{fischer2023}, selecionados sob regra
@@ -351,7 +352,7 @@ Duas notas de identidade (errata de 19/10/2026,
 Seção~\ref{sec:met-datasets}): o conjunto historicamente rotulado
 ``superconduct'' é o \texttt{online\_news} (OnlineNewsPopularity;
 regressão contínua legítima --- apenas o rótulo estava errado), e o
-\texttt{california\_\allowbreak housing} é a variante com \textbf{alvo
+\texttt{california\_\allowbreak housing}$^\dagger$ é a variante com \textbf{alvo
 binarizado} do \emph{tabular-benchmark} --- degenerada para afirmações
 distribucionais. Este capítulo marca esse conjunto com $^\dagger$ em
 toda ocorrência, e todo resultado-manchete ganha análise de
@@ -434,9 +435,9 @@ professor comprimido & sim & confirmada com escopo estreito \\
 Teste de sinal & instrumento confirmatório do 16/20 & não
 (fixado na leitura interina) & $p\approx0{,}019$ sequencial \\
 E1 (clássicos) & destilado vence o melhor entre QRF e NGBoost & sim
-(executor já disparado) & confirmada (17/20) \\
+(execução já iniciada) & confirmada (17/20) \\
 E3 (utilidade) & custo realizado menor em $\tau{=}0{,}90$ & registrada
-(mesmo commit do executor) & confirmada (18/20) \\
+(antes de qualquer leitura) & confirmada (18/20) \\
 Re-tuning & hiperparâmetros herdados são piso da retenção &
 sim (adendo de 12/11) & refutada por conjunto (9/20); agregado
 mantido \\
@@ -471,7 +472,7 @@ poucos dados. Investigamos com uma varredura de tamanho de \emph{pool} (caps
 de 800, 2.000 e 8.000 linhas): há um ganho genuíno de poucos dados no
 \texttt{wine\_quality} ($\Delta = +0{,}026$ em $n{=}800$), que
 desaparece a partir de $n{=}2.000$ e \emph{não} replica no
-\texttt{california\_\allowbreak housing}. Atribuímos o resquício, portanto, a um
+\texttt{california\_\allowbreak housing}$^\dagger$. Atribuímos o resquício, portanto, a um
 moderador de poucos dados dependente do conjunto, e o reportamos como
 observação, não como efeito geral.
 
@@ -490,11 +491,11 @@ negativo é escopado com precisão: tamanhos de \emph{pool} realistas (3 mil a
 As duas leituras são compatíveis; a reconciliação exata é proposta,
 não demonstrada.
 
-\emph{A destilação pontual falha em escala de \emph{pool} realista,
-independentemente do professor.} O aluno pontual destilado supera o
+\emph{A destilação pontual falha em escala de \emph{pool} realista
+com os dois professores testados.} O aluno pontual destilado supera o
 controle de rótulos verdadeiros em apenas 4 de 20 conjuntos; a
 replicação com um professor quase $6\times$ mais forte (gap de âncora
-0,028 vs.\ 0,005 de RMSE no \texttt{california\_\allowbreak housing}) não altera o
+0,028 vs.\ 0,005 de RMSE no \texttt{california\_\allowbreak housing}$^\dagger$) não altera o
 quadro, e a varredura de \emph{pool} mostra que o ganho residual é um
 fenômeno de poucos dados ($n \leq 800$) em alguns conjuntos apenas.
 H1 é refutada; o que o professor sabe sobre a \emph{média} o aluno
@@ -599,12 +600,16 @@ mediana, entre 12\% e 19\% da vantagem do professor --- um CRPS entre
 1,4\% e 2,8\% menor que o do controle ---, com o extremo inferior como
 estimativa conservadora. A retenção de um conjunto individual muda com
 o orçamento de ajuste (sobe ou se mantém em 9 de 20; cai em 11) e não
-deve ser citada isoladamente. Dois fatos completam a leitura: o
+deve ser citada isoladamente. Três fatos completam a leitura: o
 re-ajuste muda a composição do placar sem mudar a contagem
 (\texttt{health\_\allowbreak insurance} entra,
-\texttt{miami\_\allowbreak housing} sai), e destilação e re-ajuste
+\texttt{miami\_\allowbreak housing} sai); destilação e re-ajuste
 \emph{compõem} --- o aluno destilado também melhora ao ser re-ajustado,
-em 17 de 20 conjuntos
+em 17 de 20 conjuntos; e o braço destilado do re-ajuste carrega uma
+assimetria fraca que o \emph{favorece} (as linhas de validação do
+Optuna participaram, via contexto do professor, dos alvos OOF), de
+modo que a queda para 12\% não é artefato contra a destilação --- se
+algo, o piso verdadeiro é ainda mais baixo
 (\texttt{results/\allowbreak distillation/\allowbreak retune\_\allowbreak analysis.csv}).
 
 \subsection{Quão seguro é cada um dos 16}
@@ -620,9 +625,9 @@ $[0{,}0;\,0{,}6]$); inclui o zero em \textbf{4} (\texttt{cps88wages},
 pontual positivo; \texttt{health\_\allowbreak insurance} com ganho
 negativo); e fica inteiramente abaixo de zero em \textbf{3}
 (\texttt{diamonds\_\allowbreak real}, \texttt{wine\_\allowbreak quality},
-\texttt{fifa}). O 16 a 4 decompõe-se, portanto, em 12 vitórias claras,
-4 vitórias indistinguíveis de empate, 1 derrota indistinguível de
-empate e 3 derrotas claras --- a Figura~\ref{fig:destil-forest} mostra o quadro
+\texttt{fifa}). O 16 a 4 decompõe-se, portanto, em 12 vitórias claras, 1 vitória na
+margem, 3 vitórias indistinguíveis de empate, 1 derrota indistinguível
+de empate e 3 derrotas claras --- a Figura~\ref{fig:destil-forest} mostra o quadro
 de uma vez, e a coluna de intervalos da
 Tabela~\ref{tab:destil-retencao} traz o detalhe por conjunto
 (\texttt{results/\allowbreak distillation/\allowbreak bootstrap\_\allowbreak lines.csv}).
@@ -636,7 +641,9 @@ ganho no desenho herdado (pontos cheios; IC95 por \emph{bootstrap}
 pareado das linhas do teste, B=10.000; verde = intervalo inteiramente
 positivo, cinza = contém o zero, vermelho = inteiramente negativo). Os
 círculos vazados dão o ganho pontual com os dois braços re-ajustados.
-O que olhar: 12 intervalos inteiramente positivos; o re-ajuste encolhe
+O que olhar: 13 intervalos inteiramente positivos --- doze com folga
+e um, o \texttt{online\_news}, por margem mínima (limite inferior
+0,01\%) ---; o re-ajuste encolhe
 os maiores ganhos sem inverter o quadro. $^\dagger$alvo binarizado.}
 \label{fig:destil-forest}
 \end{figure}
@@ -804,7 +811,7 @@ superior), o aluno de controle com rótulos verdadeiros já ocupa o
 regime rápido (2,6--5,3~\us/linha) --- é a refutação de H1 tornada
 visível: não há nada que a destilação pontual pudesse acrescentar ali.
 No plano \textbf{distribucional} (linha inferior), abaixo de
-${\sim}250$~\us/linha no \texttt{california\_\allowbreak housing} e de
+${\sim}250$~\us/linha no \texttt{california\_\allowbreak housing}$^\dagger$ e de
 ${\sim}1.300$~\us/linha no \texttt{year\_\allowbreak prediction}, as estratégias
 derivadas do professor deixam os alunos sozinhos, e o destilado é o
 CRPS-ótimo entre eles (a floresta quantílica nativa também
@@ -813,7 +820,7 @@ o supera;
 Seção~\ref{sec:destil-e1}): CRPS 0,109 a
 99~\us/linha onde a configuração mais barata do professor precisa de
 245~\us/linha para 0,094 --- $2{,}5\times$ a latência do aluno --- no
-\texttt{california\_\allowbreak housing}; e CRPS 4,43 a 169~\us/linha onde a
+\texttt{california\_\allowbreak housing}$^\dagger$; e CRPS 4,43 a 169~\us/linha onde a
 configuração mais barata do professor que o supera custa
 4.576~\us/linha --- $27\times$ a latência --- no
 \texttt{year\_\allowbreak prediction}.
@@ -832,7 +839,7 @@ O veredito de H3: \textbf{confirmada com escopo estreito}. No
 \texttt{year\_\allowbreak prediction} o aluno destilado é
 Pareto-dominante no sentido forte --- CRPS melhor que o do professor
 mais subamostrado (4,43 contra 4,70) a $7{,}8\times$ menos latência;
-no \texttt{california\_\allowbreak housing} a faixa existe, mas é a
+no \texttt{california\_\allowbreak housing}$^\dagger$ a faixa existe, mas é a
 banda abaixo de 245~\us\ em que nenhuma configuração do professor
 opera (e que a QRF nativa ocupa com CRPS melhor, como o E1 mediria);
 no \texttt{kin8nm} a hipótese \emph{falha} --- a redução de
@@ -860,7 +867,7 @@ mais barata dele; onde é pequena, reduzir o \emph{ensemble} basta ---
 e, antes de qualquer uma, teste-se o nativo clássico do E1.} Na
 fronteira medida de ponta a ponta, a configuração mais barata do
 professor que supera o aluno destilado custa $2{,}5\times$ a latência
-dele no \texttt{california\_\allowbreak housing} e $27\times$ no
+dele no \texttt{california\_\allowbreak housing}$^\dagger$ e $27\times$ no
 \texttt{year\_\allowbreak prediction}; no \texttt{kin8nm}, de vantagem pequena, um
 professor de um membro já opera à latência do aluno. Colaterais: 1
 membro do TabPFN $\approx$ 8 membros a 1/7 da latência, e a última
@@ -907,7 +914,7 @@ $[q_{0{,}10}, q_{0{,}90}]$ é a \emph{diferença} entre as frações nos
 dois níveis, de modo que uma curva mais íngreme que a diagonal no
 centro indica intervalos estreitos demais (subcobertura); não
 existe um atalho ``acima = sobre-cobre'' válido para a curva
-inteira. No \texttt{california\_\allowbreak housing},
+inteira. No \texttt{california\_\allowbreak housing}$^\dagger$,
 o controle de rótulos verdadeiros satura em sobrecobertura extrema e o
 professor exibe a forma em S de caudas mal calibradas, enquanto o
 aluno destilado é o mais próximo da diagonal; no \texttt{cpu\_activity},
@@ -937,7 +944,7 @@ degradam RMSE nem CRPS, mas erodem a cobertura de intervalos em 0,5 a
 5,1~p.p.\ de PICP80 nos quatro conjuntos testados: a superconfiança
 em contexto do professor transfere-se ao aluno. E a destilação chega a
 \emph{melhorar} a calibração num dos dois critérios: no
-\texttt{california\_\allowbreak housing}, o aluno
+\texttt{california\_\allowbreak housing}$^\dagger$, o aluno
 destilado tem o menor desvio médio da diagonal entre os três sistemas
 --- mas, no critério de cobertura do intervalo central, ele
 \emph{subcobre} (PICP80 de 0,596, contra sobrecobertura de
@@ -974,9 +981,11 @@ papel de \emph{baseline} distribucional nativo \emph{dentro} das famílias
 testadas. A limitação esconde um possível confundidor: se um aluno
 nativo clássico forte fechasse sozinho o gap que atribuímos à
 destilação, a contribuição inteira estaria superdimensionada. Esta
-seção fecha essa lacuna com o experimento E1, pré-registrado em
-\texttt{docs/\allowbreak desenho-\allowbreak melhorias-\allowbreak finais.\allowbreak md} em 05/10/2026, \emph{antes}
-da execução, conforme o contrato de conduta do programa.
+seção fecha essa lacuna com o experimento E1, cujas hipóteses e
+critérios foram fixados por escrito antes de qualquer leitura de
+resultado, com a execução já iniciada --- o estatuto exato está na
+Tabela~\ref{tab:destil-hipoteses} ---, conforme o contrato de conduta
+do estudo.
 
 \subsection{Desenho pré-registrado}
 \label{sec:destil-e1-desenho}
@@ -1050,9 +1059,9 @@ clássico vence o aluno destilado (média de 3 sementes; menor é melhor;
 \small
 \begin{tabular}{lrrrr}
 \toprule
-Conjunto & Aluno destilado & Controle hard & QRF & Teacher \\
+Conjunto & Aluno destilado & Controle & QRF & Professor \\
 \midrule
-california\_housing     & 0,109 & 0,180 & 0,084 & \textbf{0,069} \\
+california\_housing$^\dagger$ & 0,109 & 0,180 & 0,084 & \textbf{0,069} \\
 physiochemical\_protein & 1,736 & 1,785 & 1,528 & \textbf{1,212} \\
 wine\_quality           & 0,365 & 0,328 & \textbf{0,279} & 0,289 \\
 \bottomrule
@@ -1091,20 +1100,21 @@ de 20 ($p=0{,}25$). A vantagem sobre o controle, portanto, não é
 artefato de um controle mal construído, mas a pergunta prática
 ``alguém pagaria o professor?'' é respondida pela regra de decisão
 --- teste as alternativas baratas primeiro --- e pelo eixo que nenhuma
-alternativa cobre: latência de microssegundos \emph{com} forma
-distribucional transferida.
+alternativa cobre: latência na casa de cem microssegundos por linha
+\emph{com} forma distribucional transferida.
 
 O saldo interpretativo segue o critério pré-fixado: a vantagem da
 destilação \textbf{não é redundante} com nativos distribucionais
---- com a ressalva de que, contra a \emph{melhor} de quatro
+fortes em configuração \emph{default} --- com a ressalva de que,
+contra a \emph{melhor} de quatro
 alternativas sem professor escolhida conjunto a conjunto (seleção por
 oráculo, favorável à alternativa), o destilado vence em 12 de 20
 ($p=0{,}25$): ele supera cada alternativa barata tomada isoladamente,
-não o melhor conjunto delas ---
-fortes em configuração \emph{default} --- mas a regra de decisão ganha uma
+não o melhor conjunto delas. A regra de decisão ganha, com isso, uma
 instância concreta e um complemento. O passo ``teste um aluno-quantil
 nativo forte'' agora nomeia a QRF explicitamente: ela custa segundos
-de treino, serve a microssegundos e, numa minoria previsível de
+de treino, serve a unidades ou dezenas de microssegundos por linha
+e, numa minoria previsível de
 conjuntos, resolve o problema antes que qualquer professor precise ser
 carregado.
 
@@ -1158,7 +1168,7 @@ $\tau{=}0{,}05$ --- e, contra o gaussiano, para $14$--$21\%$ em
 $\tau{=}0{,}90$ e $\tau{=}0{,}05$ (13\% em $\tau{=}0{,}95$). A leitura fecha o argumento do capítulo: \emph{a
 vantagem distribucional do professor vive nas caudas --- exatamente
 onde vivem as decisões de custo assimétrico --- e é lá que o aluno
-destilado a entrega, em microssegundos}
+destilado a entrega, na casa de cem microssegundos por linha}
 (\texttt{results/\allowbreak distillation/\allowbreak decision\_\allowbreak utility.\allowbreak csv};
 análise em \texttt{decision\_\allowbreak utility\_\allowbreak analysis.\allowbreak csv}).
 
@@ -1217,7 +1227,7 @@ O contraponto fecha a leitura: onde o custo do erro é
 simétrico e a decisão consome só o centro da distribuição, o ganho
 mediano de ${\sim}1\%$ do perfil em~U não paga a complexidade --- o
 aluno de rótulos pontuais, mais simples e tipicamente mais rápido (no
-\texttt{california\_\allowbreak housing}, 50 contra 99~\us/linha), é a
+\texttt{california\_\allowbreak housing}$^\dagger$, 50 contra 99~\us/linha), é a
 ferramenta certa, e a regra da Seção~\ref{sec:destil-regra} existe
 para dizer isso antes de qualquer custo ser pago. Fonte:
 \texttt{results/\allowbreak distillation/\allowbreak oof/\allowbreak tabpfn\_\allowbreak <conjunto>.parquet}.
@@ -1250,9 +1260,11 @@ oferece é robustez entre regimes
 \textbf{A cauda pesada é o moderador de falha?} Não --- e a leitura
 correta é modesta.
 Re-executamos professor e alunos sob
-$y' = \log(1+y)$ nos três conjuntos de derrota em escala de preço
-(entre eles o \texttt{health\_\allowbreak insurance}, cujo
-diagnóstico próprio está na Seção~\ref{sec:destil-derrotas}), mais
+$y' = \log(1+y)$ nos três conjuntos de derrota com alvo assimétrico
+--- \texttt{fifa} e \texttt{diamonds\_\allowbreak real}, em escala
+de preço, e \texttt{health\_\allowbreak insurance}, horas semanais
+com 29,9\% de zeros (diagnóstico próprio na
+Seção~\ref{sec:destil-derrotas}) ---, mais
 dois controles positivos. A transformação \emph{não} resgata as
 falhas (\texttt{fifa} persiste em $-1{,}69$). As diferenças absolutas
 de CRPS encolhem para 0,004--0,025 em espaço logarítmico, mas isso é
@@ -1262,7 +1274,7 @@ professor sobre o controle ---, a transformação não reduz a vantagem
 nos três conjuntos de derrota
 (1,5\% $\to$ 2,7\% no \texttt{fifa}; 4,9\% $\to$ 8,6\% no
 \texttt{diamonds\_\allowbreak real}; 2,1\% $\to$ 4,2\% no
-\texttt{health\_\allowbreak insurance}) e a reduz pouco nos dois
+\texttt{health\_\allowbreak insurance}) e a reduz, sem eliminar, nos dois
 controles positivos ($14{,}4\%\!\to\!9{,}1\%$ no
 \texttt{kings\_\allowbreak county}; $12{,}9\%\!\to\!11{,}1\%$ no
 \texttt{miami\_\allowbreak housing}). O que a ablação estabelece é
@@ -1304,7 +1316,7 @@ Cada cláusula da regra é um resultado deste capítulo: a cláusula (i) é
 a ablação do log; a (ii) é o aluno MLP mais o E1; a verificação por
 OOF é a Seção~\ref{sec:destil-oof}; e as duas pontas do veredito são a
 fronteira da Seção~\ref{sec:destil-fronteira} --- os casos
-\texttt{california\_\allowbreak housing}/\texttt{year\_\allowbreak prediction} de um lado e o
+\texttt{california\_\allowbreak housing}$^\dagger$/\texttt{year\_\allowbreak prediction} de um lado e o
 \texttt{kin8nm} do outro.
 
 \emph{A regra de decisão --- transforme, teste um nativo forte,

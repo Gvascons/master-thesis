@@ -104,7 +104,8 @@ multicritério: latência de inferência, custo de treinamento e de
 e não apenas acurácia. Terceira, atualidade verificada: inclusão simultânea
 da geração 2026 de \emph{foundation models} (TabFM, medido semanas após o
 lançamento) e da família Kolmogorov--Arnold, ambas ausentes dos benchmarks
-neutros à data das nossas verificações (13--15/07/2026). Dois recortes
+neutros à data das nossas verificações (registro no
+Apêndice~\ref{app:suplementares}). Dois recortes
 do elenco ficam declarados: o estudo compara modelos individuais, não
 sistemas de AutoML por combinação de modelos como o AutoGluon
 \citep{erickson2020}, cuja camada de \emph{ensembling} responde a uma
@@ -168,8 +169,8 @@ modelos como regressores probabilísticos e aponta explicitamente que o
 \emph{deployment} em catálogo completo pode exigir destilação ---
 demanda de terceiros pela interseção que este trabalho ocupa.
 
-Até onde verificamos (13/07/2026, reconfirmado em
-04/10, 14/10 e 19/10/2026), não havia comparação neutra TabPFN~$\times$~TabFM sob
+Até onde verificamos, não havia comparação neutra
+TabPFN~$\times$~TabFM sob
 protocolo idêntico --- mesmas partições, mesmo pré-processamento, mesma
 política de subamostragem de contexto. A exigência não é burocrática: num
 campo em que os modelos recebem atualizações mensais e os resultados
@@ -222,8 +223,8 @@ multicritério}: \citet{poeta2024} é anterior na comparação isolada,
 e a reivindicação foi escopada em função dele (o registro datado da
 correção está no Apêndice~\ref{app:suplementares}).
 
-O que permanecia aberto --- e segue aberto até
-04/10/2026, fora deste trabalho --- é o teste da família Kolmogorov--Arnold
+O que permanecia aberto --- e seguia aberto, fora deste trabalho, até
+a última busca registrada --- é o teste da família Kolmogorov--Arnold
 contra o \emph{slate} completo GBDT/DL/\emph{foundation models} num
 benchmark multicritério de protocolo uniforme: \citet{poeta2024} não têm
 GBDTs, \citet{kancritical2024} não têm GBDTs nem \emph{foundation models},
@@ -260,7 +261,7 @@ substituição de até 96\% dos blocos do \emph{transformer} por um
 tradutor afim fechado \citep{shallow2026}, o alinhamento de ativações
 para operar com contextos reduzidos \citep{actalign2026} e a variante
 \emph{Fast} do TabPFN-3.5 \citep{tabpfn35tr2026} --- todos, até onde
-verificamos (14/10 e 19/10/2026), avaliados apenas em classificação ou em
+verificamos, avaliados apenas em classificação ou em
 predição pontual: o relatório do TabPFN-3.5 avalia distribucionalmente
 (no ScoringBench) apenas o modelo cheio, não a variante \emph{Fast} ---
 e avaliação distribucional \emph{do professor} segue não sendo
@@ -481,9 +482,10 @@ partir da linha correspondente.
 
 \begin{table}[htbp]
 \centering
-\caption[Mapa de lacunas por eixo da literatura]{Mapa de lacunas por eixo da literatura. Caracterizações conforme
-verificações online datadas (13--20/07/2026; re-varreduras em 04/10,
-19/10 e 05/11/2026), registradas nos memorandos citados na abertura do capítulo.}
+\caption[Mapa de lacunas por eixo da literatura]{Mapa de lacunas por
+eixo da literatura. Caracterizações conforme as buscas datadas deste
+estudo, de julho a novembro de 2026 (registro no
+Apêndice~\ref{app:suplementares}).}
 \label{tab:lacunas}
 \small
 \begin{tabular}{p{0.21\textwidth}p{0.30\textwidth}p{0.27\textwidth}p{0.10\textwidth}}
@@ -523,7 +525,8 @@ Classificação \citep{pocketfm2026,pocketfmhealth2026,gear2026}; regressão
 pontual contemporânea \citep{jeong2026}; motor comercial fechado
 \citep{priorlabs2025} &
 Regressão \emph{distribucional}: curvas de quantis, CRPS, cobertura; papel
-do OOF na calibração; TabFM como \emph{professor} &
+do OOF na calibração; TabFM como professor \emph{distribucional}
+(pontual já coberto por repositório público) &
 Cap.~\ref{chap:destilacao} \\
 \addlinespace
 Seleção de algoritmos &
@@ -547,9 +550,8 @@ duas das lacunas foram parcialmente erodidas durante a execução do projeto
 estreito, e \citet{jeong2026} alcançou a regressão pontual dias antes da
 nossa entrega --- e ambas as erosões estão registradas com data e
 reescopo explícito, em vez de silenciadas; o pilar distribucional e a
-fronteira de estratégias permaneciam, em 19/10/2026, inéditos ---
-condição reconfirmada nas re-varreduras datadas de 05/11 e de
-12/11/2026. Terceira, a
+fronteira de estratégias permaneciam inéditos até a última busca
+registrada. Terceira, a
 tabela deixa visível que as três frentes empíricas da dissertação
 (Capítulos~\ref{chap:benchmark}, \ref{chap:framework}
 e~\ref{chap:destilacao}) atacam lacunas distintas mas encadeadas: o

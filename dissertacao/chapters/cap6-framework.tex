@@ -24,8 +24,8 @@
 \chapter{O Arcabouço de Decisão Validado}
 \label{chap:framework}
 
-Este capítulo tem como objetivo elevar o arcabouço de decisão de
-descritivo a validado, por meio de três estudos sobre os mesmos 18
+Este capítulo tem como objetivo submeter o arcabouço de decisão,
+até aqui descritivo, a avaliação por três estudos sobre os mesmos 18
 conjuntos de dados do benchmark: um resultado negativo, em que o
 roteamento por meta-características não generaliza sob validação
 \emph{leave-one-dataset-out}; um resultado positivo, em que a política
@@ -37,7 +37,7 @@ O arcabouço resultante é um fluxograma de quatro restrições verificáveis
 \emph{a priori}, no qual a primeira pergunta --- latência --- é agora
 quantitativamente justificada.
 
-\section{Do descritivo ao validado}
+\section{Do descritivo ao avaliado}
 \label{sec:descritivo-validado}
 
 O benchmark multicritério do Capítulo~\ref{chap:benchmark} produz, por
@@ -64,15 +64,22 @@ são terços do \emph{ranking} dos 14 modelos no critério (3 = terço
 melhor), exceto C9, qualitativa por família (GBDTs intrinsecamente
 interpretáveis; arquiteturas de atenção, parcial), e o ajuste dos
 \emph{foundation models}, 3 por construção (zero busca de
-hiperparâmetros). O que a matriz mostra: nenhuma linha tem 3 estrelas
-em todas as colunas --- os perfis são complementares.}
+hiperparâmetros). O que a matriz mostra: na resolução de terços, o
+XGBoost é a única linha com três estrelas em todas as colunas --- o
+retrato do \emph{default} seguro ---, mas a disputa do topo é mais
+fina do que a matriz resolve: dentro do terço superior de desempenho,
+os \emph{foundation models} ficam à frente
+(Capítulo~\ref{chap:benchmark}), ao preço do terço inferior de
+latência.}
 \label{fig:decision-matrix}
 \end{figure}
 
-A matriz torna visível o padrão central: as linhas do topo (foundation
-models) e as do meio (GBDTs) têm perfis \emph{complementares}, não
-ordenáveis --- o que é ótimo em desempenho é fraco em latência, e
-vice-versa. O segundo instrumento, o fluxograma orientado a restrições
+A matriz torna visível o padrão central da comparação entre
+\emph{foundation models} e GBDTs: o que é ótimo em desempenho na
+resolução fina do Capítulo~\ref{chap:benchmark} é fraco em latência,
+e vice-versa --- com a ressalva de que, na resolução de terços da
+própria matriz, o XGBoost aparece forte em todos os critérios (ver
+legenda). O segundo instrumento, o fluxograma orientado a restrições
 (apresentado em sua forma final na Seção~\ref{sec:arcabouco-resultante}),
 codifica esse compromisso como uma sequência de perguntas verificáveis
 antes de qualquer treino.
@@ -195,7 +202,9 @@ todos os 18.
 
 \begin{table}[htb]
 \centering
-\caption[Regret das políticas sob LODO]{Regret normalizado das políticas de recomendação sob LODO, nos
+\caption[Regret das políticas de recomendação]{Regret normalizado
+das políticas de recomendação (a árvore sob LODO; as políticas fixas,
+descritivas nos mesmos conjuntos), nos
 estudos com 11 e com 14 modelos (\textbf{negrito} = melhor política da
 coluna). ``Sempre-FM'' toma o \emph{melhor} FM de cada conjunto --- um
 oráculo intrafamília ---, e as duas últimas linhas são as políticas de
@@ -276,11 +285,10 @@ acurácia \emph{e} custo de inferência pode, legitimamente, chegar a
 outra recomendação. Esta seção fecha essa lacuna com o experimento E2, que pergunta: a
 política ``FM primeiro'' continua regret-ótima quando a métrica de
 decisão pondera acurácia e custo? O desenho (grade de pesos, políticas
-e métrica) foi registrado em
-\texttt{docs/\allowbreak desenho-\allowbreak melhorias-\allowbreak finais.\allowbreak md}
-antes da leitura do resultado --- mas o commit que registra as
-hipóteses já carrega o resultado, de modo que o rótulo correto é
-\emph{análise registrada}, não pré-registro.
+e métrica) foi escrito antes da leitura do resultado, mas o commit
+que registra as hipóteses já carrega o resultado --- não há carimbo
+independente que prove a anterioridade ---, de modo que o rótulo
+correto é \emph{análise registrada}, não pré-registro.
 
 \subsection{Desenho registrado}
 \label{sec:e2-desenho}
@@ -307,10 +315,11 @@ dois empatam em $w \approx 0{,}81$: com menos de ${\sim}80\%$ do
 peso na acurácia, o GBDT passa à frente. A normalização por postos
 ignora se o modelo mais lento é duas ou cem mil vezes mais lento ---
 quem é último em latência carrega o termo $(1-w)$ inteiro --- e, como
-os \emph{foundation models} são os mais lentos em todos os conjuntos,
+o líder de acurácia (TabFM) é o mais lento da grade e o TabPFN está
+entre os três mais lentos,
 o ponto de cruzamento é governado pela distância, em postos de
 acurácia, entre eles e os modelos rápidos, que é pequena. A escolha
-por postos é deliberada (as latências diferem por seis ordens de
+por postos é deliberada (as latências diferem por cinco ordens de
 grandeza, e uma escala cardinal seria dominada por elas), mas
 significa que ``10--20\% do peso'' é uma afirmação sobre ordens, não
 sobre microssegundos. Para cada valor de $w$,
@@ -456,7 +465,7 @@ exatamente na direção do viés declarada no registro. A inversão da
 recomendação com 10--20\% de peso na latência não depende, portanto, do
 conjunto em que a latência foi medida. Uma segunda dependência fica
 declarada: a faixa é medida na \textbf{normalização por postos} do
-desenho --- escolhida deliberadamente pela robustez às seis ordens de
+desenho --- escolhida deliberadamente pela robustez às cinco ordens de
 magnitude que separam as latências --- e normalizações alternativas
 (logarítmica, linear) deslocam o ponto exato do cruzamento sem mudar a
 leitura qualitativa, que é a que o arcabouço usa: existe um peso
@@ -474,7 +483,7 @@ sua forma final, com os 14 modelos do estudo completo.
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.88\linewidth]{images/decision_flowchart_14_pt.pdf}
-\caption[Fluxograma de decisão]{Fluxograma de decisão validado, estudo com 14 modelos: cada
+\caption[Fluxograma de decisão]{Fluxograma de decisão, estudo com 14 modelos: cada
 losango é uma restrição verificável \emph{a priori}. Fonte: elaboração
 própria (\texttt{scripts/\allowbreak figures\_\allowbreak ai1\_\allowbreak display.\allowbreak py}).}
 \label{fig:flowchart-14}

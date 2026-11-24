@@ -35,8 +35,10 @@ chegada da geração 2026 de foundation models?} O
 Capítulo~\ref{chap:benchmark} responde em
 dois tempos: dentro da geração anterior a 2026, sim --- o topo é
 equivalência prática aferida sob os critérios declarados (8/10 equivalentes sob ROPE
-$\pm0{,}01$; sensibilidade $0{,}005/0{,}01/0{,}02 \to 2/8/10$ no
-critério $E[\theta]>0{,}5$), com a interação modelo$\times$conjunto
+$\pm0{,}01$ no critério brando $E[\theta]>0{,}5$, e 3/10 --- os
+GBDTs --- no corte estrito de 0,95; sensibilidade
+$0{,}005/0{,}01/0{,}02 \to 2/8/10$ no
+critério brando), com a interação modelo$\times$conjunto
 dominando a variância de \emph{rank} (0,69, contra 0,20 da família e
 0,11 do modelo-dentro-da-família), de modo que o eixo ``GBDT vs.\
 aprendizado profundo'' é uma abstração fraca para esses dados; entre
@@ -90,7 +92,8 @@ quais condições verificáveis a priori?} Transfere a forma da
 distribuição preditiva, não a média. O essencial do que o professor
 sabe sobre a média, um GBDT ajustado aprende sozinho dos rótulos
 brutos: o aluno treinado nas médias do professor supera o controle em
-4 de 20 conjuntos, com qualquer dos dois professores testados. O
+4 de 20 conjuntos com o TabPFN, e a réplica com o TabFM como
+professor, nos cinco conjuntos centrais, mantém o negativo. O
 treinado nas curvas de quantis retém, na mediana, 19\% do gap de CRPS
 com hiperparâmetros herdados (12\% com os dois braços re-ajustados),
 com retenção positiva em 16 de 20 conjuntos (teste de sinal,
@@ -130,7 +133,7 @@ positivos, conforme o contrato de conduta do estudo
     \emph{hold-out} intocado pela seleção, inferência frequentista \emph{e}
     bayesiana com ROPE e análise de sensibilidade, e três eixos de custo
     sob o mesmo protocolo. Dele saem o empate positivo da geração
-    anterior, a quebra pela geração 2026 e, até onde alcançam as
+    anterior, o deslocamento do topo pela geração 2026 e, até onde alcançam as
     verificações
     datadas, a primeira comparação neutra
     TabPFN~$\times$~TabFM sob protocolo idêntico, enquadrada como
@@ -176,7 +179,7 @@ positivos, conforme o contrato de conduta do estudo
   \item \textbf{Arcabouço de decisão avaliado por \emph{regret}
     (evidência~$+$~regra; Capítulo~\ref{chap:framework}).} A política
     fixa ``\emph{foundation model} primeiro'' é regret-ótima na métrica
-    primária (\emph{regret} mediano 0,000 na geração 2026 sob LODO,
+    primária (\emph{regret} mediano 0,000 na geração 2026,
     preservado na política executável sempre-TabFM --- média 0,080,
     pior caso 1,000 no \texttt{telco}, este último em grande parte
     artefato do pré-processamento medido no
@@ -206,7 +209,8 @@ positivos, conforme o contrato de conduta do estudo
     classe e regressão \emph{pontual}, sem tocar o recorte
     distribucional --- a linhagem não tabular de destilação
     distribucional é citada como antecedente na
-    Seção~\ref{sec:rel-destilacao}). A evidência: retenção mediana de 19\% do gap de CRPS,
+    Seção~\ref{sec:rel-destilacao}). A evidência: retenção mediana de
+    12\% a 19\% do gap de CRPS, conforme o ajuste dos braços,
     positiva em 16 de 20 conjuntos ($p=0{,}006$, $p\approx0{,}019$ sob
     a correção sequencial; probabilidade posterior
     bayesiana de 0,96 em retenção positiva, com massa posterior
@@ -215,9 +219,12 @@ positivos, conforme o contrato de conduta do estudo
     casa de cem microssegundos por linha.
   \item \textbf{Refutação da destilação pontual em \emph{pool} realista
     (evidência negativa; Capítulo~\ref{chap:destilacao}).} O aluno
-    pontual destilado supera o controle em apenas 4 de 20 conjuntos,
-    com qualquer dos dois professores --- inclusive o de vantagem
-    pontual sobre o \emph{baseline} quase $6\times$ maior ---, e a varredura de tamanho de \emph{pool} isola o
+    pontual destilado supera o controle em apenas 4 de 20 conjuntos
+    com o TabPFN; a réplica com o TabFM --- cuja vantagem
+    pontual sobre o \emph{baseline} é quase $6\times$ maior no
+    conjunto medido (o \texttt{california\_housing}, de alvo
+    binarizado) --- mantém o negativo nos cinco conjuntos centrais, e a
+    varredura de tamanho de \emph{pool} isola o
     moderador (ganho residual restrito a $n \leq 800$, dependente do
     conjunto) --- uma hipótese de reconciliação com os ganhos pontuais
     contemporâneos de \citet{jeong2026}, cuja receita difere da nossa
@@ -380,8 +387,9 @@ custo aceito em troca. Fonte: Capítulos~\ref{chap:benchmark}--\ref{chap:destila
 \midrule
 Nenhuma restrição ativa; latência tolerante &
 \emph{Foundation model} primeiro (TabPFN maduro; TabFM fronteira) &
-\emph{Regret} mediano 0,000 com 14 modelos sob LODO (teto da
-família; a
+\emph{Regret} mediano 0,000 com 14 modelos na avaliação do
+Capítulo~\ref{chap:framework} (teto da família, medido nos mesmos 18
+conjuntos; a
 executável sempre-TabFM preserva a mediana, com média 0,080 e pior
 caso 1,0; sempre-TabPFN: mediana 0,242); melhor absoluto em 13 de 18
 (Seções~\ref{sec:resultado-positivo}, \ref{sec:cap5-ato4}) &
@@ -446,7 +454,8 @@ GBDT nativo; destilação recupera parte da vantagem distribucional &
 recomendação FM inverte com 10--20\% de peso na latência (E2)
 (Seções~\ref{sec:cap5-ato2}, \ref{sec:regret-ponderado}) &
 Rank do topo --- perda $<$1~p.p.\ de AUC no pelotão do núcleo (ROPE
-8/10 vs.\ TabPFN a $E[\theta]>0{,}5$); vs.\ TabFM a equivalência é
+vs.\ TabPFN: 8/10 no critério brando, 3/10 no estrito); vs.\ TabFM a
+equivalência é
 incerta ($P$ 0,33; $E[\theta]$ 0,40) \\
 \addlinespace
 Interpretabilidade intrínseca exigida (regulação) &
@@ -515,7 +524,7 @@ endereçável.} O TabFM declara pré-treino exclusivamente sintético; o
 afinado em 43 conjuntos reais que incluem o \texttt{higgs} deste
 benchmark (com a
 sensibilidade medida nos doze conjuntos de classificação: diferenças
-de AUC entre $-0{,}0051$ e $+0{,}0003$, e no \texttt{higgs} o
+de AUC entre $-0{,}0051$ e $+0{,}0002$, e no \texttt{higgs} o
 checkpoint só-sintético é até ligeiramente melhor, 0,8113 contra
 0,8111; Seção~\ref{sec:met-limitacoes}); o regressor padrão é sintético puro,
 preservando a parte distribucional. Permanece, além disso, o risco mais fraco de

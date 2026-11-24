@@ -40,7 +40,7 @@ discutem-se o teste independente desfavorável
 da família Kolmogorov--Arnold, as reversões condicionais que alimentam o
 arcabouço de decisão do Capítulo~\ref{chap:framework} e, fechando o
 capítulo, a análise de complementaridade por instância que explica
-\emph{onde} a quebra do empate acontece.
+\emph{onde} o deslocamento acontece.
 
 \section{Cobertura e organização da evidência}
 \label{sec:cap5-cobertura}
@@ -407,8 +407,9 @@ eixo de restrições do arcabouço de decisão
 (Capítulo~\ref{chap:framework}) quanto a pergunta da destilação
 (Capítulo~\ref{chap:destilacao}): quanto desse preço é removível?
 
-\emph{Modelos praticamente equivalentes em acurácia diferem em
-${\sim}300\times$ no tempo de treino e em mais de quatro ordens de
+\emph{Modelos praticamente equivalentes em acurácia (no critério
+brando) diferem em até ${\sim}300\times$ no tempo de treino e em
+mais de quatro ordens de
 magnitude na
 latência de inferência; no núcleo de 11, a fronteira de Pareto
 rank~$\times$~custo é \{TabPFN, XGBoost, LightGBM\} no eixo de treino ---
@@ -514,7 +515,7 @@ restauram a máxima de uma família vencedora: elas
 mostram que a resposta certa é condicional --- e condições verificáveis
 a priori são exatamente o que um arcabouço de decisão pode codificar.
 
-\section{Ato IV --- a quebra do empate: a geração 2026}
+\section{Ato IV --- o deslocamento do topo: a geração 2026}
 \label{sec:cap5-ato4}
 
 A expansão para a grade completa de 14 modelos muda o retrato. O TabFM
@@ -643,10 +644,13 @@ conjunto de regressão. A pergunta de decisão mudou de natureza: não é
 mais ``qual família vence?'', e sim ``\emph{a latência do foundation
 model cabe no caso de uso?}''.
 
-\emph{A geração 2026 quebra o empate: o TabFM lidera o rank médio
+\emph{A geração 2026 desloca o topo: o TabFM lidera o rank médio
 nas três tarefas e é o melhor modelo em 13 dos 18 conjuntos, zero-shot
---- ao preço de quatro a cinco ordens de magnitude em latência de
-\emph{serving} (43.262 vs.\ 0,33~\us/linha).} O empate não tornou o arcabouço multicritério obsoleto; a quebra o
+--- liderança consistente, que os testes de baixo poder não confirmam
+como separação estatística --- ao preço de quatro a cinco ordens de
+magnitude em latência de
+\emph{serving} (43.262 vs.\ 0,33~\us/linha).} O empate não tornou o
+arcabouço multicritério obsoleto; o deslocamento o
 tornou mais necessário --- e apontou seu único obstáculo.
 
 No mesmo movimento da extensão, o benchmark produz o teste independente
@@ -907,8 +911,9 @@ franja pequena de discordâncias que o TabFM vence em alguns conjuntos
 e perde em outros, e as três explicações pré-registradas para a
 vantagem não foram confirmadas.
 
-\textbf{Em custo, o empate nunca existiu.} Modelos equivalentes em
-acurácia diferem em cerca de $300\times$ no tempo de treino, e o líder
+\textbf{Em custo, o empate nunca existiu.} Modelos praticamente
+equivalentes em acurácia (no critério brando) diferem em até cerca de
+$300\times$ no tempo de treino, e o líder
 de acurácia é o mais lento da grade em inferência: 43.262~\us{} por
 linha no \texttt{adult}, contra 0,33 do XGBoost --- invertendo o eixo
 de custo (treino de segundos e ajuste zero; serviço caro).
