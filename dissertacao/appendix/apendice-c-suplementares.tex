@@ -335,7 +335,7 @@ para o \texttt{openml\_id} 44980 --- que é o \texttt{kin8nm} (8.192
 amostras), não o \texttt{diamonds} (44979; 53.940 amostras).
 \emph{O que aconteceu:} o erro foi descoberto em 20/07/2026, quando a
 análise consolidada da extensão CTR23 acusou métricas idênticas até a
-4ª casa entre ``\texttt{kin8nm} (extensão)'' e ``\texttt{diamonds}
+4\textordfeminine\ casa entre ``\texttt{kin8nm} (extensão)'' e ``\texttt{diamonds}
 (núcleo)''; um indício anterior (\emph{pool} de 6.553 linhas, incompatível
 com $\sim$43~mil) havia sido incorretamente aceito como aproximação de
 configuração --- lapso registrado. A validade experimental não foi
@@ -398,3 +398,84 @@ justificativa estão comentadas no próprio script gerador. Registro:
 comentário em \texttt{scripts/\allowbreak plot\_\allowbreak calibration.\allowbreak py} (definição de
 \texttt{DATASETS}); retenção do \texttt{cpu\_activity} em
 \texttt{docs/\allowbreak relatorio-\allowbreak ai2.\allowbreak md} (fase 6a).
+
+\section{Registro de desenho, buscas e licenças do Capítulo~7}
+\label{sec:app-registro-cap7}
+
+Esta seção concentra o material de registro que o corpo do
+Capítulo~\ref{chap:destilacao} resume e remete.
+
+\textbf{Buscas de novidade (escopo $\times$ datas).} O recorte da
+destilação distribucional foi verificado contra a literatura e
+repositórios públicos em varreduras datadas: 15--20/07/2026 (varredura
+inicial; memorando versionado em
+\texttt{docs/\allowbreak memo-\allowbreak novidade-\allowbreak destilacao.md}),
+04/10 (pré-entrega; registrou a colisão parcial de
+\citealp{jeong2026} e o relatório técnico do TabFM), 14--19/10
+(re-varreduras pós-errata), 05/11, 12/11, 17/11 e 23/11/2026 (última).
+As varreduras de escopo mais largo (todas as lacunas do estudo, não só
+a destilação) são as de 13--20/07, 04/10, 14/10, 19/10, 05/11 e
+12/11/2026, registradas no memorando e no histórico do repositório.
+Uma correção de reivindicação pertence a este registro: as checagens
+de julho de 2026 afirmavam que nenhum benchmark independente de KANs
+tabulares existia; a re-varredura de 04/10/2026 identificou
+\citet{poeta2024} como anterior (junho de 2024), e a reivindicação
+foi reescopada em adendo datado para ``primeiro teste da família
+contra a grade completa de famílias em protocolo multicritério''.
+
+\textbf{Cronologia do desenho em duas etapas e correção sequencial.}
+O pré-registro de 15/07/2026 fixou H1--H3, os critérios pós-piloto e a
+previsão de extensão de 8 a 10 conjuntos. O teste de sinal e a regra
+de elegibilidade (3--100 mil linhas) foram fixados em 20/07/2026, após
+leitura intermediária em 15 conjuntos (11 positivas, $p=0{,}059$), e a
+população foi completada para 20. Tratando as duas leituras como
+desenho sequencial em dois estágios (nível nominal de 5\% em cada): o
+erro tipo~I global do procedimento é 0,0283; o $p$-valor ajustado por
+ordenação de estágios para 16/20 é 0,0189; a extensão isolada deu 5
+positivas em 5 ($p=0{,}03125$); o limite superior de Bonferroni com
+duas leituras é 0,0118
+(\texttt{scripts/\allowbreak interim\_\allowbreak sequencial.py}).
+Desvios de execução registrados em adendos datados no documento de
+desenho: cap de 50 mil linhas no contexto do professor (espelhando o
+benchmark); predição em blocos por restrição de VRAM; encadeamento
+tolerante a falhas; hiperparâmetros herdados em lugar do Optuna por
+aluno (custo medido pelo re-ajuste dos 20, adendo de 12/11, executado
+em 17/11); variante mista executada só em $\lambda{=}0{,}8$;
+\emph{transfer set} MUNGE não executado. As correções de identidade de
+conjuntos (\texttt{diamonds}/\texttt{kin8nm};
+\texttt{online\_news}; alvo binarizado do
+\texttt{california\_housing}) estão nas erratas canônicas citadas no
+Capítulo~\ref{chap:metodologia}; a execução duplicada acidental do
+episódio do \texttt{diamonds} reproduziu o \emph{pipeline} de ponta a
+ponta com resultados idênticos.
+
+\textbf{Licenças dos professores (texto das cláusulas).} TabPFN-2.5
+(TABPFN-2.5 Non-Commercial License v1.1, verificada na fonte em
+23/11/2026): (i) saídas não são derivados --- ``\emph{Outputs are not
+considered Derivatives under this License}'' (\S1); (ii) o uso
+licenciado é o não comercial, e treinar, afinar ou destilar outros
+modelos \emph{para uso comercial} está explicitamente fora da
+definição de \emph{Non-Commercial Purpose}; (iii) o \S2(d) veda usar
+as saídas para ``\emph{train, fine-tune, or distill a model that is
+competitive with the TABPFN-2.5 Model}'' --- o aluno deste estudo
+retém 12--19\% da vantagem distribucional e não compete com o
+professor em qualidade, mas a palavra final sobre ``competitivo'' é do
+licenciante. TabFM (TabFM Non-Commercial License v1.0, verificada em
+23/11/2026): não comercial, saídas não são derivados, sem cláusula de
+modelo competitivo.
+
+\textbf{Conjuntos elegíveis omitidos da população de destilação.} A
+regra de elegibilidade (CTR23, 3--100 mil linhas) alcança dezenove
+conjuntos; os quinze selecionados deixaram quatro de fora:
+\texttt{white\_wine} (id 44971; subconjunto do \texttt{wine\_quality}
+do núcleo), o \texttt{california\_housing} \emph{contínuo} (44977;
+versão não binarizada do conjunto do núcleo),
+\texttt{superconductivity} (44964; à época da seleção acreditava-se
+sobreposto ao núcleo, crença que a errata de 19/10 desfez --- e a
+omissão não foi revisitada) e
+\texttt{naval\_propulsion\_plant} (44969; sem justificativa
+registrada). A sensibilidade com os quatro, sob o mesmo protocolo (um
+split, sementes $\{0,1,2\}$), está na tabela de robustez do
+Capítulo~\ref{chap:destilacao}; proveniência e limites em
+\texttt{results/\allowbreak distillation/\allowbreak
+ctr23\_\allowbreak omitidos/\allowbreak PROVENANCE.md}.

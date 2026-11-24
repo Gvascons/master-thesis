@@ -1,57 +1,48 @@
 % Abstract — faithful mirror of pretext/resumo.tex (NBR 6028: one
-% paragraph, 150-500 words, no formulas).
-For a decade, model choice for tabular data was guided by the maxim that
-gradient boosting always wins; the arrival of tabular foundation models
-, pre-trained networks that predict with no task-specific training,
-made that guidance obsolete without replacing it with neutral evidence.
-This dissertation attacks the problem on three chained fronts. First, a
-multi-criteria benchmark evaluates 14 models from three families
-(gradient boosting, deep learning, and foundation models) on 18 public
-OpenML datasets (250 of the 252 possible cells; two declared structural
-exclusions), under a protocol whose hold-out no selection stage observes, with
-both frequentist and Bayesian statistical inference. In the study's 11-model core slate, the top of the accuracy ranking is a statistical tie (8 of
-the 10 non-leading models are practically equivalent to the leader under
-a region of practical equivalence of one percentage point of AUC, under
-the expected-posterior-mass criterion declared in the text; three of
-ten at the strict cut) and
-the 2026 generation breaks it: TabFM, evaluated zero-shot, leads the
-average rank in all three tasks (2.7 in binary classification, 1.0 in
-multiclass, and 1.2 in regression) and is the best model on 13 of the 18
-datasets, at the cost of four to five orders of magnitude in inference
-latency; Kolmogorov--Arnold networks, independently tested, finish in the
-bottom third across all three tasks. Second, a decision framework is
-assessed by leave-one-dataset-out (negative validation of the learned
-router, comparative assessment of the fixed policies): meta-feature
-routing does not
-generalize (hit rate of 0.11 against 0.44 for the trivial baseline), the
-fixed ``foundation model first'' policy is regret-optimal on the primary
-metric (median regret of 0.000 in the 2026 generation, preserved by the
-executable single-model policy), and a
-registered multi-criteria regret experiment shows that shifting just
-10 to 20 percent of the weight from accuracy to latency (crossover
-between weights 0.9 and 0.8, under rank normalization) flips the recommendation away from the
-foundation model, quantitatively justifying the flowchart of four
-a priori verifiable constraints that consolidates the framework. Third,
-the distributional distillation of foundation models, a scope verified
-as novel, transfers the quantile curves of the TabPFN teacher to
-students that serve in microseconds: point distillation fails robustly at
-realistic data scales, but distributional distillation retains a median
-of 19 percent of the teacher's distributional advantage with inherited
-hyperparameters (12 percent with both arms re-tuned, the conservative
-estimate), positive on 16
-of 20 datasets (sign test with a p-value of 0.006 at face value and of
-approximately 0.019 under the sequential correction of the two-stage
-design, declared in the text; 15 of 19, p-value
-0.010, in the sensitivity analysis excluding the binarized-target
-dataset of the erratum), beats classical
-distributional baselines on 17 of 20 datasets in the pre-registered
-experiment E1, and condenses into a practical decision rule whose
-preconditions can be verified in minutes. Together (evidence under a
-single protocol, a framework assessed under LODO, and selective
-distillation),
-these results replace the maxim with a procedure; what the foundation
-model knows that raw data cannot teach the student is the predictive
-distribution, and that is what gets distilled.
+% paragraph, 150-500 words, no formulas). Rewritten 2026-11-24.
+For a decade, model selection for tabular data relied on the maxim that
+gradient boosting always wins. Tabular foundation models, pre-trained
+networks that predict without task-specific training, have cast doubt on
+that maxim, yet most of the available evidence comes from the models'
+own proponents, under differing protocols. This dissertation aims to
+produce comparative evidence under a single protocol and to turn it into
+a selection procedure, along three lines. First, a multi-criteria
+benchmark evaluates 14 models from three families (gradient boosting,
+deep learning, and foundation models) on 18 public OpenML datasets, with
+a hold-out that no selection stage ever observes, frequentist and
+Bayesian inference, and measured training, tuning, and latency costs.
+Second, a decision framework is assessed by leaving one dataset out at a
+time (leave-one-dataset-out). Third, the distillation of the TabPFN
+teacher's quantile curves into gradient-boosting students is studied on
+20 regression datasets, under registered hypotheses. Among the 11
+pre-2026 models, the top of the accuracy ranking is a tie: 3 to 8 of the
+10 non-leading models are practically equivalent to the leader,
+depending on the Bayesian criterion adopted, within one percentage point
+of AUC. In the 2026 generation, TabFM, with no tuning at all, has the
+best average rank in all three tasks and is the best model on 13 of the
+18 datasets; the lead is consistent across datasets, but the tests,
+underpowered with so few datasets per task, do not confirm it as a
+statistical separation, and it costs four to five orders of magnitude
+more inference latency. Kolmogorov--Arnold networks finish in the bottom
+third on all three tasks. For the decision, a router learned from
+meta-features is less accurate than the trivial rule (0.11 vs.\ 0.44);
+the fixed ``foundation model first'' policy has median regret of zero on
+the primary metric, but stops being the recommendation once 10 to 20
+percent of the decision weight shifts from accuracy to latency.
+In distillation, the student trained on the teacher's means beats the
+control on only 4 of 20 datasets; the student trained on the quantile
+curves retains, at the median, 12 to 19 percent of the teacher's
+distributional advantage, depending on how the students are tuned, with
+positive retention on 16 of 20 datasets (sign test, p of approximately
+0.019 under the two-stage design correction), and beats classical
+distributional baselines on 17 of 20. The conclusion is that, in the
+regime studied (datasets of up to 100 thousand samples, pinned model
+versions, a single GPU), model choice should start from the
+application's constraints (latency, architectural limits,
+interpretability) rather than from a universal winner; and that
+distillation recovers a modest but consistent share of the foundation
+model's predictive uncertainty, under preconditions that can be checked
+in minutes.
 
 \vspace{1cm}
 \noindent\textbf{Keywords:} tabular data; foundation models;

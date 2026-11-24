@@ -328,9 +328,10 @@ redutor sistemático de viés. O resultado é um desempenho consistente, com
 pouco ajuste, exatamente no regime de dados heterogêneos de tamanho pequeno
 a médio --- diagnóstico corroborado pela avaliação de
 \citet{grinsztajn2022}, com a ressalva registrada de que
-\citet{mcelfresh2023}, na grade mais larga, concluem que a escolha do
-conjunto de dados importa mais do que a do modelo e consideram o
-debate superestimado. Por isso, nesta dissertação os
+\citet{mcelfresh2023}, na grade mais larga, consideram o debate
+NN~vs.\ GBDT superenfatizado: em número surpreendente de conjuntos a
+diferença é desprezível, e um ajuste leve de hiperparâmetros num GBDT
+importa, em média, mais do que a escolha entre as duas famílias. Por isso, nesta dissertação os
 GBDTs cumprem o papel de \emph{hipótese nula}: toda proposta nova em dados
 tabulares deve ser medida contra eles.
 
@@ -391,18 +392,22 @@ MLPs com custo próximo ao de um modelo único, parametrizando eficientemente
 múltiplas ``sub-redes'' que compartilham a maior parte dos pesos.
 
 Se os GBDTs dominam,
-por que a área continua investindo em redes? Por três promessas que
-árvores não fazem. Primeiro, redes aprendem \emph{representações}:
+por que a área continua investindo em redes? Por duas promessas que
+árvores não fazem e uma que redes cumprem com mais naturalidade.
+Primeiro, redes aprendem \emph{representações}:
 \emph{embeddings} de categorias e camadas intermediárias reutilizáveis,
 porta de entrada para transferência entre tarefas e para dados mistos
-(tabela junto a texto ou imagem). Segundo, redes são treináveis por
-gradiente de \emph{qualquer} perda diferenciável, o que permite cabeças de
-saída flexíveis --- multi-alvo, multi-quantil, distribucionais --- com
-mudança mínima de arquitetura; essa plasticidade é explorada diretamente
-pelos alunos de destilação do Capítulo~\ref{chap:destilacao}. Terceiro, e decisivo para esta
+(tabela junto a texto ou imagem). Segundo, e decisivo para esta
 dissertação: toda a família de \emph{foundation models} da
-Seção~\ref{sec:fund-fm}, que redefine o custo de entrada em novas tarefas,
-só é possível sobre redes.
+Seção~\ref{sec:fund-fm}, que redefine o custo de entrada em novas
+tarefas, só é possível sobre redes. Terceiro, uma rede troca de cabeça
+de saída com mudança mínima de arquitetura --- multi-alvo,
+multiquantil, distribucional. Essa plasticidade não é exclusiva das
+redes: o \emph{gradient boosting} também otimiza qualquer perda
+diferenciável (é a sua definição), as implementações atuais admitem
+saídas multiquantil nativas, e é um XGBoost multiquantil o aluno
+principal do Capítulo~\ref{chap:destilacao} --- mas nas redes ela vem
+de graça, e o mesmo capítulo a usa no aluno MLP de comparação.
 
 \subsection{Atenção e Transformers}
 
@@ -958,21 +963,35 @@ do Capítulo~\ref{chap:destilacao}.
 O arcabouço frequentista tem uma assimetria incômoda: ele pode
 rejeitar a igualdade, mas não pode \emph{afirmá-la} --- não-rejeição não é
 evidência de equivalência, especialmente com $N$ pequeno e pouco poder.
-\citet{benavoli2017} oferecem o complemento bayesiano: o teste de postos
-sinalizados bayesiano estima a distribuição \emph{posterior} da diferença
-média de desempenho entre dois modelos e introduz uma \emph{região de
-equivalência prática} (ROPE, \emph{region of practical equivalence}) --- um
-intervalo em torno de zero, fixado \emph{a priori} por juízo de domínio,
-dentro do qual diferenças são irrelevantes na prática. A posterior é então
-resumida em três probabilidades: a de o primeiro modelo ser praticamente
-melhor, a de o segundo ser praticamente melhor e a de os dois serem
-\emph{praticamente equivalentes} (a massa da posterior dentro da ROPE).
-Dizer que dois modelos são praticamente equivalentes é, portanto, uma
-afirmação positiva e quantificada --- ``com probabilidade $p$, a diferença
-entre eles é menor do que o que declaramos irrelevante'' --- e não um
-não-resultado. É esse instrumento que autoriza as conclusões de empate do
-Capítulo~\ref{chap:benchmark}; a escolha do raio da ROPE e sua análise de sensibilidade são
-decisões de protocolo, especificadas no Capítulo~\ref{chap:metodologia}.
+\citet{benavoli2017} oferecem o complemento bayesiano. Fixa-se
+\emph{a priori}, por juízo de domínio, uma \emph{região de
+equivalência prática} (ROPE, \emph{region of practical equivalence}):
+um intervalo $[-r, r]$ em torno de zero dentro do qual a diferença de
+desempenho entre dois modelos é considerada irrelevante. As $N$
+diferenças pareadas, uma por conjunto de dados, são tratadas como
+amostra de uma distribuição desconhecida, sobre a qual se põe um prior
+não paramétrico (um processo de Dirichlet com uma pseudo-observação em
+zero). O objeto de interesse é o vetor
+$\theta = (\theta_{\text{esq}}, \theta_{\text{ROPE}},
+\theta_{\text{dir}})$, com soma 1: as probabilidades de que a
+diferença típica entre os dois modelos (formalmente, a média de duas
+diferenças sorteadas) caia à esquerda da ROPE, dentro dela ou à
+direita. $\theta_{\text{ROPE}}$ alto significa equivalência prática;
+$\theta_{\text{dir}}$ alto, que o primeiro modelo é praticamente
+melhor. A posterior de $\theta$ é obtida por amostragem, e há duas
+maneiras de resumi-la, que não dão o mesmo número: a \emph{massa
+esperada} em cada região, $E[\theta_{\text{ROPE}}]$, lida neste
+estudo com corte 0,5; e a fração de amostras posteriores em que
+$\theta_{\text{ROPE}}$ é a maior das três componentes, que é a
+convenção de \citet{benavoli2017}, usualmente lida com corte 0,95. O
+Capítulo~\ref{chap:benchmark} reporta as duas. Em qualquer delas,
+dizer que dois modelos são praticamente equivalentes é uma afirmação
+positiva e quantificada --- e não um não-resultado. Uma ressalva vale
+para o regime deste estudo: a pseudo-observação a priori fica dentro
+da ROPE e, com $N$ pequeno, puxa o resultado na direção da
+equivalência; a escolha do raio $r$ e a análise de sensibilidade são
+decisões de protocolo, especificadas no
+Capítulo~\ref{chap:metodologia}.
 
 \subsection{Tamanho de efeito e decomposição de variância}
 

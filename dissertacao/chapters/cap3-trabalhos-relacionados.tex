@@ -24,20 +24,12 @@ parte dos trabalhos centrais ainda não passou por revisão por pares.
 Qualquer afirmação do tipo ``nenhum trabalho faz X'' é, portanto,
 perecível. O contrato de conduta científica deste projeto
 (Capítulo~\ref{chap:metodologia}) exige que afirmações de novidade sejam
-sustentadas por verificação online datada; as datas relevantes são
-13--20/07/2026 (antes de investir nas contribuições), 04/10/2026
-(re-varredura pré-entrega, que inclusive corrigiu um lapso nosso,
-registrado na Seção~\ref{sec:rel-kan}), 19/10/2026 (re-varredura
-pós-fechamento da cadeia experimental, incluindo varredura primária
-pela API do arXiv) e 05/11/2026 (re-varredura final pré-depósito:
-nenhum trabalho novo que altere o posicionamento; \citet{jeong2026}
-seguia na v1). As lacunas enunciadas a seguir
+sustentadas por verificação online datada; as buscas deste estudo vão
+de julho a novembro de 2026, e o registro completo, com datas e
+vereditos, está no Apêndice~\ref{app:suplementares}. As lacunas
+enunciadas a seguir
 devem ser lidas como ``abertas até onde verificamos, nas datas
-declaradas'' --- nunca como certezas atemporais. Os registros canônicos
-dessas verificações, com datas e vereditos, estão em
-\texttt{docs/\allowbreak memo-\allowbreak novidade-\allowbreak destilacao.\allowbreak md} (15/07, 20/07, 04/10 e 05/11/2026, com adendos de 14--15/10; a auditoria de 19/10 está em \texttt{docs/\allowbreak desenho-\allowbreak melhorias-\allowbreak finais.\allowbreak md}) e
-\texttt{docs/\allowbreak memo-\allowbreak novos-\allowbreak modelos-\allowbreak kan-\allowbreak tabkan-\allowbreak tabfm.\allowbreak md} (13/07 e 04/10/2026),
-no repositório do projeto.
+declaradas'' --- nunca como certezas atemporais.
 
 \section{Benchmarks tabulares e a controvérsia GBDT vs.\ aprendizado profundo}
 \label{sec:rel-benchmarks}
@@ -209,7 +201,7 @@ TabKANet \citep{tabkanet2024}, que usa camadas KAN apenas como módulo de
 
 A literatura crítica aponta na
 direção oposta aos proponentes. \citet{kancritical2024} compararam KAN e
-MLP sob paridade simultânea de parâmetros \emph{e} FLOPs e encontraram o
+MLP controlando ora o número de parâmetros, ora os FLOPs, e encontraram o
 MLP vencendo em seis de oito tarefas de aprendizado de máquina, com o KAN
 dominando apenas em regressão simbólica. \citet{poeta2024} conduziram o
 primeiro benchmark independente KAN-vs-MLP em dados tabulares, com
@@ -218,22 +210,17 @@ um estudo pioneiro e suas escolhas são defensáveis para uma primeira
 investigação, mas duas limitações de escopo importam aqui --- não há
 \emph{baselines} GBDT e o treino usa apenas dez épocas --- de modo que o
 estudo não responde à pergunta que o praticante faz (``KAN compete com o
-XGBoost?''). Quanto ao TabKAN, as ressalvas devem-se menos aos autores ---
-um grupo pequeno publicando em venue recém-criada, com orçamento
-computacional limitado --- do que ao estado da evidência: seis dos dez
+XGBoost?''). Quanto ao TabKAN, três limitações da evidência importam aqui: seis dos dez
 conjuntos têm menos de 8 mil amostras, não há regressão, e o XGBoost de
 comparação parece subajustado (AUC de 0,726 em \texttt{credit\_g}, quando
 nosso próprio \emph{tuning} obtém ${\approx}0{,}77$ no mesmo conjunto ---
 0,767 no \emph{hold-out}, 0,786 em validação cruzada).
 
-Registre-se um lapso nosso: nas checagens de julho de 2026
-afirmáramos que nenhum benchmark independente de KANs tabulares existia; a
-re-varredura de 04/10/2026 identificou que \citet{poeta2024} é anterior
-(junho de 2024) e o registro foi corrigido em adendo datado, com a
-reivindicação reescopada nos artigos e nesta dissertação. O episódio
-ilustra por que este capítulo insiste em verificações datadas: o erro foi
-nosso, e o mecanismo de correção previsto no contrato de conduta
-funcionou.
+A reivindicação deste estudo é, portanto, a de \emph{primeiro teste
+da família contra a grade completa de famílias em protocolo
+multicritério}: \citet{poeta2024} é anterior na comparação isolada,
+e a reivindicação foi escopada em função dele (o registro datado da
+correção está no Apêndice~\ref{app:suplementares}).
 
 O que permanecia aberto --- e segue aberto até
 04/10/2026, fora deste trabalho --- é o teste da família Kolmogorov--Arnold
@@ -431,20 +418,22 @@ treino varre diretamente, somado à diferença de \emph{professor} e
 protocolo. O ponto de posicionamento permanece: \citet{jeong2026} não
 tocam quantis, CRPS, calibração nem fronteira de estratégias.
 
-Às datas verificadas (13--20/07/2026; re-varreduras em
-04/10, 19/10 e 05/11/2026, incluindo buscas dirigidas por destilação combinada com
-quantis/CRPS e varredura primária pela API do arXiv --- em 05/11,
-\citet{jeong2026} seguia na v1, estritamente pontual), nenhum trabalho
-público cobria, \textbf{para
+Nas buscas realizadas entre julho e novembro de 2026 (protocolo,
+expressões e datas no Apêndice~\ref{app:suplementares}), não
+encontramos trabalho público que cobrisse, \textbf{para
 \emph{foundation models} tabulares}: (i) destilação
-\emph{distribucional} em regressão --- transferência de curvas de quantis,
-avaliada por CRPS e cobertura de intervalos; (ii) uma fronteira entre
-estratégias de \emph{serving} medidas nos mesmos \emph{hold-outs}; (iii) o
-TabFM como \emph{professor} de destilação. As três permaneciam abertas; o
-Capítulo~\ref{chap:destilacao} ataca as três --- a última fechando com um
-negativo arquitetural: a cabeça de regressão do TabFM é pontual (confirmado
-pelo relatório técnico oficial, \citealp{kong2026}), e o espalhamento do
-seu ensemble é mensuravelmente inútil como distribuição preditiva. Por fim,
+\emph{distribucional} em regressão --- transferência de curvas de
+quantis, avaliada por CRPS e cobertura de intervalos; (ii) uma
+fronteira entre estratégias de \emph{serving} medidas nos mesmos
+\emph{hold-outs}. Um terceiro ponto é mais estreito: o TabFM já
+aparece como professor no repositório público de setembro de 2026
+citado acima, restrito a classificação e regressão pontual; o que o
+Capítulo~\ref{chap:destilacao} acrescenta é o teste do TabFM como
+professor \emph{distribucional}, e o resultado é um negativo
+arquitetural --- a cabeça de regressão do TabFM é pontual (confirmado
+pelo relatório técnico oficial, \citealp{kong2026}), e o espalhamento
+do seu \emph{ensemble} é mensuravelmente inútil como distribuição
+preditiva. Por fim,
 registramos o que \emph{não} reivindicamos: a formulação básica
 ``destilar \emph{foundation model} tabular em aluno rápido'' é do Pocket FM,
 e em hipótese alguma reivindicamos a primeira destilação de \emph{foundation

@@ -23,14 +23,20 @@
 
 Este capítulo tem como objetivo apresentar os resultados do benchmark de
 14 modelos tabulares sobre os 18 conjuntos de dados do OpenML, executado
-sob o protocolo único do Capítulo~\ref{chap:metodologia}. A leitura tem
+sob o protocolo único do Capítulo~\ref{chap:metodologia} --- é ele que
+responde à QP1 (\emph{o empate de acurácia entre as famílias sobrevive
+a um protocolo rigoroso e à chegada da geração 2026 de foundation
+models?}). A leitura tem
 dois movimentos: no núcleo de 11 modelos anteriores à extensão de 2026, o
 topo da acurácia é um empate estatístico aferido por equivalência prática
-e a interação modelo$\times$conjunto domina a variância de rank, de modo que a decisão
-migra para custo, latência, robustez e estrutura da tarefa; a geração 2026
-quebra esse empate --- o TabFM, \emph{zero-shot}, lidera o rank médio nas
+e a interação modelo$\times$conjunto (somada ao ruído) domina a
+variância de rank, de modo que a decisão
+migra para custo, latência, robustez e estrutura da tarefa; a geração
+2026 desloca o topo --- o TabFM, \emph{zero-shot}, lidera o rank médio nas
 três tarefas, ao custo de quatro a cinco ordens de magnitude em latência
-de inferência. Além disso, discutem-se o teste independente desfavorável
+de inferência --- liderança consistente entre conjuntos, que os testes
+de baixo poder não confirmam como separação estatística. Além disso,
+discutem-se o teste independente desfavorável
 da família Kolmogorov--Arnold, as reversões condicionais que alimentam o
 arcabouço de decisão do Capítulo~\ref{chap:framework} e, fechando o
 capítulo, a análise de complementaridade por instância que explica
@@ -48,10 +54,9 @@ produzem predição nele. Essa distinção importa para a leitura
 estatística: células ausentes por limite arquitetural são informação
 sobre o modelo --- um critério de decisão em si, retomado no
 Capítulo~\ref{chap:framework} --- e não dados faltantes a imputar.
-Registre-se também que o episódio de retificação de rótulo descrito no
-Capítulo~\ref{chap:metodologia} (o conjunto historicamente chamado
-``diamonds'' é, na verdade, o \texttt{kin8nm}) precede todos os números
-reportados neste capítulo: cada valor aqui citado é posterior à errata.
+As identidades dos conjuntos são as da
+Tabela~\ref{tab:datasets}; o quinto conjunto de regressão do núcleo é
+o \texttt{kin8nm}.
 
 Antes dos resultados, convém revisitar o espaço amostral sobre o qual
 eles se apoiam. A Figura~\ref{fig:dataset-landscape}, no Capítulo~\ref{chap:metodologia},
@@ -74,10 +79,12 @@ FT-Transformer, SAINT, TabNet, STab, RealMLP, TabM) e um \emph{foundation model}
 (TabPFN). A \emph{grade completa de 14} acrescenta os três modelos
 incorporados na extensão: o \emph{foundation model} TabFM
 \citep{tabfm2026,kong2026} e as duas redes de Kolmogorov--Arnold (KAN
-\citep{kan2024} e TabKAN \citep{tabkan2025}). Os Atos~I a III leem o
+\citep{kan2024} e TabKAN \citep{tabkan2025}). O recorte é definido pela ordem de entrada dos modelos no estudo, não
+pelo ano de publicação: o TabPFN, um \emph{foundation model}, pertence
+ao núcleo. Os Atos~I a III leem o
 núcleo de 11 --- é sobre ele que a máxima ``\emph{boosting} sempre
-vence'' \citep{grinsztajn2022} foi formulada --- máxima que
-\citet{mcelfresh2023} já matizavam, ao concluir que a escolha do
+vence'' \citep{grinsztajn2022} foi formulada, máxima que
+\citet{mcelfresh2023} já matizavam ao concluir que a escolha do
 conjunto importa mais que a do modelo --- e é sobre ele
 que o empate se estabelece; o Ato~IV lê a grade completa e mostra o que a
 extensão muda; e o Ato~V desce ao nível da instância para localizar onde
@@ -144,10 +151,10 @@ A interpretação exige a ressalva imediata: um post-hoc que não separa
 não é, por si só, evidência de equivalência --- com $k$ grande e $N$
 pequeno, a distância crítica é larga por construção, e ``não separável''
 pode significar apenas ``sem poder para separar''. É exatamente por isso
-que o protocolo soma instrumentos mais finos --- adotados em
-25/06/2026, já durante a análise, e por isso descritos aqui como
-análise planejada, não como pré-registro ---, apresentados no
-Capítulo~\ref{chap:fundamentacao} e aplicados a seguir.
+que o protocolo soma instrumentos mais finos, apresentados no
+Capítulo~\ref{chap:fundamentacao} e aplicados a seguir; eles foram
+definidos depois de iniciada a análise dos resultados e não fazem
+parte de um pré-registro.
 
 O teste bayesiano \emph{signed-rank} com região de equivalência prática
 (ROPE) \citep{benavoli2017} responde à pergunta que o frequentista não
@@ -165,7 +172,13 @@ mas no corte estrito de 0,95 apenas \textbf{3 dos 10} a atingem ---
 XGBoost (0,999), LightGBM (0,992) e CatBoost (0,957), os três GBDTs
 --- e, no sentido oposto, nenhum modelo atinge 0,95 de
 \emph{superioridade} prática sobre o líder (um único, o TabNet,
-atinge 0,95 de inferioridade). A análise de sensibilidade do
+atinge 0,95 de inferioridade). Em linguagem simples: o critério
+estrito autoriza dizer que os três GBDTs e o TabPFN são praticamente
+equivalentes em AUC na margem de um ponto percentual; o critério
+brando ($E[\theta]>0{,}5$) diz apenas que, para os demais, a
+equivalência é mais provável que as duas alternativas somadas --- uma
+afirmação muito mais fraca, e é com ela que a contagem chega a 8 de
+10. A análise de sensibilidade do
 limiar mostra a progressão
 $0{,}005/0{,}01/0{,}02 \to 2/8/10$ equivalentes no critério
 $E[\theta]>0{,}5$ (e $0/3/5$ no critério estrito): a conclusão de
@@ -207,27 +220,28 @@ qualquer análise ao plano descritivo. Essas limitações são declaradas em
 cada seção em que se tornam vinculantes, e nenhuma conclusão central deste
 capítulo depende de significância em tarefa sem poder para aferi-la.
 
-Se o topo empata, resta perguntar o que, afinal, explica a variação de
-desempenho que existe. A decomposição de variância de ranks responde
---- e a leitura completa exige as três parcelas, não duas:
-$\eta^2_{\text{família}} = 0{,}20$ do total; a identidade do modelo
-como um todo explica 0,31; a diferença, 0,11, é o
-modelo-dentro-da-família; e os 0,69 restantes são interação
-modelo$\times$conjunto --- o mesmo modelo mudando de posição conforme
-o conjunto. Duas consequências. Primeira, da variância que a
-identidade do modelo explica, a família responde por 64,5\%: o eixo
-``GBDT vs.\ DL'' é uma abstração fraca não porque a família importe
-pouco frente ao modelo (é quase o dobro do efeito
-modelo-dentro-da-família), mas porque \emph{ambos} são pequenos
-frente à interação. Segunda, e é a que o arcabouço usa: o que domina
-é ``o vencedor depende do conjunto''. Uma
-ressalva de leitura acompanha os números: com as famílias desbalanceadas do
-núcleo (3 GBDTs, 7 DL, 1 \emph{foundation model}), a partição é mecanicamente
-conservadora.
+Se o topo empata, resta perguntar o que, afinal, explica a variação
+de \emph{rank} que existe. Como os \emph{ranks} são atribuídos
+dentro de cada conjunto, toda a variância se reparte entre o que é
+atribuível ao modelo e um resíduo. A identidade do modelo responde por
+0,31 do total: 0,20 é diferença entre famílias e 0,11, diferença entre
+modelos da mesma família (da parcela do modelo, a família responde por
+64,5\%). O resíduo, 0,69, é a parte em que o mesmo modelo muda de
+posição de um conjunto para outro; com um único valor por
+modelo$\times$conjunto, ele reúne a interação modelo$\times$conjunto
+e o ruído de medição, que não conseguimos separar. A leitura que os
+números sustentam é, portanto: a posição média de um modelo prevê
+menos de um terço da variação de \emph{rank}, e a maior parte dela
+depende do conjunto --- o eixo ``GBDT vs.\ DL'' é uma abstração fraca
+não porque a família importe pouco frente ao modelo, mas porque ambos
+são pequenos frente ao resíduo. Uma ressalva: com as famílias
+desbalanceadas do núcleo (3 GBDTs, 7 DL, 1 \emph{foundation model}),
+a parcela atribuível à família é mecanicamente limitada.
 
-\emph{A interação modelo$\times$conjunto domina a variância de ranks
-(0,69, contra 0,20 da família e 0,11 do modelo-dentro-da-família): o
-vencedor depende do conjunto.} Esse achado reorienta a pergunta prática de ``qual família?'' para ``qual
+\emph{A identidade do modelo responde por 0,31 da variância de ranks
+(0,20 da família, 0,11 do modelo-dentro-da-família); os 0,69 restantes
+--- interação com o conjunto mais ruído --- variam de conjunto para
+conjunto: o vencedor depende do conjunto.} Esse achado reorienta a pergunta prática de ``qual família?'' para ``qual
 modelo, sob quais restrições?'' --- a semente do arcabouço do
 Capítulo~\ref{chap:framework}.
 
@@ -315,10 +329,12 @@ em GPU).
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.95\linewidth]{images/inference_time.pdf}
-\caption{Latência de inferência no \texttt{adult}, em \us{} por linha
-(mediana de 5 passadas, escala logarítmica; rótulos internos da figura em
-inglês). Fonte: \texttt{results/\allowbreak figures/\allowbreak inference\_\allowbreak time.\allowbreak pdf} (dados em
-\texttt{results/\allowbreak latency/\allowbreak latency\_\allowbreak adult.\allowbreak csv}).}
+\caption[Latência de inferência no \texttt{adult}]{Latência de
+inferência no \texttt{adult}, em \us{} por linha
+(mediana de 5 passadas, escala logarítmica; cores por família). Fonte:
+\texttt{results/\allowbreak latency/\allowbreak latency\_\allowbreak adult.\allowbreak csv};
+figura de
+\texttt{scripts/\allowbreak fig\_\allowbreak inference\_\allowbreak time\_\allowbreak pt.py}.}
 \label{fig:cap5-latencia}
 \end{figure}
 
@@ -337,11 +353,8 @@ cada predição. A ressalva de regime merece ênfase: essas razões
 descrevem o serviço em lote amortizado no
 hardware declarado no Capítulo~\ref{chap:metodologia}; o serviço online
 de linha única estreita as diferenças --- mas não as ordens de
-magnitude. Registre-se ainda que o subtítulo embutido na própria
-imagem (``$\sim$1000x+ slower to serve'') é um arredondamento
-editorial da geração da figura e nomeia apenas TabPFN e STab ---
-o TabFM, a barra mais lenta da própria imagem, fica fora do rótulo;
-os fatores medidos são TabPFN $22.473\times$ e TabFM $131.097\times$
+magnitude. Os fatores medidos são TabPFN $22.473\times$ e TabFM
+$131.097\times$
 o XGBoost no \texttt{adult} --- e a razão varia com o conjunto, de
 $3.079\times$ (\texttt{credit\_g}) a $247.402\times$
 (\texttt{cardiovascular\_\allowbreak disease}) na medição multiconjunto
@@ -376,9 +389,10 @@ figura em inglês). Fonte: \texttt{latex/\allowbreak ai1/\allowbreak figures/\al
 A figura mostra o que a latência isolada não mostra: no plano
 treino $\times$ rank, os \emph{foundation models} ocupam o canto ótimo --- e é
 só ao trocar o eixo de custo para a latência de serviço que a imagem se
-inverte. Essa dupla leitura é o \textbf{achado-âncora do programa}: o
+inverte. Essa dupla leitura é o \textbf{achado central do capítulo}: o
 paradigma de \emph{in-context learning} compra treino de segundos e
-ajuste zero ao preço de serviço proibitivo. É ela que motiva tanto o
+ajuste zero ao preço de uma latência de inferência quatro a cinco
+ordens de grandeza maior no \texttt{adult}. É ela que motiva tanto o
 eixo de restrições do arcabouço de decisão
 (Capítulo~\ref{chap:framework}) quanto a pergunta da destilação
 (Capítulo~\ref{chap:destilacao}): quanto desse preço é removível?
@@ -546,27 +560,41 @@ separam vizinhos de rank dentro do núcleo de 11 na mesma tabela
 (Apêndice~\ref{app:tabelas}). Uma condição de contorno fica declarada
 no \texttt{covertype}: o conjunto tem 581 mil linhas e o protocolo o
 subamostra a 100 mil (teto fixado antes da entrada dos \emph{foundation
-models} e idêntico para os 14 modelos); GBDTs treinados na base
-completa alcançam, em execuções fora deste protocolo, log-loss na
-casa de 0,08 --- a vitória do TabFM nesse conjunto é, portanto,
-condicional ao teto de dados, que o Capítulo~\ref{chap:metodologia}
-justifica por viabilidade e paridade. E o TabPFN, por sua vez,
+models} e idêntico para os 14 modelos); a vitória do TabFM vale nesse
+regime, e não medimos o que os modelos ajustados alcançariam com a
+base completa --- o teto é justificado no
+Capítulo~\ref{chap:metodologia} por viabilidade e paridade. E o TabPFN, por sua vez,
 consolida-se como o vice consistente da grade (ranks médios
-4,2/2,5/3,0 nas três tarefas): a geração 2026 não é um ponto fora da
-curva, é uma família inteira --- os dois \emph{foundation models} ocupam os
+4,2/2,5/3,0 nas três tarefas): o resultado não se restringe a um
+modelo --- os dois \emph{foundation models} ocupam os
 dois primeiros postos em todas as tarefas.
 
+A regressão, a tarefa com menos conjuntos, merece o seu próprio
+parágrafo. Na grade completa, a ordem dos \emph{ranks} médios de RMSE
+é TabFM (1,2), TabPFN (3,0), XGBoost (5,0), RealMLP (5,2), LightGBM
+(5,6) e CatBoost (5,8) (Tabela~\ref{tab:app-regressao}); MAE e
+R\textsuperscript{2} preservam os dois primeiros lugares
+(Tabela~\ref{tab:app-secundarias-regression}). Com cinco
+conjuntos, nenhum teste pareado pode atingir 5\% de significância, e
+a leitura é descritiva. Na classificação binária, a estatística KS,
+usual em crédito, dá no topo a mesma ordem que a ROC-AUC: TabFM
+(3,0), TabPFN (4,8) e XGBoost (5,0)
+(Tabela~\ref{tab:app-ks}).
+
 A consequência interpretativa é a re-escopagem do Ato~I: o empate fica
-corretamente lido como \emph{retrato da geração anterior}. Não foi o
-aprendizado profundo ajustado que alcançou os GBDTs; foi o pré-treino que
-atropelou ambos. E a cautela estatística permanece dita: com $k{=}14$ e
+corretamente lido como \emph{retrato da geração anterior}. Quem
+ultrapassou os GBDTs não foi um modelo treinado na tarefa, e sim um
+modelo pré-treinado usado sem ajuste --- a associação com o pré-treino
+é a descrição do que se mede, não um mecanismo testado. E a cautela estatística permanece dita: com $k{=}14$ e
 $N{=}10$, a distância crítica de Nemenyi é larga
 (Figura~\ref{fig:cap5-cd}) --- a separação do TabFM apoia-se na
 consistência entre conjuntos (13 vitórias em 18) e nos tamanhos de
 efeito pareados ($d=0{,}68$ contra o XGBoost), \textbf{não} no
 post-hoc frequentista \emph{nem} no instrumento bayesiano: contra o
 XGBoost, a convenção de Benavoli põe 0,67 da probabilidade posterior
-em superioridade do TabFM, e contra o CatBoost a região modal é a de
+em superioridade do TabFM (0,33 na equivalência; massa posterior
+esperada da equivalência $E[\theta]=0{,}40$), e contra o CatBoost a
+região modal é a de
 equivalência --- consistência, sem separação estatística decisiva. Três condições de
 contorno adicionais são declaradas: na regressão, $N{=}5$ põe o piso do
 p-valor de Wilcoxon em 0,0625 (piso combinatório --- nenhum resultado
@@ -581,7 +609,7 @@ apenas no fim de setembro de 2026 \citep{kong2026} e segue sem revisão
 por pares --- os resultados são sobre essa versão, e isso fica
 registrado.
 
-O contrapeso é frontal, e é o achado-âncora do programa: o líder de
+O contrapeso é frontal, e é o achado central do capítulo: o líder de
 acurácia é o pior modelo da grade em latência de serviço ---
 43.262~\us/linha sob o protocolo padrão, $131.097\times$ o XGBoost, e
 mais em contextos maiores, chegando a ${\sim}394$~ms/linha no maior
@@ -730,7 +758,7 @@ tamanho do \emph{pool} e vantagem é $+0{,}14$ (TabPFN) e $+0{,}26$
 do \emph{TabPFN} vai à direção da hipótese, $\rho=-0{,}61$,
 $p=0{,}060$, também não significativa --- a mistura de métricas entre
 tarefas é parte do que o agregado dilui) --- descritivamente, o maior saldo está no
-\texttt{jannis} (o 5º maior conjunto da grade), mas os postos seguintes são
+\texttt{jannis} (o 5\textordmasculine\ maior conjunto da grade), mas os postos seguintes são
 de um conjunto médio e um pequeno (\texttt{magictelescope},
 \texttt{phoneme}): a leitura que os dados sustentam é que a vantagem
 \emph{não encolhe} com o tamanho, não que cresça com ele. O
@@ -817,35 +845,48 @@ conjuntos grandes.}
 \section{Síntese do capítulo}
 \label{sec:cap5-sintese}
 
-Três fatos encadeados emergem do benchmark. \textbf{(i)}~Na geração do
-núcleo de 11 modelos, o desempenho bruto empata no topo --- empate
-positivo, aferido por equivalência prática bayesiana sob critérios
-declarados (os três GBDTs a $P \geq 0{,}95$; oito de dez a
-$E[\theta]>0{,}5$) e robusto à
-variação do limiar no quarteto do topo --- e a interação
-modelo$\times$conjunto domina a variância de rank (0,69); a
-decisão racional migra, portanto, para custo, latência, robustez e
-estrutura da tarefa, exatamente os eixos em que os modelos diferem por
-ordens de magnitude. \textbf{(ii)}~A geração 2026 quebra o empate em
-acurácia: o TabFM lidera as três tarefas e vence em 13 de 18 conjuntos,
-\emph{zero-shot} --- ao preço de quatro a cinco ordens de magnitude em latência
-de \emph{serving}, invertendo o eixo de custo (treino de segundos e ajuste
-zero; serviço proibitivo). A camada por instância (Ato~V) qualifica a
-quebra: ela nasce de uma franja de discordância pequena (concordância
-mediana ${\ge}0{,}936$), convertida de forma heterogênea --- vitórias
-esmagadoras em alguns conjuntos, derrotas reais em outros --- e as
-explicações mecanicistas fáceis (margem baixa, minoritária, poucos
-dados) não foram confirmadas sob os critérios pré-registrados. A quebra não aposenta a leitura
-multicritério: ela a torna mais necessária, porque a escolha ótima
-passa a depender de uma única restrição dominante. \textbf{(iii)}~Essa
-restrição é atacável: a latência do \emph{foundation model} não é uma lei, é um
-custo de arquitetura --- e custos de arquitetura podem ser transferidos
-para modelos pequenos. As ressalvas do capítulo acompanham os fatos:
-$N$ pequeno por tarefa (multiclasse descritiva; piso de p-valor na
-regressão), distância crítica larga na grade completa, latências medidas
-no regime de lote amortizado em dispositivo natural, e TabFM avaliado em
-versão fixada anterior à revisão por pares de seu relatório técnico. O
-Capítulo~\ref{chap:framework} converte esses fatos em um arcabouço de
-decisão por restrições validado por \emph{leave-one-dataset-out}, e o
-obstáculo de latência que resta à política resultante é o objeto do
-Capítulo~\ref{chap:destilacao}.
+A QP1 perguntava se o empate de acurácia entre as famílias de
+modelos tabulares sobrevive a um protocolo rigoroso e à chegada da
+geração 2026 de \emph{foundation models}. A resposta tem três partes.
+
+\textbf{Antes do TabFM, sim, na classificação binária.} No recorte de
+11 modelos, os três GBDTs são praticamente equivalentes ao líder de
+\emph{rank} (TabPFN) no critério estrito (probabilidade de
+equivalência de pelo menos 0,95 com ROPE de $\pm0{,}01$ de AUC), e 8
+dos 10 não-líderes o são no critério mais brando ($E[\theta]>0{,}5$)
+--- conclusão robusta à variação do limiar no quarteto do topo. A
+interação modelo$\times$conjunto, somada ao ruído, domina a variância
+de \emph{rank} (0,69); a decisão racional migra, portanto, para
+custo, latência, robustez e estrutura da tarefa, exatamente os eixos
+em que os modelos diferem por ordens de magnitude. Em multiclasse
+($N{=}3$) e em regressão ($N{=}5$), o benchmark não tem poder para
+afirmar nem para negar o empate.
+
+\textbf{Com o TabFM, não.} Ele lidera o \emph{rank} médio nas três
+tarefas e é o melhor modelo em 13 dos 18 conjuntos, sem ajuste por
+conjunto. Essa liderança apoia-se na consistência entre conjuntos e no
+tamanho de efeito ($d{=}0{,}68$ contra o XGBoost); nem o
+\emph{post-hoc} frequentista nem o teste bayesiano a separam de forma
+decisiva. A camada por instância (Ato~V) a qualifica: XGBoost e
+\emph{foundation models} concordam em 93,6\% a 95,0\% das instâncias
+(mediana entre conjuntos), a diferença de \emph{rank} nasce de uma
+franja pequena de discordâncias que o TabFM vence em alguns conjuntos
+e perde em outros, e as três explicações pré-registradas para a
+vantagem não foram confirmadas.
+
+\textbf{Em custo, o empate nunca existiu.} Modelos equivalentes em
+acurácia diferem em cerca de $300\times$ no tempo de treino, e o líder
+de acurácia é o mais lento da grade em inferência: 43.262~\us{} por
+linha no \texttt{adult}, contra 0,33 do XGBoost --- invertendo o eixo
+de custo (treino de segundos e ajuste zero; serviço caro).
+
+Essas conclusões valem dentro de quatro limites, declarados onde
+vinculam: poucos conjuntos por tarefa (multiclasse descritiva; piso de
+$p$-valor na regressão), distância crítica larga na grade completa,
+latência medida em lote amortizado com cada modelo em seu dispositivo,
+e TabFM avaliado em versão fixada anterior à revisão por pares de seu
+relatório técnico. O Capítulo~\ref{chap:framework} converte esses
+resultados em um arcabouço de decisão por restrições e o avalia por
+\emph{leave-one-dataset-out}; o Capítulo~\ref{chap:destilacao}
+investiga se a latência do \emph{foundation model} pode ser reduzida
+por destilação.

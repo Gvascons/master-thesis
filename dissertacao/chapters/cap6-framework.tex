@@ -54,9 +54,18 @@ melhor), e sua leitura motiva todo o restante do capítulo.
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.92\linewidth]{images/decision_matrix.png}
-\caption{Matriz de decisão multicritério dos 14 modelos (linhas,
-ordenadas por desempenho) em seis critérios (colunas; rótulos internos da
-figura em inglês). Fonte: \texttt{results/\allowbreak figures/\allowbreak decision\_\allowbreak matrix.\allowbreak png}.}
+\caption[Matriz de decisão multicritério dos 14 modelos]{Matriz de
+decisão multicritério dos 14 modelos (linhas, ordenadas por
+desempenho) em seis critérios (colunas; rótulos internos em inglês):
+desempenho (C1, \emph{regret} normalizado médio), custo de treino
+(C6), custo de ajuste (C8), latência de inferência (C7), robustez
+(C10, pior rank entre dobras) e interpretabilidade (C9). As estrelas
+são terços do \emph{ranking} dos 14 modelos no critério (3 = terço
+melhor), exceto C9, qualitativa por família (GBDTs intrinsecamente
+interpretáveis; arquiteturas de atenção, parcial), e o ajuste dos
+\emph{foundation models}, 3 por construção (zero busca de
+hiperparâmetros). O que a matriz mostra: nenhuma linha tem 3 estrelas
+em todas as colunas --- os perfis são complementares.}
 \label{fig:decision-matrix}
 \end{figure}
 
@@ -78,6 +87,18 @@ complementares --- um negativo (o que o arcabouço \emph{não} deve tentar
 fazer) e um positivo (a política que os dados sustentam) --- e, em
 seguida, com um terceiro estudo, registrado, que estende a avaliação
 ao cenário multicritério.
+
+Convém separar desde já o que cada estudo testa. O teste fora da
+amostra (LODO) aplica-se ao que é \emph{aprendido}: a árvore é
+treinada em 17 conjuntos e avaliada no décimo oitavo, e é esse teste
+que ela não passa. As políticas fixas não aprendem nada; o seu
+\emph{regret} descreve o que teria acontecido nos 18 conjuntos do
+benchmark, e a escolha de ``sempre-FM'' como a melhor delas é feita
+sobre os mesmos conjuntos em que é medida. O fluxograma da
+Seção~\ref{sec:arcabouco-resultante}, por fim, não é avaliado como
+política: ele reúne o que os três estudos mostram, acrescido de duas
+restrições de admissibilidade (limites arquiteturais e
+interpretabilidade) que nenhum dos estudos mede.
 
 \section{O resultado negativo: roteamento por meta-características não
 generaliza}
@@ -142,11 +163,29 @@ evolução}
 
 Se o roteamento aprendido não funciona, a alternativa natural são
 \emph{políticas fixas}: recomendar sempre a mesma família,
-independentemente do conjunto. Para compará-las, usamos a métrica de
-\textbf{regret normalizado} sobre a métrica primária de cada conjunto:
-0 significa que a família recomendada contém o melhor modelo do
-conjunto; 1, que contém apenas o pior. A
-Tabela~\ref{tab:regret-lodo} resume o \emph{regret} das quatro políticas ---
+independentemente do conjunto. Para compará-las, medimos o que cada
+política deixa de ganhar. Num dado conjunto, seja $m^{*}$ a métrica
+primária do melhor dos 14 modelos, $m^{-}$ a do pior, e $m_{F}$ a do
+melhor modelo da família $F$ que a política recomenda. O
+\textbf{regret normalizado} da política nesse conjunto é
+\begin{equation}
+\mathrm{regret}(F) \;=\;
+\frac{\lvert m^{*} - m_{F} \rvert}{\lvert m^{*} - m^{-} \rvert}.
+\label{eq:regret-normalizado}
+\end{equation}
+Vale 0 quando a família recomendada contém o melhor modelo do conjunto
+e 1 quando o melhor que ela oferece é o pior modelo do conjunto; 0,10
+significa que a recomendação custou um décimo da distância entre o
+melhor e o pior. No conjunto \texttt{adult}, por exemplo, o melhor
+modelo é um \emph{foundation model}: recomendar a família FM tem
+\emph{regret} 0; recomendar GBDT, 0,10; recomendar aprendizado
+profundo, 0,60. Duas observações de leitura. A política recebe o
+melhor modelo da família recomendada --- é uma medida do teto da
+família; as políticas de modelo único vêm logo adiante. E a
+normalização depende do pior modelo do conjunto, de modo que o
+\emph{regret} compara políticas dentro de um estudo e as colunas @11
+e @14 da Tabela~\ref{tab:regret-lodo} não são comparáveis linha a
+linha. A Tabela~\ref{tab:regret-lodo} resume o \emph{regret} das quatro políticas ---
 a árvore sob LODO e as três políticas fixas --- nos dois estudos; as
 linhas da árvore e da política sempre-FM agregam sobre os 17 conjuntos em
 que a família FM participa (\texttt{helena} é excluída por limite
@@ -159,8 +198,9 @@ todos os 18.
 \caption{Regret normalizado das políticas de recomendação sob LODO, nos
 estudos com 11 e com 14 modelos (\textbf{negrito} = melhor política da
 coluna). ``Sempre-FM'' toma o \emph{melhor} FM de cada conjunto --- um
-oráculo intrafamília, não uma política executável; as políticas de
-modelo único estão no texto. Fonte: \texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak validation\{,\allowbreak \_\allowbreak 14\}.\allowbreak csv}.}
+oráculo intrafamília ---, e as duas últimas linhas são as políticas de
+modelo único que um praticante consegue executar (no estudo @11 a
+família FM tem um único modelo, e a linha sempre-FM já é executável). Fonte: \texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak validation\{,\allowbreak \_\allowbreak 14\}.\allowbreak csv}.}
 \label{tab:regret-lodo}
 \small
 \begin{tabular}{lcccc}
@@ -172,6 +212,9 @@ Sempre-GBDT        & 0,249 & 0,168 & 0,305 & 0,291 \\
 Sempre-DL          & 0,189 & 0,132 & 0,313 & 0,349 \\
 \textbf{Sempre-FM} & \textbf{0,115} & \textbf{0,018} & \textbf{0,021} &
 \textbf{0,000} \\
+\midrule
+Sempre-TabFM (executável)  & --- & --- & 0,080 & 0,000 \\
+Sempre-TabPFN (executável) & 0,115 & 0,018 & 0,261 & 0,242 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -198,10 +241,9 @@ teto da família, não uma política que um praticante consiga executar.
 As políticas executáveis de modelo único, pela mesma régua:
 \textbf{sempre-TabFM} tem \emph{regret} médio 0,080, mediano 0,000 e
 pior caso \textbf{1,000} (o \texttt{telco\_customer\_churn}, onde o
-TabFM é o último de 14 na métrica primária --- um último lugar que a
-medição de 23/11/2026 mostrou ser sensível ao pré-processamento:
-com a coluna \texttt{TotalCharges} numérica, o TabFM passa ao melhor
-AUC do conjunto entre os 14 modelos reavaliados,
+TabFM é o último de 14 na métrica primária --- um último lugar sensível
+ao pré-processamento: com a coluna \texttt{TotalCharges} numérica, o
+TabFM passa ao melhor AUC do conjunto entre os 14 modelos reavaliados,
 Capítulo~\ref{chap:metodologia});
 \textbf{sempre-TabPFN}, média 0,261. A mediana zero, portanto,
 sobrevive na política executável ``TabFM por padrão'' --- mas a média
@@ -214,29 +256,31 @@ primeiro, com as verificações baratas de contorno''
 métrica primária.} Na geração 2026, o teto da família FM atinge
 \emph{regret} médio 0,021 e mediano 0,000 sob LODO --- nenhuma política
 aprendida ou fixa o supera, e a executável sempre-TabFM preserva a
-mediana zero. A recomendação de desempenho deixou de
-depender do conjunto de dados; a ressalva é que esse resultado vale
-para a métrica primária isolada, questão que a próxima seção enfrenta.
+mediana zero. A escolha de \emph{família} pela métrica primária deixou de
+depender do conjunto de dados --- a escolha do \emph{modelo} dentro
+dela ainda depende (a interação modelo$\times$conjunto domina a
+variância de ranks no Capítulo~\ref{chap:benchmark}); a ressalva é
+que esse resultado vale para a métrica primária isolada, questão que a
+próxima seção enfrenta.
 
 \section{Regret multicritério ponderado: quando a recomendação vira}
 \label{sec:regret-ponderado}
 
-O resultado positivo da seção anterior tem uma limitação declarada
-desde o artigo AI-1: o \emph{regret} é calculado sobre a métrica primária,
+O resultado positivo da seção anterior tem uma limitação declarada:
+o \emph{regret} é calculado sobre a métrica primária,
 não sobre combinações multicritério ponderadas por preferências do
 usuário. A limitação não é cosmética. O Capítulo~\ref{chap:benchmark}
 mostrou que o líder de acurácia custa 4--5 ordens de magnitude mais
 para servir que um GBDT; um praticante cuja função de utilidade pondere
 acurácia \emph{e} custo de inferência pode, legitimamente, chegar a
-outra recomendação. Esta seção fecha essa lacuna com o experimento E2,
-registrado em \texttt{docs/\allowbreak desenho-\allowbreak melhorias-\allowbreak finais.\allowbreak md}
-(05/10/2026) --- com uma precisão de relato devida: o commit que
-registra as hipóteses do E2 já carrega
-o seu resultado, de modo que o rótulo honesto é \emph{análise
-registrada}, não pré-registro; o desenho (grade de pesos, políticas e
-métrica) estava escrito antes da leitura, mas não há carimbo
-independente que o prove: a política ``FM primeiro'' continua regret-ótima
-quando a métrica de decisão pondera acurácia e custo?
+outra recomendação. Esta seção fecha essa lacuna com o experimento E2, que pergunta: a
+política ``FM primeiro'' continua regret-ótima quando a métrica de
+decisão pondera acurácia e custo? O desenho (grade de pesos, políticas
+e métrica) foi registrado em
+\texttt{docs/\allowbreak desenho-\allowbreak melhorias-\allowbreak finais.\allowbreak md}
+antes da leitura do resultado --- mas o commit que registra as
+hipóteses já carrega o resultado, de modo que o rótulo correto é
+\emph{análise registrada}, não pré-registro.
 
 \subsection{Desenho registrado}
 \label{sec:e2-desenho}
@@ -247,27 +291,38 @@ S \;=\; w \cdot r_{\text{acc}} \;+\; (1-w) \cdot r_{\text{lat}},
 \label{eq:score-ponderado}
 \end{equation}
 em que $r_{\text{acc}}$ é o rank normalizado em $[0,1]$ do modelo na
-métrica primária do conjunto, $r_{\text{lat}}$ é o rank normalizado da
-latência de inferência, e $w \in \{1{,}0;\, 0{,}9;\, \ldots;\, 0{,}0\}$
+métrica primária do conjunto e $r_{\text{lat}}$ é o rank normalizado
+da latência de inferência --- ambos orientados de modo que \textbf{0 é
+o melhor} modelo do conjunto e 1 o pior, de modo que o melhor score
+$S$ é o \emph{menor} ---, e
+$w \in \{1{,}0;\, 0{,}9;\, \ldots;\, 0{,}0\}$
 varre o espectro de preferências --- de ``só acurácia importa''
-($w{=}1$) a ``só latência importa'' ($w{=}0$). Para cada valor de $w$,
+($w{=}1$) a ``só latência importa'' ($w{=}0$). Um exemplo mostra como
+o peso atua e por que o cruzamento vem cedo. Num conjunto em que um
+\emph{foundation model} é o mais acurado ($r_{\text{acc}}{=}0$) e o
+mais lento ($r_{\text{lat}}{=}1$), seu score é $S = 1-w$; um GBDT que
+seja o mais rápido ($r_{\text{lat}}{=}0$) e o quarto em acurácia
+entre 14 ($r_{\text{acc}} \approx 0{,}23$) tem $S = 0{,}23\,w$. Os
+dois empatam em $w \approx 0{,}81$: com menos de ${\sim}80\%$ do
+peso na acurácia, o GBDT passa à frente. A normalização por postos
+ignora se o modelo mais lento é duas ou cem mil vezes mais lento ---
+quem é último em latência carrega o termo $(1-w)$ inteiro --- e, como
+os \emph{foundation models} são os mais lentos em todos os conjuntos,
+o ponto de cruzamento é governado pela distância, em postos de
+acurácia, entre eles e os modelos rápidos, que é pequena. A escolha
+por postos é deliberada (as latências diferem por seis ordens de
+grandeza, e uma escala cardinal seria dominada por elas), mas
+significa que ``10--20\% do peso'' é uma afirmação sobre ordens, não
+sobre microssegundos. Para cada valor de $w$,
 calcula-se o \emph{regret} normalizado de cada política fixa exatamente como
 no estudo original: 0 se a família recomendada contém o modelo de
-melhor score $S$ no conjunto; 1 se contém apenas o pior.\footnote{As
-quatro políticas do registro estão no artefato
-(\texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak weighted\_\allowbreak regret.\allowbreak csv}): a árvore-LODO
-é avaliada pela recomendação por conjunto armazenada no estudo original
-(\texttt{lodo\_\allowbreak validation\_\allowbreak 14.\allowbreak csv}), sem reajuste --- ela foi treinada
-para prever o vencedor de \emph{acurácia} e aqui é pontuada sob o score
-ponderado. O resultado reitera, agora sob o score ponderado, o que a Seção~\ref{sec:resultado-negativo} estabeleceu:
-em mediana, a árvore nunca supera a melhor política fixa em nenhum $w$;
-pela média, fica abaixo da sempre-FM até $w{=}0{,}7$ e acima a partir de
-$w{=}0{,}8$ (um único cruzamento) --- sobre $N$s distintos: a árvore é
-pontuada em 17 conjuntos (artefato regenerado em 17/11/2026 para
-incorporar a célula \texttt{kin8nm} ausente por herança pré-errata; as
-políticas fixas são idênticas às da geração original) --- e colapsa na
-política sempre-FM nos pesos altos (mediana 0{,}000 apenas em
-$w \geq 0{,}9$).}
+menor score $S$ no conjunto; 1 se contém apenas o pior.\footnote{A árvore-LODO é avaliada pela recomendação por conjunto do
+estudo original, sem reajuste. O resultado reitera a
+Seção~\ref{sec:resultado-negativo}: em mediana, a árvore nunca supera
+a melhor política fixa em nenhum $w$, e colapsa na política sempre-FM
+nos pesos altos
+(\texttt{results/\allowbreak aggregated/\allowbreak
+lodo\_\allowbreak weighted\_\allowbreak regret.\allowbreak csv}).}
 Os $N$s espelham os da Tabela~\ref{tab:regret-lodo}: 18 conjuntos para
 as políticas sempre-GBDT e sempre-DL, 17 para sempre-FM
 (\texttt{helena} excluída por limite arquitetural). A hipótese
@@ -283,14 +338,9 @@ modelos sob protocolo idêntico. A latência relativa entre modelos é
 aproximadamente estável entre conjuntos para GBDTs e modelos de deep
 learning; para \emph{foundation models}, porém, ela cresce com o tamanho do
 contexto, de modo que o proxy é conservador a favor dos FMs em
-conjuntos pequenos e contra eles em conjuntos grandes. Essa ressalva
-foi posteriormente fechada com medição: a latência dos 14 modelos foi
-re-medida sob protocolo idêntico nos dois extremos de tamanho do
-benchmark (\texttt{credit\_g}, mil amostras; \texttt{cardiovascular\_\allowbreak disease},
-70~mil), os \emph{rankings} mostraram-se estáveis (Spearman
-0{,}78--0{,}95 entre os três conjuntos) e a varredura completa desta
-seção, re-executada com cada um dos três \emph{proxies}, produz o mesmo
-veredito --- o detalhe fica para a discussão dos resultados.
+conjuntos pequenos e contra eles em conjuntos grandes. A ressalva
+foi depois fechada com medição nos dois extremos de tamanho do
+benchmark; o teste está no fim da Seção~\ref{sec:e2-resultados}.
 
 \subsection{Resultados: o cruzamento}
 \label{sec:e2-resultados}
@@ -304,10 +354,15 @@ os conjuntos.
 \begin{figure}[htb]
 \centering
 \includegraphics[width=\linewidth]{images/lodo_weighted_regret.pdf}
-\caption{Regret multicritério ponderado das três políticas fixas e da
-árvore-LODO em função do peso da acurácia $w$ (Eq.~\ref{eq:score-ponderado}; experimento
-E2, estudo com 14 modelos). Fonte:
-\texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak weighted\_\allowbreak regret.\allowbreak csv}.}
+\caption[Regret multicritério ponderado por política]{Regret
+multicritério ponderado das três políticas fixas e da árvore-LODO em
+função do peso da acurácia $w$ (Eq.~\ref{eq:score-ponderado};
+experimento E2, estudo com 14 modelos; rótulos internos em inglês).
+Leitura: menor é melhor; o eixo vai de $w{=}0$ (só latência) a
+$w{=}1$ (só acurácia) --- a Tabela~\ref{tab:weighted-regret} percorre
+o mesmo espectro na ordem inversa. O que olhar: a curva sempre-FM é a
+melhor à direita e a pior à esquerda, e cruza as demais entre
+$w{=}0{,}9$ e $w{=}0{,}8$.}
 \label{fig:lodo-weighted}
 \end{figure}
 
@@ -349,8 +404,10 @@ cruzamento, portanto, ocorre entre $w{=}0{,}9$ e $w{=}0{,}8$. Pela
 média (painel direito da Figura~\ref{fig:lodo-weighted}), o quadro é
 ligeiramente mais favorável aos FMs: sempre-FM ainda é a melhor
 política em $w{=}0{,}8$ (0,119 contra 0,143 do GBDT e 0,146 do DL) e
-só perde em $w{=}0{,}7$ (0,243 contra 0,105 do GBDT). Segundo, a partir
-de $w \leq 0{,}6$, ``sempre-GBDT'' tem \emph{regret} mediano exatamente zero ---
+só perde em $w{=}0{,}7$ (0,243 contra 0,105 do GBDT). Segundo, na faixa intermediária a melhor política fixa pela mediana é
+\emph{sempre-DL} ($0{,}035$ em $w{=}0{,}8$; $0{,}000$ em $w{=}0{,}7$),
+e a partir
+de $w \leq 0{,}6$ ``sempre-GBDT'' tem \emph{regret} mediano exatamente zero ---
 assim que a latência domina a função de utilidade, a família GBDT
 contém o melhor modelo em metade ou mais dos conjuntos, espelhando no
 extremo oposto o que a família FM faz em $w{=}1$. Terceiro, no extremo
@@ -411,8 +468,8 @@ minoritário de latência a partir do qual a recomendação vira.
 Os três estudos convergem para uma mesma conclusão: o que resta de
 informativo na decisão --- e o que o fluxograma sempre codificou --- são
 \textbf{restrições verificáveis \emph{a priori}}, não predições de
-desempenho. A Figura~\ref{fig:flowchart-14} apresenta o fluxograma
-validado na sua forma final, com os 14 modelos do estudo completo.
+desempenho. A Figura~\ref{fig:flowchart-14} apresenta o fluxograma na
+sua forma final, com os 14 modelos do estudo completo.
 
 \begin{figure}[htb]
 \centering
@@ -423,7 +480,16 @@ própria (\texttt{scripts/\allowbreak figures\_\allowbreak ai1\_\allowbreak disp
 \label{fig:flowchart-14}
 \end{figure}
 
-As quatro restrições, na ordem em que o fluxograma as verifica:
+A recomendação cabe em quatro perguntas, feitas nesta ordem antes de
+treinar qualquer modelo: a predição precisa sair em microssegundos por
+linha? o problema tem mais de 10 classes, ou mais linhas do que o
+\emph{foundation model} aceita como contexto? o domínio exige um
+modelo interpretável por construção? --- se alguma resposta for sim, a
+família indicada é a que a restrição deixa de pé; se nenhuma for, o
+\emph{default} é o \emph{foundation model}, comparado com um GBDT
+ajustado antes da adoção, porque o seu pior caso medido é o último
+lugar num conjunto. As quatro restrições, na ordem em que o fluxograma
+as verifica:
 
 \begin{enumerate}
   \item \textbf{Latência e custo de inferência.} O líder de acurácia
@@ -432,9 +498,10 @@ As quatro restrições, na ordem em que o fluxograma as verifica:
     microssegundos, a família FM está excluída na forma nativa. O
     experimento E2 quantifica por que esta é a primeira pergunta: a
     recomendação inverte com apenas 10--20\% do peso na latência
-    (Seção~\ref{sec:regret-ponderado}). Recuperar a família FM dentro
-    desse orçamento é precisamente o objeto do
-    Capítulo~\ref{chap:destilacao}.
+    (Seção~\ref{sec:regret-ponderado}). O
+    Capítulo~\ref{chap:destilacao} mede uma rota para dentro desse
+    orçamento --- destilar a distribuição preditiva do TabPFN em
+    regressão --- com resultado positivo delimitado a esse recorte.
   \item \textbf{Limites arquiteturais.} Mais de 10 classes (limite do
     TabFM) ou estouro do limite de contexto são exclusões estruturais
     objetivas --- o caso \texttt{helena} (100 classes) no próprio
@@ -451,7 +518,7 @@ As quatro restrições, na ordem em que o fluxograma as verifica:
     Capítulo~\ref{chap:benchmark}.
 \end{enumerate}
 
-A validação por \emph{regret} confirma que essas quatro perguntas capturam o
+A avaliação por \emph{regret} indica que essas quatro perguntas capturam o
 essencial: as restrições são o \emph{conteúdo informativo real} da
 decisão, e o desempenho bruto deixou de discriminar dentro da família
 líder. O arcabouço resultante é deliberadamente modesto na forma --- um
@@ -496,10 +563,10 @@ devem citar a versão do estudo (11 ou 14 modelos) a que se referem.
 
 \section{Síntese do capítulo}
 
-Este capítulo transformou os instrumentos descritivos do
-Capítulo~\ref{chap:benchmark} em um arcabouço validado por três
-estudos sob LODO: o roteamento aprendido por meta-características não
-generaliza (taxa de acerto 0,11 vs.\ 0,44 com 11 modelos; 0,72 vs.\ 0,78 com
+Este capítulo submeteu os instrumentos descritivos do
+Capítulo~\ref{chap:benchmark} a três estudos de avaliação --- o único
+componente aprendido, a árvore, sob LODO: o roteamento aprendido por
+meta-características não generaliza (taxa de acerto 0,11 vs.\ 0,44 com 11 modelos; 0,72 vs.\ 0,78 com
 14); a política fixa ``\emph{foundation model} primeiro'' é regret-ótima na
 métrica primária (\emph{regret} mediano 0,000 na geração 2026,
 preservado na política executável sempre-TabFM, cuja média é 0,080 e
@@ -508,9 +575,9 @@ multicritério ponderado, o experimento registrado E2, localiza o
 ponto em que essa recomendação vira --- entre $w{=}0{,}9$ e $w{=}0{,}8$
 de peso na acurácia pela mediana --- e com isso justifica
 quantitativamente a arquitetura do fluxograma: a latência é a primeira
-pergunta porque é a que mais cedo muda a resposta. O único obstáculo que
-resta entre o praticante e a política regret-ótima --- a latência de
-inferência --- é o objeto do Capítulo~\ref{chap:destilacao}: destilar o
-conhecimento do \emph{foundation model} em um aluno que viva no
-\emph{tier} de microssegundos, preservando não só a predição pontual, mas
-a distribuição preditiva completa.
+pergunta porque é a que mais cedo muda a resposta. O obstáculo que resta entre o praticante e a política regret-ótima
+--- a latência de inferência --- motiva o
+Capítulo~\ref{chap:destilacao}, que mede uma rota específica para
+reduzi-la: destilar a distribuição preditiva do professor TabPFN em um
+aluno de \emph{gradient boosting}, em regressão --- um recorte, não a
+remoção geral do obstáculo.

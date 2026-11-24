@@ -101,11 +101,10 @@ year\_prediction        & regressão & 44027 & 515\,000 & 90 & -- & numéricos \
 \end{tabular}
 \end{table}
 
-Duas notas de identidade acompanham a tabela, resultado da auditoria
-nome\slash ID\slash dimensões de 19/10/2026 sobre
-os 33 identificadores do estudo (a checagem registrada como pendência
-na errata do \texttt{kin8nm}; registro canônico em
-\texttt{docs/\allowbreak errata-\allowbreak datasets-\allowbreak core-\allowbreak regressao.\allowbreak md}). ($\dagger$)~O
+Duas notas de identidade acompanham a tabela; os identificadores e as
+dimensões de todos os conjuntos foram conferidos contra o OpenML, e o
+histórico das correções de rótulo está no
+Apêndice~\ref{app:suplementares}. ($\dagger$)~O
 \texttt{california\_\allowbreak housing} do id 44090 é a variante do
 \emph{tabular-benchmark} de \citet{grinsztajn2022} com \textbf{alvo
 binarizado pela mediana} (valor do imóvel acima/abaixo), não a
@@ -114,13 +113,10 @@ RMSE sobre alvo $\{0,1\}$ é a raiz do escore de Brier, e os
 \emph{ranks} internos permanecem válidos ---, mas o conjunto é
 degenerado para leituras distribucionais, e cada resultado que o
 envolve no Capítulo~\ref{chap:destilacao} carrega análise de
-sensibilidade com ele excluído. ($\ddagger$)~O conjunto
-historicamente rotulado ``superconduct'' sempre foi o
-\textbf{OnlineNewsPopularity} (alvo = logaritmo do número de
-compartilhamentos; regressão contínua legítima): apenas o rótulo
-estava errado, e foi renomeado para \texttt{online\_news} em todos os
-artefatos por retificação datada --- o mesmo tratamento do episódio
-\texttt{diamonds}/\texttt{kin8nm}.
+sensibilidade com ele excluído. ($\ddagger$)~O
+\texttt{online\_news} é o conjunto OnlineNewsPopularity (alvo =
+logaritmo do número de compartilhamentos; regressão contínua
+legítima).
 
 A seleção obedeceu a quatro critérios, cada um ligado a uma necessidade da
 investigação:
@@ -370,14 +366,14 @@ de hiperparâmetros por validação cruzada interna (3 \emph{folds}) sobre o
     disparidade maior que a premissa (o custo mediano por \emph{trial}
     do aprendizado profundo ficou uma ordem de grandeza acima do dos
     GBDTs, e o tempo total de busca, 1,1--140$\times$ acima, conforme o
-    par de modelos --- faixa recomputada em 23/11 sobre as medianas por
+    par de modelos --- faixa calculada sobre as medianas por
     modelo, excluído o \texttt{adult}); o viés residual favorece o aprendizado profundo em
     tempo de busca --- que, ainda assim, não vence --- e a leitura
     correta é ``orçamentos assimétricos por desenho, paridade imperfeita
     medida e declarada'', não equalização. Uma
-    exceção histórica é declarada: no \texttt{adult}, os 11 experimentos
-    da Fase~1 anteriores à redução de orçamento (100
-    \emph{trials}; 7 deles de aprendizado profundo) foram mantidos como
+    exceção é declarada: no \texttt{adult}, 11 modelos (7 deles de
+    aprendizado profundo) foram ajustados com 100
+    \emph{trials}, e não 25, e os resultados foram mantidos como
     âncora de validação, de modo que,
     nesse único conjunto, as arquiteturas legadas tiveram 4$\times$ o
     orçamento de KAN/TabKAN; o conjunto é excluído dos agregados de
@@ -391,9 +387,8 @@ de hiperparâmetros por validação cruzada interna (3 \emph{folds}) sobre o
     espaço (p.~ex., \texttt{n\_estimators} próximo do teto de 2\,000),
     limitação declarada do desenho do espaço.
     A direção de otimização segue a métrica primária de cada tarefa
-    (maximização de ROC-AUC; minimização de \emph{log-loss} e RMSE),
-    verificada em auditoria de código
-    (Seção~\ref{sec:met-estatistica}).
+    (maximização de ROC-AUC; minimização de \emph{log-loss} e RMSE;
+    Seção~\ref{sec:met-estatistica}).
   \item \textbf{Regime de treinamento dos modelos profundos.} Máximo de 200
     épocas com parada antecipada (paciência 20, monitorando a perda de
     validação), lote de 256, otimizador AdamW e restauração do melhor
@@ -527,7 +522,8 @@ análise de complementaridade pré-registrada que o
 Capítulo~\ref{chap:benchmark} reporta (Seção~\ref{sec:cap5-ato5}). A cadeia segue a prática canônica para comparação de
 múltiplos classificadores em múltiplos conjuntos \citep{demsar2006,
 benavoli2017}, acrescida de uma camada bayesiana e de uma decomposição de
-variância. Toda a cadeia foi submetida a auditoria de corretude (julho de
+variância. Toda a cadeia foi verificada contra implementações de
+referência (julho de
 2026), que incluiu a recomputação manual da estatística de Friedman
 (idêntica à da implementação: $\chi^2 = 31{,}309$ nos dados binários);
 na camada bayesiana, a implementação original devolve a massa
@@ -550,17 +546,18 @@ reporta os dois critérios; o registro está em
     de Iman--Davenport, menos conservadora para $N$ pequeno.
   \item \textbf{Post-hoc de Nemenyi} com diagramas de diferença crítica,
     $\mathrm{CD} = q_\alpha \sqrt{k(k+1)/6N}$ \citep{demsar2006}; a lógica
-    de agrupamento dos diagramas foi verificada formalmente na auditoria
-    (grupos são intervalos contíguos na ordem de \emph{ranks}, com todo par
-    interno distando menos que o CD).
+    de agrupamento dos diagramas é a canônica: grupos são intervalos
+    contíguos na ordem de \emph{ranks}, com todo par
+    interno distando menos que o CD.
   \item \textbf{Wilcoxon signed-rank par a par com correção de Holm}
     (método exato para $N \le 25$ sem empates), complementando o Nemenyi
     com as \emph{magnitudes} das diferenças. \textbf{Limitação declarada:}
     com $N=5$ conjuntos de regressão, o menor p-valor bilateral atingível é
     $2 \cdot (1/2^5) = 0{,}0625$ --- rejeição a $\alpha = 0{,}05$ é
     matematicamente impossível, e após Holm todos os p-valores saturam em
-    1,0 (verificado empiricamente). Conclusões de regressão apoiam-se,
-    portanto, em \emph{ranks}, tamanhos de efeito e análise bayesiana.
+    1,0. Conclusões de regressão apoiam-se,
+    portanto, em \emph{ranks} e tamanhos de efeito, e são lidas como
+    descritivas.
   \item \textbf{Tamanho de efeito:} $d$ de Cohen na variante pareada
     ($d_z$), a forma correta para o desenho de medidas repetidas (os mesmos
     conjuntos avaliam todos os modelos).
@@ -571,14 +568,18 @@ reporta os dois critérios; o registro está em
     \citealp{benavoli2017}): o arcabouço frequentista não autoriza afirmar
     equivalência (não rejeição $\neq$ igualdade); a posterior bayesiana com
     região de equivalência prática autoriza. O ROPE primário é de
-    $\pm 0{,}01$ de AUC --- um ponto percentual como limiar de irrelevância
-    prática, alinhado à granularidade típica de decisões de modelo na
-    indústria --- \emph{com análise de sensibilidade pré-definida} em
+    $\pm 0{,}01$ de AUC: diferenças menores que um ponto percentual são
+    tratadas como irrelevantes na prática. O valor é uma convenção
+    declarada, não uma constante da área --- por isso a análise é
+    repetida com sensibilidade em
     $\{0{,}005;\, 0{,}01;\, 0{,}02\}$, reportada integralmente no
     Capítulo~\ref{chap:benchmark}.
-  \item \textbf{Decomposição de variância ($\eta^2$):} parcela da variância
-    dos \emph{ranks} explicada pela família, via razão de somas de
-    quadrados entre-famílias e total. Uma ressalva de interpretação é
+  \item \textbf{Decomposição de variância ($\eta^2$):} partição da
+    variância dos \emph{ranks} em parcela entre famílias, parcela entre
+    modelos da mesma família e resíduo, via razões de somas de
+    quadrados; com uma observação por modelo$\times$conjunto, o
+    resíduo reúne a interação modelo$\times$conjunto e o ruído,
+    inseparáveis. Uma ressalva de interpretação é
     declarada de antemão: no recorte do núcleo de 11 modelos (Ato~I do
     Capítulo~\ref{chap:benchmark}), as famílias são desbalanceadas --- 3
     GBDTs, 7 de aprendizado profundo e 1 \emph{foundation model} --- e,

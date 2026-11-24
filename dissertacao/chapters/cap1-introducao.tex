@@ -36,9 +36,10 @@ Considere, porém, a decisão concreta que essa máxima pretende resolver. Um
 time de ciência de dados precisa escolher o modelo que decidirá, em
 produção, aprovações de crédito (um problema da família dos conjuntos
 \texttt{credit\_g} e \texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit} deste estudo), ou o
-que estimará preços e tempos com intervalos de confiança, como nos
-conjuntos imobiliários \texttt{miami\_housing} e \texttt{kings\_county}
-deste estudo. Em 2026, esse time encontra um cardápio que a
+que estimará preços e tempos acompanhados de intervalos de predição,
+como nos conjuntos imobiliários \texttt{miami\_housing} e
+\texttt{kings\_county} usados no estudo de destilação
+(Capítulo~\ref{chap:destilacao}). Em 2026, esse time encontra um cardápio que a
 máxima não previa: além dos três \emph{gradient boostings} consolidados,
 há uma dúzia de arquiteturas profundas que alegam tê-los alcançado, duas
 redes de Kolmogorov--Arnold com alegações fortes de superioridade e, no
@@ -61,11 +62,15 @@ e a variância de desempenho é dominada pela interação
 modelo$\times$conjunto (o vencedor depende do conjunto, não da
 família); ``\emph{boosting} sempre vence'' não encontra margem de
 acurácia que a sustente (Capítulo~\ref{chap:benchmark}). Segundo, a
-geração 2026 quebra o empate em direção inesperada: quem o quebrou não
-foi o aprendizado profundo ajustado, e sim o pré-treino. O TabFM,
-avaliado \emph{zero-shot}, sem qualquer ajuste, é o
-melhor modelo em \textbf{13 dos 18 conjuntos} do benchmark e lidera o rank
-médio nas três tarefas. O preço, contudo, muda a natureza da decisão: o
+geração 2026 desloca o topo em direção inesperada: quem passou à
+frente não foi o aprendizado profundo ajustado, e sim o pré-treino. O
+TabFM, avaliado \emph{zero-shot}, sem qualquer ajuste, é o melhor
+modelo em \textbf{13 dos 18 conjuntos} do benchmark e lidera o rank
+médio nas três tarefas --- uma liderança consistente entre conjuntos,
+que os testes, de baixo poder com poucos conjuntos por tarefa, não
+chegam a confirmar como separação estatística
+(Capítulo~\ref{chap:benchmark}). O preço, contudo, muda a natureza da
+decisão: o
 líder de acurácia custa cerca de \textbf{43 milissegundos por linha} para
 servir predições, contra \textbf{0,33 microssegundos} do XGBoost
 (quatro a cinco ordens de magnitude; aproximadamente 131~mil
@@ -77,8 +82,8 @@ uso e, se não cabe, o que fazer?
 obstáculo à adoção do líder é um custo de arquitetura (o conjunto de
 treino viaja com o modelo a cada predição), e custos de arquitetura
 podem, em princípio, ser transferidos: a destilação de conhecimento
-\citep{hinton2015} treina um aluno de microssegundos nas saídas do
-professor caro. Para \emph{foundation models} tabulares, a literatura
+\citep{hinton2015} treina, nas saídas do professor caro, um aluno que
+serve na casa de cem microssegundos por linha. Para \emph{foundation models} tabulares, a literatura
 estabeleceu essa rota em classificação \citep{pocketfm2026}. O que ela
 transfere em \emph{regressão}, em particular quando o alvo da
 preservação é a distribuição preditiva completa, com
@@ -95,9 +100,10 @@ verificável em minutos (Capítulo~\ref{chap:destilacao}).
 O problema que esta dissertação enfrenta pode ser enunciado em três
 camadas, cada uma herdando a anterior. Na primeira camada, há um
 \emph{vácuo de evidência comparável}: as famílias de modelos tabulares
-disponíveis em 2026 (\emph{gradient boosting}, aprendizado profundo em
-suas três linhagens e \emph{foundation models} de aprendizado em
-contexto) não haviam sido medidas sob um protocolo único que combinasse
+disponíveis em 2026 (\emph{gradient boosting}; aprendizado profundo
+em suas três linhagens --- redes densas, arquiteturas de atenção e
+redes de Kolmogorov--Arnold --- e \emph{foundation models} de
+aprendizado em contexto) não haviam sido medidas sob um protocolo único que combinasse
 seleção de hiperparâmetros estritamente separada da
 medição, inferência estatística capaz de \emph{afirmar} equivalências
 além de rejeitá-las, e eixos de custo (tempo de treino, custo de ajuste
@@ -162,18 +168,23 @@ operacional da família líder pode ser removido.
     aprendido por meta-características com políticas fixas sob métrica de
     \emph{regret}, incluindo a extensão ao \emph{regret}
     multicritério ponderado por preferências de latência;
+  \item Caracterizar, por análise de complementaridade por instância
+    pré-registrada, onde os \emph{foundation models} e o melhor GBDT
+    discordam --- e se essa discordância é roteável;
   \item Investigar o que a destilação de conhecimento transfere de
     \emph{foundation models} tabulares em regressão, pontual e
     distribucional; medir a fronteira de estratégias de serviço
     (destilar, comprimir contexto, reduzir \emph{ensemble}) nos mesmos
-    \emph{hold-outs}, testar o aluno destilado contra \emph{baselines}
-    distribucionais clássicos em experimento pré-registrado, e condensar
+    \emph{hold-outs}; testar o aluno destilado contra \emph{baselines}
+    distribucionais clássicos e medir a utilidade de decisão do ganho
+    distribucional em unidades do problema, ambos em experimentos
+    registrados; e condensar
     as condições de valor numa regra de decisão prática;
   \item Sustentar todas as conclusões em infraestrutura reprodutível
     (sementes, versões e dados fixados, artefatos versionados), sob um
-    contrato explícito de conduta científica (pré-registro de hipóteses,
-    verificação datada de novidade, reporte de resultados negativos e
-    correção por retificação).
+    contrato explícito de conduta científica (pré-registro de
+    hipóteses, verificação datada de novidade, reporte de resultados
+    negativos e correção registrada de erros).
 \end{itemize}
 
 \section{Perguntas de pesquisa}
@@ -181,7 +192,14 @@ operacional da família líder pode ser removido.
 
 Três perguntas de pesquisa organizam a dissertação; cada uma é respondida
 por um capítulo de resultados, e as três são retomadas, com a evidência
-acumulada, na conclusão.
+acumulada, na conclusão. O ``empate'' a que a QP1 se refere é o estado
+da literatura imediatamente anterior a este estudo: avaliações em
+escala reportam que, em boa parte dos conjuntos tabulares, a diferença
+de desempenho entre \emph{gradient boosting} e aprendizado profundo
+ajustado é pequena e o vencedor alterna com o conjunto
+\citep{mcelfresh2023}; o $N$ ``realista'' da QP2 é o regime de
+poucas dezenas de conjuntos de dados em que qualquer benchmark
+operacional vive.
 
 \begin{description}
   \item[QP1.] \emph{O empate de acurácia entre as famílias de modelos
@@ -203,9 +221,15 @@ acumulada, na conclusão.
 
 A Figura~\ref{fig:intro-qps} resume o encadeamento, em que a resposta
 de cada
-pergunta cria a pergunta seguinte: o empate e sua quebra (QP1) tornam a
-decisão multicritério inevitável (QP2), e a política de decisão validada
-esbarra num único obstáculo, cuja remoção é o objeto da QP3. No diagrama,
+pergunta cria a pergunta seguinte: o empate e seu deslocamento (QP1)
+tornam a
+decisão multicritério inevitável (QP2), e a política de decisão
+esbarra num único obstáculo, cuja redução é o objeto da QP3. As
+hipóteses falsificáveis associadas às perguntas, com os critérios de
+decisão, são enunciadas onde são testadas: no benchmark
+(Capítulo~\ref{chap:benchmark}), no experimento E2
+(Capítulo~\ref{chap:framework}) e no desenho em duas etapas da
+destilação (Capítulo~\ref{chap:destilacao}). No diagrama,
 as setas sólidas ligam cada pergunta ao capítulo que a responde, e as
 tracejadas marcam esse encadeamento lógico; os
 Capítulos~\ref{chap:fundamentacao} a~\ref{chap:metodologia} fornecem,
@@ -239,8 +263,11 @@ o recorte e a evidência que faltavam. Em ordem de apresentação:
     empate estatístico da geração anterior (8 de 10 modelos praticamente
     equivalentes ao líder, no critério declarado; variância de rank
     dominada pela interação modelo$\times$conjunto) e a
-    quebra do empate pela geração 2026 (TabFM líder nas três tarefas e
-    melhor modelo em 13 de 18 conjuntos, \emph{zero-shot}, ao preço de
+    liderança consistente da geração 2026 (TabFM com melhor rank nas
+    três tarefas e
+    melhor modelo em 13 de 18 conjuntos, \emph{zero-shot}, sem
+    confirmação como separação estatística pelos testes de baixo poder,
+    ao preço de
     quatro a cinco ordens de magnitude em latência). Inclui a primeira
     comparação neutra TabPFN~$\times$~TabFM sob protocolo idêntico, até
     onde alcançam as verificações datadas (Capítulo~\ref{chap:benchmark}).
@@ -260,43 +287,36 @@ o recorte e a evidência que faltavam. Em ordem de apresentação:
     trivial no estudo com 11 modelos; 0,72 contra 0,78 com 14); a política
     fixa ``\emph{foundation model} primeiro'' é \emph{regret}-ótima na
     métrica primária, com \emph{regret} mediano zero na geração 2026; e o
-    experimento E2, contribuição exclusiva desta
-    dissertação, localiza o ponto de inversão (basta deslocar 10 a 20\%
+    experimento E2 localiza o ponto de inversão (basta deslocar 10 a 20\%
     do peso da acurácia para a latência, na normalização por postos
     adotada, para a recomendação virar),
     justificando quantitativamente a arquitetura do fluxograma
     (Capítulo~\ref{chap:framework}).
   \item \textbf{A destilação distribucional de foundation models
-    tabulares.} O recorte verificado como inédito: sob desenho
-    registrado em duas etapas (hipóteses e pilotos pré-registrados em
-    julho; instrumento confirmatório e elegibilidade da extensão
-    fixados após leitura intermediária, com a correção sequencial
-    correspondente --- Capítulo~\ref{chap:destilacao}), em 20
-    conjuntos, a destilação \emph{pontual} falha de
-    forma robusta com qualquer professor (um resultado negativo reportado
-    com proeminência integral), enquanto a transferência das curvas de
-    quantis retém mediana de 19\% da vantagem distribucional do professor
-    com hiperparâmetros herdados (12\% com os dois braços
-    re-ajustados, a estimativa conservadora),
-    positiva em 16 de 20 conjuntos (teste de sinal unilateral
-    $p=0{,}006$; $p\approx0{,}019$ sob a correção sequencial; 15 de 19
-    na sensibilidade que exclui o conjunto de alvo
-    binarizado da errata), a
-    latências de microssegundos; a primeira fronteira medida de ponta a
-    ponta entre destilar, comprimir contexto e reduzir \emph{ensemble}; a
-    ablação que mostra que a rotulagem \emph{out-of-fold} protege
-    calibração, não acurácia; o experimento pré-registrado E1, cuja
-    comparação pareada completa é exclusiva desta dissertação, em que o
-    aluno destilado vence
-    \emph{baselines} distribucionais clássicos em 17 de 20 conjuntos
-    (teste de sinal unilateral $p=0{,}0013$); e a regra de decisão
-    prática que converte as
-    refutações em instrução verificável em minutos
-    (Capítulo~\ref{chap:destilacao}).
+    tabulares.} Em 20 conjuntos de regressão, sob hipóteses
+    registradas antes dos experimentos
+    (Capítulo~\ref{chap:destilacao}), mostra-se que: (a) a destilação
+    \emph{pontual} não funciona --- o aluno treinado nas médias do
+    professor supera o controle em 4 de 20 conjuntos, com qualquer dos
+    dois professores testados (um resultado negativo reportado com
+    proeminência integral); (b) a destilação das curvas de quantis
+    funciona em parte --- retenção mediana de 12\% a 19\% da vantagem
+    distribucional do professor, conforme o ajuste dos alunos,
+    positiva em 16 de 20 conjuntos (teste de sinal,
+    $p\approx0{,}019$ com a correção do desenho em duas etapas); (c) o
+    aluno destilado supera \emph{baselines} distribucionais clássicos
+    em 17 de 20 conjuntos (experimento E1); (d) destilar, comprimir o
+    contexto e reduzir o \emph{ensemble} são medidos nos mesmos
+    \emph{hold-outs}, e a rotulagem \emph{out-of-fold} protege a
+    calibração, não a acurácia; (e) esses resultados condensam-se numa
+    regra de decisão cuja pré-condição se mede em minutos. Nas buscas
+    datadas deste estudo não se encontrou trabalho acadêmico anterior
+    sobre esse recorte (Capítulo~\ref{chap:destilacao}).
   \item \textbf{Infraestrutura e conduta reutilizáveis.} O protocolo, os
     artefatos versionados (cada número do texto rastreia a um CSV,
     JSON ou notebook executado), os pré-registros com adendos datados, as
-    verificações de novidade registradas e o rito de errata pública
+    verificações de novidade registradas e o procedimento público de
+    correção de erros
     constituem, em conjunto, uma contribuição metodológica de
     reprodutibilidade, descrita no Capítulo~\ref{chap:metodologia} e
     exercitada ao longo de toda a parte empírica.
