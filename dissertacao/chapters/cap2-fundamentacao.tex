@@ -380,7 +380,8 @@ uma decisão incômoda: como entregar \texttt{ocupação} a uma rede que só
 consome números? A codificação \emph{one-hot} --- uma coluna binária por
 categoria --- explode a dimensionalidade quando a cardinalidade é alta: no
 benchmark desta dissertação, o conjunto \texttt{amazon\_\allowbreak employee} atingiria
-da ordem de 7 a 16 mil colunas (conforme o \emph{split}) sem um teto de
+da ordem de 11 a 14 mil colunas nos \emph{splits} de treino (15.626 no
+conjunto completo) sem um teto de
 cardinalidade, penalizando
 especialmente os modelos de atenção, cujo custo cresce com o número de
 colunas. A alternativa padrão são \emph{embeddings} aprendidos: cada
@@ -420,7 +421,8 @@ de graça, e o mesmo capítulo a usa no aluno MLP de comparação.
 
 A segunda linhagem importa o mecanismo que revolucionou o processamento de
 linguagem: a \emph{atenção} \citep{vaswani2017}. Aqui a profundidade matemática se
-justifica: metade dos modelos do benchmark e todos os \emph{foundation
+justifica: mais de um terço dos modelos do benchmark e todos os
+\emph{foundation
 models} da Seção~\ref{sec:fund-fm} são construídos sobre essas equações.
 
 Dada uma sequência de $n$ vetores de entrada empilhados em
@@ -560,14 +562,18 @@ fases: pré-treinamento sintético e predição por um único passe direto. Font
 \emph{De onde vem a capacidade de ``aprender'' sem gradiente?} Do
 pré-treinamento. As \emph{prior-fitted networks} (PFNs) são pré-treinadas
 em milhões de pequenos conjuntos de dados \emph{sintéticos}, amostrados de
-um prior sobre mecanismos geradores --- tipicamente modelos causais
+um prior sobre mecanismos geradores \citep{muller2022pfn}; no TabPFN,
+esse prior é construído de modelos causais
 estruturais (SCMs): grafos causais aleatórios cujas variáveis se relacionam
-por funções e ruídos sorteados \citep{muller2022pfn}. Em cada tarefa
+por funções e ruídos sorteados \citep{hollmann2025}. Em cada tarefa
 sintética, a rede vê um contexto rotulado e é treinada a prever os rótulos
 retidos; ao fazê-lo em escala, aprende um algoritmo genérico de inferência:
 a saída do passe direto aproxima a \emph{distribuição preditiva posterior}
-sob o prior sintético, dado o contexto \citep{nagler2023}. O \textbf{TabPFN} \citep{hollmann2025}
-e suas versões v2/v2.5 \citep{priorlabs2025} estabeleceram o paradigma na
+sob o prior sintético, dado o contexto \citep{muller2022pfn};
+\citet{nagler2023} complementa essa leitura bayesiana com uma análise
+frequentista das PFNs como preditores pré-ajustados, porém não
+treinados. O \textbf{TabPFN}, nas versões v2 \citep{hollmann2025}
+e v2.5 \citep{priorlabs2025}, estabeleceu o paradigma na
 prática, com um limite nativo de contexto (50 mil linhas na v2.5) herdado
 do custo quadrático da atenção.
 
@@ -865,7 +871,7 @@ leitura usada na avaliação da contribuição
 \includegraphics[width=\linewidth]{images/quantis_cobertura_diss.pdf}
 \caption[Da curva de quantis à cobertura]{Da curva de quantis à cobertura (TabPFN, OOF do
 \texttt{fps\_benchmark}): (a)~a predição de uma linha; (b)~a cobertura
-empírica por nível. Fonte: \texttt{results/\allowbreak distillation/\allowbreak oof/}.}
+empírica por nível.}
 \label{fig:quantis-cobertura}
 \end{figure}
 

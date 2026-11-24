@@ -70,7 +70,7 @@ no repositório.
 \begin{table}[htbp]
 \centering
 \caption[Os 18 conjuntos de dados do benchmark]{Os 18 conjuntos de dados OpenML do benchmark (tamanhos aproximados
-antes do teto de 100~mil amostras). Fonte: \texttt{configs/\allowbreak datasets.\allowbreak yaml}.}
+antes do teto de 100~mil amostras).}
 \label{tab:datasets}
 \small
 \begin{tabular}{llrrrrl}
@@ -127,9 +127,10 @@ investigação:
     conjuntos, com \texttt{kin8nm} e outros provenientes de suítes curadas
     como a OpenML-CTR23 \citep{fischer2023}) é condição para que o arcabouço
     de decisão da QP2 não seja um artefato de um único tipo de tarefa.
-  \item \textbf{Três ordens de grandeza em tamanho amostral.} Os conjuntos
+  \item \textbf{Faixa ampla de tamanho amostral.} Os conjuntos
     variam de cerca de mil (\texttt{credit\_g}) a 581~mil amostras
-    (\texttt{covertype}). A QP1 pergunta, entre outras coisas, onde a liderança troca de mãos ao
+    (\texttt{covertype}) --- duas ordens de grandeza após o teto de
+    100~mil amostras. A QP1 pergunta, entre outras coisas, onde a liderança troca de mãos ao
     longo do eixo de tamanho; sem variação ampla nesse eixo, a pergunta seria
     irrespondível por construção.
   \item \textbf{Diversidade de composição de atributos.} Conjuntos puramente
@@ -153,9 +154,7 @@ condicional da QP1.
   \centering
   \includegraphics[width=0.85\textwidth]{images/dataset_landscape.pdf}
   \caption[Paisagem dos conjuntos: amostras $\times$ atributos]{Paisagem dos 18 conjuntos de dados no plano amostras $\times$
-  atributos (rótulos internos da figura em inglês). Fonte:
-  \texttt{results/\allowbreak figures/\allowbreak dataset\_\allowbreak landscape.\allowbreak pdf}, gerado a partir de
-  \texttt{configs/\allowbreak datasets.\allowbreak yaml}.}
+  atributos (rótulos internos da figura em inglês).}
   \label{fig:dataset-landscape}
 \end{figure}
 
@@ -364,8 +363,10 @@ de hiperparâmetros por validação cruzada interna (3 \emph{folds}) sobre o
     do Apêndice~\ref{app:hp-escolhidos}, não uma afirmação da
     literatura. As medições realizadas mostraram
     disparidade maior que a premissa (o custo mediano por \emph{trial}
-    do aprendizado profundo ficou uma ordem de grandeza acima do dos
-    GBDTs, e o tempo total de busca, 1,1--140$\times$ acima, conforme o
+    do aprendizado profundo ficou mais de uma ordem de grandeza acima
+    do dos
+    GBDTs --- cerca de 57$\times$ pela razão de medianas ---, e o
+    tempo total de busca, 1,1--140$\times$ acima, conforme o
     par de modelos --- faixa calculada sobre as medianas por
     modelo, excluído o \texttt{adult}); o viés residual favorece o aprendizado profundo em
     tempo de busca --- que, ainda assim, não vence --- e a leitura
@@ -748,11 +749,12 @@ conhecidas e as decisões tomadas diante delas.
     categórica de 6.531 níveis --- na codificação ordinal ajustada no
     treino, a grande maioria do \emph{hold-out} recebe o código de
     categoria desconhecida. O tratamento é idêntico para os 14
-    modelos, e o efeito foi medido em 23/11/2026 nos \textbf{14
+    modelos, e o efeito foi medido nos \textbf{14
     modelos}, com os dois braços
     (\texttt{results/\allowbreak aggregated/\allowbreak
     telco\_\allowbreak totalcharges\_\allowbreak sensitivity.csv};
-    13 dos 14 braços ``publicado'' reproduzem o AUC publicado exato; o
+    13 dos 14 braços reavaliados reproduzem exatamente o AUC
+    registrado; o
     STab, de inferência estocástica, difere em $8\times10^{-4}$):
     o efeito vai de $-0{,}003$ a $+0{,}006$ nos demais modelos, mas é
     $+0{,}028$ no TabFM,
@@ -764,7 +766,7 @@ conhecidas e as decisões tomadas diante delas.
     ressalva.
   \item \textbf{Redes de regressão treinam no alvo bruto --- efeito
     medido.} O \emph{pipeline} não padroniza o alvo das redes em
-    regressão. A medição de 23/11/2026 (5 redes $\times$ 5 conjuntos
+    regressão. Uma medição dedicada (5 redes $\times$ 5 conjuntos
     $\times$ 3 sementes, hiperparâmetros herdados --- um piso do
     efeito, já que a busca foi feita no alvo bruto) encontra melhora
     de RMSE em 17 das 25 células, tipicamente abaixo de 2\%, com os

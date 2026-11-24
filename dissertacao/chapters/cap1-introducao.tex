@@ -58,9 +58,11 @@ a máxima em dois pontos. Primeiro, na
 geração de modelos anterior a 2026, o topo da acurácia é um \emph{empate
 estatístico}: sob região de equivalência prática de um ponto percentual de
 AUC, 8 dos 10 modelos não-líderes são praticamente equivalentes ao
-líder no critério brando (3 dos 10, os GBDTs, no corte estrito de
+líder --- ele próprio já um \emph{foundation model}, o TabPFN, com rank
+médio 3,2 --- no critério brando (3 dos 10, os GBDTs, no corte estrito de
 0,95), e a variância de desempenho é dominada pela interação
-modelo$\times$conjunto (o vencedor depende do conjunto, não da
+modelo$\times$conjunto somada ao ruído (o vencedor depende do
+conjunto, não da
 família); ``\emph{boosting} sempre vence'' não encontra margem de
 acurácia que a sustente (Capítulo~\ref{chap:benchmark}). Segundo, a
 geração 2026 desloca o topo em direção inesperada: quem passou à
@@ -168,10 +170,10 @@ operacional da família líder pode ser removido.
     adições de 2026: a comparação neutra entre os dois \emph{foundation
     models} (TabPFN e TabFM) e o primeiro teste independente da família
     Kolmogorov--Arnold contra a grade completa de famílias;
-  \item Construir um arcabouço de decisão orientado a restrições e
-    avaliá-lo por \emph{leave-one-dataset-out}, confrontando o roteamento
-    aprendido por meta-características com políticas fixas sob métrica de
-    \emph{regret}, incluindo a extensão ao \emph{regret}
+  \item Construir um arcabouço de decisão orientado a restrições,
+    avaliar o seu componente aprendido por \emph{leave-one-dataset-out}
+    e confrontá-lo com políticas fixas (avaliadas descritivamente) sob
+    métrica de \emph{regret}, incluindo a extensão ao \emph{regret}
     multicritério ponderado por preferências de latência;
   \item Caracterizar, por análise de complementaridade por instância
     pré-registrada, onde os \emph{foundation models} e o melhor GBDT
@@ -269,9 +271,10 @@ o recorte e a evidência que faltavam. Em ordem de apresentação:
     empate estatístico da geração anterior (8 de 10 modelos
     praticamente equivalentes ao líder no critério brando, 3 de 10 no
     corte estrito; variância de rank
-    dominada pela interação modelo$\times$conjunto) e a
+    dominada pela interação modelo$\times$conjunto somada ao ruído) e a
     liderança consistente da geração 2026 (TabFM com melhor rank nas
-    três tarefas e
+    três tarefas --- na multiclasse, sobre os 2 conjuntos em que
+    opera --- e
     melhor modelo em 13 de 18 conjuntos, \emph{zero-shot}, sem
     confirmação como separação estatística pelos testes de baixo poder,
     ao preço de
@@ -288,16 +291,19 @@ o recorte e a evidência que faltavam. Em ordem de apresentação:
     se sustentam (Capítulo~\ref{chap:benchmark}).
   \item \textbf{Um arcabouço de decisão avaliado, não
     apenas descrito.}
-    Três estudos submetem o fluxograma a teste --- o componente
+    Três estudos avaliam os componentes do arcabouço (o fluxograma é a
+    síntese dos três, não uma política avaliada) --- o componente
     aprendido sob \emph{leave-one-dataset-out}: o roteamento por
     meta-características
     não generaliza (taxa de acerto 0,11 contra 0,44 do \emph{baseline}
     trivial no estudo com 11 modelos; 0,72 contra 0,78 com 14); a política
     fixa ``\emph{foundation model} primeiro'' é \emph{regret}-ótima na
-    métrica primária, com \emph{regret} mediano zero na geração 2026; e o
+    métrica primária em avaliação descritiva, com \emph{regret} mediano
+    zero na geração 2026; e o
     experimento E2 localiza o ponto de inversão (basta deslocar 10 a 20\%
-    do peso da acurácia para a latência, na normalização por postos
-    adotada, para a recomendação virar),
+    do peso da acurácia para a latência --- pela mediana do
+    \emph{regret}, na normalização por postos
+    adotada --- para a recomendação virar),
     justificando quantitativamente a arquitetura do fluxograma
     (Capítulo~\ref{chap:framework}).
   \item \textbf{A destilação distribucional de foundation models
