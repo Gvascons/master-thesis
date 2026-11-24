@@ -247,9 +247,11 @@ def fig_flowchart14_pt():
     plt.close(fig)
 
 
-def fig_flowchart14():
-    """Updated practitioner flowchart: the validated 4-constraint framework
-    at 14 models (AI-1 section 5.3), replacing the pre-2026 @11 version."""
+def fig_flowchart14(ref="AI-2", out="decision_flowchart_14"):
+    """Updated practitioner flowchart: the evaluated 4-constraint framework
+    at 14 models (AI-1 section 5.3), replacing the pre-2026 @11 version.
+    ref: label for the distillation cross-reference ("AI-2" for the paper,
+    "Ch. 7" for the EN dissertation, saved as decision_flowchart_14_en)."""
     fig, ax = plt.subplots(figsize=(12, 8.5))
     ax.axis("off")
 
@@ -269,7 +271,8 @@ def fig_flowchart14():
                    "(FMs cost 4–5 orders of magnitude more per row)")
     arrow(0.5, 0.93, 0.5, 0.87)
     box(0.13, 0.66, "GBDT family\n(XGBoost / LightGBM / CatBoost)\n"
-                    "distillation can recover part\nof the FM edge (AI-2)",
+                    "in distributional regression, distillation\n"
+                    f"recovers part of the TabPFN edge ({ref})",
         "#fde")
     arrow(0.36, 0.80, 0.17, 0.71, "yes")
     box(0.5, 0.62, "2. Architectural limits hit?\n"
@@ -283,11 +286,12 @@ def fig_flowchart14():
     arrow(0.36, 0.40, 0.17, 0.30, "yes")
     box(0.5, 0.18, "4. No active constraint → FOUNDATION MODEL FIRST\n"
                    "TabPFN (mature) · TabFM (frontier, v1.0.1 caveats)\n"
-                   "median normalized regret 0.000 @14 models (LODO)",
+                   "median normalized regret 0.000 @14 models (descriptive;\n"
+                   "executable always-TabFM: 0.000 median, 0.080 mean)",
         "#efe")
     arrow(0.5, 0.37, 0.5, 0.25, "no")
     ax.set_ylim(0.08, 1.0)
-    save(fig, "decision_flowchart_14")
+    save(fig, out)
     plt.close(fig)
 
 
@@ -298,6 +302,7 @@ def main():
     fig_pareto(test_df)
     fig_learning_curves()
     fig_flowchart14()
+    fig_flowchart14(ref="Ch. 7", out="decision_flowchart_14_en")
     fig_flowchart14_pt()
 
 

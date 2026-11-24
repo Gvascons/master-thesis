@@ -85,26 +85,26 @@ Source: \texttt{configs/\allowbreak datasets.\allowbreak yaml}.}
 \toprule
 Dataset & Task & OpenML ID & $n$ & $d$ & Classes & Attributes \\
 \midrule
-adult                   & binary & 1590  & 49\,000  & 14 & 2 & mixed \\
-amazon\_employee        & binary & 4135  & 33\,000  & 9  & 2 & categorical \\
-bank\_marketing         & binary & 1461  & 45\,000  & 16 & 2 & mixed \\
-cardiovascular\_disease & binary & 45547 & 70\,000  & 11 & 2 & mixed \\
-credit\_g               & binary & 31    & 1\,000   & 20 & 2 & mixed \\
-give\_me\_some\_credit  & binary & 46929 & 150\,000 & 10 & 2 & numeric \\
-higgs                   & binary & 23512 & 98\,000  & 28 & 2 & numeric \\
-magictelescope          & binary & 44125 & 13\,000  & 10 & 2 & numeric \\
-phoneme                 & binary & 1489  & 5\,400   & 5  & 2 & numeric \\
-telco\_customer\_churn  & binary & 42178 & 7\,000   & 19 & 2 & mixed \\
+adult                   & binary & 1590  & 49{,}000  & 14 & 2 & mixed \\
+amazon\_employee        & binary & 4135  & 33{,}000  & 9  & 2 & categorical \\
+bank\_marketing         & binary & 1461  & 45{,}000  & 16 & 2 & mixed \\
+cardiovascular\_disease & binary & 45547 & 70{,}000  & 11 & 2 & mixed \\
+credit\_g               & binary & 31    & 1{,}000   & 20 & 2 & mixed \\
+give\_me\_some\_credit  & binary & 46929 & 150{,}000 & 10 & 2 & numeric \\
+higgs                   & binary & 23512 & 98{,}000  & 28 & 2 & numeric \\
+magictelescope          & binary & 44125 & 13{,}000  & 10 & 2 & numeric \\
+phoneme                 & binary & 1489  & 5{,}400   & 5  & 2 & numeric \\
+telco\_customer\_churn  & binary & 42178 & 7{,}000   & 19 & 2 & mixed \\
 \midrule
-covertype               & multiclass & 1596  & 581\,000 & 54 & 7   & numeric \\
-helena                  & multiclass & 41169 & 65\,000  & 27 & 100 & numeric \\
-jannis                  & multiclass & 41168 & 84\,000  & 54 & 4   & numeric \\
+covertype               & multiclass & 1596  & 581{,}000 & 54 & 7   & numeric \\
+helena                  & multiclass & 41169 & 65{,}000  & 27 & 100 & numeric \\
+jannis                  & multiclass & 41168 & 84{,}000  & 54 & 4   & numeric \\
 \midrule
-california\_housing$^{\dagger}$ & regression & 44090 & 21\,000  & 8  & -- & numeric \\
-kin8nm                  & regression & 44980 & 8\,192   & 8  & -- & numeric \\
-online\_news$^{\ddagger}$ & regression & 44064 & 40\,000  & 59 & -- & mixed \\
-wine\_quality           & regression & 287   & 6\,500   & 11 & -- & numeric \\
-year\_prediction        & regression & 44027 & 515\,000 & 90 & -- & numeric \\
+california\_housing$^{\dagger}$ & regression & 44090 & 21{,}000  & 8  & -- & numeric \\
+kin8nm                  & regression & 44980 & 8{,}192   & 8  & -- & numeric \\
+online\_news$^{\ddagger}$ & regression & 44064 & 40{,}000  & 59 & -- & mixed \\
+wine\_quality           & regression & 287   & 6{,}500   & 11 & -- & numeric \\
+year\_prediction        & regression & 44027 & 515{,}000 & 90 & -- & numeric \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -275,13 +275,13 @@ Three composition decisions deserve explicit justification:
     the training set via in-context learning
     (Chapter~\ref{chap:fundamentacao}). This asymmetry is deliberate
     --- the zero-shot regime is precisely the paradigmatic claim
-    under test, and its inference parameters (an 8-member inference
-    ensemble --- TabPFN's default, mirrored in TabFM, whose library
-    default is 32, for comparability and cost; a 50{,}000-sample
-    context cap per member in both models, via an ensemble of
-    subsamples --- external, with 4 members, in TabPFN; internal to
-    the library in TabFM) are fixed policies, not quantities tuned
-    to our data.
+    under test, and its inference parameters are fixed policies, not
+    quantities tuned to our data: an 8-member inference ensemble
+    (TabPFN's default, mirrored in TabFM for comparability and cost,
+    although TabFM's library default is 32) and a 50{,}000-sample
+    context cap per member in both models, enforced by an external
+    ensemble of 4 subsamples in TabPFN and internally by the library
+    in TabFM.
 \end{itemize}
 
 Both foundation models have declared architectural limits, from which
@@ -315,7 +315,9 @@ external folds with the hyperparameters fixed.}
 \begin{itemize}
   \item \textbf{Untouched final hold-out --- why.} 20\% of each
     dataset is split off \emph{before} any cross-validation
-    (stratified in classification; fixed seed 42). Every final
+    (stratified in classification; fixed seed 42); the remaining
+    80\% (the development partition, or \emph{pool}) feeds all
+    selection. Every final
     result reported comes exclusively from that set. The common
     alternative --- reporting the mean of the external folds --- is
     defensible, but the prior hold-out offers a stronger guarantee:
@@ -366,13 +368,13 @@ external folds with the hyperparameters fixed.}
     with shuffling. Under imbalance of up to 16:1, non-stratified
     partitions can leave folds almost without the minority class.
   \item \textbf{Optimization budgets 100/25 --- why the asymmetry.}
-    The search uses Optuna with the TPE sampler and MedianPruner
+    The search uses Optuna with the Tree-structured Parzen Estimator
+    (TPE) sampler and MedianPruner
     \citep{akiba2019}: 100 trials for gradient boosting and 25 for
     deep learning. The nominal asymmetry \emph{attenuates} the cost
     disparity: the design premise estimated a deep-learning trial at
     about 4$\times$ a GBDT trial, and assumed that 25 TPE trials
-    (Optuna's Tree-structured Parzen Estimator sampler
-    \citep{akiba2019}) would suffice for most of the landscape ---
+    would suffice for most of the landscape ---
     our own budget premise, assessed \emph{a posteriori} through the
     winning configurations and the across-seed stability of
     Appendix~\ref{app:hp-escolhidos}, not a claim from the
@@ -410,7 +412,7 @@ external folds with the hyperparameters fixed.}
     being confounded with differences of architecture. Single
     exception: RealMLP keeps the schedule of the \texttt{pytabkit}
     package (256 epochs, additive patience), because the package's
-    tuned defaults are the very object the model claims to test.
+    tuned defaults are themselves the object of the model's claim.
   \item \textbf{Isolation and operational robustness.} Each
     experiment runs in an isolated subprocess; out-of-memory errors
     trigger automatic batch-size reduction and, at the limit,
@@ -536,8 +538,8 @@ The tests employed --- Friedman, Nemenyi, Wilcoxon, the Bayesian
 analysis with ROPE --- were presented in depth in
 Chapter~\ref{chap:fundamentacao}; this section declares \emph{the
 application protocol}: which tests, in which order, with which
-corrections, and with which sensitivity analyses. To it is added, at
-the instance level, McNemar's exact test on the discordant pairs
+corrections, and with which sensitivity analyses. At the instance
+level, the protocol adds McNemar's exact test on the discordant pairs
 \citep{mcnemar1947} --- the instrument of the pre-registered
 complementarity analysis that Chapter~\ref{chap:benchmark} reports
 (Section~\ref{sec:cap5-ato5}). The chain follows the canonical
@@ -594,7 +596,7 @@ Chapter~\ref{chap:benchmark} reports both criteria; the record is in
     than one percentage point are treated as practically irrelevant.
     The value is a declared convention, not a constant of the field
     --- which is why the analysis is repeated with sensitivity at
-    $\{0.005;\, 0.01;\, 0.02\}$, reported in full in
+    $\{0.005, 0.01, 0.02\}$, reported in full in
     Chapter~\ref{chap:benchmark}.
   \item \textbf{Variance decomposition ($\eta^2$):} partition of the
     rank variance into a between-family share, a share between
@@ -715,7 +717,7 @@ Reproducibility rests on six mechanisms:
 \section{Scientific-conduct contract}
 \label{sec:met-conduta}
 
-The work adopts an explicit conduct contract, signed into the
+The work adopts an explicit conduct contract, set out in the
 research program's master document before the experimental phase and
 binding for all activities:
 
@@ -756,7 +758,7 @@ exclusion, a correction) needs grounding.
 
 Following the good practice of declaring the design's weaknesses
 \emph{before} presenting any result, this section enumerates the
-known limitations and the decisions taken in face of them.
+known limitations and the decisions taken in response to them.
 
 \begin{itemize}
   \item \textbf{Statistical power limited by small $N$.} With 10/3/5
@@ -864,8 +866,8 @@ known limitations and the decisions taken in face of them.
     averages over 2 datasets (Section~\ref{sec:met-estatistica}).
     The alternative --- removing \texttt{helena} from the benchmark
     --- would hide precisely the kind of architectural restriction
-    that a study of practical decision-making should expose. One
-    precision of terms: it is a \emph{native limit}, not an
+    that a study of practical decision-making should expose. To be
+    precise, it is a \emph{native limit}, not an
     impossibility --- TabPFN-2.5 offers an official
     \texttt{ManyClassClassifier} that circumvents the cap by
     decomposition --- and the exclusion preserves the comparison of
