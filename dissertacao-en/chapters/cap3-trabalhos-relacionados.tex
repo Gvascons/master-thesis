@@ -1,4 +1,578 @@
-%% STUB — translation pending
+%% ============================================================================
+%% Chapter 3 — Related Work (English version, adapted from the frozen
+%% Portuguese chapter of 2026-11-24; same labels).
+%% ============================================================================
+
 \chapter{Related Work}
 \label{chap:related}
-[Translation pending.]
+
+This chapter positions the dissertation in the literature, walking
+through six axes: the tabular benchmarks that consolidated the
+comparison between GBDTs and deep learning, the evaluation of tabular
+foundation models, the Kolmogorov--Arnold family applied to tabular
+data, the acceleration and serving strategies for these models, the
+distillation of tabular foundation models, and algorithm selection by
+meta-learning. Each axis closes with the specific gap this work
+occupies, and the chapter ends with a synthesis table linking each gap
+to the chapter that attacks it. Since the field advances in cycles of
+a few months, every characterization of third-party work comes from
+dated online checks, and the scope qualifiers of the cited works
+(``classification only'', ``no public methodology'', ``contemporary
+with this work'') are deliberately preserved.
+
+A note on method before the content. The literature covered by this
+chapter moves in cycles of roughly three months --- TabPFN-2.5 in
+November 2025, Pocket FM in May 2026, TabFM in June 2026, the
+contemporary work of \citet{jeong2026} in October 2026 --- and a good
+share of the central works has not yet undergone peer review. Any
+claim of the form ``no work does X'' is therefore perishable. This
+project's scientific-conduct contract (Chapter~\ref{chap:metodologia})
+requires novelty claims to be supported by dated online checks; this
+study's searches span July to November 2026, and the complete record,
+with dates and verdicts, is in Appendix~\ref{app:suplementares}. The
+gaps stated below should be read as ``open as far as we checked, on
+the declared dates'' --- never as timeless certainties.
+
+\section{Tabular benchmarks and the GBDT vs.\ deep learning controversy}
+\label{sec:rel-benchmarks}
+
+The modern protocol for comparing gradient boosting and deep learning
+on tabular data was established by two works. \citet{grinsztajn2022}
+gave quantitative form to the saying ``trees win on tables'',
+identifying the inductive biases that explain the advantage: the
+irregularity of tabular target functions and the presence of
+uninformative attributes favor tree-based methods over neural
+networks. \citet{mcelfresh2023} nuanced the conclusion at a larger
+scale of datasets: networks win with non-trivial frequency, and
+dataset meta-features partially predict when that happens. Before
+both, \citet{gorishniy2021} had standardized the comparison protocols
+for tabular deep learning --- reference architectures, equalized
+tuning, multiple seeds. More recently, TabArena \citep{tabarena2025}
+maintains a ``living'' benchmark with dozens of datasets and a
+continuously updated ranking as new models are released. The same
+consolidation wave produced three resources we record for their
+complementarity with our framing: the TALENT toolbox
+\citep{talent2024} and its associated large study \citep{ye2024closer},
+which standardize the evaluation of deep tabular methods at large
+dataset scale; TabReD \citep{tabred2024}, which examines gaps of the
+academic deep-tabular benchmarks --- showing that conclusions change
+when the evaluation changes, the lesson convergent with ours; and the
+result that even a nearest-neighbor baseline, revisited with modern
+tooling (SGD, deep representations, stochastic neighbor sampling),
+becomes competitive again \citep{modernnca2025} --- a reminder that
+strong baselines are a precondition of any fair comparison.
+
+Parallel to the benchmarks runs the literature on \emph{how} to
+compare classifiers across multiple datasets. The canonical
+frequentist protocol --- Friedman with corrected post-hoc, operating
+on datasets and never on folds --- was fixed by \citet{demsar2006};
+\citet{benavoli2017} argued, a decade later, that null-hypothesis
+tests answer the wrong question (``is there a difference?'' instead
+of ``does the difference matter?'') and proposed the Bayesian
+alternative with a region of practical equivalence (ROPE). The
+reference tabular benchmarks adopt the first framework; the Bayesian
+layer, though available for nearly a decade, rarely appears in them
+--- and the sensitivity of the conclusions to the ROPE radius is
+almost never analyzed.
+
+The two narratives --- ``trees win'' \citep{grinsztajn2022} and
+``modern deep learning has caught up'' \citep{realmlp2024,tabm2025}
+--- are often treated as contradictory. Our reading, supported by
+the learning curves of Chapter~\ref{chap:benchmark}, is that both
+are claims conditional on sample size and task structure, true in
+different regimes: the leadership crossover between families is
+real, dataset-specific, and measurable when the training size is
+swept directly. The arrival of foundation models displaces the
+entire controversy: the new axis is not tree vs.\ network, but
+pre-trained vs.\ trained from scratch. It is worth recording that
+the two reference benchmarks predate the second generation of
+tabular foundation models --- not a methodological defect, but
+dating: neither could have included models that did not yet exist.
+
+The gap we occupy on this axis is not one of breadth: our benchmark
+does not compete there (18 datasets is less than TabArena covers);
+it differs on three fronts that remained open. First, protocol depth
+per cell: hyperparameter selection separated from measurement, with
+uniform tuning per family, and frequentist \emph{and} Bayesian
+inference --- the latter with the practical-equivalence layer via
+ROPE \citep{benavoli2017} and a sensitivity analysis of the radius
+--- on the same cells. Second, multi-criteria evaluation: inference
+latency, training and tuning cost, robustness and interpretability
+measured under the same protocol, not only accuracy. Third, verified
+currency: simultaneous inclusion of the 2026 generation of
+foundation models (TabFM, measured weeks after release) and of the
+Kolmogorov--Arnold family, both absent from the neutral benchmarks
+at the dates of our checks (record in
+Appendix~\ref{app:suplementares}). Two cast exclusions are
+disclosed: the study compares individual models, not
+model-combination AutoML systems such as AutoGluon
+\citep{erickson2020}, whose ensembling layer answers a different
+question from ours; and the releases after the version freeze
+(TabICLv2, TabPFN-3/3.5) are excluded by dating, not by judgment.
+Chapter~\ref{chap:benchmark} executes this design.
+
+\section{Tabular foundation models and their evaluation}
+\label{sec:rel-tfm}
+
+TabPFN v2 \citep{hollmann2025} and its v2.5 update
+\citep{priorlabs2025} established in-context learning with
+prior-fitted networks for tabular data: a network pre-trained on
+synthetic datasets conditions on the training set as a prompt at
+prediction time, with no gradient updates on the target task. The
+line evolved quickly --- TabPFN-3 and, more recently, TabPFN-3.5
+\citep{tabpfn3-2026} --- and inspired variants exploring scale and
+speed: TabICL \citep{tabicl2025} extends the paradigm to large
+datasets; TabFlex \citep{tabflex2025} uses linear attention to scale
+to millions of rows; MotherNet \citep{mothernet2023} amortizes the
+fitting into a hypernetwork that emits the weights of an MLP in a
+single forward pass.
+
+TabFM \citep{tabfm2026} is an independent implementation of the same
+paradigm by Google Research, with a hybrid architecture of attention
+over columns and row compression, released with weights in June
+2026. At the date of our integration (July 2026), there was no
+paper: the citable sources were the official blog, the model card
+and the repository. Since late September 2026 there is an official
+technical report \citep{kong2026}, still without peer review ---
+which, among other things, confirms in a primary source the scalar
+regression head we had verified architecturally (a fact that matters
+to Chapter~\ref{chap:destilacao}). The framing we adopt throughout
+the dissertation is that of an \emph{inter-laboratory replication}
+of the PFN/ICL paradigm --- Google vs.\ Prior Labs --- not that of a
+second paradigm.
+
+As for how these models have been evaluated, TabFM's public numbers
+at release time came from the proponent itself (Google's evaluation
+on TabArena), with only partial independent verification ---
+standard practice in industrial releases, but one that leaves the
+community without neutral evidence precisely in the period when
+adoption decisions are made. On the TabPFN line, the independent
+analysis of \citet{ye2025tabpfnv2} dissects the strengths of
+TabPFN~v2 and capacity extensions --- an in-depth examination of a
+single model, distinct from the neutral comparison between families
+that was missing. In parallel, a recent line evaluates tabular
+foundation models directly as conditional density estimators in
+regression, with proper scoring rules
+\citep{izbicki2026,landsgesell2026} --- distributional evaluation of
+the \emph{teacher}, without any distillation or serving component.
+That line consolidated over 2026: ScoringBench
+\citep{scoringbench2026} evaluates foundation models with proper
+scoring rules on 101 regression datasets and concludes that the
+point and probabilistic rankings diverge --- independent
+corroboration of the distinction that structures
+Chapter~\ref{chap:destilacao}; and a large-scale astronomical
+application \citep{photoz2026} uses these models as probabilistic
+regressors and explicitly points out that full-catalog deployment
+may require distillation --- third-party demand for the
+intersection this work occupies.
+
+As far as we checked, there was no neutral TabPFN~$\times$~TabFM
+comparison under an identical protocol --- same partitions, same
+preprocessing, same context-subsampling policy. The demand is not
+bureaucratic: in a field where models receive monthly updates and
+published results mix versions, a comparison is only interpretable
+with pinned versions and mirrored policies (in our case, the same
+50-thousand-row context cap and the same structural exclusion of
+the 100-class dataset for both models).
+Chapter~\ref{chap:benchmark} provides that comparison, framed as an
+inter-laboratory replication of the paradigm; and the
+distributional evaluation of the \emph{teachers} --- complementary
+to the conditional-density benchmarks cited --- reappears in
+Chapter~\ref{chap:destilacao} as input to the distillation, an axis
+none of the evaluation works covers.
+
+\section{The Kolmogorov--Arnold family on tabular data}
+\label{sec:rel-kan}
+
+On the proponents' side, Kolmogorov--Arnold networks (KAN)
+\citep{kan2024} invert the MLP: learnable univariate activation
+functions (B-splines) live on the edges, and the nodes merely sum
+--- an inductive bias of smooth additivity. The work had a
+high-impact reception (an oral at ICLR 2025), but its original
+evidence concentrates on symbolic regression and scientific
+problems, not heterogeneous tabular data. The most direct tabular
+extension is TabKAN \citep{tabkan2025}, a modular framework of KAN
+variants whose best reported configuration (ChebyKAN) claims to beat
+XGBoost and tabular transformers on ten datasets --- average AUC of
+0.857 against XGBoost's 0.814 on the eight binary ones. There is
+also TabKANet \citep{tabkanet2024}, which uses KAN layers only as a
+numeric-embedding module inside a transformer.
+
+The critical literature points in the opposite direction from the
+proponents. \citet{kancritical2024} compared KAN and MLP controlling
+either the number of parameters or the FLOPs, and found the MLP
+winning on six of eight machine-learning tasks, with KAN dominating
+only in symbolic regression. \citet{poeta2024} conducted the first
+independent KAN-vs-MLP benchmark on tabular data, with results
+favorable to KAN in accuracy but at higher computational cost; it
+is a pioneering study and its choices are defensible for a first
+investigation, but two scope limitations matter here --- there are
+no GBDT baselines and training uses only ten epochs --- so the
+study does not answer the question the practitioner asks (``does
+KAN compete with XGBoost?''). As for TabKAN, three limitations of
+the evidence matter here: six of the ten datasets have fewer than 8
+thousand samples, there is no regression, and the comparison
+XGBoost appears undertuned (an AUC of 0.726 on \texttt{credit\_g},
+when our own tuning obtains ${\approx}0.77$ on the same dataset ---
+0.767 on the hold-out, 0.786 in cross-validation).
+
+This study's claim is therefore that of the \emph{first test of the
+family against the full grid of families under a multi-criteria
+protocol}: \citet{poeta2024} is earlier in the isolated comparison,
+and the claim was scoped around it (the dated record of the
+correction is in Appendix~\ref{app:suplementares}).
+
+What remained open --- and remained open, outside this work, up to
+the last recorded search --- is the test of the Kolmogorov--Arnold
+family against the full GBDT/DL/foundation-model slate in a
+uniform-protocol multi-criteria benchmark: \citet{poeta2024} have
+no GBDTs, \citet{kancritical2024} have neither GBDTs nor foundation
+models, and neither measures cost axes. No large-scale neutral
+tabular benchmark included KANs at the checked dates.
+Chapter~\ref{chap:benchmark} provides exactly that test, with
+sanity checks against the proponents' published values; the outcome
+is unfavorable to the strong claims --- KAN and TabKAN finish in
+the bottom third on all three tasks, with TabKAN behind TabNet
+itself in multiclass and regression --- in line with the critical
+literature and consistent with the hypothesis of undertuned
+baselines in the original papers, with the caveat, disclosed in
+Chapter~\ref{chap:metodologia}, that TabKAN is our own
+reimplementation (AdamW with mini-batches in place of the original
+L-BFGS) and KAN had its normalization and grid range adapted: the
+conclusion holds for this grid's protocol.
+
+\section{Acceleration and serving of tabular foundation models}
+\label{sec:rel-serving}
+
+The main operational weakness of tabular foundation models is
+inference cost: every prediction re-conditions on the entire
+training set. A \emph{distillation-free} acceleration literature
+grew rapidly in 2026, and it is the direct competitor of the
+strategy we study in Chapter~\ref{chap:destilacao}.
+
+TACO \citep{taco2026} learns, end to end, a compression of the
+in-context set to about 1\% of its original size, with inference up
+to 94$\times$ faster. CRUMB \citep{crumb2026} selects a compact
+context by distributional matching (MMD), without retraining the
+model --- it is the representative method of the ``compress the
+context'' arm that we use as a conceptual reference (our frontier
+measures the simplest variant, by subsampling). In the same general
+direction, there are proposals for memory-efficient tabular
+foundation models \citep{memeff2026}. The arm kept populating at a
+monthly pace: in October 2026 alone appeared the replacement of up
+to 96\% of the transformer's blocks by a closed-form affine
+translator \citep{shallow2026}, activation alignment to operate
+with reduced contexts \citep{actalign2026} and the \emph{Fast}
+variant of TabPFN-3.5 \citep{tabpfn35tr2026} --- all, as far as we
+checked, evaluated only on classification or point prediction: the
+TabPFN-3.5 report evaluates distributionally (on ScoringBench) only
+the full model, not the \emph{Fast} variant --- and distributional
+evaluation \emph{of the teacher} is still not distillation. This
+work's distributional gap is preserved.
+
+In the direction of amortization and transfer, MotherNet
+\citep{mothernet2023} amortizes the fitting into a hypernetwork
+that emits an MLP's weights in a single forward pass --- it
+eliminates the re-conditioning cost by trading it for a generator
+network; MotherTree \citep{mothertree2026} takes the same idea to a
+symbolic student, emitting a standalone decision tree --- fast
+predictors with neither teacher nor distillation, conceptual
+neighbors that attest to the demand for the microsecond regime.
+TL-ANDI \citep{tlandi2026} combines distilled labels and anchoring
+for transfer to restricted-context tasks --- a goal orthogonal to
+ours (it produces neither fast students nor touches the
+distributional axis), cited for completeness of the map.
+
+FP8 quantization of attention \citep{kubler2026} is a fourth
+emerging serving lever, which we do not measure in this work. And
+post-hoc conformal calibration of the \emph{teacher} itself
+\citep{park2026} is the complementary route to calibrated intervals
+without any fast student --- one pays the foundation model's
+latency in exchange for coverage guarantees.
+
+Finally, there is plain engineering. Truncating the context,
+shrinking the inference ensemble and caching the processed context
+are current practice --- and, as far as we checked, folklore: the
+works above rarely compare their proposals against these cheap
+levers, and the cheap levers are almost never measured against each
+other.
+
+The gap here is one of cross-comparison: each cited work evaluates
+its own strategy against the full \emph{teacher}; none measures the
+strategies \emph{against each other} --- distill vs.\ compress the
+context vs.\ shrink the ensemble --- on the same hold-out sets,
+under the same protocol and with the same cost axes. That crossed
+frontier is one of the contributions of
+Chapter~\ref{chap:destilacao}, which executes it and extracts two
+findings of its own: ensemble shrinking is underrated (one member
+approximates eight at a seventh of the latency) and the last
+doubling of context is disproportionately expensive on 16~GB GPUs.
+
+\section{Distillation of tabular foundation models}
+\label{sec:rel-destilacao}
+
+The mechanics of training a small model on the outputs of a large
+one is established literature: model compression via soft labels
+and transfer sets goes back to \citet{bucila2006}, the modern
+formulation with temperature is \citet{hinton2015}'s, and the
+transposition to trees has its own lineage --- \citet{breiman1996},
+the born-again trees of \citet{vidal2020} and the distillation into
+soft decision trees of \citet{frosst2017}. It is from this
+mechanics that we start; what changes with foundation models is the
+\emph{teacher} (an in-context-learning model, whose cost is at
+inference) and, in our case, the target (quantile curves, not
+labels).
+
+That mechanics, it is worth recording, is enjoying a renaissance
+outside the tabular world: distillation is a central piece of the
+post-training recipes of contemporary large language models, in
+three variants --- the classical \emph{off-policy} one, from a
+larger teacher to a smaller student, whether through distributions
+(soft labels, as in the pre-training of the Gemma family,
+\citealp{gemma2025}) or through generated text (hard labels, as in
+the distilled models of DeepSeek-R1, \citealp{deepseek2025}); the
+\emph{on-policy} one, in which the teacher corrects the student's
+own generations \citep{agarwal2024}; and self-distillation, in
+which the teacher is the model itself in a privileged
+condition\footnote{A practitioner's overview of these three
+variants in the frontier models of 2026 is at
+\url{https://huggingface.co/blog/sergiopaniego/distillation-2026}
+(accessed 2026-11-05).}. This dissertation's contribution is an
+instance of the first variant --- expensive teacher, cheap student,
+soft labels --- transposed to the tabular world with one difference
+of target: what is transferred is not a distribution over tokens or
+classes, but the predictive distribution of a regression,
+represented by quantiles. None of these language works touches
+tabular data; the parallel serves as context, not competition.
+
+The work that establishes the distillation of tabular foundation
+models is Pocket FM \citep{pocketfm2026}:
+XGBoost/CatBoost/LightGBM/MLP students trained on soft labels from
+multiple teachers (TabICLv2, TabPFNv2.6, LimiX, Orion-MSP) over 153
+datasets, retaining 96.5\% of the teacher's AUC with speedups of
+38--860$\times$. Two methodological contributions of Pocket FM
+matter directly to this dissertation: the demonstration that
+stratified \emph{out-of-fold} (OOF) labeling is necessary --- an
+in-context-learning teacher that scores its own training set
+produces nearly deterministic labels, collapsing the soft targets
+--- and the analysis of when distillation works or fails (gains
+concentrated at low dimensionality). The clinical sister paper
+\citep{pocketfmhealth2026} extends the analysis to 19 health
+datasets, adding calibration and fairness, and reports that
+multiple teachers do not beat the best single teacher. Both works
+are \textbf{classification only}. We adopt Pocket FM's OOF labeling
+as a basis --- reinventing it would be worse, ignoring it would be
+leakage --- and we delimit our contribution on that specific axis
+to what OOF protects \emph{in distributional regression}:
+calibration, not accuracy (Chapter~\ref{chap:destilacao}).
+
+Around this line orbit variants and neighbors. GEAR \citep{gear2026}
+adds a two-stage variant with synthetic expansion of the transfer
+set --- classification only; in the same family, \citet{dey2026}
+distill a TabPFN teacher into a compact feed-forward network
+(${\sim}6$~thousand times smaller) for credit decisioning,
+evaluated on accuracy and AUC --- also classification only.
+TabDistill \citep{tabdistill2025} distills transformers into tiny
+MLPs in the few-shot classification regime (and occupies the name,
+which is why we do not use it). Another line distills foundation
+models into generalized additive models (GAMs) for
+interpretability, not speed \citep{tfmgam2026}. And Prior Labs
+sells, alongside TabPFN-2.5, a closed distillation engine
+\citep{priorlabs2025}: proprietary, with accuracy--latency
+comparisons in the technical report but \textbf{no public
+methodology or code} --- evidence of industrial demand for the
+strategy, not scientific evidence about it.
+
+\emph{Outside the tabular world, distilling distributions is an
+established line.} The Bayesian posterior predictive has been
+distilled into a single network since \citet{korattikara2015}; the
+distribution of ensembles is distilled in classification
+\citep{malinin2020end2} and in regression via a Normal--Wishart
+parameterization \citep{malinin2020rpn}; uncertainty distillation
+for single-pass inference is active in vision \citep{shen2021};
+and a recent work distills the uncertainty of a deep ensemble in
+tabular regression evaluating CRPS and coverage
+\citep{park2025uncertainty}. All that lineage, however,
+presupposes a teacher with accessible weights or members, a
+parametric (Gaussian, Dirichlet, Normal--Wishart) or sample-based
+representation, and a neural student. In the pre-TFM tabular
+world, distillation into boosted trees covers regression only at
+the point level \citep{fakoor2020}. None of these works has a
+black-box in-context-learning teacher, a non-parametric quantile
+target or a multi-quantile GBDT student --- the cell this work
+occupies.
+
+\emph{The distributional pieces exist --- separately.} No isolated
+ingredient of distributional distillation is new, and the gap lies
+precisely in the composition. Quantile regression with the pinball
+loss --- the asymmetric loss whose minimizer is the $\tau$ quantile
+--- is classical \citep{koenker1978}; the CRPS as a proper scoring
+rule and its standard estimator on a quantile grid are standard in
+probabilistic forecasting \citep{gneiting2007,gneiting2011}; and
+XGBoost \citep{chen2016} supports, since version 2.0, native
+multi-quantile objectives --- which makes a quantile GBDT a natural
+student body for receiving quantile curves. On the \emph{teacher}
+side, TabPFN v2.5 exposes arbitrary quantiles of the predictive
+distribution through its native API. The pieces were all on the
+table; no academic work had connected them in a distillation
+protocol evaluated by CRPS and coverage (and no public repository,
+in the distributional framing --- the September 2026 one that
+distills TabFM into XGBoost stays at the point
+level\footnote{TabFMKD,
+\url{https://github.com/gegen07/TabFMKD} (last commit 2026-09-14;
+accessed 2026-11-23): OOF soft labels for classification and a
+convex teacher--label combination for point regression.}).
+
+Contemporary with this work (2026-10-01, when our experiments were
+already concluded), \citet{jeong2026} extend distillation to
+\textbf{point targets} of regression: squared-error transfer of
+the teacher's means, evaluated only on RMSE, with stronger
+teachers (TabPFN~v3 and TabICLv2) and a different protocol,
+reporting point gains. Chapter~\ref{chap:destilacao} discusses the
+reconciliation between those gains and our scoped negative result
+--- the plausible moderator is the low-data regime, which our
+training-size sweep scans directly, compounded by the difference
+in teacher and protocol. The positioning point remains:
+\citet{jeong2026} touch neither quantiles, nor CRPS, nor
+calibration, nor a strategy frontier.
+
+In the searches conducted between July and November 2026 (protocol,
+expressions and dates in Appendix~\ref{app:suplementares}), we
+found no public work covering, \textbf{for tabular foundation
+models}: (i) \emph{distributional} distillation in regression ---
+transfer of quantile curves, evaluated by CRPS and interval
+coverage; (ii) a frontier between serving strategies measured on
+the same hold-outs. A third point is narrower: TabFM already
+appears as a teacher in the September 2026 public repository cited
+above, restricted to classification and point regression; what
+Chapter~\ref{chap:destilacao} adds is the test of TabFM as a
+\emph{distributional} teacher, and the result is an architectural
+negative --- TabFM's regression head is point-valued (confirmed by
+the official technical report, \citealp{kong2026}), and the spread
+of its ensemble is measurably useless as a predictive
+distribution. Finally, we record what we do \emph{not} claim: the
+basic formulation ``distill a tabular foundation model into a fast
+student'' belongs to Pocket FM, and under no circumstances do we
+claim the first distillation of tabular foundation models.
+
+\section{Algorithm selection and meta-learning}
+\label{sec:rel-selecao}
+
+Recommending an algorithm from meta-features of the problem goes
+back to the algorithm selection problem of \citet{rice1976} and has
+a long meta-learning literature. The result of
+\citet{mcelfresh2023} --- that meta-features partially predict when
+networks beat trees --- is the modern version of that promise. The
+historical experience, however, is of fragility outside large
+dataset collections: with few observations, learned routers
+overfit. Independent contemporary evidence points the same way in
+the foundation-model era: global meta-feature approaches do not
+prove robust for explaining or selecting among models of that
+generation \citep{herre2026}.
+
+What practice lacks is not yet another recommender, but the honest
+validation of the recommender in the regime where real benchmarks
+operate: a small $N$ of datasets. With $N{=}18$, honesty demands
+explicit leave-one-dataset-out (LODO) validation --- each dataset
+predicted by a model trained on the others --- which the
+recommendation literature rarely reports in this regime. Our LODO
+analysis (Chapter~\ref{chap:framework}) shows that the
+meta-feature tree does not beat trivial baselines as a predictor
+(hit rate 0.11 against 0.44 for the majority-class baseline, in
+the 11-model study), and that the fixed policy ``foundation model
+first, deviate on constraints'' is the lowest-regret one in the
+descriptive evaluation. The resulting framework is deliberately
+oriented to verifiable constraints (\emph{constraint-driven})
+rather than learned routing --- a methodological position that
+avoids overfitting recommenders to few observations.
+
+\section{Synthesis of the gaps}
+\label{sec:rel-sintese}
+
+Table~\ref{tab:lacunas} consolidates the chapter: for each axis,
+what the literature already offers, the gap identified in the dated
+checks, and the chapter of this dissertation that attacks it. The
+table also serves as a reverse reading map --- a reader interested
+in a single contribution can start from the corresponding row.
+
+\begin{table}[htbp]
+\centering
+\caption[Map of gaps per literature axis]{Map of gaps per literature
+axis. Characterizations according to this study's dated searches,
+July to November 2026 (record in
+Appendix~\ref{app:suplementares}).}
+\label{tab:lacunas}
+\small
+\begin{tabular}{p{0.21\textwidth}p{0.30\textwidth}p{0.27\textwidth}p{0.10\textwidth}}
+\toprule
+\textbf{Axis} & \textbf{What exists} & \textbf{Gap} & \textbf{Where we attack} \\
+\midrule
+GBDT vs.\ DL benchmarks &
+Consolidated protocols \citep{grinsztajn2022,mcelfresh2023,gorishniy2021};
+living benchmark (TabArena) &
+2026 generation and KAN family absent; multi-criteria with cost
+measured under the same protocol &
+Ch.~\ref{chap:benchmark} \\
+\addlinespace
+TFM evaluation &
+Proponent's numbers (TabFM); distributional evaluation of the
+\emph{teachers} without distillation
+\citep{izbicki2026,landsgesell2026,scoringbench2026} &
+Neutral TabPFN $\times$ TabFM comparison under an identical protocol &
+Ch.~\ref{chap:benchmark} \\
+\addlinespace
+KAN family on tabular &
+Narrow independent evaluations \citep{poeta2024,kancritical2024},
+without GBDT/TFM or cost axes &
+Test against the full GBDT/DL/TFM slate under a uniform
+multi-criteria protocol &
+Ch.~\ref{chap:benchmark} \\
+\addlinespace
+TFM acceleration/serving &
+Strategies evaluated in isolation: TACO, CRUMB, MotherNet, FP8
+quantization \citep{taco2026,crumb2026,mothernet2023,kubler2026} &
+Crossed frontier distill $\times$ compress $\times$ shrink ensemble
+on the same hold-outs &
+Ch.~\ref{chap:destilacao} \\
+\addlinespace
+TFM distillation &
+Classification \citep{pocketfm2026,pocketfmhealth2026,gear2026};
+contemporary point regression \citep{jeong2026}; closed commercial
+engine \citep{priorlabs2025} &
+\emph{Distributional} regression: quantile curves, CRPS, coverage;
+role of OOF in calibration; TabFM as a \emph{distributional} teacher
+(point level already covered by a public repository) &
+Ch.~\ref{chap:destilacao} \\
+\addlinespace
+Algorithm selection &
+Meta-features since \citet{rice1976}; fragility in the TFM era
+\citep{herre2026} &
+Router tested under LODO with small $N$; constraint policy
+evaluated by regret &
+Ch.~\ref{chap:framework} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Three observations close the chapter. First, none of the gaps is a
+gap of formulation: the mechanics of distillation is classical
+(Section~\ref{sec:rel-destilacao}), the benchmark protocols are
+consolidated (Section~\ref{sec:rel-benchmarks}) --- the gaps are
+ones of \emph{measurement under a uniform protocol}, exactly the
+kind of contribution a neutral benchmark with reusable
+infrastructure can make. Second, two of the gaps were partially
+eroded during the project's execution --- \citet{poeta2024}
+anticipated the independent KAN test in a narrow scope, and
+\citet{jeong2026} reached point regression days before our delivery
+--- and both erosions are recorded with dates and explicit
+rescoping, rather than silenced; the distributional pillar and the
+strategy frontier remained unclaimed up to the last recorded
+search. Third, the table makes visible that the dissertation's
+three empirical fronts (Chapters~\ref{chap:benchmark},
+\ref{chap:framework} and~\ref{chap:destilacao}) attack gaps that
+are distinct but chained: the benchmark generates the evidence the
+decision framework organizes, and the cost inversion the benchmark
+quantifies is precisely the problem the distillation attacks. With
+the gaps mapped, Chapter~\ref{chap:metodologia} specifies the
+shared experimental protocol that attacks them, with the design's
+limitations disclosed before any result.
