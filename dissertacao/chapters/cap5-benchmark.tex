@@ -130,20 +130,17 @@ instrumento visual canônico dessa análise, no qual o eixo é o rank médio
 (menor é melhor) e cada barra horizontal conecta um grupo de modelos a
 distância menor que o CD --- portanto estatisticamente inseparável; a
 largura dessas barras é a forma visual da cautela sobre o CD largo
-discutida na Seção~\ref{sec:cap5-ato4}. O diagrama é exibido já sobre a
-grade completa de 14 modelos para evitar duplicação de figura; as
-estatísticas do Ato~I são computadas sobre a restrição aos 11, cuja ordem
-relativa o diagrama preserva --- exceto por um trio adjacente
-estatisticamente inseparável (RealMLP/SAINT/FT-Transformer, ranks a
-0,1--0,3 um do outro), que se reordena entre as duas grades.
+que a Seção~\ref{sec:cap5-ato4} retoma na grade completa.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.9\linewidth]{images/cd_diagram_binary.pdf}
-\caption[Diagrama de distância crítica (binária)]{Diagrama de distância crítica (Nemenyi) para a classificação
-binária, grade completa de 14 modelos ($N{=}10$ conjuntos, CD $= 6{,}27$;
-rótulos internos da figura em inglês). Fonte:
-\texttt{latex/\allowbreak ai1/\allowbreak figures/\allowbreak cd\_\allowbreak diagram\_\allowbreak binary.\allowbreak pdf}.}
+\includegraphics[width=0.9\linewidth]{images/cd_diagram_binary_11.pdf}
+\caption[Diagrama de distância crítica (núcleo de 11)]{Diagrama de
+distância crítica (Nemenyi) para a classificação binária no núcleo de
+11 modelos ($N{=}10$ conjuntos, $\mathrm{CD}=4{,}77$). O que olhar: o
+TabPFN lidera o rank médio (3,2), mas a barra superior conecta do
+TabPFN ao MLP --- o post-hoc não separa o pelotão, e é por isso que a
+leitura de equivalência vem do instrumento bayesiano, não daqui.}
 \label{fig:cap5-cd}
 \end{figure}
 
@@ -257,11 +254,14 @@ linhas.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{images/heatmap_classification.pdf}
-\caption[Mapa de calor da classificação]{Mapa de calor da classificação: métrica primária por modelo
-(colunas) e conjunto (linhas); células vazias em \texttt{helena} são as
-duas exclusões estruturais (rótulos internos da figura em inglês). Fonte:
-\texttt{results/\allowbreak figures/\allowbreak heatmap\_\allowbreak classification.\allowbreak pdf}.}
+\includegraphics[width=\linewidth]{images/heatmap_classification_pt.pdf}
+\caption[Mapa de calor da classificação]{Métrica primária por modelo
+(colunas, agrupadas por família e ordenadas pelo rank médio) e
+conjunto (linhas): ROC-AUC nas binárias, log-loss nas multiclasse. A
+cor codifica o \emph{rank} do modelo dentro do conjunto (1 = melhor,
+mais escuro), de modo que a comparação válida --- dentro de cada linha
+--- é a que a cor mostra; os valores absolutos estão anotados. Os
+traços em \texttt{helena} são as duas exclusões estruturais.}
 \label{fig:cap5-heatmap}
 \end{figure}
 
@@ -365,24 +365,34 @@ Nenhum dos eixos isolados decide; o instrumento de decisão é o
 cruzamento desempenho $\times$ custo. Sobre rank médio $\times$ custo
 --- sendo o rank o instrumento primário de comparação do estudo --- o
 núcleo de 11 modelos resolve-se em uma fronteira de Pareto de
-\{TabPFN, XGBoost, LightGBM\} no eixo de custo de treino, que se estreita
+\{TabPFN, XGBoost, LightGBM\} no eixo de custo de treino (medianas
+sobre os 18 conjuntos, Tabela~\ref{tab:app-custos}: LightGBM 0,66~s,
+XGBoost 0,69~s, TabPFN 1,35~s), que se estreita
 para \{XGBoost, TabPFN\} no eixo de latência (sobre AUC média em vez de
 rank, o CatBoost também entra na fronteira --- e, no eixo de latência, o
 TabPFN sai dela); \textbf{todo o
 aprendizado profundo clássico é dominado} em ambos os cruzamentos. A
-Figura~\ref{fig:cap5-pareto} apresenta o retrato completo, já com os 14
-modelos, no plano rank binário médio $\times$ tempo mediano de treino
-(escala logarítmica; o eixo de rank é invertido, de modo que
-acima-à-esquerda é melhor); o ponto estrelado marca o Pareto-ótimo da
-grade completa (TabFM), e as comparações sobre o eixo de latência de
-inferência são as reportadas acima.
+Figura~\ref{fig:cap5-pareto} apresenta o retrato completo, já com os
+14 modelos, nos dois planos; na grade completa do painel de treino, a
+fronteira reduz-se ao próprio TabFM, que combina o melhor rank com o
+menor tempo mediano de treino.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.92\linewidth]{images/pareto_binary.pdf}
-\caption[Fronteira de Pareto: rank $\times$ tempo de treino]{Fronteira de Pareto: rank binário médio \emph{versus} tempo
-mediano de treino, grade completa de 14 modelos (rótulos internos da
-figura em inglês). Fonte: \texttt{latex/\allowbreak ai1/\allowbreak figures/\allowbreak pareto\_\allowbreak binary.\allowbreak pdf}.}
+\includegraphics[width=\linewidth]{images/pareto_binary_pt.pdf}
+\caption[Fronteiras de Pareto: rank $\times$ custo]{Fronteiras de
+Pareto no plano rank binário médio $\times$ custo: (a) tempo mediano
+de treino sobre os 18 conjuntos (a mesma base da
+Tabela~\ref{tab:app-custos}); (b) latência de inferência no
+\texttt{adult}. O eixo de rank é invertido (acima-à-esquerda é
+melhor); estrelas marcam a fronteira da grade completa de 14, e a
+linha tracejada liga a fronteira do núcleo de 11, cuja pertinência é
+decidida nos ranks recomputados do recorte. O que olhar: no painel
+(a) o TabFM domina a grade sozinho e o núcleo resolve-se em
+\{LightGBM, XGBoost, TabPFN\}; no painel (b) a imagem inverte-se ---
+a fronteira passa a \{XGBoost, TabPFN, TabFM\}, com os
+\emph{foundation models} pagando quatro ordens de magnitude de
+latência pelo rank.}
 \label{fig:cap5-pareto}
 \end{figure}
 
@@ -438,11 +448,13 @@ figura em inglês). Fonte: \texttt{results/\allowbreak figures/\allowbreak imbal
 \label{fig:cap5-imbalance}
 \end{figure}
 
-A tendência é monotônica e na direção que a intuição de praticantes
-sugere --- árvores lidam melhor com classes raras do que redes treinadas
-por gradiente sobre perda média --- mas uma ressalva é parte do
-resultado: com poucos conjuntos por faixa, trata-se de direção
-descritiva, não de teste. Duas observações
+A Figura~\ref{fig:cap5-imbalance} mostra duas tendências opostas,
+sobre os ranks da grade completa de 14: o rank médio dos GBDTs melhora
+à medida que o desbalanceamento aumenta (6,6 na faixa leve; 5,5 na
+moderada; 4,6 na severa), o dos modelos profundos piora (8,7 $\to$
+8,9 $\to$ 9,6), e os \emph{foundation models} ficam à frente nas
+três faixas, sem tendência definida (3,3; 4,1; 2,7). Com 3, 4 e 3
+conjuntos por faixa, trata-se de direção descritiva, não de teste. Duas observações
 completam o quadro
 condicional. No extremo de cardinalidade categórica
 (\texttt{amazon\_\allowbreak employee}), os modelos de atenção ficam
@@ -588,7 +600,7 @@ ultrapassou os GBDTs não foi um modelo treinado na tarefa, e sim um
 modelo pré-treinado usado sem ajuste --- a associação com o pré-treino
 é a descrição do que se mede, não um mecanismo testado. E a cautela estatística permanece dita: com $k{=}14$ e
 $N{=}10$, a distância crítica de Nemenyi é larga
-(Figura~\ref{fig:cap5-cd}) --- a separação do TabFM apoia-se na
+(Figura~\ref{fig:cap5-cd14}) --- a separação do TabFM apoia-se na
 consistência entre conjuntos (13 vitórias em 18) e nos tamanhos de
 efeito pareados ($d=0{,}68$ contra o XGBoost), \textbf{não} no
 post-hoc frequentista \emph{nem} no instrumento bayesiano: contra o
@@ -609,6 +621,19 @@ fixada v1.0.1 (julho de 2026), cujo relatório técnico oficial apareceu
 apenas no fim de setembro de 2026 \citep{kong2026} e segue sem revisão
 por pares --- os resultados são sobre essa versão, e isso fica
 registrado.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\linewidth]{images/cd_diagram_binary.pdf}
+\caption[Diagrama de distância crítica (grade de 14)]{Diagrama de
+distância crítica (Nemenyi) para a classificação binária na grade
+completa de 14 modelos ($N{=}10$ conjuntos, $\mathrm{CD}=6{,}27$;
+rótulos internos em inglês). Com $k{=}14$, a distância crítica cobre
+quase metade do eixo: o instrumento não tem poder para separar o
+TabFM do pelotão, e a leitura da liderança apoia-se na consistência
+entre conjuntos e nos tamanhos de efeito.}
+\label{fig:cap5-cd14}
+\end{figure}
 
 O contrapeso é frontal, e é o achado central do capítulo: o líder de
 acurácia é o pior modelo da grade em latência de serviço ---
