@@ -1,6 +1,1496 @@
-%% STUB — translation pending
-\chapter{Distributional Distillation}
+%% ============================================================================
+%% Chapter 7 — Distributional Distillation of Foundation Models (English
+%% version, adapted from the frozen Portuguese chapter at 64f9adf; same
+%% labels). EN figures: pareto_distill_en.pdf, calibration_distill_en.pdf
+%% (shared with AI-2), forest_distill_en.pdf (fig_forest_distill.py "en"),
+%% tikz-cap7-1-en.pdf.
+%% ============================================================================
+
+\chapter{Distributional Distillation of Foundation Models}
 \label{chap:destilacao}
-[Translation pending.]
-\section{Pending}\label{sec:destil-regra}
-\begin{figure}[h]\caption{Pending}\label{fig:destil-calibration}\end{figure}
+
+Chapter~\ref{chap:framework} ended with a policy --- foundation model
+first --- and an obstacle: the cost of serving it. This chapter
+measures how much of that obstacle knowledge distillation removes on
+the \emph{distributional} output of regression --- the framing with
+no prior academic study (Section~\ref{sec:destil-novidade}) --- on 20
+datasets. It is worth saying at the outset what the contribution is
+\emph{not}: returning quantiles is something a GBDT already does on
+its own --- this chapter's control is exactly that native quantile
+GBDT. The question is whether the same student learns \emph{more}
+from the teacher's distilled distribution than from the labels
+themselves. There are four results. First, the teacher's point
+accuracy does not transfer: the student trained on the teacher's
+means beats the student trained on the true labels on only 4 of 20
+datasets. Second, the shape of the predictive distribution transfers
+in part: the student trained on the teacher's 19 quantile curves
+beats its control on 16 of 20 datasets, with a median CRPS gain of
+2.8\% (1.4\% when both arms are re-tuned), serving at about a hundred
+microseconds per row. Third, that gain concentrates in the tails of
+the distribution --- exactly where asymmetric-cost decisions operate.
+Fourth, it is not universal, and the conditions under which it pays
+off fit in a rule that can be checked in minutes.
+Section~\ref{sec:destil-metodo} describes the method; the following
+sections present the results, what threatens them, and when to use
+each thing.
+
+\section{Motivation and novelty check}
+\label{sec:destil-motivacao}
+
+\subsection{The price of the new leader}
+\label{sec:destil-preco}
+
+Chapter~\ref{chap:benchmark} established that the 2026 generation of
+tabular foundation models shifts the historical top of accuracy --- a
+consistent lead, without confirmation as a statistical separation;
+Chapter~\ref{chap:framework}, that the fixed policy ``foundation
+model first'' is regret-optimal on the primary metric, with median
+regret 0.000 in the descriptive evaluation, over the 17 datasets in
+which the family participates. The only obstacle to that policy is
+the cost of serving --- and it is not an implementation detail but a
+constitutive property of the paradigm: in-context-learning models
+carry the training set as context on every prediction. Under a
+standardized protocol on \texttt{adult}, we measured 7{,}416~\us/row
+for TabPFN and 43{,}262~\us/row for TabFM, against 0.33~\us/row for
+the tuned XGBoost --- factors of approximately $22{,}000\times$ and
+$131{,}000\times$, respectively.
+Section~\ref{sec:regret-ponderado} showed, moreover, that shifting
+10--20\% of the weight from accuracy to latency is enough to flip the
+recommendation: reducing that cost is what decides whether the policy
+can be used where latency counts. This chapter measures one of the
+routes --- distillation --- in a specific framing: regression, with
+TabPFN as the distributional teacher.
+
+The classical tool for this attack is \textbf{knowledge
+distillation} \citep{bucila2006,hinton2015}: training a fast student
+on the outputs of an expensive teacher. For tabular foundation
+models, the literature established it in \emph{classification}
+\citep{pocketfm2026}; this chapter's question is what it can and
+cannot transfer in \emph{regression} --- in particular in
+distributional regression, where the teacher's output is not a
+number but a complete predictive distribution, from which quantiles,
+intervals, and calibrated uncertainty are read. Three questions
+organize the study, echoing RQ3 of the Introduction: what
+distillation transfers in tabular regression
+(Sections~\ref{sec:destil-ponto} and~\ref{sec:destil-dist}); at what
+serving cost (Section~\ref{sec:destil-fronteira}); and under which
+verifiable conditions (Sections~\ref{sec:destil-oof}
+to~\ref{sec:destil-regra}).
+
+\subsection{Dated novelty check --- and the partial collision of October}
+\label{sec:destil-novidade}
+
+No novelty claim is made without a dated online check
+(Chapter~\ref{chap:metodologia}); the complete record of the
+searches --- scopes, dates, and works examined --- is in
+Appendix~\ref{app:suplementares}. The picture they establish: the
+distillation of tabular foundation models into fast students already
+exists in \emph{classification} --- Pocket~FM \citep{pocketfm2026}
+distills classification teachers into GBDT/MLP students over 153
+datasets, retaining 96.5\% of the AUC with 38--860$\times$ speedups,
+and establishes out-of-fold labeling as necessary; a sister work
+extends the analysis to clinical data \citep{pocketfmhealth2026}.
+Prior Labs sells a closed distillation engine alongside TabPFN-2.5
+\citep{priorlabs2025}, with no public methodology or code;
+TabDistill \citep{tabdistill2025} covers only the few-shot regime;
+another line distills foundation models into generalized additive
+models for interpretability \citep{tfmgam2026}; and GEAR
+\citep{gear2026} adds synthetic expansion, for classification only.
+On the acceleration-\emph{without}-distillation arm, TACO
+\citep{taco2026} and CRUMB \citep{crumb2026} compress the context,
+MotherNet \citep{mothernet2023} amortizes the fitting into a
+hypernetwork, and TL-ANDI \citep{tlandi2026} transfers to
+restricted-context tasks --- none compares the strategies against
+each other on the same hold-outs. And the mother idea of distilling
+predictive distributions is older and non-tabular --- from the
+Bayesian predictive \citep{korattikara2015} to ensembles in
+regression \citep{malinin2020rpn}, always with a teacher of
+accessible weights, a parametric representation, and a neural
+student (Section~\ref{sec:rel-destilacao}); what the sweep found
+open is the instance with a black-box in-context-learning teacher, a
+quantile target, and a GBDT student in tabular regression. From that
+finding came three decisions: adopting Pocket~FM's out-of-fold
+labeling as the methodological base; never claiming ``the first
+distillation of a tabular foundation model''; and adjusting the
+framing to what was open --- \textbf{distributional regression}
+(distilling the distribution, not the mean, evaluating with CRPS and
+coverage), the \textbf{three-strategy frontier} of serving, and
+TabFM as a teacher.
+
+A contemporary work partially touches the framing:
+\citet{jeong2026} distill TabICLv2 and TabPFN~v3 into neural and
+tree students \emph{including regression} --- but only with point
+targets (squared-error transfer of the teacher's means) and
+evaluation restricted to RMSE, without CRPS, quantiles, calibration,
+or a cost frontier. The reconciliation between the point gains they
+report and our negative result is discussed in
+Section~\ref{sec:destil-ponto}: the pool-size sweep offers a
+\emph{hypothesis} of moderation (residual gain in small pools), but
+their recipe differs from ours on axes we did not replicate ---
+labeling with full context, expansion with synthetic queries, and a
+student trained only on teacher predictions --- so the
+reconciliation is proposed, not demonstrated. TabFM's official
+technical report \citep{kong2026}, still without peer review,
+confirms at the primary source the architectural check of
+Section~\ref{sec:destil-professores}. The distributional pillar and
+the three-strategy frontier remain, up to the last search (November
+2026; record in Appendix~\ref{app:suplementares}), without prior
+academic work --- a public repository of September 2026 distills
+TabFM into XGBoost for classification and point regression, without
+touching the distributional framing.
+
+\section{Method}
+\label{sec:destil-metodo}
+
+Three roles run through the chapter. The \textbf{teacher} is the
+expensive foundation model, which returns a predictive distribution
+for each row. The \textbf{distilled student} is an XGBoost trained
+to reproduce the teacher's outputs instead of the observed labels.
+The \textbf{control} is the same XGBoost, with the same
+hyperparameters, trained the usual way, on the observed labels. The
+comparison that matters is always distilled student against control:
+the two cost the same to serve, and the difference between them is
+what the teacher added. The comparison against the teacher says how
+much was left on the way.
+
+\subsection{Teachers: one distributional, one point}
+\label{sec:destil-professores}
+
+\textbf{TabPFN v2.5} \citep{hollmann2025,priorlabs2025} is the
+distributional teacher: its native API returns arbitrary quantiles
+of the predictive distribution (the bar-distribution head: a
+discretized histogram over the target's range), from which we
+extract a grid of 19 levels ($\tau = 0.05, 0.10, \ldots, 0.95$). We
+use v2.5, not the more recent TabPFN-3/3.5 releases
+\citep{tabpfn3-2026,tabpfn35tr2026}, for comparability with the
+version pinned in Chapter~\ref{chap:benchmark}'s benchmark and for
+verified operation on the study's 16~GB GPU; the method uses nothing
+version-specific, but the magnitude transferred may depend on it
+(Section~\ref{sec:destil-limitacoes}).
+
+\textbf{TabFM} \citep{tabfm2026} is an exclusively point teacher,
+and that is a result, not a premise. We verified
+\emph{architecturally} that its regression head decodes a single
+scalar --- a check made on the code in July 2026 and since confirmed
+at the primary source by the official technical report
+\citep{kong2026}, not yet peer-reviewed --- and \emph{empirically}
+that no usable distribution can be improvised from it: the spread of
+its 8-member ensemble, used as a predictive distribution on
+\texttt{california\_\allowbreak housing}$^\dagger$, produces a CRPS
+of 0.524 against the TabPFN teacher's 0.069, with 16.3\% coverage at
+a nominal 80\%
+(\texttt{results/\allowbreak distillation/\allowbreak tabfm\_\allowbreak spread.\allowbreak csv}).
+Both teachers operate with an 8-member inference ensemble and a
+context capped at 50{,}000 rows --- the same policies as the
+benchmark; for TabFM, 8 members proved equivalent in accuracy
+(measurement recorded in the versioned wrapper
+\texttt{src/\allowbreak models/\allowbreak tabfm\_\allowbreak model.\allowbreak py})
+to the library's default of 32, at a quarter of the cost, on our
+datasets.
+
+\subsection{Out-of-fold labeling and student families}
+\label{sec:destil-alunos}
+
+The teacher predicts conditioned on the training set it receives as
+context. If a row is in that context and we ask for its prediction,
+it has already seen the answer: the prediction comes out too close
+to the label, with too little uncertainty, and a student trained on
+it inherits that undue confidence. For this reason the teacher's
+targets for each row of the training pool come from an
+\emph{out-of-fold} (OOF) scheme with $K{=}5$: the teacher
+conditioned on 4/5 of the pool labels the held-out fifth, so that no
+row is labeled by a teacher that had it in context --- in a
+10{,}000-row dataset, each row is predicted by a teacher that saw
+8{,}000 others and not it (Section~\ref{sec:destil-oof} measures
+what happens when that caution is removed: accuracy does not worsen,
+but the intervals become too narrow). The labels are cached once per
+(dataset, teacher) pair and reused by all student variants --- the
+pipeline's dominant cost is paid once. All students inherit the
+tuned hyperparameters of the corresponding benchmark baseline:
+capacity stays fixed. It must be said precisely what this control
+equalizes and what it does not: between the quantile control and the
+distilled student, the target \emph{and the loss function} change
+(native pinball in the control; multi-output squared error on the
+teacher's curves in the distilled one), and the inherited
+hyperparameters were searched for squared error --- a configuration
+asymmetry whose cost the re-tuning of both arms measures later
+(Section~\ref{sec:destil-retune}): with both re-tuned, the sign
+holds (16/20) and the magnitude drops from 2.8\% to 1.4\% median
+CRPS gain --- Section~\ref{sec:destil-dist} presents the two
+estimates together. There are three families:
+
+\begin{itemize}
+  \item \textbf{XGBoost point} \citep{chen2016}: trained on the true
+    labels (control), on the teacher's OOF mean (\emph{soft}), or on
+    a 0.8/0.2 mixture;
+  \item \textbf{XGBoost multi-quantile}: the control variant uses
+    the native pinball objective \citep{koenker1978} on the true
+    labels; the distilled variant fits the teacher's 19 quantile
+    curves as multi-output regression, with quantile crossings
+    repaired by per-row sorting;
+  \item \textbf{Quantile MLP}: the benchmark's MLP body with a
+    19-output head; pinball on the labels (control) or squared error
+    on the teacher's curves (distilled) --- symmetric to the XGBoost
+    pair, to test whether the student's family matters.
+\end{itemize}
+
+Figure~\ref{fig:destil-pipeline} summarizes the pipeline and the
+role of each variant: the true-label (\emph{hard}) variants are the
+controls every distilled (\emph{soft}) variant must beat, and all
+systems are evaluated on the same untouched 20\% hold-out.
+
+\begin{figure}[htb]
+\centering
+% Pre-compiled diagram (editable source: tikz-src/tikz-cap7-1-en.tex;
+% recompile with: tectonic tikz-src/tikz-cap7-1-en.tex && mv tikz-cap7-1-en.pdf images/)
+\includegraphics{images/tikz-cap7-1-en.pdf}
+\caption[Distributional distillation pipeline]{Distributional
+distillation pipeline: the teacher labels the pool out of fold;
+distilled student and control are multi-quantile XGBoosts of the
+same configuration, one trained on the teacher's quantile curves and
+the other on the true labels (pinball loss).}
+\label{fig:destil-pipeline}
+\end{figure}
+
+\subsection{Metrics}
+\label{sec:destil-metricas}
+
+For point quality, RMSE and MAE. For distributional quality, the
+\textbf{CRPS} (continuous ranked probability score
+\citep{gneiting2007}: the proper scoring rule that generalizes the
+absolute error of point predictions to complete predictive
+distributions; lower is better), estimated as twice the mean pinball
+loss over the 19-quantile grid \citep{gneiting2011} --- the standard
+grid estimator of probabilistic-forecasting practice. We validated
+this estimator against the Gaussian closed form: it carries a nearly
+constant multiplicative overestimate of ${\sim}4$--5\% (ratio 1.048
+in the four location$\times$scale scenarios;
+\texttt{results/\allowbreak distillation/\allowbreak crps\_\allowbreak grid\_\allowbreak gaussian\_\allowbreak validation.\allowbreak csv}),
+approximately independent of location and scale in the tested
+scenarios, so all internal comparisons and retention ratios are
+preserved --- but absolute CRPS values should not be compared to
+other works'. For calibration, PICP80/90 (the fraction of test
+targets inside the nominal 80\%/90\% interval) together with the
+interval widths. The synthesis metric is the \textbf{CRPS gap
+retention},
+\begin{equation}
+  \mathrm{ret} \;=\;
+  \frac{\mathrm{CRPS}_{\mathrm{hard}} - \mathrm{CRPS}_{\mathrm{soft}}}
+       {\mathrm{CRPS}_{\mathrm{hard}} - \mathrm{CRPS}_{\mathrm{teacher}}},
+\label{eq:destil-retencao}
+\end{equation}
+where 1 means the distilled student recovers the teacher's entire
+advantage over its own true-label control, negative values mean
+distillation hurt, and values above 1 mean the student ended up
+better than the teacher itself --- what the networks literature
+calls a \emph{born-again} student \citep{furlanello2018}. An example
+with real numbers from Table~\ref{tab:destil-retencao} fixes the
+reading. On \texttt{cpu\_activity}, the control has CRPS 1.294, the
+teacher 1.061, and the distilled student 1.178: the teacher's
+advantage is $1.294-1.061=0.233$, the student gained
+$1.294-1.178=0.116$, and the retention is $0.116/0.233=0.50$ --- the
+student recovered half the advantage. On \texttt{wine\_quality}, the
+distilled student (0.365) ended up \emph{worse} than the control
+(0.328), with the teacher at 0.289: the numerator is negative and
+the retention is $-0.97$. Since on all 20 datasets the teacher beats
+the control (positive denominator), ``positive retention'' is
+exactly equivalent to ``the distilled student beats the control''
+--- and, being a ratio, retention oscillates when the denominator is
+small, which is why the conclusions use the sign and the median, not
+the mean. Latency is measured in \us/row on the benchmark's hold-out
+(median of 5 passes for the students; a single timed pass for the
+teachers, whose cost per pass is minutes).
+
+\subsection{Datasets and infrastructure}
+\label{sec:destil-setup}
+
+\begin{sloppypar}
+The study uses the benchmark's five regression datasets
+(\texttt{wine\_quality},
+\texttt{california\_\allowbreak housing}$^\dagger$,
+\texttt{online\_news}, \texttt{kin8nm},
+\texttt{year\_\allowbreak prediction}; pools of 5{,}200 to 80{,}000
+rows) plus \textbf{fifteen datasets} from the OpenML-CTR23 suite
+\citep{fischer2023}, selected under a declared rule: 3{,}000 to
+100{,}000 rows, pinned version IDs, and two suite datasets excluded
+for target leakage discovered in the check (the target is a sum of
+attributes in \texttt{brazilian\_\allowbreak houses} and
+\texttt{wave\_energy}). The fifteen do not exhaust the rule: it
+reaches \textbf{nineteen} eligible datasets, and the four absent
+ones --- named, with IDs and the status of each omission --- are in
+Appendix~\ref{app:suplementares}. The sensitivity with them is in
+Table~\ref{tab:destil-robustez} (17/24 with the four; 16/22 without
+the two that overlap the core): the distilled student wins on the
+continuous \texttt{california} and loses on the other three --- two
+of those defeats by the same duplicate-memorization mechanism as
+\texttt{wine\_quality} (29--36\% of the test with an exact twin in
+the pool), and the
+\texttt{naval\_\allowbreak propulsion\_\allowbreak plant} one genuine
+(\texttt{ctr23\_\allowbreak sensitivity.csv}). The measurement of
+the four was repeated on four more data splits (43--46; reporting
+rule fixed before any reading: all splits, with no later cut): the
+picture is stable --- continuous \texttt{california} positive on all
+five splits, \texttt{white\_wine} and \texttt{superconductivity}
+negative on all five, and \texttt{naval} crossing zero once
+($+0.02$ on split 45, negative on the others) --- so the enlarged
+scoreboard is 17/24 ($p=0.032$) on four splits and 18/24
+($p=0.011$) on one, with an aggregate by the sign of the mean
+retention of \textbf{17/24} ($p=0.032$); in the conservative cut,
+16/22 ($p=0.026$) on four splits and 17/22 on one, with aggregate
+\textbf{16/22} (per-split table in
+Appendix~\ref{app:suplementares};
+\texttt{ctr23\_\allowbreak omitidos/\allowbreak multisplit.csv}).
+The trajectory of the pool's fixation is in
+Section~\ref{sec:destil-desenho}, with the sequential correction it
+requires.
+
+Two identity notes (erratum of 2026-10-19,
+Section~\ref{sec:met-datasets}): the dataset historically labeled
+``superconduct'' is \texttt{online\_news} (OnlineNewsPopularity; a
+legitimate continuous regression --- only the label was wrong), and
+\texttt{california\_\allowbreak housing}$^\dagger$ is the
+\textbf{binarized-target} variant of the \emph{tabular-benchmark}
+--- degenerate for distributional claims. This chapter marks that
+dataset with $^\dagger$ at every occurrence, and every headline
+result carries a sensitivity analysis with it excluded, reported
+next to the result. The partitions are identical to the
+benchmark's --- a fixed 20\% hold-out (seed 42) that no selection
+stage ever observes --- with three student seeds throughout the
+study. The hardware is the same RTX~5080 (16~GB) of the previous
+chapters; the VRAM ceilings are treated as measurements, not
+annoyances, and reappear as a finding in
+Section~\ref{sec:destil-fronteira}.
+\end{sloppypar}
+
+\section{Two-stage registered design: hypotheses, criteria, and conduct}
+\label{sec:destil-desenho}
+
+The experimental design was registered in \textbf{two stages}, and
+the distinction matters for the confirmatory status of each number.
+The first stage is the pre-registration of 2026-07-15
+(\texttt{docs/}\allowbreak\texttt{desenho-experimental-destilacao.md}),
+prior to any execution: the three falsifiable hypotheses H1--H3 on
+the five central regression datasets, the post-pilot decision
+criteria, the forecast of an extension of 8 to 10 datasets, and the
+explicit commitment to report negative results with the same
+prominence as positive ones. The three hypotheses:
+
+\begin{itemize}
+  \item \textbf{H1 (point).} The distilled student retains
+    $\geq 50\%$ of the RMSE gap (teacher $-$ tuned baseline) on
+    $\geq 3$ of the 5 central datasets, with latency
+    $\leq 10$~\us/row.
+  \item \textbf{H2 (distribution).} The distilled quantile student
+    beats, in CRPS, the quantile student trained on the true labels
+    (control), with interval coverage (PICP~80/90\%) within
+    $\pm 5$~p.p.\ of nominal.
+  \item \textbf{H3 (Pareto).} There exists a latency band in which
+    the distilled student is Pareto-dominant over the teacher with
+    subsampled context.
+\end{itemize}
+
+The post-pilot criteria even anticipated the zero-retention scenario
+(``the work becomes the negative result with a cause analysis'') ---
+a commitment Section~\ref{sec:destil-ponto} honors for the point
+axis. The execution deviations and the dataset-identity corrections
+are recorded, with dates, in the design document and in
+Appendix~\ref{app:suplementares};
+Section~\ref{sec:destil-setup} and Chapter~\ref{chap:metodologia}
+carry what affects the reading.
+
+The \textbf{second stage} demands the same reporting rigor. The
+headline's confirmatory instrument --- the sign test --- and the
+extension's eligibility rule (CTR23 suite datasets with 3 to 100
+thousand rows) were fixed \emph{after} an interim reading of the
+picture on 15 datasets (11 positive retentions, sign $p=0.059$), and
+the population was then completed to 20. A design with an interim
+reading inflates the type~I error; treated as sequential in two
+stages, the final result's $p$-value goes from 0.006 to
+approximately \textbf{0.019}, and that is the confirmatory value
+(the full computation --- global error, extension alone, Bonferroni
+bound --- is in Appendix~\ref{app:suplementares}).
+Table~\ref{tab:destil-hipoteses} lists each hypothesis and analysis
+of the chapter, its registration status, and the verdict.
+
+\begin{table}[htbp]
+\centering
+\caption[The chapter's hypotheses and registration status]{The
+chapter's hypotheses and analyses: what they claim, whether they
+were fixed before any result was read, and the verdict. Details and
+dates in Appendix~\ref{app:suplementares}.}
+\label{tab:destil-hipoteses}
+\small
+\begin{tabular}{p{0.14\linewidth}p{0.38\linewidth}p{0.14\linewidth}p{0.22\linewidth}}
+\toprule
+Code & What it claims & Before reading? & Verdict \\
+\midrule
+H1 (point) & point student retains $\geq$50\% of the RMSE gap on
+$\geq$3/5 & yes & refuted (4/20) \\
+H2 (distribution) & distilled beats the control in CRPS, with
+coverage within $\pm$5~p.p. & yes & CRPS: confirmed (16/20);
+coverage: not met (10/20) \\
+H3 (Pareto) & there is a latency band where the distilled student
+dominates the compressed teacher & yes & confirmed with narrow
+scope \\
+Sign test & confirmatory instrument of the 16/20 & no (fixed at the
+interim reading) & $p\approx0.019$ sequential \\
+E1 (classical) & distilled beats the best of QRF and NGBoost & yes
+(execution already started) & confirmed (17/20) \\
+E3 (utility) & lower realized cost at $\tau{=}0.90$ & registered
+(before any reading) & confirmed (18/20) \\
+Re-tuning & inherited hyperparameters are a floor on retention &
+yes (addendum of 11-12) & refuted per dataset (9/20); aggregate
+upheld \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Point distillation does not transfer --- with either tested teacher}
+\label{sec:destil-ponto}
+
+The first result is the negative the pre-registration committed to
+reporting. On the 20 datasets, the point student trained on the
+teacher's means beats its true-label control on only \textbf{4}; H1
+is refuted already on the five central datasets. The natural
+objection --- ``the teacher was not strong enough'' --- was tested
+directly, replicating the experiment with TabFM, whose anchor gap
+(the teacher's RMSE advantage over the shared control, the
+retention's denominator) is nearly $6\times$ TabPFN's on
+\texttt{california\_\allowbreak housing}$^\dagger$: 0.028 against
+0.005 RMSE. The picture does not change: only the two
+\texttt{california} \emph{soft} cells beat the control, with a best
+intra-pipeline retention of 0.11 (california/mixture), and the
+remaining eight cells sit at the control's level or below. At full
+pool, a tuned GBDT extracts as much point accuracy from the raw
+labels as from the teacher's opinions about them.
+
+Surprisingly, a residue of gain appeared in the smaller exploratory
+experiments --- and the contrast between smoke runs and the pilot
+suggested the hypothesis that the point gain is a low-data
+phenomenon. We investigated with a pool-size sweep (caps of 800,
+2{,}000, and 8{,}000 rows): there is a genuine low-data gain on
+\texttt{wine\_quality} ($\Delta = +0.026$ at $n{=}800$), which
+disappears from $n{=}2{,}000$ on and does \emph{not} replicate on
+\texttt{california\_\allowbreak housing}$^\dagger$. We therefore
+attribute the residue to a dataset-dependent low-data moderator, and
+report it as an observation, not a general effect.
+
+That sweep is also the key to the reconciliation with the partial
+collision of Section~\ref{sec:destil-novidade}: \citet{jeong2026}
+report point-distillation gains in regression with newer teachers
+(TabPFN~v3 and TabICLv2), squared-error transfer, and
+RMSE-only evaluation, under a different protocol and suites --- and
+with a recipe that differs from ours on axes we did not replicate
+(full-context labeling, synthetic-query expansion, a student trained
+only on teacher predictions). Our sweep offers a moderation
+hypothesis for the contrast --- residual gain restricted to small
+pools --- and our negative is scoped precisely: realistic pool sizes
+(3{,}000 to 100{,}000 rows), student capacity fixed by the
+benchmark's tuning. The two readings are compatible; the exact
+reconciliation is proposed, not demonstrated.
+
+\emph{Point distillation fails at realistic pool scale with both
+tested teachers.} The distilled point student beats the true-label
+control on only 4 of 20 datasets; the replication with a teacher
+nearly $6\times$ stronger (anchor gap 0.028 vs.\ 0.005 RMSE on
+\texttt{california\_\allowbreak housing}$^\dagger$) does not change
+the picture, and the pool sweep shows the residual gain is a
+low-data phenomenon ($n \leq 800$) on some datasets only. H1 is
+refuted; what the teacher knows about the \emph{mean}, the student
+learns on its own from the data.
+
+\section{Distributional distillation works --- where the teacher has
+an advantage}
+\label{sec:destil-dist}
+
+Transferring the teacher's quantile curves --- rather than its mean
+--- changes the outcome. Table~\ref{tab:destil-retencao} presents
+the per-dataset result: the three CRPS values (control, distilled,
+teacher), the distilled student's relative gain over the control
+with a confidence interval by resampling the test rows, and the
+retention of Eq.~\ref{eq:destil-retencao}.
+
+\begin{table}[htbp]
+\centering
+\caption[Distributional distillation result per dataset]{Result per
+dataset, ordered by retention (mean of 3 seeds). Gain = percentage
+reduction of the distilled student's CRPS relative to the control,
+with a 95\% CI by resampling the test rows (B=10{,}000); retention =
+fraction of the teacher's advantage the student recovers
+(Eq.~\ref{eq:destil-retencao}). On every row the teacher beats the
+control, so positive retention is equivalent to ``the distilled
+student beats the control''. On \texttt{pumadyn32nh} the distilled
+student sits below its own teacher by less than $10^{-4}$, invisible
+at this rounding. $^\dagger$binarized target
+(Section~\ref{sec:met-datasets}). Sources:
+\texttt{retune\_analysis.csv}, \texttt{bootstrap\_lines.csv},
+\texttt{paper\_retention.csv}.}
+\label{tab:destil-retencao}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrrrr}
+\toprule
+Dataset & CRPS ctrl & CRPS dist & CRPS teach & Gain (\%) & 95\% CI (\%) & Retention \\
+\midrule
+pumadyn32nh & 0.0130 & 0.0124 & 0.0124 & $+$4.7 & [3.7; 5.7] & $+$1.057 \\
+california\_housing$^\dagger$ & 0.1802 & 0.1086 & 0.0691 & $+$39.7 & [37.1; 42.3] & $+$0.644 \\
+abalone & 1.154 & 1.098 & 1.060 & $+$4.9 & [3.0; 6.7] & $+$0.595 \\
+fps\_benchmark & 0.4651 & 0.3855 & 0.3128 & $+$17.1 & [15.1; 19.0] & $+$0.523 \\
+cpu\_activity & 1.294 & 1.178 & 1.061 & $+$9.0 & [6.4; 11.6] & $+$0.500 \\
+cps88wages & 160.8 & 160.6 & 160.4 & $+$0.1 & [$-$0.1; 0.3] & $+$0.465 \\
+year\_prediction & 4.558 & 4.427 & 4.246 & $+$2.9 & [2.6; 3.2] & $+$0.419 \\
+online\_news & 0.4554 & 0.4540 & 0.4497 & $+$0.3 & [0.0; 0.6] & $+$0.255 \\
+sarcos & 1.270 & 1.163 & 0.7961 & $+$8.4 & [7.4; 9.4] & $+$0.225 \\
+kings\_county & 50{,}516 & 48{,}969 & 43{,}262 & $+$3.1 & [1.5; 4.6] & $+$0.213 \\
+grid\_stability & 0.0043 & 0.0038 & 0.0017 & $+$10.3 & [8.6; 12.0] & $+$0.170 \\
+kin8nm & 0.0682 & 0.0644 & 0.0380 & $+$5.7 & [4.4; 7.0] & $+$0.128 \\
+physiochemical\_protein & 1.785 & 1.736 & 1.212 & $+$2.8 & [1.9; 3.6] & $+$0.086 \\
+video\_transcoding & 0.3053 & 0.2974 & 0.2138 & $+$2.6 & [0.1; 5.0] & $+$0.086 \\
+space\_ga & 0.0601 & 0.0592 & 0.0488 & $+$1.5 & [$-$0.9; 3.8] & $+$0.078 \\
+miami\_housing & 31{,}999 & 31{,}931 & 27{,}882 & $+$0.2 & [$-$1.9; 2.3] & $+$0.016 \\
+health\_insurance & 7.273 & 7.311 & 7.122 & $-$0.5 & [$-$1.3; 0.2] & $-$0.255 \\
+diamonds\_real & 192.5 & 195.5 & 183.1 & $-$1.5 & [$-$2.4; $-$0.6] & $-$0.315 \\
+wine\_quality & 0.3277 & 0.3652 & 0.2891 & $-$11.4 & [$-$14.6; $-$8.5] & $-$0.970 \\
+fifa & 2{,}837 & 2{,}893 & 2{,}795 & $-$1.9 & [$-$3.8; $-$0.1] & $-$1.287 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The distilled student beats its control on \textbf{16 of the 20}
+datasets. If distillation had no effect at all, the distilled
+student would beat the control on about half the datasets, as in a
+sequence of 20 coin tosses; observing 16 or more wins in 20 has
+probability 0.006 (one-sided sign test) --- corrected for the
+design's interim reading, $p \approx 0.019$
+(Section~\ref{sec:destil-desenho}). The sign test concludes only
+this: the distilled student beats the control more often than
+chance explains; it does not say by how much --- it counts a wide
+win and a minimal-margin win the same way --- and it therefore comes
+accompanied by the median and the per-dataset analysis. The median
+retention is $+0.19$: on the typical dataset, the student recovers
+about a fifth of the teacher's advantage, which corresponds to a
+median CRPS 2.8\% lower than the control's. Two supplementary
+instruments agree with different degrees of firmness: the one-sided
+Wilcoxon gives $p=0.045$ (two-sided, 0.090: it would not reject),
+and the Bayesian signed-rank analysis \citep{benavoli2017} assigns
+probability 0.96 to the positive-retention region (ROPE $\pm0.05$;
+expected posterior mass $E[\theta]=0.70$). The verdict therefore
+rests on the sign test and the median;
+Table~\ref{tab:destil-robustez} gathers all the variants.
+
+\subsection{How large the effect is, and what it depends on}
+\label{sec:destil-retune}
+
+In the main design, distilled student and control use the same
+hyperparameters, inherited from the XGBoost tuned in
+Chapter~\ref{chap:benchmark}'s benchmark. That keeps capacity equal
+in both arms, but has a cost: those hyperparameters were searched
+for squared error, which is the distilled student's loss and not the
+control's (pinball). The control may be at a disadvantage by
+configuration, not for lack of a teacher. To measure that, the two
+arms were re-tuned separately (Optuna, 25 trials each, validation
+within the pool) on the 20 datasets. The scoreboard does not change
+--- 16 of 20 --- but the magnitude drops: the median retention goes
+from 0.19 to 0.12, and the median CRPS gain over the control from
+2.8\% to 1.4\% (the re-tuned mean retention is $-0.02$, pulled by
+the negatives). About half of the effect measured in the main design
+therefore came from the control's configuration. The number this
+work stands behind is the interval: the distilled student recovers,
+at the median, between 12\% and 19\% of the teacher's advantage ---
+a CRPS between 1.4\% and 2.8\% lower than the control's --- with the
+lower end as the conservative estimate. An individual dataset's
+retention changes with the tuning budget (it rises or holds on 9 of
+20; falls on 11) and should not be quoted in isolation. Three facts
+complete the reading: re-tuning changes the scoreboard's composition
+without changing the count (\texttt{health\_\allowbreak insurance}
+enters, \texttt{miami\_\allowbreak housing} leaves); distillation
+and re-tuning \emph{compose} --- the distilled student also improves
+when re-tuned, on 17 of 20 datasets; and the re-tuning's distilled
+arm carries a weak asymmetry that \emph{favors} it (the Optuna
+validation rows participated, via the teacher's context, in the OOF
+targets), so the drop to 12\% is not an artifact against
+distillation --- if anything, the true floor is even lower
+(\texttt{results/\allowbreak distillation/\allowbreak retune\_\allowbreak analysis.csv}).
+
+\subsection{How safe each of the 16 is}
+\label{sec:destil-bootstrap}
+
+The sign test counts as a win any positive difference, however
+small. Resampling the test rows (B=10{,}000, students of the three
+seeds), the 95\% interval of the CRPS gain lies entirely above zero
+on \textbf{12} datasets; above zero by a minimal margin on
+\textbf{1} (\texttt{online\_news}, gain $0.3\%$, CI $[0.0;\,0.6]$);
+includes zero on \textbf{4} (\texttt{cps88wages},
+\texttt{miami\_\allowbreak housing}, and \texttt{space\_ga} with a
+positive point gain; \texttt{health\_\allowbreak insurance} with a
+negative one); and lies entirely below zero on \textbf{3}
+(\texttt{diamonds\_\allowbreak real},
+\texttt{wine\_\allowbreak quality}, \texttt{fifa}). The 16 to 4
+therefore decomposes into 12 clear wins, 1 win at the margin, 3 wins
+indistinguishable from a tie, 1 defeat indistinguishable from a tie,
+and 3 clear defeats --- Figure~\ref{fig:destil-forest} shows the
+picture at once, and the interval column of
+Table~\ref{tab:destil-retencao} carries the per-dataset detail
+(\texttt{results/\allowbreak distillation/\allowbreak bootstrap\_\allowbreak lines.csv}).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\linewidth]{images/forest_distill_en.pdf}
+\caption[CRPS gain per dataset, with uncertainty]{Relative CRPS gain
+of the distilled student over the control, per dataset, ordered by
+the gain in the inherited design (filled points; 95\% CI by paired
+bootstrap of the test rows, B=10{,}000; green = interval entirely
+positive, gray = contains zero, red = entirely negative). The hollow
+circles give the point gain with both arms re-tuned. What to look
+at: 13 intervals entirely positive --- twelve comfortably and one,
+\texttt{online\_news}, by a minimal margin (lower bound 0.01\%) ---;
+re-tuning shrinks the largest gains without inverting the picture.
+$^\dagger$binarized target.}
+\label{fig:destil-forest}
+\end{figure}
+
+\subsection{Robustness of the verdict}
+\label{sec:destil-robustez}
+
+\begin{table}[htbp]
+\centering
+\caption[Robustness of the distributional distillation verdict]{The
+same verdict under all design variants. ``Without binarized''
+excludes \texttt{california\_housing}$^\dagger$; ``re-tuned''
+re-optimizes both arms' hyperparameters; the last two scenarios
+enlarge the population with the four omitted eligible datasets,
+measured on five data splits --- the scoreboard shown is the
+aggregate by the sign of the mean retention; the per-split variation
+(18/24 and 17/22 on a single split) is in
+Section~\ref{sec:destil-setup} and
+Appendix~\ref{app:suplementares}.}
+\label{tab:destil-robustez}
+\small
+\begin{tabular}{lcccc}
+\toprule
+Variant & Score & Median ret. & Sign (one-s.) & Wilcoxon \\
+\midrule
+Main (inherited, 3 seeds) & 16/20 & 0.19 & 0.006 (0.019 seq.) & 0.045 \\
+Without the binarized & 15/19 & 0.17 & 0.010 & 0.067 \\
+Both arms re-tuned & 16/20 & 0.12 & 0.006 & 0.035 \\
+Re-tuned, without the binarized & 15/19 & 0.10 & 0.010 & 0.048 \\
+Ten student seeds & 16/20 & 0.19 & --- & --- \\
+With the 4 omitted eligible (5 splits) & 17/24 & --- & 0.032 & --- \\
+Without the 2 overlapping the core (5 splits) & 16/22 & --- & 0.026 & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The sensitivity that matters most is that of
+\texttt{california\_housing}$^\dagger$ (binarized target;
+Section~\ref{sec:met-datasets}): excluded, retention is positive on
+15 of 19, with median $+0.17$, sign $p=0.010$, and a median
+bootstrap CI entirely positive $[0.08;\,0.42]$ --- but the one-sided
+Wilcoxon moves to $p=0.067$ and stops rejecting at 5\%. The
+qualitative conclusion does not depend on the dataset; the pair of
+instruments ends with the sign test significant and the Wilcoxon
+marginal. On that dataset, incidentally, the ``distributional gain''
+is the calibration of a Bernoulli, not continuous regression: no
+headline rests on it, and, wherever it reappears in examples, the
+$^\dagger$ symbol accompanies it. Two complements close the
+robustness: the bootstrap 95\% CI of the retention median is
+$[0.08;\,0.44]$, and that of the fraction of positive datasets,
+$[0.60;\,0.95]$
+(\texttt{bootstrap\_\allowbreak retention.csv}); and a Friedman test
+over the five distributional systems (teacher, distilled, control,
+QRF, NGBoost) rejects equality ($\chi^2{=}64.6$,
+$p{=}3{\times}10^{-13}$; average ranks 1.1/2.3/3.1/3.6/4.9), with
+the distilled student as the only system the Nemenyi post-test does
+not separate from the teacher ($\mathrm{CD}{=}1.36$) --- though the
+distilled--control pair (0.8) does not reach the CD in that
+conservative test either, which is why that pair is judged by the
+paired comparison (\texttt{friedman\_\allowbreak systems.csv}).
+
+Three reading caveats complete the picture. First, retention is a
+ratio and oscillates when the teacher's advantage is small: the
+\emph{born-again} case of \texttt{pumadyn32nh} rests on an advantage
+below 0.001 CRPS (\texttt{online\_news} and
+\texttt{grid\_\allowbreak stability} are analogous) --- which is why
+the table carries the relative gain with its interval next to the
+ratio. Second, the ``big success'' label demands relative reading:
+the absolute improvement of $+0.160$ on \texttt{cps88wages} operates
+on a CRPS of ${\sim}160$ --- a $0.1\%$ gain, indistinguishable from
+zero in the bootstrap; the absolute successes that resist are
+\texttt{year\_\allowbreak prediction} ($+0.130$; $+2.9\%$, CI
+$[2.6;\,3.2]$) and \texttt{cpu\_activity} ($+0.117$). Third,
+near-null positives (\texttt{miami\_housing}, $+0.016$) count as
+successes under the sign test --- the ROPE sweep (0.95--0.96
+posterior probability between ROPE 0.02 and 0.10) delimits the
+effect of treating them as equivalences.
+
+\subsection{The four defeats, one by one}
+\label{sec:destil-derrotas}
+
+The failures are diagnosable --- but each by its own cause; there is
+no common diagnosis. On \texttt{wine\_quality}, the cause is a
+dataset artifact: 27.6\% of the test has an exact covariate twin in
+the pool (the original dataset carries 1{,}179 duplicated rows), the
+pinball control memorizes the twins and the student, trained on the
+teacher's smoothed curves, does not --- on the rows \emph{without} a
+twin the distilled student wins by $+3.0\%$ CRPS, and on the
+deduplicated dataset ($n=5{,}318$, teacher re-labeled OOF) the
+distilled student wins on all three seeds, with a gain of $+0.85\%$
+and retention $+0.10$
+(\texttt{results/\allowbreak distillation/\allowbreak wine\_\allowbreak dedup.csv});
+the published ``defeat'' is duplicate memorization, not a
+limitation of distillation, and it stays in the table because the
+original dataset is the one in the registered population.
+\texttt{health\_\allowbreak insurance} has as target \texttt{whrswk}
+--- hours worked per week, with 29.9\% zeros and \emph{negative}
+skewness ($-0.34$) --- and its retention goes from $-0.26$
+(inherited) to $+0.65$ (re-tuned): a configuration-sensitive
+failure, not a scale effect. That leaves \texttt{fifa} and
+\texttt{diamonds\_\allowbreak real} as the failures without a tested
+explanation, on price-scale targets --- and, for them,
+Section~\ref{sec:destil-regra} shows that the heavy-tail hypothesis
+is not confirmed.
+
+\subsection{Coverage: the clause of H2 that is not met}
+\label{sec:destil-cobertura}
+
+The quality transferred is not only the aggregate CRPS: calibration
+accompanies --- and, on one criterion, exceeds --- the transfer, as
+the reliability curves of Section~\ref{sec:destil-oof}
+(Figure~\ref{fig:destil-calibration}) show in detail. H2's second
+clause, however, receives here the explicit verdict that parity with
+the refutations demands: the pre-registered requirement of coverage
+within $\pm 5$~p.p.\ of nominal \textbf{is not met} by the pure
+distilled student --- PICP80 falls inside the band on 10 of the 20
+datasets (and on 2 of the 5 central ones) --- so H2 is confirmed
+only on the CRPS clause; the remedy is measured in the conformal
+pilot (Section~\ref{sec:destil-oof}), which fixes the coverage ---
+on the criterion of the distance to nominal decreasing --- on 5/5
+datasets in the distilled arm and 3/5 in the control, without moving
+the CRPS.
+
+\emph{In synthesis: distributional distillation retains, at the
+median, 12\% to 19\% of the teacher's CRPS advantage (depending on
+how the arms are tuned), positive on 16 of 20 datasets --- 12 clear
+wins --- with the gain concentrated where the teacher's advantage is
+large.}
+
+\section{The serving frontier: distill, compress, or shrink the ensemble}
+\label{sec:destil-fronteira}
+
+Retention says what the student preserves; it does not say when the
+student is the right choice against the engineering alternatives a
+practitioner has at hand. To answer H3, we measured accuracy and
+latency of \emph{all} the strategies on the same hold-outs, on three
+positive-advantage datasets (one of them,
+\texttt{california\_\allowbreak housing}$^\dagger$, has a binarized
+target --- the numbers hold as a latency$\times$CRPS measurement,
+but \texttt{year\_\allowbreak prediction} is the frontier's
+legitimate distributional showcase): TabPFN with the context
+subsampled to \{1{,}000, 5{,}000, 10{,}000, 25{,}000, full\} (the
+``compress the context'' arm, in the simple subsampling variant ---
+CRUMB \citep{crumb2026} is that arm's representative method in the
+literature); TabPFN with 1/4/8 ensemble members (the ``shrink the
+ensemble'' arm); the distilled and control students (the
+``distill'' arm); and the full-context TabFM as an accuracy anchor
+(4{,}905--394{,}301~\us/row). Figure~\ref{fig:destil-pareto}
+presents the resulting frontier: the latency axis is
+\emph{logarithmic} --- equal horizontal distances are equal
+multiplicative factors --- better is down and to the left, and what
+matters is the vertical distance between the distilled student and
+the teacher's curve at the nearest measured latency.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=\linewidth]{images/pareto_distill_en.pdf}
+\caption[Frontier distill $\times$ compress $\times$ shrink
+ensemble]{Frontier distill $\times$ compress $\times$ shrink
+ensemble: RMSE (top) and CRPS (bottom) against inference latency on
+three positive-advantage datasets. In the
+\texttt{california\_housing}$^\dagger$ panel, the target is
+binarized: the control's saturation and the shape of the curves are
+artifacts of a two-valued target, and the panel holds as a
+latency$\times$CRPS measurement, not as a distributional showcase
+(that is \texttt{year\_prediction}).}
+\label{fig:destil-pareto}
+\end{figure}
+
+The figure separates three regimes. On the \textbf{point} plane (top
+row), the true-label control student already occupies the fast
+regime (2.6--5.3~\us/row) --- it is the refutation of H1 made
+visible: there is nothing point distillation could add there. On the
+\textbf{distributional} plane (bottom row), below
+${\sim}250$~\us/row on
+\texttt{california\_\allowbreak housing}$^\dagger$ and
+${\sim}1{,}300$~\us/row on \texttt{year\_\allowbreak prediction},
+the teacher-derived strategies leave the students alone, and the
+distilled one is the CRPS-optimal among them (the native quantile
+forest also inhabits that regime --- and on
+\texttt{california\_\allowbreak housing}$^\dagger$ beats it;
+Section~\ref{sec:destil-e1}): CRPS 0.109 at 99~\us/row where the
+teacher's cheapest configuration needs 245~\us/row for 0.094 ---
+$2.5\times$ the student's latency --- on
+\texttt{california\_\allowbreak housing}$^\dagger$; and CRPS 4.43 at
+169~\us/row where the cheapest teacher configuration that beats it
+costs 4{,}576~\us/row --- $27\times$ the latency --- on
+\texttt{year\_\allowbreak prediction}.
+
+The third dataset inverts the picture --- and the inversion is
+instructive. On \texttt{kin8nm}, the teacher's advantage is small
+($+0.030$ CRPS) and a \emph{single-member} TabPFN delivers CRPS
+0.040 at 150~\us/row --- essentially the student's latency. There,
+the right lever is ensemble shrinking, not distillation: it is the
+frontier-level counterpart of the decision rule of
+Section~\ref{sec:destil-regra} --- when the teacher's advantage is
+small, the cheap engineering menu settles the matter before
+distillation enters the scene.
+
+H3's verdict: \textbf{confirmed with narrow scope}. On
+\texttt{year\_\allowbreak prediction} the distilled student is
+Pareto-dominant in the strong sense --- better CRPS than the most
+subsampled teacher (4.43 against 4.70) at $7.8\times$ less latency;
+on \texttt{california\_\allowbreak housing}$^\dagger$ the band
+exists, but it is the band below 245~\us{} in which no teacher
+configuration operates (and which the native QRF occupies with a
+better CRPS, as E1 would measure); on \texttt{kin8nm} the
+hypothesis \emph{fails} --- ensemble shrinking delivers the
+student's latency with a much better CRPS. H3 holds, therefore,
+where the teacher's advantage is large, and is replaced by cheap
+engineering where it is small --- the same condition as the
+decision rule.
+
+Two side findings have independent value. First, shrinking TabPFN's
+ensemble from 8 to 1 member \emph{improved} the RMSE on
+\texttt{california\_\allowbreak housing}$^\dagger$ (0.2521 against
+0.2555) at a seventh of the latency --- ensemble shrinking is an
+underrated first lever, sometimes free. Second, the last doubling of
+context (25{,}000 $\to$ 50{,}000) on
+\texttt{year\_\allowbreak prediction} requires the library's
+memory-saving mode on the 16~GB GPU and costs $3.3\times$ the
+latency (148.6 against 45.1~ms/row) for an RMSE gain of 0.05: on
+GPUs of common size, the full-context teacher does not pay for
+itself.
+
+\emph{Where the teacher's advantage is large, the distilled student
+is, among the teacher-derived strategies, the CRPS-optimal
+distributional system below the teacher's cheapest competitive
+configuration; where it is small, shrinking the ensemble suffices
+--- and, before either, the classical native of E1 should be
+tried.} On the frontier measured end to end, the cheapest teacher
+configuration that beats the distilled student costs $2.5\times$ its
+latency on \texttt{california\_\allowbreak housing}$^\dagger$ and
+$27\times$ on \texttt{year\_\allowbreak prediction}; on
+\texttt{kin8nm}, of small advantage, a single-member teacher already
+operates at the student's latency. Side findings: 1 TabPFN member
+$\approx$ 8 members at 1/7 of the latency, and the last context
+doubling is disproportionately expensive on 16~GB GPUs.
+
+\section{Why label out-of-fold: calibration, not accuracy}
+\label{sec:destil-oof}
+
+The classification literature \citep{pocketfm2026} establishes that
+in-sample teacher labels collapse toward the one-hot and must be
+avoided. Regression, we show, behaves differently --- and the
+difference only appears when the confounder is removed. Our
+three-regime ablation compares: OOF (80\% context, no leakage),
+in-sample with the \emph{same} 80\% context (with leakage, identical
+context), and in-sample with full context. The design deconfounds
+leakage from context size --- exactly what the usual OOF vs.\
+in-sample comparison does not separate.
+
+The result: leakage, isolated, does \emph{not} degrade accuracy ---
+RMSE even improves on all four tested datasets, and CRPS on three
+--- and context size contributes little (though, on
+\texttt{wine\_quality}, it costs 5.9~p.p.\ of additional coverage).
+The damage concentrates on \textbf{interval coverage}: at identical
+context, in-sample-labeled students lose 0.5 to 5.1~p.p.\ of PICP80
+on all four datasets --- artifact
+\texttt{ablation\_\allowbreak insample.\allowbreak csv} in
+\texttt{results/\allowbreak distillation/}. The mechanics is
+legible: the teacher is overconfident on the rows it has in context,
+and that overconfidence --- invisible to accuracy metrics ---
+transfers to the student as too-narrow intervals. In regression, OOF
+labeling is a \emph{calibration} safeguard, not an accuracy one ---
+a deconfounded refinement of the classification finding.
+
+Figure~\ref{fig:destil-calibration} closes the calibration axis with
+the reliability curves of the distributional systems --- promised in
+Section~\ref{sec:destil-dist}: for each nominal level $\tau$, the
+empirical fraction of targets below the predicted $\tau$ quantile,
+with the diagonal as perfect calibration. The correct reading rule
+--- the same as Figure~\ref{fig:quantis-cobertura}'s --- is per
+level: a curve above the diagonal at some $\tau$ means the predicted
+quantile is too \emph{high} at that level; the coverage of a central
+interval $[q_{0.10}, q_{0.90}]$ is the \emph{difference} between the
+fractions at the two levels, so a curve steeper than the diagonal in
+the center indicates too-narrow intervals (undercoverage); there is
+no shortcut ``above = overcovers'' valid for the whole curve. On
+\texttt{california\_\allowbreak housing}$^\dagger$, the true-label
+control saturates in extreme overcoverage and the teacher exhibits
+the S shape of badly calibrated tails, while the distilled student
+is the closest to the diagonal; on \texttt{cpu\_activity}, the three
+systems are well calibrated and the distilled one remains
+competitive. The curve transfer with sort repair acts as a
+calibration regularizer, not as a copy --- and a dedicated ablation
+isolates the component: the repair improves or ties the CRPS on 20
+of 20 datasets in both arms --- strict improvement on 20 of 20 in
+the \emph{hard} arm and 18 of 20 in the \emph{soft} one (two exact
+ties) --- but with a median effect below 1\%, so no conclusion of
+the chapter depends on it (Appendix~\ref{sec:app-abl-sort}).
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=\linewidth]{images/calibration_distill_en.pdf}
+\caption[Reliability on the hold-out]{Reliability curves on the
+hold-out (\texttt{california\_housing}$^\dagger$,
+\texttt{cpu\_activity}): TabPFN teacher, distilled student, and
+control; the axis mechanics is that of
+Figure~\ref{fig:quantis-cobertura}.}
+\label{fig:destil-calibration}
+\end{figure}
+
+\emph{Out-of-fold labeling protects the student's calibration, not
+its accuracy.} At identical context, in-sample labels degrade
+neither RMSE nor CRPS, but erode interval coverage by 0.5 to
+5.1~p.p.\ of PICP80 on the four tested datasets: the teacher's
+in-context overconfidence transfers to the student. And distillation
+even \emph{improves} calibration on one of the two criteria: on
+\texttt{california\_\allowbreak housing}$^\dagger$, the distilled
+student has the smallest mean deviation from the diagonal among the
+three systems --- but, on the central-interval coverage criterion,
+it \emph{undercovers} (PICP80 of 0.596, against the teacher's
+overcoverage of 0.951): ``better calibrated'' holds on the first
+criterion, not the second, and it is the conformal step that closes
+the coverage (with the $^\dagger$ caveat: there the target is
+binarized, and ``calibration'' is that of a Bernoulli).
+
+The symmetric objection remains: if the gain were \emph{only}
+calibration, a cheap conformal correction on the true-label control
+would reach it. A declared pilot (5 datasets, 3 seeds, per-quantile
+split-conformal on both arms) answers that it does not:
+conformalization fixes the coverage --- on the criterion of the
+distance to nominal decreasing --- on 5/5 datasets in the
+\emph{soft} arm and 3/5 in the \emph{hard} one (the exceptions: the
+california-\emph{hard}, which already overcovered and whose coverage
+conformalization moves away from nominal, with a PICP80 distance
+from $8.06$ to $9.63$~p.p., and the cps88wages-\emph{hard}, which
+was already within 1~p.p.\ of nominal and moves by less than
+1~p.p.), but moves the CRPS by less than 1\% --- the distilled
+student's shape advantage survives the correction intact.
+Conformalization buys calibration; distillation buys shape
+(Appendix~\ref{sec:app-pilot-conformal}).
+
+\section{E1 --- classical distributional baselines: the strong native
+put to the test}
+\label{sec:destil-e1}
+
+Up to here, classical distributional baselines outside the compared
+families --- NGBoost \citep{duan2020} and quantile regression
+forests (QRF) \citep{meinshausen2006} --- were not included: the
+true-label quantile students play the role of the native
+distributional baseline \emph{within} the tested families. The
+limitation hides a possible confounder: if a strong classical native
+closed on its own the gap we attribute to distillation, the whole
+contribution would be oversized. This section closes that gap with
+experiment E1, whose hypotheses and criteria were fixed in writing
+before any result was read, with execution already started --- the
+exact status is in Table~\ref{tab:destil-hipoteses} --- per the
+study's conduct contract.
+
+\subsection{Pre-registered design}
+\label{sec:destil-e1-desenho}
+
+Two falsifiable hypotheses were fixed, with interpretation criteria
+registered for \emph{both} outcomes:
+
+\begin{itemize}
+  \item \textbf{H-B1:} on the majority of the 20 datasets, the
+    distilled student's CRPS is less than or equal to the best
+    classical baseline's (one-sided sign test; $\alpha = 0.05$);
+  \item \textbf{H-B2:} the classical baselines do not alter the
+    frontier's reading --- their latencies are in microseconds (the
+    students' tier), so they compete with the distilled student in
+    accuracy, not in cost.
+\end{itemize}
+
+The pre-fixed criteria (gates): if H-B1 were confirmed, the decision
+rule would gain the note ``a strong classical native does not
+replace distillation where the teacher's advantage is large''; if
+refuted, \emph{all} the distilled student's advantage claims would
+be re-scoped in the papers and in this dissertation, with the
+negative result reported with the same prominence. The protocol is
+identical to the rest of the chapter's --- same 20 datasets, same
+partitions (20\% hold-out, seed 42), 3 seeds, the same CRPS
+estimator on the 19-quantile grid --- with one asymmetry declared in
+the pre-registration itself: NGBoost (Normal distribution, early
+stopping on a 10\%-of-pool validation) and the QRF (native quantiles
+at the same 19~$\tau$) run with documented \emph{default}
+hyperparameters, \emph{without} specific tuning, so the
+interpretation is limited to ``strong default''. A same-day dated
+addendum records the single execution decision: the QRF package does
+not accept missing values (present in 3 CTR23 datasets; NGBoost
+handles them natively), and median imputation fitted on the pool and
+applied to the test was adopted, on the QRF path only --- a simple,
+leakage-free, declared policy.
+
+\subsection[Results: 17 of 20, with three instructive
+upsets]{Results: 17 of 20 for the distilled student --- with three
+instructive upsets}
+\label{sec:destil-e1-resultados}
+
+\begin{sloppypar}
+All the numbers below were recomputed from the analysis artifact
+\texttt{baselines\_\allowbreak analysis.\allowbreak csv} (in
+\texttt{results/\allowbreak distillation/}), which the script
+\texttt{analyze\_\allowbreak baselines.\allowbreak py} aggregates
+from the raw artifact
+\texttt{classical\_\allowbreak baselines.\allowbreak csv}.
+\textbf{H-B1 is confirmed}: the distilled student has a CRPS less
+than or equal to the best classical baseline's on \textbf{17 of the
+20} datasets (one-sided sign test $p = 0.0013$; one-sided Wilcoxon
+$p = 0.0008$). The best classical is the QRF on 19 of the 20
+datasets (NGBoost beats it only on \texttt{cps88wages}).
+\textbf{H-B2 too}: the classicals' per-dataset median latencies fall
+between 4.1 and 31.9~\us/row (QRF 4.1--21.4; NGBoost 12.2--31.9)
+--- the students' tier, two to four orders of magnitude below the
+teachers, depending on the teacher and the context. The classicals
+compete with the distilled student in accuracy, never in cost, and
+the frontier reading of Section~\ref{sec:destil-fronteira} remains
+intact.
+\end{sloppypar}
+
+The pre-fixed criterion demands reading the three upsets one by one,
+and Table~\ref{tab:destil-e1-reveses} lays them out in full.
+
+\begin{table}[htb]
+\centering
+\caption[The three upsets of E1]{The three upsets of E1: CRPS where
+the best classical baseline beats the distilled student (mean of 3
+seeds; lower is better; \textbf{bold} = best in row). Source:
+\texttt{results/\allowbreak distillation/\allowbreak baselines\_\allowbreak analysis.\allowbreak csv}.}
+\label{tab:destil-e1-reveses}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Dataset & Distilled student & Control & QRF & Teacher \\
+\midrule
+california\_housing$^\dagger$ & 0.109 & 0.180 & 0.084 & \textbf{0.069} \\
+physiochemical\_protein & 1.736 & 1.785 & 1.528 & \textbf{1.212} \\
+wine\_quality           & 0.365 & 0.328 & \textbf{0.279} & 0.289 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Three readings emerge. First, the upsets are not random:
+\texttt{wine\_quality} is precisely the dataset where the
+pre-registered criterion already advised against distilling (the
+teacher behind the baseline in RMSE; retention $-0.97$ in
+Table~\ref{tab:destil-retencao}), and there the \emph{default} QRF
+beats \emph{even the teacher} (CRPS 0.279 against 0.289; the only
+dataset, out of 20, where that happens) --- the study's sharpest
+demonstration that the ``test a strong native student'' step of the
+decision rule is not rhetorical. Second, even on the other two
+upsets, distillation keeps working in its own framing (retentions
+$+0.64$ --- on the binarized-target dataset$^\dagger$ --- and
+$+0.09$ over the same-family control); what E1 adds is that, on
+those datasets, a different native family reaches further with no
+teacher at all. Third, the reading about the control's strength
+needs both halves. The best classical beats the true-label
+\emph{control} (the pinball XGBoost) on 5 of the 20 datasets; but
+E3's own Gaussian workaround (point $+$ global Gaussian residual)
+beats it on 7 --- with ${\sim}21\%$ on
+\texttt{fps\_\allowbreak benchmark} and on the binarized
+dataset$^\dagger$ --- and, in union, some teacher-free alternative
+beats the control on 9 of the 20
+(\texttt{results/\allowbreak distillation/\allowbreak decision\_\allowbreak utility.csv}).
+The control remains the right paired comparison --- same family and
+same capacity, with the label and loss differences declared in
+Section~\ref{sec:destil-alunos} --- but it is not the teacher-free
+ceiling: against the \emph{best} teacher-free alternative of each
+dataset (control, Gaussian, QRF, or NGBoost --- an oracle selection,
+overly favorable to the alternative), the distilled student wins on
+12 of 20 ($p=0.25$). The advantage over the control is therefore not
+an artifact of a badly built control, but the practical question
+``would anyone pay for the teacher?'' is answered by the decision
+rule --- test the cheap alternatives first --- and by the axis no
+alternative covers: latency at about a hundred microseconds per row
+\emph{with} transferred distributional shape.
+
+The interpretive balance follows the pre-fixed criterion: the
+distillation advantage \textbf{is not redundant} with strong native
+distributional baselines in default configuration --- with the
+caveat that, against the \emph{best} of four teacher-free
+alternatives chosen dataset by dataset (oracle selection, favorable
+to the alternative), the distilled student wins on 12 of 20
+($p=0.25$): it beats each cheap alternative taken in isolation, not
+the best ensemble of them. The decision rule thereby gains a
+concrete instance and a complement. The step ``test a strong native
+quantile student'' now names the QRF explicitly: it costs seconds of
+training, serves at units or tens of microseconds per row and, on a
+predictable minority of datasets, settles the problem before any
+teacher needs to be loaded.
+
+\emph{A strong classical distributional native does not replace
+distillation --- but it should be tried first.} The distilled
+student beats the best of NGBoost and QRF on 17 of 20 datasets (sign
+test $p=0.0013$; Wilcoxon $p=0.0008$), at latencies of the same tier
+(classicals at 4--32~\us/row). The three upsets are diagnosable ---
+on \texttt{wine\_quality}, where the gate already advised against
+distilling, the default QRF beats even the teacher --- and they
+convert the ``strong native'' step of the decision rule into a
+concrete instruction: try the QRF first; it costs seconds.
+
+\section{E3 --- decision utility: the distributional gain in problem units}
+\label{sec:destil-e3}
+
+The CRPS summarizes the whole distribution; a decision uses one
+point of it. Whoever must reserve capacity to cover 90\% of cases
+acts on the 0.90 quantile, and the cost of erring downward is nine
+times that of erring upward: the expected cost of that decision is,
+by construction, the pinball loss at level 0.90 (the newsvendor
+problem). Experiment E3 therefore brings no evidence independent of
+the CRPS --- it decomposes it per level $\tau$ and expresses it in
+the unit of the target. Three systems are measured on the same 20
+datasets and 3 seeds: the distilled student, the control, and the
+output of someone who only has a point model (the point prediction
+plus a single-deviation Gaussian residual, estimated on 10\% of the
+pool and refit on the full pool). The two hypotheses and the focal
+level $\tau{=}0.90$ were written before any reading of the result
+(status in Table~\ref{tab:destil-hipoteses}).
+
+The two registered hypotheses are confirmed. At $\tau{=}0.90$ ---
+the typical service level of capital reserve or tail provisioning
+--- the distilled student's realized cost is less than or equal to
+the \emph{hard} control's on \textbf{18 of 20} datasets (one-sided
+sign $p{=}0.0002$; supplementary Wilcoxon $p{=}0.0001$) and less
+than or equal to the Gaussian workaround's on \textbf{17 of 20}
+($p{=}0.0013$). The count exceeds that of the aggregate CRPS itself
+(16 of 20) --- the tail edge is more consistent across datasets than
+the average over all levels --- and comfortably survives the
+exclusion of the binarized dataset$^\dagger$ (17/19, $p{=}0.0004$;
+16/19, $p{=}0.0022$).
+
+The pre-declared exploratory analysis (H-D3) explains why: the
+profile of the gain per level $\tau$ is U-shaped. In the center of
+the distribution ($\tau$ between 0.45 and 0.65), the median cost
+reduction over the control is ${\sim}1\%$; in the tails, it rises to
+$8.0\%$ at $\tau{=}0.90$, $8.2\%$ at $\tau{=}0.95$, and $8.7\%$ at
+$\tau{=}0.05$ --- and, against the Gaussian, to $14$--$21\%$ at
+$\tau{=}0.90$ and $\tau{=}0.05$ (13\% at $\tau{=}0.95$). The reading
+closes the chapter's argument: \emph{the teacher's distributional
+advantage lives in the tails --- exactly where asymmetric-cost
+decisions live --- and it is there that the distilled student
+delivers it, at about a hundred microseconds per row}
+(\texttt{results/\allowbreak distillation/\allowbreak decision\_\allowbreak utility.\allowbreak csv};
+analysis in
+\texttt{decision\_\allowbreak utility\_\allowbreak analysis.\allowbreak csv}).
+
+Three applied readings, with real rows from the OOF labeling
+artifact (the same as Figure~\ref{fig:quantis-cobertura}'s), ground
+what the identity between the cost ratio and the level~$\tau$ means
+in practice. Three selection warnings first, because illustration is
+not statistics: the curves are \emph{teacher} outputs under OOF
+labeling (not the distilled student's --- the student learns exactly
+these curves, with the retention Table~\ref{tab:destil-retencao}
+measures); the individual rows were \emph{chosen} for legibility,
+not drawn at random; and each choice comes declared with the whole
+portfolio's statistic next to it. On \texttt{cps88wages}, an
+income-cutoff policy at 500~dollars a week would approve by the
+mean, comfortably, a row with a point prediction of 953; the same
+row's 0.10 quantile is 338. The dataset has two rows with exactly
+those covariates and exactly that curve --- one realized 356, the
+other 1{,}132 --- and that is what a wide predictive distribution
+\emph{means}: two individuals identical to the model, outcomes
+$3.2\times$ apart, and an interval $[338;\,1{,}587]$ that covers
+both while the point 953 misses both (the row is at the
+${\sim}99$th percentile of the mean--realized discrepancy; the twin
+is the counterexample the mean hides).
+
+On the whole portfolio, with the \emph{same} cutoff of 500 on both
+sides, 86.6\% of the rows the mean approves (12{,}247 of 14{,}141)
+have a 0.10 quantile below the cutoff --- and the fraction depends
+on the cutoff, which is why the grid goes declared: 48\% at 300,
+74\% at 400, 95\% at 600, and 100\% from 700 dollars on. What the
+rule buys is also stated from both sides: it is \emph{conservative}
+--- it declines a lot, and the declined block realizes below 500 in
+only 32\% of cases, slightly above the whole portfolio's 29\% ---
+but what it \emph{keeps} is clean: only 9.6\% of the
+q$_{0.10}$-approvals realize below the cutoff, three times less
+than the base. That is exactly what ``how much do you earn with 90\%
+confidence?'' means: purity of the approved portfolio, paid in
+volume --- a trade the single point does not even allow stating.
+
+On \texttt{fps\_\allowbreak benchmark}, among the 326 configurations
+with a point prediction in the 107--109~FPS band, the central 80\%
+intervals range from 1.1 to 8.7~FPS --- the pair displayed here are
+the two ends of that band, declaredly: same mean, and the
+minimum-performance guarantee (the 0.10 quantile) distinguishes what
+the mean does not see (108 against 102). On
+\texttt{video\_\allowbreak transcoding}, provisioning the reserve by
+the point prediction overruns on 53.2\% of the jobs --- the mean is
+close to the median, and half end up above by construction ---
+while provisioning by the 0.90 quantile overruns on 5.2\%: below
+the nominal 10\% (the teacher overcovers on this dataset), with a
+\emph{median} slack three times smaller than that of the fixed
+margin with the same overrun rate (0.19 against 0.62) --- on the
+mean the order inverts (0.76 against 0.62), because the q$_{0.90}$
+concentrates large slacks exactly on the volatile jobs, which is
+where the fixed margin overruns.
+
+The counterpoint closes the reading: where the cost of error is
+symmetric and the decision consumes only the center of the
+distribution, the U-profile's median gain of ${\sim}1\%$ does not
+pay for the complexity --- the point-label student, simpler and
+typically faster (on
+\texttt{california\_\allowbreak housing}$^\dagger$, 50 against
+99~\us/row), is the right tool, and the rule of
+Section~\ref{sec:destil-regra} exists to say so before any cost is
+paid. Source:
+\texttt{results/\allowbreak distillation/\allowbreak oof/\allowbreak tabpfn\_\allowbreak <dataset>.parquet}.
+
+\section{When to distill: the decision rule}
+\label{sec:destil-regra}
+
+The conditions of value for distillation come out of two tested
+questions --- does the student's family matter? does the heavy tail
+explain the failures? --- whose answers (yes to the first; no to
+the second) close the practical rule.
+
+\textbf{Does the student's family matter?} Yes. XGBoost's pinball
+objective, under this design's inherited hyperparameters, leaves
+measurable room on several datasets ---
+Section~\ref{sec:destil-e1-resultados} quantifies it: some
+teacher-free alternative beats it on 9 of 20 --- and distillation
+fills part of that room consistently; that is, in part, the room it
+occupies. A true-label quantile-MLP student, by contrast, matches
+the distilled XGBoost \emph{with no teacher at all} on small,
+numeric datasets (CRPS 0.110 against 0.109 on
+\texttt{california\_\allowbreak housing}$^\dagger$; 0.047 against
+0.064 on \texttt{kin8nm}) --- but collapses on
+\texttt{year\_\allowbreak prediction} (CRPS 9.66, with near-total
+overcoverage), where distillation rescues it (CRPS $\to 4.91$). No
+student family dominates; what distillation offers is robustness
+across regimes
+(\texttt{results/\allowbreak distillation/\allowbreak mlp\_\allowbreak students.\allowbreak csv}).
+
+\textbf{Is the heavy tail the failure moderator?} No --- and the
+correct reading is modest. We re-ran teacher and students under
+$y' = \log(1+y)$ on the three defeat datasets with skewed targets
+--- \texttt{fifa} and \texttt{diamonds\_\allowbreak real}, on price
+scales, and \texttt{health\_\allowbreak insurance}, weekly hours
+with 29.9\% zeros (its own diagnosis in
+Section~\ref{sec:destil-derrotas}) --- plus two positive controls.
+The transformation does \emph{not} rescue the failures
+(\texttt{fifa} persists at $-1.69$). The absolute CRPS differences
+shrink to 0.004--0.025 in log space, but that is a change of the
+metric's unit; on the dimensionless comparison --- the teacher's
+\emph{relative} advantage over the control --- the transformation
+does not reduce the advantage on the three defeat datasets (1.5\%
+$\to$ 2.7\% on \texttt{fifa}; 4.9\% $\to$ 8.6\% on
+\texttt{diamonds\_\allowbreak real}; 2.1\% $\to$ 4.2\% on
+\texttt{health\_\allowbreak insurance}) and reduces it, without
+eliminating it, on the two positive controls
+($14.4\%\!\to\!9.1\%$ on \texttt{kings\_\allowbreak county};
+$12.9\%\!\to\!11.1\%$ on \texttt{miami\_\allowbreak housing}). What
+the ablation establishes is a weaker and still useful pair: the
+transformation is free, it changes the error regime in which
+teacher and students operate, and it does not eliminate the
+teacher's relative advantage
+(\texttt{results/\allowbreak distillation/\allowbreak ablation\_\allowbreak logtarget.\allowbreak csv}).
+
+From the two refutations, from E1 and from the frontier, the final
+decision rule --- the operational form of the answer to RQ3:
+
+\begin{quote}
+\textbf{Before distilling: (i)~apply cheap target transformations
+(a log on price-scale targets is free, changes the error regime,
+and how much it moves your dataset is measured in minutes);
+(ii)~test a strong native distributional student --- a default QRF
+costs seconds, and a quantile MLP covers the small, numeric
+datasets. Distill when a genuine teacher advantage persists after
+both --- a single OOF labeling, at a cost of minutes, measures that
+advantage directly. Where it is large, distillation is the only
+measured strategy that carries part of it below the teacher's
+cheapest competitive configuration; where it is small, simple
+ensemble shrinking may close the case.}
+\end{quote}
+
+A declared descriptive analysis supports the rule's gate:
+conditioning retention on the teacher's \emph{relative} advantage,
+the half of the datasets with advantage above the median has
+positive retention on 10 of 10, and the four failures all
+concentrate in the low-advantage half (one-sided Fisher exact
+$p{=}0.043$; $p{=}0.033$ without the binarized
+dataset$^\dagger$). The criterion predicts the effect's \emph{sign},
+not its magnitude (non-significant Spearman), and carries two
+declared limits: conditioner and outcome share the control's CRPS
+on the same hold-out, and the conditioner uses the oracle version
+of the criterion
+(\texttt{retention\_\allowbreak conditional.csv}).
+
+Each clause of the rule is a result of this chapter: clause (i) is
+the log ablation; (ii) is the MLP student plus E1; the OOF check is
+Section~\ref{sec:destil-oof}; and the verdict's two ends are the
+frontier of Section~\ref{sec:destil-fronteira} --- the
+\texttt{california\_\allowbreak housing}$^\dagger$/\texttt{year\_\allowbreak prediction}
+cases on one side and \texttt{kin8nm} on the other.
+
+\emph{The decision rule --- transform, test a strong native, and
+distill only the advantage that remains --- is verifiable in
+minutes.} The four defeats all fall in the half of the datasets
+where the teacher's relative advantage is smaller (conditional
+analysis above), but each has its own cause: duplicates on
+\texttt{wine\_quality}, configuration sensitivity on
+\texttt{health\_\allowbreak insurance}, and two defeats without a
+tested explanation (\texttt{fifa},
+\texttt{diamonds\_\allowbreak real}), which the log transformation
+does not rescue (Section~\ref{sec:destil-derrotas}). The
+precondition is measured with a single cheap OOF labeling, and E1
+adds the intermediate step: the QRF as a strong native of
+negligible cost.
+
+\section{Discussion, limitations, and synthesis}
+\label{sec:destil-discussao}
+
+\subsection{What distillation transfers --- and what that says about
+the teachers}
+\label{sec:destil-transfere}
+
+The consistent pattern across 20 datasets, two teachers, two student
+families, and three ablations is that \emph{point} information
+saturates from the raw labels --- a tuned GBDT does not need the
+teacher's opinions about the mean --- while \emph{distributional}
+information (quantile structure, calibrated width) is carried by the
+teacher and transferable. Not the mean: the \textbf{shape}. And the
+shape is exactly the component a point-label student cannot learn
+from the raw data to the same extent, and the most expensive
+component to serve in context. It is worth making explicit,
+therefore, what the contribution is \emph{not}: returning quantiles
+a GBDT already does on its own --- this chapter's control is
+precisely the native pinball objective, and E1 measures the
+classical QRF and NGBoost. The contribution is the same quantile
+student extracting from the \emph{teacher's} distilled distribution
+what the scalar label does not contain: the shape of the
+uncertainty, with the gain concentrated in the tails.
+
+A practical consequence: leading in point accuracy does not imply
+offering a predictive distribution. TabFM wins the accuracy tables
+of Chapter~\ref{chap:benchmark}, but its regression head returns a
+single value (a check confirmed by the official technical report
+\citep{kong2026}) and the spread of its ensemble is no substitute
+(16.3\% coverage at a nominal 80\%, measured on one dataset). Among
+the measured teachers, TabPFN's distributional head is the decisive
+architectural asset; the independent benchmarks that today evaluate
+foundation models as conditional density estimators
+\citep{izbicki2026,landsgesell2026} point the same way, and our
+results quantify what the absence of that head costs. For the
+practitioner with a 16~GB GPU, the order of the measured levers is:
+shrink the ensemble first (sometimes free), compress the context
+next, reserve the full teacher for batch processing --- and, when
+distributional predictions must be served below the teacher's
+cheapest competitive configuration, the distilled student is that
+regime's CRPS-optimal occupant \emph{among the teacher-derived
+strategies}; a native QRF also occupies it (and on
+\texttt{california\_\allowbreak housing}$^\dagger$ reaches further
+--- one of E1's three upsets), which is why the decision rule puts
+``test a strong native student'' first
+(Section~\ref{sec:destil-e1}). The complementary route we did not
+measure --- post-hoc conformal calibration of the teacher itself
+\citep{park2026} --- delivers calibrated intervals without a fast
+student, but does not attack latency; FP8 quantization of attention
+\citep{kubler2026} is a fourth emerging serving lever, also not
+measured here.
+
+\subsection{Limitations}
+\label{sec:destil-limitacoes}
+
+\begin{itemize}
+  \item \textbf{Heterogeneous, budget-dependent magnitude.}
+    Retention varies from $-1.3$ to $+1.1$ across datasets, the
+    Bayesian posterior leaves ${\sim}25\%$ of mass on negative
+    retention, and Section~\ref{sec:destil-retune} shows that half
+    of the main design's magnitude came from the control's
+    configuration. What is delivered is the decision rule of
+    Section~\ref{sec:destil-regra}, not a universal claim.
+  \item \textbf{A population with one binarized-target dataset.}
+    \texttt{california\_housing}$^\dagger$ remains in the registered
+    population; every headline carries the sensitivity without it
+    (Table~\ref{tab:destil-robustez}).
+  \item \textbf{Four eligible datasets outside the population.} The
+    eligibility rule reaches 19 CTR23 datasets; four stayed out
+    (Section~\ref{sec:destil-setup}); the sensitivity with them is
+    in Table~\ref{tab:destil-robustez}.
+  \item \textbf{Classicals in default configuration.} NGBoost and
+    QRF enter in documented default configuration, without specific
+    tuning; E1's reading is ``strong default'', not ``classical
+    tuned to the limit''.
+  \item \textbf{Grid CRPS estimator.} The 19-quantile grid
+    overestimates the exact CRPS by a nearly constant ${\sim}4$--5\%:
+    internal comparisons preserved, absolute values not comparable
+    across works; the 99-quantile grid ablation confirms the
+    constancy on real data
+    (\texttt{ablation\_\allowbreak densegrid.csv}).
+  \item \textbf{One-sidedness and multiplicity.} The central
+    $p$-values are one-sided, per the directional hypotheses of
+    Table~\ref{tab:destil-hipoteses}; the headline survives the
+    two-sided reading ($p=0.012$) and the sequential correction
+    ($p\approx0.019$), but the supplementary Wilcoxon (two-sided
+    $0.090$) and the post-hoc Fisher (two-sided $0.087$) would not
+    reject. No correction is applied \emph{across} experiments;
+    under Holm on the confirmatory family, the primary conclusions
+    survive and the supplementary instruments do not.
+  \item \textbf{Group structure ignored by the i.i.d.\ split.} On
+    datasets with groups (tracks by the same artist in
+    \texttt{year\_\allowbreak prediction}, resales of the same
+    property in \texttt{kings\_county}), absolute metrics inflate
+    for all systems equally; the retention's denominator can
+    distort, without affecting the direction of the paired
+    comparisons.
+  \item \textbf{Seeds.} The protocol uses 3 seeds per student; the
+    10-seed re-run kept 16/20 and a median of 0.191 (against
+    0.192), with a maximum individual shift of 0.013 --- the
+    across-seed variance is negligible next to the across-dataset
+    variance.
+  \item \textbf{Hardware and teacher version.} Measurements on a
+    single GPU delimit, not map, the hardware space; the results
+    refer to TabPFN v2.5 and TabFM v1.0.1, pinned versions --- the
+    method uses nothing specific to them, but the magnitude may
+    depend on the version (Chapter~\ref{chap:conclusao}).
+  \item \textbf{Teacher licenses.} Both teachers' weights carry
+    non-commercial licenses, and TabPFN-2.5's forbids training,
+    with its outputs, a model ``competitive'' with it. The results
+    hold for research and evaluation; commercial use of a distilled
+    student depends on a license from the vendor (the clauses' full
+    text is in Appendix~\ref{app:suplementares}; the consolidation,
+    in Chapter~\ref{chap:conclusao}).
+\end{itemize}
+
+\section{Chapter summary}
+\label{sec:destil-sintese}
+
+The chapter delimits the space in which distilling tabular
+foundation models for regression works. The point axis is negative
+with both tested teachers, on pools of 3{,}000 to 100{,}000 rows and
+fixed student capacity: there is nothing to transfer. The
+distributional axis --- the framing with no prior academic work ---
+is positive on 16 of 20 datasets (median retention of 12\% to 19\%,
+depending on how the arms are tuned), at up to three orders of
+magnitude less latency depending on the dataset ($7.4\times$ to
+$880\times$ against the full-context teacher; against its cheapest
+competitive configuration, $2.5\times$ and $27\times$ where the
+advantage is large --- Section~\ref{sec:destil-fronteira}), and
+beats the best of QRF and NGBoost on 17 of 20 in the pre-registered
+E1 (12 of 20 against the best of four teacher-free alternatives
+chosen per dataset).
+% source: results/distillation/pareto.csv
+The three-strategy frontier locates when each lever wins, the OOF
+ablation shows that the right safeguard protects calibration, and
+the negative results --- point refuted, heavy tail not confirmed,
+partial redundancy with classicals --- convert into a decision rule
+whose precondition can be checked in minutes. It is the
+dissertation's answer to RQ3: what the foundation model knows and
+the baseline does not learn on its own is part of the
+distribution's shape --- and it is that part, between an eighth and
+a fifth of the teacher's advantage at the median, that distills.
+With the three research questions answered, it remains for
+Chapter~\ref{chap:conclusao} to consolidate the program's
+contributions, limitations, and future work.
