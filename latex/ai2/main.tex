@@ -174,7 +174,9 @@ answer RQ1, \S\ref{sec:frontier} RQ2, and
     configuration that beats it (2.5$\times$ its latency on
     california\_housing --- the binarized-target erratum dataset of
     \S\ref{sec:setup} --- and 27$\times$ on year\_prediction), while on
-    kin8nm --- whose teacher edge is small --- a single-member teacher
+    kin8nm --- a latency case: the teacher is already cheap at the
+    student's tier (its relative edge, 44\%, is among the largest)
+    --- a single-member teacher
     already matches student latency, and
     side-findings show ensemble reduction is underrated (1 member $\approx$
     8 at 1/7 the latency) while the last context doubling is grossly
@@ -715,7 +717,7 @@ is the quantity discussed in \S\ref{sec:frontier}. In the CRPS row, the distille
 teacher-derived systems below the
 teacher's cheapest competitive configuration on california\_housing
 (erratum dataset: binarized-target variant) and
-year\_prediction; on kin8nm, whose teacher edge is small, the
+year\_prediction; on kin8nm, a latency case, the
 single-member teacher already sits at student latency.
 Source: \texttt{results/\allowbreak distillation/\allowbreak pareto.\allowbreak csv}.}
 \label{fig:pareto}
@@ -766,8 +768,8 @@ $\tau$-quantile (y-axis). The diagonal is perfect calibration; the
 correct per-level reading: a curve above the diagonal at a given
 $\tau$ means that quantile is predicted too high, and central-interval
 coverage is the \emph{difference} between the shares at the two
-levels (a curve steeper than the diagonal in the middle means
-too-narrow intervals). The distilled student is
+levels (steeper than the diagonal means too-wide intervals ---
+overcoverage; flatter, too-narrow ones). The distilled student is
 closest to the diagonal on both panels --- by mean diagonal distance;
 by central-interval coverage it under-covers (PICP80 0.596 vs.\ the
 teacher's over-coverage at 0.951), and the conformal step is what
@@ -843,9 +845,15 @@ Together these yield the paper's practical rule:
 \textbf{Before distilling: (i) apply cheap target transforms; (ii) try a
 strong native quantile student. Distill when a genuine teacher edge
 persists after both --- one OOF labeling pass, costing minutes, measures
-that edge directly.} Where the edge is large, distillation is the only measured strategy
-that carries part of it below the teacher's cheapest competitive
-configuration (\S\ref{sec:frontier}); where it is small, ensemble
+that edge directly.} Where no cheap teacher configuration reaches
+the student's latency tier (the two measured frontier cases),
+distillation is the teacher-derived strategy
+that carries part of the edge below the teacher's cheapest
+competitive
+configuration (\S\ref{sec:frontier}; a strong native such as the
+QRF can occupy the same latency regime, and on one dataset
+outperformed it); where a single teacher member already runs at the
+student's latency, ensemble
 reduction alone may suffice.
 \end{quote}
 

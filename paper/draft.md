@@ -320,8 +320,12 @@ Together these yield the paper's practical rule:
 > **Before distilling: (i) apply cheap target transforms; (ii) try a strong
 > native quantile student. Distill when a genuine teacher edge persists
 > after both — one OOF labeling pass, costing minutes, measures that edge
-> directly.** Where the edge persists, distillation is the only route to
-> sub-millisecond distributional serving (§5.3).
+> directly.** Where no cheap teacher configuration reaches the student's
+> latency tier, distillation is the teacher-derived route that carries part
+> of the edge below the teacher's cheapest competitive configuration (a
+> strong native such as the QRF can occupy the same latency regime, and on
+> one dataset outperformed it); where a single teacher member already runs
+> at the student's latency, ensemble reduction may close the case (§5.3).
 
 ## 6. Discussion
 
