@@ -100,6 +100,10 @@ PAIRS = [
      "excl.\\ \\texttt{adult} --- Section~\\ref{sec:met-custo}), and "
      "latency (\\textmu s/row, \\texttt{adult})."),
     ("Variabilidade entre \\emph{folds}", "Across-fold variability"),
+    ("AUC-ROC", "ROC-AUC"),
+    ("Mean rank (1 = best)", "Average rank (1 = best)"),
+    ("$B{=}10\\,000$", "$B{=}10{,}000$"),
+    ("<conjunto>", "<dataset>"),
     ("Mediana, sobre os conjuntos da tarefa, do coeficiente de variação "
      "entre \\emph{folds} da métrica primária (\\%; menor = mais "
      "estável).",
@@ -143,6 +147,41 @@ FILES = ["tabelas-geradas.tex", "tabela-metricas-operacionais.tex",
          "hiperparametros-escolhidos.tex"]
 
 
+def convert_custos_block(s: str) -> str:
+    """Converte o bloco da tabela de custos (tab:app-custos), que o
+    gerador PT emite em formato PT *sem chaves* (vírgula decimal nua e
+    ponto de milhar): 8.644,82 -> 8,644.82."""
+    start = s.find(r"\label{tab:app-custos}")
+    if start == -1:
+        return s
+    end = s.find(r"\end{table}", start)
+    block = s[start:end]
+    # 1) ponto de milhar -> placeholder; 2) vírgula decimal -> ponto;
+    # 3) placeholder -> vírgula (ordem obrigatória)
+    block = re.sub(r"(?<=\d)\.(?=\d{3}(?!\d))", "\x00", block)
+    block = re.sub(r"(?<=\d),(?=\d)", ".", block)
+    block = block.replace("\x00", ",")
+    return s[:start] + block + s[end:]
+
+
+def check_en_numbers(name: str, s: str) -> None:
+    """Falha se restar número em formato PT nas linhas de célula de
+    tabela: vírgula decimal nua (d,dd — teria pego 28 das 35 células do
+    caso tab:app-custos) ou híbrido milhar+decimal PT (d.ddd,dd). O
+    milhar PT isolado ("1.117") é sintaticamente indistinguível de um
+    decimal EN e não é detectável aqui; o bloco de custos é convertido
+    explicitamente por convert_custos_block."""
+    bad = []
+    for i, line in enumerate(s.splitlines(), 1):
+        if "&" not in line:
+            continue
+        if re.search(r"\d,\d{1,2}(?!\d)(?!\})", line):
+            bad.append((i, "virgula decimal PT", line.strip()[:60]))
+        if re.search(r"\d{1,3}\.\d{3},\d", line):
+            bad.append((i, "hibrido milhar+decimal PT", line.strip()[:60]))
+    assert not bad, f"{name}: formato PT residual: {bad[:5]}"
+
+
 def main():
     DST.mkdir(exist_ok=True)
     for name in FILES:
@@ -151,12 +190,16 @@ def main():
             s = s.replace(pt, en)
         # separador decimal: 0{,}123 -> 0.123 (apenas entre dígitos)
         s, n = re.subn(r"(?<=\d)\{,\}(?=\d)", ".", s)
+        s = convert_custos_block(s)
+        # intervalos de IC: "[a; b]" -> "[a, b]"
+        s = re.sub(r"\[(\d[\d.]*);\s*(\d[\d.]*)\]", r"[\1, \2]", s)
         resid = re.findall(r"[çãõáéíóúâêô]", s)
+        check_en_numbers(name, s)
         header = ("% Gerado por scripts/gen_appendix_en.py a partir de "
                   f"dissertacao/appendix/{name} (nao editar a mao).\n")
         (DST / name).write_text(header + s)
         print(f"{name}: {n} decimais convertidos; residuo acentos: "
-              f"{len(resid)}")
+              f"{len(resid)}; checagem de formato EN: ok")
 
 
 if __name__ == "__main__":

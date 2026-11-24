@@ -7,6 +7,8 @@ legenda) com fontes maiores. Mesmo artefato de dados e mesma semântica.
 
 Saída: results/figures/learning_curves_diss.{png,pdf}
 Uso: uv run python scripts/fig_learning_curves_diss.py
+Com argumento "en": rótulos em inglês, saída
+dissertacao-en/images/learning_curves_diss_en.{png,pdf} (PT intocada).
 """
 import sys
 from pathlib import Path
@@ -32,6 +34,7 @@ PRIMARY = {"binary": ("roc_auc", True), "multiclass": ("log_loss", False),
 
 
 def main():
+    en = len(sys.argv) > 1 and sys.argv[1] == "en"
     df = pd.read_csv(REPO / "results/learning_curve/curve.csv")
     df["primary"] = df.apply(lambda r: r[PRIMARY[r.task_type][0]], axis=1)
 
@@ -66,23 +69,31 @@ def main():
         nice = {"roc_auc": "AUC", "log_loss": "log-loss", "rmse": "RMSE"}
         arrow = " ↑" if higher else " ↓"
         ax.set_title(f"{ds}\n({task}, {nice[col]}{arrow}{yl})", fontsize=11)
-        ax.set_xlabel("tamanho do pool de treino", fontsize=10)
+        ax.set_xlabel("training pool size" if en else "tamanho do pool de treino",
+                      fontsize=10)
         ax.tick_params(labelsize=9)
         ax.grid(alpha=0.3, which="both")
-    axes[0].set_ylabel("métrica primária", fontsize=10)
-    axes[3].set_ylabel("métrica primária", fontsize=10)
+    ylab = "primary metric" if en else "métrica primária"
+    axes[0].set_ylabel(ylab, fontsize=10)
+    axes[3].set_ylabel(ylab, fontsize=10)
     # última célula vira painel de legenda
     axes[5].axis("off")
     handles = [Line2D([0], [0], color=c, lw=2.2, marker="o", ms=5)
                for c in CMAP.values()]
     axes[5].legend(handles, [DISPLAY[m] for m in CMAP], loc="center",
-                   fontsize=12, frameon=False, title="Modelos",
+                   fontsize=12, frameon=False,
+                   title="Models" if en else "Modelos",
                    title_fontsize=12)
     plt.tight_layout()
-    for ext in ("png", "pdf"):
-        fig.savefig(REPO / f"results/figures/learning_curves_diss.{ext}",
-                    dpi=200, bbox_inches="tight")
-    print("salvo: results/figures/learning_curves_diss.png|pdf")
+    if en:
+        outs = [REPO / "dissertacao-en/images/learning_curves_diss_en",
+                REPO / "results/figures/learning_curves_diss_en"]
+    else:
+        outs = [REPO / "results/figures/learning_curves_diss"]
+    for base in outs:
+        for ext in ("png", "pdf"):
+            fig.savefig(f"{base}.{ext}", dpi=200, bbox_inches="tight")
+    print("salvo:", ", ".join(str(b) for b in outs))
 
 
 if __name__ == "__main__":

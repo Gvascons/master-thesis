@@ -1,8 +1,4 @@
-%% ============================================================================
-%% Appendix C — Supplementary results and process record (English version;
-%% same labels as the frozen PT appendix at 64f9adf).
-%% ============================================================================
-
+%% Appendix C --- Supplementary results and process record (English version; labels match the Portuguese deposit version).
 \chapter{Supplementary Results and Process Record}
 \label{app:suplementares}
 
@@ -24,8 +20,8 @@ regret (Section~\ref{sec:regret-ponderado}); E3 = decision utility
 (Chapter~\ref{chap:framework}); E6 = sampling variant (in this
 appendix); A-GRID = dense-grid CRPS estimator ablation; A-SORT =
 sort repair (Section~\ref{sec:app-abl-sort}); R-COND = conditional
-retention; R-TUNE = student re-tuning (pilot of 10-15 extended to the
-20 datasets on 11-17); SEEDS-10 = the 10-seed re-run (the last four
+retention; R-TUNE = student re-tuning (pilot of 2026-10-15 extended to the
+20 datasets on 2026-11-17); SEEDS-10 = the 10-seed re-run (the last four
 in the limitations of Chapter~\ref{chap:destilacao}).
 
 \section{Distillation ablations: disaggregated tables}
@@ -139,7 +135,7 @@ Retention \\
 
 The text of Chapter~\ref{chap:destilacao} states that curve transfer
 with sort repair ``acts as a calibration regularizer''; this
-pre-registered ablation (2026-10-14; executed on 10-15) isolates the
+pre-registered ablation (2026-10-14; executed on 2026-10-15) isolates the
 component. The same \emph{hard} and \emph{soft} quantile students of
 the 20 datasets (3 seeds) were evaluated with and without the
 post-hoc sorting of the 19 predicted quantiles. Quantile crossing is
@@ -162,7 +158,7 @@ advantage. Source:
 \subsection{Post-hoc conformal calibration (declared pilot)}
 \label{sec:app-pilot-conformal}
 
-A pre-registered exploratory pilot (2026-10-14, executed on 10-15;
+A pre-registered exploratory pilot (2026-10-14, executed on 2026-10-15;
 pilot $\neq$ result): if \emph{both} students receive per-quantile
 split-conformal calibration (CQR style, with 10\% of the pool
 reserved for calibration), does the distilled student's advantage
@@ -269,7 +265,7 @@ before distilling, apply cheap target transformations. Records:
 (phase 6a),
 \texttt{results/\allowbreak distillation/\allowbreak ablation\_\allowbreak logtarget.\allowbreak csv}.
 
-\subsection{Distillation by sampling (own methodological variant)}
+\subsection{Distillation by sampling (an original methodological variant)}
 \emph{What it was:} a pre-registered exploratory hypothesis (H-X1,
 2026-10-14) that sampling $K{=}8$ pseudo-labels per row from the
 teacher's distribution (inverse of the OOF quantile function) and
@@ -285,7 +281,7 @@ Sampling improves calibration where the MSE student undercovers
 (\texttt{california}: PICP80 from 0.60 to 0.80), but the conformal
 pilot (Appendix~\ref{sec:app-pilot-conformal}) shows the same
 calibration can be bought at a fraction of the cost. \emph{Why it is
-here:} it was the candidate for the final round's own
+here:} it was the final round's candidate for an original
 methodological contribution; the pre-registered criterion required,
 in case of refutation, recording it as a tested variant without a
 claim --- and that is what this record does. Post-erratum note
@@ -353,8 +349,8 @@ end-to-end reproducibility test
 (\texttt{extension\_\allowbreak kin8nm\_\allowbreak repro\_\allowbreak check.\allowbreak csv}:
 numbers reproduced exactly under the same seeds), and the real
 \texttt{diamonds} entered the extension as \texttt{diamonds\_real}.
-\emph{Why it is here:} it is the work's most serious record
-deviation and the origin of two safeguards (name/ID/dimension
+\emph{Why it is here:} it is the most serious record-keeping
+deviation in this work and the origin of two safeguards (name/ID/dimension
 verification at download; an \texttt{approx\_\allowbreak samples}
 divergence as a mandatory investigation signal). Canonical record:
 \texttt{docs/\allowbreak errata-\allowbreak diamonds-\allowbreak kin8nm.\allowbreak md},
@@ -421,13 +417,15 @@ Chapter~\ref{chap:destilacao} summarizes and points to.
 \textbf{Novelty searches (scope $\times$ dates).} The
 distributional-distillation framing was checked against the
 literature and public repositories in dated sweeps: 2026-07-15 to
-07-20 (initial sweep; versioned memo in
+2026-07-20 (initial sweep; versioned memo in
 \texttt{docs/\allowbreak memo-\allowbreak novidade-\allowbreak destilacao.md}),
-10-04 (pre-delivery; it recorded the partial collision of
-\citealp{jeong2026} and TabFM's technical report), 10-14 to 10-19
-(post-erratum re-sweeps), 11-05, 11-12, 11-17, and 11-23 (the last).
+2026-10-04 (pre-delivery; it recorded the partial collision of
+\citealp{jeong2026} and TabFM's technical report), 2026-10-14 to
+2026-10-19 (post-erratum re-sweeps), 2026-11-05, 2026-11-12,
+2026-11-17, and 2026-11-23 (the last).
 The wider-scope sweeps (all the study's gaps, not only distillation)
-are those of 07-13 to 07-20, 10-04, 10-14, 10-19, 11-05, and 11-12,
+are those of 2026-07-13 to 2026-07-20, 2026-10-04, 2026-10-14,
+2026-10-19, 2026-11-05, and 2026-11-12,
 recorded in the memo and in the repository history. One claim
 correction belongs to this record: the July 2026 checks stated that
 no independent benchmark of tabular KANs existed; the 2026-10-04
@@ -452,8 +450,8 @@ Execution deviations recorded in dated addenda in the design
 document: a 50{,}000-row cap on the teacher's context (mirroring the
 benchmark); block prediction under VRAM constraints; failure-tolerant
 chaining; inherited hyperparameters in place of per-student Optuna
-(cost measured by the re-tuning of the 20, addendum of 11-12,
-executed on 11-17); the mixture variant executed only at
+(cost measured by the re-tuning of the 20, addendum of 2026-11-12,
+executed on 2026-11-17); the mixture variant executed only at
 $\lambda{=}0.8$; the MUNGE transfer set not executed. The
 dataset-identity corrections (\texttt{diamonds}/\texttt{kin8nm};
 \texttt{online\_news}; the binarized target of
@@ -484,7 +482,7 @@ reaches nineteen datasets; the fifteen selected left four out:
 \texttt{wine\_quality}), the \emph{continuous}
 \texttt{california\_housing} (44977; the non-binarized version of
 the core's dataset), \texttt{superconductivity} (44964; at
-selection time believed to overlap the core, a belief the 10-19
+selection time believed to overlap the core, a belief the 2026-10-19
 erratum undid --- and the omission was not revisited), and
 \texttt{naval\_propulsion\_plant} (44969; with no recorded
 justification). The sensitivity with the four, under the same

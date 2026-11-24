@@ -1,11 +1,5 @@
-%% ============================================================================
-%% Chapter 7 — Distributional Distillation of Foundation Models (English
-%% version, adapted from the frozen Portuguese chapter at 64f9adf; same
-%% labels). EN figures: pareto_distill_en.pdf, calibration_distill_en.pdf
-%% (shared with AI-2), forest_distill_en.pdf (fig_forest_distill.py "en"),
-%% tikz-cap7-1-en.pdf.
-%% ============================================================================
-
+%% Chapter 7 --- Distributional Distillation of Foundation Models (English version; labels match the Portuguese deposit version).
+%% EN figures: pareto_distill_en, calibration_distill_en, forest_distill_en, tikz-cap7-1-en.
 \chapter{Distributional Distillation of Foundation Models}
 \label{chap:destilacao}
 
@@ -358,7 +352,9 @@ result carries a sensitivity analysis with it excluded, reported
 next to the result. The partitions are identical to the
 benchmark's --- a fixed 20\% hold-out (seed 42) that no selection
 stage ever observes --- with three student seeds throughout the
-study (ten on the point core). The hardware is the same RTX~5080
+study (a ten-seed re-run of the TabPFN students on all 20 datasets
+confirms the verdict; Section~\ref{sec:destil-robustez}). The
+hardware is the same RTX~5080
 (16~GB) as in the previous chapters; the VRAM ceilings are treated as measurements, not
 annoyances, and reappear as a finding in
 Section~\ref{sec:destil-fronteira}.
@@ -711,7 +707,7 @@ conservative test either, which is why that pair is judged by the
 paired comparison (\texttt{friedman\_\allowbreak systems.csv}).
 
 Three reading caveats complete the picture. First, retention is a
-ratio and oscillates when the teacher's advantage is small: the
+ratio and oscillates when the teacher's absolute advantage is small: the
 \emph{born-again} case of \texttt{pumadyn32nh} rests on an advantage
 below 0.001 CRPS (\texttt{online\_news}, at a 1.3\% relative
 advantage, is analogous) --- which is why
@@ -774,8 +770,9 @@ the CRPS.
 
 \emph{In synthesis: the distilled student's CRPS is, at the median,
 2.8\% lower than the control's (1.4\% with both arms re-tuned) ---
-recovering 12\% to 19\% of the teacher's advantage --- and it wins
-on 16 of 20 datasets: 12 clear wins, 1 at the margin, 3 ties with a
+recovering 12\% to 19\% of the teacher's advantage. By point
+estimate it wins on 16 of 20 datasets; by confidence interval, the
+scoreboard is 12 clear wins, 1 win at the margin, 3 ties with a
 positive point estimate, 1 tie with a negative one, and 3 clear
 defeats.}
 
@@ -861,7 +858,7 @@ configuration operates (and which the native QRF occupies with a
 better CRPS, as E1 would measure); on \texttt{kin8nm} the
 hypothesis \emph{fails} --- ensemble shrinking delivers the
 student's latency with a much better CRPS. H3 holds, therefore,
-where the teacher's advantage is large and no cheap teacher
+where the teacher's absolute advantage is large and no cheap teacher
 configuration reaches the student's latency tier; where one does,
 as on \texttt{kin8nm}, cheap engineering replaces distillation ---
 a latency condition, complementary to the decision rule's
@@ -882,8 +879,8 @@ latency (148.6 against 45.1~ms/row) for an RMSE gain of 0.05: on
 GPUs of common size, the full-context teacher does not pay for
 itself.
 
-\emph{Where the teacher's advantage is large, the distilled student
-is, among the teacher-derived strategies, the CRPS-optimal
+\emph{Where the teacher's absolute advantage is large, the distilled
+student is, among the teacher-derived strategies, the CRPS-optimal
 distributional system below the teacher's cheapest competitive
 configuration; where a single-member teacher already reaches the
 student's latency tier, as on \texttt{kin8nm}, shrinking the
@@ -892,7 +889,7 @@ E1 should be tried.} On the frontier measured end to end, the cheapest teacher
 configuration that beats the distilled student costs $2.5\times$ its
 latency on \texttt{california\_\allowbreak housing}$^\dagger$ and
 $27\times$ on \texttt{year\_\allowbreak prediction}; on
-\texttt{kin8nm}, of small advantage, a single-member teacher already
+\texttt{kin8nm}, a single-member teacher already
 operates at the student's latency. Side findings: 1 TabPFN member
 $\approx$ 8 members at 1/7 of the latency, and the last context
 doubling is disproportionately expensive on 16~GB GPUs.
@@ -1066,8 +1063,8 @@ $p = 0.0008$). The best classical is the QRF on 19 of the 20
 datasets (NGBoost beats it only on \texttt{cps88wages}).
 \textbf{H-B2 too}: the classicals' per-dataset median latencies fall
 between 4.1 and 31.9~\us/row (QRF 4.1--21.4; NGBoost 12.2--31.9)
---- the students' tier, one to four orders of magnitude below the
-teachers, depending on the teacher and the context. The classicals
+--- the students' tier, from under one to four orders of magnitude
+below the teachers, depending on the teacher and the context. The classicals
 compete with the distilled student in accuracy, never in cost, and
 the frontier reading of Section~\ref{sec:destil-fronteira} remains
 intact.
@@ -1247,7 +1244,8 @@ the point prediction overruns on 53.2\% of the jobs --- the mean is
 close to the median, and half end up above by construction ---
 while provisioning by the 0.90 quantile overruns on 5.2\%: below
 the nominal 10\% (the teacher overcovers on this dataset), with a
-\emph{median} slack nearly three times smaller than that of the
+\emph{median} slack --- the provision above the point prediction ---
+nearly three times smaller than that of the
 fixed margin with the same overrun rate (0.22 against 0.62) --- on
 the
 mean the order inverts (0.76 against 0.62), because the q$_{0.90}$
@@ -1261,7 +1259,8 @@ pay for the complexity --- the true-label student, simpler and
 typically faster (on
 \texttt{california\_\allowbreak housing}$^\dagger$, the quantile
 control serves at 50 against the distilled student's 99~\us/row,
-and a point student is faster still, at 2.6--5.3~\us/row), is the
+and a point student is faster still: 2.6--5.3~\us/row across the
+three frontier datasets), is the
 right tool, and the rule of
 Section~\ref{sec:destil-regra} exists to say so before any cost is
 paid. Source:
@@ -1478,6 +1477,10 @@ measured here.
     refer to TabPFN v2.5 and TabFM v1.0.1, pinned versions --- the
     method uses nothing specific to them, but the magnitude may
     depend on the version (Chapter~\ref{chap:conclusao}).
+  \item \textbf{Regression only.} The distillation claims cover the
+    distributional output of regression; classification distillation
+    is established ground (Pocket~FM,
+    Section~\ref{sec:rel-destilacao}) and is not re-measured here.
   \item \textbf{Teacher licenses.} Both teachers' weights carry
     non-commercial licenses, and TabPFN-2.5's forbids training,
     with its outputs, a model ``competitive'' with it. The results
@@ -1502,7 +1505,8 @@ at up to three orders of
 magnitude less latency depending on the dataset ($7.4\times$ to
 $880\times$ against the full-context teacher; against its cheapest
 competitive configuration, $2.5\times$ and $27\times$ where the
-advantage is large --- Section~\ref{sec:destil-fronteira}), and
+teacher's absolute advantage is large ---
+Section~\ref{sec:destil-fronteira}), and
 beats the best of QRF and NGBoost on 17 of 20 in the pre-registered
 E1 (12 of 20 against the best of four teacher-free alternatives
 chosen per dataset).

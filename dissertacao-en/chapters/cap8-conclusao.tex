@@ -1,11 +1,4 @@
-%% ============================================================================
-%% Chapter 8 — Conclusion (English version, adapted from the frozen PT
-%% chapter at 64f9adf; same labels). Deliberate EN divergences: "(by the
-%% median)" added to the 10–20% practitioner advice; one cross-reference
-%% sentence consolidating RQ3 limitations (non-nested design, single
-%% distributional teacher, regression-only scope) — Banca request.
-%% ============================================================================
-
+%% Chapter 8 --- Conclusion (English version; labels match the Portuguese deposit version).
 \chapter{Conclusion}
 \label{chap:conclusao}
 
@@ -29,8 +22,8 @@ with the evidence of the chapter that answered it.
 \textbf{RQ1} --- \emph{does the accuracy tie among the families of
 tabular models survive a rigorous protocol and the arrival of the
 2026 generation of foundation models?}
-Chapter~\ref{chap:benchmark} answers in two beats: within the
-pre-2026 generation, yes --- the top is practical equivalence gauged
+Chapter~\ref{chap:benchmark} answers in two beats. Within the
+pre-2026 generation, yes: the top is practical equivalence gauged
 under the declared criteria (8/10 equivalent under a ROPE of
 $\pm0.01$ on the lenient $E[\theta]>0.5$ criterion, and 3/10 --- the
 GBDTs --- at the strict 0.95 cutoff; sensitivity
@@ -38,17 +31,17 @@ $0.005/0.01/0.02 \to 2/8/10$ on the lenient criterion), with the
 model$\times$dataset interaction dominating the rank variance (0.69,
 against 0.20 for the family and 0.11 for the model-within-family), so
 that the ``GBDT vs.\ deep learning'' axis is a weak abstraction for
-these data; across generations, no --- the pre-trained paradigm pulls
+these data. Across generations, no: the pre-trained paradigm pulls
 away from the pack (TabFM zero-shot with average ranks 2.7/1.0/1.2 in
 the three tasks --- multiclass over the two datasets where it
 operates --- and best model on 13 of the 18 datasets; TabPFN as the
-consistent runner-up), supported by the consistency across datasets
-and the paired effect sizes --- not by the underpowered frequentist
-post-hoc nor by the Bayesian instrument, which does not separate
-TabFM from XGBoost and CatBoost in practical equivalence --- and at
-the price of four to five orders of magnitude in serving latency
-(43{,}262 against XGBoost's 0.33~\us/row under the standardized
-protocol). The instance layer (Section~\ref{sec:cap5-ato5}) further
+consistent runner-up). That lead is supported by the consistency
+across datasets and the paired effect sizes --- not by the
+underpowered frequentist post-hoc nor by the Bayesian instrument,
+which does not separate TabFM from XGBoost and CatBoost in practical
+equivalence --- and comes at the price of four to five orders of
+magnitude in serving latency (43{,}262 against XGBoost's
+0.33~\us/row under the standardized protocol). The instance layer (Section~\ref{sec:cap5-ato5}) further
 says \emph{where} the shift lives: XGBoost and the foundation models
 agree on ${\ge}93.6\%$ of instances (median), the disputed fringe is
 converted in a strongly heterogeneous way across datasets, and the
@@ -71,7 +64,7 @@ datasets, Section~\ref{sec:cap5-ato5}). What the data support is a
 framework of constraints verifiable before any training (latency,
 architectural limits, interpretability), with the ``foundation model
 first'' policy as the zero-median-regret default on the primary
-metric. When the decision weighs accuracy against cost, the answer
+metric (a descriptive evaluation, on the same 17 datasets). When the decision weighs accuracy against cost, the answer
 changes early: the recommendation stops being the foundation model
 between $w{=}0.9$ and $w{=}0.8$ of accuracy weight, under the rank
 normalization adopted (experiment E2,
@@ -81,22 +74,25 @@ answer earliest.
 
 \textbf{RQ3} --- \emph{what does knowledge distillation transfer from
 a tabular foundation model in regression, at what serving cost, and
-under which conditions verifiable a priori?} It transfers the shape
-of the predictive distribution, not the mean. The essential of what
+under which conditions verifiable a priori?} It transfers part of the
+shape of the predictive distribution, not the mean --- with
+TabPFN-2.5 as the sole distributional teacher. The essential of what
 the teacher knows about the mean, a tuned GBDT learns on its own from
 the raw labels: the student trained on the teacher's means beats the
 control on 4 of 20 datasets with TabPFN, and the replication with
 TabFM as teacher, on the five central datasets, remains negative. The
 one trained on the quantile curves retains, at the median, 19\% of
 the CRPS gap with inherited hyperparameters (12\% with both arms
-re-tuned), with positive retention on 16 of 20 datasets (sign test,
+re-tuned) --- a median CRPS gain of 2.8\% shrinking to 1.4\% --- with
+positive retention on 16 of 20 datasets (sign test,
 $p\approx0.019$ under the two-stage design's sequential correction),
 and beats the best of QRF and NGBoost on 17 of 20 (experiment E1).
 The distributional student's serving cost is on the order of
 $10^{2}$~\us{} per row in the measured frontier cases (99 and
 169~\us/row; Section~\ref{sec:destil-fronteira}) --- above the point
 control, and $2.5\times$ to $27\times$ below the teacher's cheapest
-competitive configuration where the advantage is large. The
+competitive configuration where the teacher's absolute advantage is
+large. The
 verifiable conditions are three, and the out-of-fold labeling that
 measures them costs minutes: transform the target, test a strong
 native distributional baseline, and distill only the advantage that
@@ -127,7 +123,8 @@ same status as positive ones, per the study's conduct contract
     inference with ROPE and sensitivity analysis, and three cost
     axes under the same protocol. From it come the previous
     generation's positive tie, the shift of the top by the 2026
-    generation and, as far as the dated checks reach, the first
+    generation (a consistent lead, not a statistically confirmed
+    separation) and, as far as the dated checks reach, the first
     neutral TabPFN~$\times$~TabFM comparison under an identical
     protocol, framed as an inter-laboratory replication of the
     paradigm, with pinned versions and mirrored policies.
@@ -172,7 +169,8 @@ same status as positive ones, per the study's conduct contract
   \item \textbf{Decision framework evaluated by regret
     (evidence~$+$~rule; Chapter~\ref{chap:framework}).} The fixed
     policy ``foundation model first'' is regret-optimal on the
-    primary metric (median regret 0.000 in the 2026 generation,
+    primary metric (a descriptive evaluation: median regret 0.000 in
+    the 2026 generation,
     preserved in the executable always-TabFM policy --- mean 0.080,
     worst case 1.000 on \texttt{telco}, the latter largely an
     artifact of the preprocessing measured in
@@ -229,8 +227,9 @@ same status as positive ones, per the study's conduct contract
   \item \textbf{Three-strategy serving frontier (evidence;
     Chapter~\ref{chap:destilacao}).} Distilling, compressing the
     context and shrinking the ensemble measured for the first time
-    on the same hold-outs: where the teacher's advantage is large,
-    the distilled student is, among the teacher-derived strategies,
+    on the same hold-outs: where the teacher's absolute advantage is
+    large, the distilled student is, among the teacher-derived
+    strategies,
     the CRPS-optimal distributional system below its cheapest
     competitive configuration ($2.5\times$ and $27\times$ the
     student's latency in the two measured cases --- E1 shows a
@@ -261,7 +260,9 @@ same status as positive ones, per the study's conduct contract
     check of July 2026, confirmed by the official technical report
     \citep{kong2026} --- and the spread of its ensemble is
     measurably useless as a predictive distribution (CRPS 0.524
-    against TabPFN's 0.069; 16.3\% coverage at a nominal 80\%): a
+    against TabPFN's 0.069; 16.3\% coverage at a nominal 80\% ---
+    measured on one dataset, the binarized-target
+    \texttt{california\_housing}$^\dagger$): a
     point leader is not a distributional leader, and the
     distributional head is the decisive architectural asset for
     distillation.
@@ -343,9 +344,9 @@ asked --- each item traces to the result that supports it.
   \item \textbf{Before paying for the full teacher, shrink the
     ensemble.} A single TabPFN member approximated the eight at a
     seventh of the latency --- sometimes at no accuracy cost ---
-    and, when the teacher's advantage is small, that lever closes
-    the case without any distillation
-    (Section~\ref{sec:destil-fronteira}).
+    and, when a single teacher member already reaches the student's
+    latency tier, that lever closes the case without any
+    distillation (Section~\ref{sec:destil-fronteira}).
   \item \textbf{On 16~GB GPUs, distrust the last context
     doubling.} The final doubling, from 25{,}000 to 50{,}000 rows,
     cost $3.3\times$ the latency for a marginal accuracy gain
@@ -355,8 +356,10 @@ asked --- each item traces to the result that supports it.
 
 The list above orders the questions; it remains to name the
 scenarios. Table~\ref{tab:conc-perfis} consolidates the same results
-as \emph{usage profiles}: for each condition verifiable before any
-training, the recommendation the data support, the measured evidence
+as \emph{usage profiles}: for each condition --- six of the ten
+verifiable before any training, the rest after one cheap, declared
+measurement --- the recommendation the data support, the measured
+evidence
 that supports it and --- the column the usual benchmarks omit ---
 what one accepts to lose in exchange. The final column is the point:
 in several profiles, the recommendation is deliberately a model
@@ -411,8 +414,8 @@ threshold; measure recall at equalized precision before switching &
 indistinguishable; minority recall 0.032 $\to$ 0.298 at threshold
 0.5 (Section~\ref{sec:cap5-ato5}). Counterweights: the
 rare-class-gain hypothesis was not confirmed; the dataset's best AUC
-belongs to a GBDT (CatBoost 0.887) --- a fixed-threshold advantage,
-on one dataset &
+belongs to a GBDT (CatBoost 0.887, Table~\ref{tab:app-binaria}) ---
+a fixed-threshold advantage, on one dataset &
 Precision (0.706 $\to$ 0.621) and latency; the advantage is
 frequent, not law (\texttt{give\_me\_some\_credit}: recalls that
 differ by less than 0.02 from one another) \\
@@ -420,7 +423,8 @@ differ by less than 0.02 from one another) \\
 Regression with tail decisions and a \us{} budget &
 Distilled student (conformal coverage correction: piloted on 5
 datasets) &
-Positive retention on 16/20 ($p{=}0.006$; $0.019$ sequential), held
+Positive retention on 16/20 ($p{=}0.006$ single-stage; $0.019$
+sequential), held
 re-tuned; at $\tau{=}0.90$, 18/20 ($p{=}0.0002$), ${\sim}8\%$ gain
 in the tails; the distilled$+$conformal combination not measured
 jointly on the 20 (Sections~\ref{sec:destil-dist},
@@ -453,7 +457,8 @@ Microseconds-per-row latency required &
 Native GBDT; distillation recovers part of the distributional
 advantage &
 0.33~\us/row (XGBoost) vs.\ 43{,}262 (TabFM), $131{,}097\times$;
-the FM recommendation flips with 10--20\% of latency weight (E2)
+the FM recommendation flips with 10--20\% of latency weight (by
+median regret; E2)
 (Sections~\ref{sec:cap5-ato2}, \ref{sec:regret-ponderado}) &
 The top rank --- a loss $<$1~p.p.\ of AUC in the core's pack (ROPE
 vs.\ TabPFN: 8/10 lenient, 3/10 strict); vs.\ TabFM the equivalence
@@ -556,12 +561,14 @@ re-tuning, registered in a dated addendum before execution, on the
 20 datasets: the aggregate verdict survives the re-tuned control
 (16 of 20, median 0.124 against the inherited 0.192, a declared
 drop), leaving per-dataset retention dependent on the tuning budget
-(Section~\ref{sec:destil-retune}). The related design-level
-caveats of RQ3 are consolidated where they are declared: the
-non-nested selection design, with its optimism quarantined to
-internal roles, in Section~\ref{sec:met-protocolo}; the single
-distributional teacher (TabPFN-2.5) and the regression-only scope,
-in Chapter~\ref{chap:destilacao}'s discussion and synthesis.
+(Section~\ref{sec:destil-retune}). Related design-level caveats are
+consolidated where they are declared: the non-nested selection
+design --- a property of the benchmark (RQ1) that RQ3 inherits
+through the students' hyperparameters --- with its optimism
+quarantined to internal roles, in
+Section~\ref{sec:met-protocolo}; the single distributional teacher
+(TabPFN-2.5) and the regression-only scope, in
+Chapter~\ref{chap:destilacao}'s limitations and synthesis.
 
 \textbf{Dataset-identity errors.} Two labeling errors inherited
 from the project's creation (\texttt{diamonds}/\texttt{kin8nm};
@@ -621,8 +628,12 @@ review \citep{tabfm2026}. The conclusions about the model are about
 fifteen of the CTR23 extension in the distillation), a
 100{,}000-sample cap and a single 16~GB GPU delimit the regime
 studied to small-and-medium tabular data on commonly sized
-hardware. The orders of magnitude between families tend to
-transfer; the absolute values do not.
+hardware. Four eligible CTR23 datasets stayed outside the
+distillation population; the sensitivity with them, measured on
+five data splits, keeps the verdict (17/24, $p=0.032$; conservative
+cut 16/22, $p=0.026$; Chapter~\ref{chap:destilacao}). The orders of
+magnitude between families tend to transfer; the absolute values do
+not.
 
 \textbf{The field moves in cycles of months.} TabPFN-2.5 in
 November 2025, Pocket~FM in May 2026, TabFM in June, the partial
@@ -707,10 +718,12 @@ listed (extensions this study leaves ready, not speculations).
     competitor.} The post-hoc conformal route on the teacher
     itself \citep{park2026} delivers coverage guarantees without a
     fast student --- at the price of the foundation model's
-    latency. Incorporating it into the frontier (and applying it
-    also on the distilled student) would test the calibration
-    advantage observed in Section~\ref{sec:destil-oof} against a
-    method with a formal guarantee.
+    latency. Incorporating it into the frontier (and applying it on
+    the distilled student beyond the five-dataset pilot of
+    Appendix~\ref{sec:app-pilot-conformal}) would test the
+    calibration advantage observed in
+    Section~\ref{sec:destil-oof} against a method with a formal
+    guarantee.
   \item \textbf{Quantization as the frontier's fourth arm.}
     Attention quantization \citep{kubler2026} is the emerging
     serving lever we did not measure; the three-strategy frontier
@@ -723,8 +736,8 @@ listed (extensions this study leaves ready, not speculations).
     extension is to incorporate training cost, robustness, and
     interpretability into the score and elicit utility functions
     from real practitioners --- testing whether the inversion
-    point (10--20\% of latency weight) moves with additional
-    criteria.
+    point (10--20\% of latency weight, by median regret) moves with
+    additional criteria.
   \item \textbf{KANs under dedicated tuning.} The negative result
     of Chapter~\ref{chap:benchmark} uses the grid's uniform
     protocol --- the fair reading for the benchmark's question,

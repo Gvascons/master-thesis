@@ -89,6 +89,7 @@ def main():
         a2.set_xlabel("limiar de decisão sobre $\\hat p(\\text{renda} > 50K)$")
         a2.set_ylabel("valor da métrica")
         a2.set_title("(b) O trade-off que o limiar governa", fontsize=11, loc="left")
+    a2.set_ylim(0, 1.02)
     a2.legend(loc="center left", fontsize=9, frameon=False)
 
     for ax in (a1, a2):
