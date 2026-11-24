@@ -545,9 +545,11 @@ family contains the best model. One qualification is mandatory: the
 --- an intra-family oracle, not an executable policy. The executable
 single-model policies: always-TabFM has mean regret 0.080, median
 0.000 and worst case 1.000 (\texttt{telco}, where TabFM ranks last of
-14 --- a last place that a 2026-11-24 measurement traces largely to a
-preprocessing idiosyncrasy: with the \texttt{TotalCharges} column
-numeric, TabFM jumps to the best AUC on that dataset); always-TabPFN
+14 --- a last place that a 2026-11-23 measurement, re-evaluating all 14
+models with the \texttt{TotalCharges} column
+numeric, traces largely to a preprocessing idiosyncrasy: TabFM jumps
+from last (0.8233) to the best AUC on that dataset (0.8515; runner-up
+LightGBM at 0.8505)); always-TabPFN
 has mean 0.261. The median zero survives in the executable policy; the
 mean and the worst case belong to it, not to the oracle. The question
 ``which family wins?''

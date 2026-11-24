@@ -530,10 +530,10 @@ benavoli2017}, acrescida de uma camada bayesiana e de uma decomposição de
 variância. Toda a cadeia foi submetida a auditoria de corretude (julho de
 2026), que incluiu a recomputação manual da estatística de Friedman
 (idêntica à da implementação: $\chi^2 = 31{,}309$ nos dados binários);
-na camada bayesiana, a reconferência de 23/11/2026 constatou que a
-implementação devolve a massa posterior esperada $E[\theta]$, e não a
+na camada bayesiana, a implementação original devolve a massa
+posterior esperada $E[\theta]$, e não a
 fração de amostras da convenção de \citet{benavoli2017} --- as duas
-grandezas estão hoje implementadas e declaradas
+grandezas estão implementadas e declaradas
 (\texttt{src/evaluation/enrichments.py}), e o Capítulo~\ref{chap:benchmark}
 reporta os dois critérios; o registro está em
 \texttt{docs/\allowbreak metodologia-\allowbreak estatistica.\allowbreak md}.
@@ -746,18 +746,23 @@ conhecidas e as decisões tomadas diante delas.
     categórica de 6.531 níveis --- na codificação ordinal ajustada no
     treino, a grande maioria do \emph{hold-out} recebe o código de
     categoria desconhecida. O tratamento é idêntico para os 14
-    modelos, e o efeito foi medido em 23--24/11/2026
+    modelos, e o efeito foi medido em 23/11/2026 nos \textbf{14
+    modelos}, com os dois braços
     (\texttt{results/\allowbreak aggregated/\allowbreak
-    telco\_\allowbreak totalcharges\_\allowbreak sensitivity.csv}):
-    milésimos de AUC nos GBDTs e no TabPFN, mas $+0{,}028$ no TabFM,
-    que salta de último para o melhor AUC do conjunto com a coluna
-    numérica --- e o conjunto é
+    telco\_\allowbreak totalcharges\_\allowbreak sensitivity.csv};
+    13 dos 14 braços ``publicado'' reproduzem o AUC publicado exato; o
+    STab, de inferência estocástica, difere em $8\times10^{-4}$):
+    o efeito vai de $-0{,}003$ a $+0{,}006$ nos demais modelos, mas é
+    $+0{,}028$ no TabFM,
+    que salta de último (0,8233) para o \textbf{melhor AUC do conjunto
+    entre os 14 reavaliados} (0,8515; o segundo é o LightGBM, 0,8505)
+    --- e o conjunto é
     exatamente o pior caso da política ``sempre-TabFM''
     (Capítulo~\ref{chap:framework}), leitura que fica com esta
     ressalva.
   \item \textbf{Redes de regressão treinam no alvo bruto --- efeito
     medido.} O \emph{pipeline} não padroniza o alvo das redes em
-    regressão. A medição de 24/11/2026 (5 redes $\times$ 5 conjuntos
+    regressão. A medição de 23/11/2026 (5 redes $\times$ 5 conjuntos
     $\times$ 3 sementes, hiperparâmetros herdados --- um piso do
     efeito, já que a busca foi feita no alvo bruto) encontra melhora
     de RMSE em 17 das 25 células, tipicamente abaixo de 2\%, com os

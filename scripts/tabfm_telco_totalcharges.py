@@ -54,10 +54,11 @@ def run(model_name, fix_totalcharges, exp, pub):
     prep = get_preprocessor(get_model_family(model_name))(
         Xtr, info, X_val=Xva, X_test=Xt)
     kwargs = {}
-    if model_name == "xgboost":
+    if model_name not in ("tabpfn", "tabfm"):
         kwargs = dict(json.loads(
-            (REPO / "results/raw" / f"xgboost_{DS}.json").read_text()
-        )["best_params"])
+            (REPO / "results/raw" / f"{model_name}_{DS}.json").read_text()
+        ).get("best_params", {}) or {})
+        kwargs.pop("cat_feature_indices", None)
     if prep.cat_feature_indices is not None:
         kwargs["cat_feature_indices"] = prep.cat_feature_indices
     set_seed(seed)
