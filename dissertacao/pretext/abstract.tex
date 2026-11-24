@@ -1,5 +1,6 @@
 % Abstract — faithful mirror of pretext/resumo.tex (NBR 6028: one
-% paragraph, 150-500 words, no formulas). Rewritten 2026-11-24.
+% paragraph, 150-500 words, no formulas). Updated 2026-11-24 to match
+% the English version's corrected abstract.
 For a decade, model selection for tabular data relied on the maxim that
 gradient boosting always wins. Tabular foundation models, pre-trained
 networks that predict without task-specific training, have cast doubt on
@@ -18,7 +19,8 @@ same datasets. Third, the distillation of the TabPFN
 teacher's quantile curves into gradient-boosting students is studied on
 20 regression datasets, under registered hypotheses. Among the 11
 pre-2026 models, the top of the accuracy ranking is a tie: 3 to 8 of the
-10 non-leading models are practically equivalent to the leader,
+10 non-leading models are practically equivalent to the leader (itself
+already a foundation model, TabPFN),
 depending on the Bayesian criterion adopted, within one percentage point
 of AUC. In the 2026 generation, TabFM, with no tuning at all, has the
 best average rank in all three tasks (in multiclass, over the two
@@ -31,20 +33,20 @@ third on all three tasks. For the decision, a router learned from
 meta-features is less accurate than the trivial rule (0.11 vs.\ 0.44);
 the fixed ``foundation model first'' policy has median regret of zero on
 the primary metric, but stops being the recommendation once 10 to 20
-percent of the decision weight shifts from accuracy to latency, under
-the rank normalization adopted.
+percent of the decision weight shifts from accuracy to latency (by
+median regret), under the rank normalization adopted.
 In distillation, the student trained on the teacher's means beats the
 control on only 4 of 20 datasets; the student trained on the quantile
 curves retains, at the median, 12 to 19 percent of the teacher's
 distributional advantage, depending on how the students are tuned, with
 positive retention on 16 of 20 datasets (sign test, p of approximately
-0.019 under the two-stage design correction), and beats classical
+0.019 under the two-stage design correction), and beats default-configured classical
 distributional baselines on 17 of 20. The conclusion is that, in the
 regime studied (datasets of up to 100 thousand samples, pinned model
 versions, a single GPU), model choice should start from the
 application's constraints (latency, architectural limits,
 interpretability) rather than from a universal winner; and that
-distillation recovers a modest but consistent share of the foundation
+distillation recovers a modest median share of the foundation
 model's predictive uncertainty, under preconditions that can be checked
 in minutes.
 

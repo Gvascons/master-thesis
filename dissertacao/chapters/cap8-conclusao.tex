@@ -33,29 +33,32 @@ diretas, cada uma com a evidência do capítulo que a respondeu.
 as famílias de modelos tabulares sobrevive a um protocolo rigoroso e à
 chegada da geração 2026 de foundation models?} O
 Capítulo~\ref{chap:benchmark} responde em
-dois tempos: dentro da geração anterior a 2026, sim --- o topo é
+dois tempos. Dentro da geração anterior a 2026, sim: o topo é
 equivalência prática aferida sob os critérios declarados (8/10 equivalentes sob ROPE
 $\pm0{,}01$ no critério brando $E[\theta]>0{,}5$, e 3/10 --- os
 GBDTs --- no corte estrito de 0,95; sensibilidade
 $0{,}005/0{,}01/0{,}02 \to 2/8/10$ no
-critério brando), com a interação modelo$\times$conjunto
-dominando a variância de \emph{rank} (0,69, contra 0,20 da família e
+critério brando), com a interação modelo$\times$conjunto ---
+embrulhada com o ruído, os dois inseparáveis a uma observação por
+célula --- dominando a variância de \emph{rank} (0,69, contra 0,20
+da família e
 0,11 do modelo-dentro-da-família), de modo que o eixo ``GBDT vs.\
-aprendizado profundo'' é uma abstração fraca para esses dados; entre
-gerações, não --- o
+aprendizado profundo'' é uma abstração fraca para esses dados. Entre
+gerações, não: o
 paradigma pré-treinado separa-se do pelotão (TabFM \emph{zero-shot}
 com \emph{ranks}
 médios 2,7/1,0/1,2 nas três tarefas --- a multiclasse sobre os dois
 conjuntos em que opera ---, melhor modelo em 13 dos 18
-conjuntos; TabPFN como vice consistente),
-sustentado pela consistência entre conjuntos e pelos tamanhos de
+conjuntos; TabPFN como vice consistente). Essa liderança é
+sustentada pela consistência entre conjuntos e pelos tamanhos de
 efeito pareados --- não pelo \emph{post-hoc} frequentista de baixo
 poder nem pelo instrumento bayesiano, que não separa o TabFM de
-XGBoost e CatBoost em equivalência prática --- e ao preço de quatro a
+XGBoost e CatBoost em equivalência prática --- e vem ao preço de
+quatro a
 cinco ordens de magnitude em latência de serviço (43.262 contra
 0,33~\us/linha do XGBoost no protocolo padronizado). A
 camada por instância (Seção~\ref{sec:cap5-ato5}) diz ainda \emph{onde}
-a quebra mora: XGBoost e \emph{foundation models} concordam em
+o deslocamento mora: XGBoost e \emph{foundation models} concordam em
 ${\ge}93{,}6\%$ das instâncias (mediana), a franja disputada é
 convertida de forma fortemente heterogênea entre conjuntos, e as
 explicações fáceis (margem baixa, classe minoritária, poucos dados)
@@ -79,7 +82,9 @@ pequenos, Seção~\ref{sec:cap5-ato5}). O que os dados sustentam é um
 arcabouço de restrições
 verificáveis antes de qualquer treino (latência, limites arquiteturais,
 interpretabilidade), com a política ``\emph{foundation model} primeiro''
-como \emph{default} de \emph{regret} mediano zero na métrica primária.
+como \emph{default} de \emph{regret} mediano zero na métrica
+primária (avaliação descritiva sobre os 17 conjuntos em que os FMs
+operam).
 Quando a decisão pondera acurácia e custo, a resposta muda cedo: a
 recomendação deixa de ser o \emph{foundation model} entre $w{=}0{,}9$
 e $w{=}0{,}8$ de peso na acurácia, na normalização por postos adotada
@@ -89,14 +94,16 @@ mais cedo muda a resposta.
 
 \textbf{QP3} --- \emph{o que a destilação de conhecimento transfere de
 um foundation model tabular em regressão, a que custo de serviço, e sob
-quais condições verificáveis a priori?} Transfere a forma da
-distribuição preditiva, não a média. O essencial do que o professor
+quais condições verificáveis a priori?} Transfere parte da forma da
+distribuição preditiva, não a média --- com o TabPFN-2.5 como único
+professor distribucional. A maior parte do que o professor
 sabe sobre a média, um GBDT ajustado aprende sozinho dos rótulos
 brutos: o aluno treinado nas médias do professor supera o controle em
 4 de 20 conjuntos com o TabPFN, e a réplica com o TabFM como
 professor, nos cinco conjuntos centrais, mantém o negativo. O
 treinado nas curvas de quantis retém, na mediana, 19\% do gap de CRPS
-com hiperparâmetros herdados (12\% com os dois braços re-ajustados),
+com hiperparâmetros herdados (12\% com os dois braços re-ajustados)
+--- um ganho mediano de CRPS de 2,8\% que encolhe para 1,4\% ---,
 com retenção positiva em 16 de 20 conjuntos (teste de sinal,
 $p\approx0{,}019$ com a correção sequencial do desenho em duas
 etapas), e supera o melhor entre QRF e NGBoost em 17 de 20
@@ -104,7 +111,9 @@ etapas), e supera o melhor entre QRF e NGBoost em 17 de 20
 ordem de $10^{2}$~\us{} por linha nos casos medidos da fronteira (99 e
 169~\us/linha; Seção~\ref{sec:destil-fronteira}) --- acima do controle
 pontual, e $2{,}5\times$ a $27\times$ abaixo da configuração
-competitiva mais barata do professor onde a vantagem é grande. As
+competitiva mais barata do professor nos dois casos medidos da
+fronteira (onde nenhuma configuração barata do professor alcança o
+\emph{tier} de latência do aluno). As
 condições verificáveis são três, e a rotulagem \emph{out-of-fold} que
 as mede custa minutos: transformar o alvo, testar um nativo
 distribucional forte e destilar somente a vantagem que sobrar ao
@@ -133,8 +142,11 @@ positivos, conforme o contrato de conduta do estudo
     conjuntos (250 das 252 células; duas exclusões estruturais), com
     \emph{hold-out} intocado pela seleção, inferência frequentista \emph{e}
     bayesiana com ROPE e análise de sensibilidade, e três eixos de custo
-    sob o mesmo protocolo. Dele saem o empate positivo da geração
-    anterior, o deslocamento do topo pela geração 2026 e, até onde alcançam as
+    sob o mesmo protocolo. Dele saem o empate positivamente aferido
+    da geração
+    anterior, o deslocamento do topo pela geração 2026 (liderança
+    consistente, não separação estatisticamente confirmada) e, até
+    onde alcançam as
     verificações
     datadas, a primeira comparação neutra
     TabPFN~$\times$~TabFM sob protocolo idêntico, enquadrada como
@@ -180,7 +192,8 @@ positivos, conforme o contrato de conduta do estudo
   \item \textbf{Arcabouço de decisão avaliado por \emph{regret}
     (evidência~$+$~regra; Capítulo~\ref{chap:framework}).} A política
     fixa ``\emph{foundation model} primeiro'' é regret-ótima na métrica
-    primária (\emph{regret} mediano 0,000 na geração 2026,
+    primária (avaliação descritiva: \emph{regret} mediano 0,000 na
+    geração 2026,
     preservado na política executável sempre-TabFM --- média 0,080,
     pior caso 1,000 no \texttt{telco}, este último em grande parte
     artefato do pré-processamento medido no
@@ -213,7 +226,8 @@ positivos, conforme o contrato de conduta do estudo
     distribucional é citada como antecedente na
     Seção~\ref{sec:rel-destilacao}). A evidência: retenção mediana de
     12\% a 19\% do gap de CRPS, conforme o ajuste dos braços,
-    positiva em 16 de 20 conjuntos ($p=0{,}006$, $p\approx0{,}019$ sob
+    positiva em 16 de 20 conjuntos ($p=0{,}006$ em estágio único,
+    $p\approx0{,}019$ sob
     a correção sequencial; probabilidade posterior
     bayesiana de 0,96 em retenção positiva, com massa posterior
     esperada 0,70), incluindo um aluno
@@ -237,7 +251,8 @@ positivos, conforme o contrato de conduta do estudo
   \item \textbf{Fronteira de três estratégias de \emph{serving}
     (evidência; Capítulo~\ref{chap:destilacao}).} Destilar, comprimir
     contexto e reduzir \emph{ensemble} medidos pela primeira vez nos
-    mesmos \emph{hold-outs}: onde a vantagem do professor é grande, o
+    mesmos \emph{hold-outs}: onde nenhuma configuração barata do
+    professor alcança o \emph{tier} de latência do aluno, o
     aluno destilado é, entre as estratégias derivadas do professor, o
     sistema distribucional CRPS-ótimo abaixo da
     configuração competitiva mais barata dele ($2{,}5\times$ e
@@ -256,7 +271,9 @@ positivos, conforme o contrato de conduta do estudo
   \item \textbf{Confronto com nativos distribucionais clássicos --- E1
     (evidência; Capítulo~\ref{chap:destilacao}).} O aluno destilado vence o
     melhor entre QRF e NGBoost em 17
-    de 20 conjuntos ($p=0{,}0013$), com os três reveses diagnosticáveis
+    de 20 conjuntos ($p=0{,}0013$, unilateral; contra a melhor
+    alternativa sem professor escolhida por conjunto por um oráculo,
+    12 de 20, $p=0{,}25$), com os três reveses diagnosticáveis
     --- no \texttt{wine\_quality}, onde o \emph{gate} pré-registrado já
     desaconselhava destilar, a QRF \emph{default} supera até o
     professor. O complemento negativo tem valor próprio: o passo ``teste
@@ -267,8 +284,10 @@ positivos, conforme o contrato de conduta do estudo
     pontual --- verificação arquitetural de julho de 2026, confirmada
     pelo relatório técnico oficial \citep{kong2026} --- e a dispersão de
     seu \emph{ensemble} é mensuravelmente inútil como distribuição
-    preditiva (CRPS 0,524 contra 0,069 do TabPFN; cobertura de 16,3\% a
-    nominal de 80\%): líder pontual não é líder distribucional, e a
+    preditiva (CRPS 0,524 contra 0,069 do TabPFN; cobertura de 16,3\%
+    a nominal de 80\% --- medição em um conjunto, o
+    \texttt{california\_housing}$^\dagger$ de alvo binarizado):
+    líder pontual não é líder distribucional, e a
     cabeça distribucional é o ativo arquitetural decisivo para a
     destilação.
   \item \textbf{Regra de decisão para destilar (regra;
@@ -309,7 +328,7 @@ e~\ref{chap:destilacao}, na ordem em que as perguntas devem ser feitas
   \item \textbf{Se latência de microssegundos importa, GBDT.} Com 40\%
     ou mais do peso da utilidade na latência, ``sempre-GBDT'' tem \emph{regret}
     mediano zero; a recomendação ``FM primeiro'' já se inverte com
-    10--20\% de peso na latência (E2,
+    10--20\% de peso na latência, pela mediana do \emph{regret} (E2,
     Seção~\ref{sec:regret-ponderado}).
   \item \textbf{Se nenhuma restrição está ativa, \emph{foundation model}
     primeiro.} Regret mediano 0,000 na geração 2026
@@ -338,8 +357,9 @@ e~\ref{chap:destilacao}, na ordem em que as perguntas devem ser feitas
     transformações e a um nativo forte --- e meça-a antes.} Uma única
     rotulagem OOF, de custo de minutos, mede diretamente a vantagem
     genuína do professor; destile somente se ela persistir
-    (Seção~\ref{sec:destil-regra}). Não destile a média: em pools
-    realistas, não há o que transferir no eixo pontual
+    (Seção~\ref{sec:destil-regra}). Não destile a média: em
+    tamanhos realistas de \emph{pool}, não há o que transferir no
+    eixo pontual
     (Seção~\ref{sec:destil-ponto}).
   \item \textbf{Rotule sempre \emph{out-of-fold}.} O custo é modesto, e
     a salvaguarda protege o que as métricas de acurácia não veem: a
@@ -347,9 +367,9 @@ e~\ref{chap:destilacao}, na ordem em que as perguntas devem ser feitas
     Seção~\ref{sec:destil-oof}).
   \item \textbf{Antes de pagar o professor completo, reduza o
     \emph{ensemble}.} Um único membro do TabPFN aproximou os oito a um
-    sétimo da latência --- às vezes sem custo em acurácia --- e, quando a
-    vantagem
-    do professor é pequena, essa alavanca encerra o caso sem destilação
+    sétimo da latência --- às vezes sem custo em acurácia --- e,
+    quando um único membro do professor já alcança o \emph{tier} de
+    latência do aluno, essa alavanca encerra o caso sem destilação
     alguma (Seção~\ref{sec:destil-fronteira}).
   \item \textbf{Em GPUs de 16~GB, desconfie do último dobro de
     contexto.} A duplicação final, de 25~mil para 50~mil linhas, custou
@@ -360,8 +380,10 @@ e~\ref{chap:destilacao}, na ordem em que as perguntas devem ser feitas
 
 A lista acima ordena as perguntas; falta nomear os cenários. A
 Tabela~\ref{tab:conc-perfis} consolida os mesmos resultados como
-\emph{perfis de uso}: para cada condição verificável antes de qualquer
-treino, a recomendação que os dados sustentam, a evidência medida que a
+\emph{perfis de uso}: para cada condição --- seis das dez
+verificáveis antes de qualquer
+treino, as demais após uma medição barata e declarada ---, a
+recomendação que os dados sustentam, a evidência medida que a
 sustenta e --- a coluna que os \emph{benchmarks} usuais omitem --- o que
 se aceita perder em troca. A coluna final é o ponto: em vários perfis, a
 recomendação é deliberadamente um modelo \emph{pior na métrica
@@ -391,8 +413,8 @@ custo aceito em troca. Fonte: Capítulos~\ref{chap:benchmark}--\ref{chap:destila
 Nenhuma restrição ativa; latência tolerante &
 \emph{Foundation model} primeiro (TabPFN maduro; TabFM fronteira) &
 \emph{Regret} mediano 0,000 com 14 modelos na avaliação do
-Capítulo~\ref{chap:framework} (teto da família, medido nos mesmos 18
-conjuntos; a
+Capítulo~\ref{chap:framework} (teto da família, medido nos 17
+conjuntos em que os FMs operam; a
 executável sempre-TabFM preserva a mediana, com média 0,080 e pior
 caso 1,0; sempre-TabPFN: mediana 0,242); melhor absoluto em 13 de 18
 (Seções~\ref{sec:resultado-positivo}, \ref{sec:cap5-ato4}) &
@@ -414,16 +436,19 @@ recall a precisão igualada antes de trocar &
 recall da minoritária 0,032 $\to$ 0,298 no limiar 0,5
 (Seção~\ref{sec:cap5-ato5}). Contrapesos: a hipótese de ganho
 concentrado na classe rara não se confirmou; o
-melhor AUC do conjunto é de um GBDT (CatBoost 0,887) --- vantagem de
+melhor AUC do conjunto é de um GBDT (CatBoost 0,887,
+Tabela~\ref{tab:app-binaria}) --- vantagem de
 limiar fixo, em um conjunto &
 Precisão (0,706 $\to$ 0,621) e latência; a vantagem é frequente, não
-lei (\texttt{give\_me\_some\_credit}: recalls que diferem menos de
+uma lei (\texttt{give\_me\_some\_credit}: recalls que diferem
+menos de
 0,02 entre si) \\
 \addlinespace
 Regressão com decisão de cauda e orçamento de \us &
 Aluno destilado (correção conformal da cobertura: piloto em 5
 conjuntos) &
-Retenção positiva em 16/20 ($p{=}0{,}006$; $0{,}019$ sequencial),
+Retenção positiva em 16/20 ($p{=}0{,}006$ em estágio único;
+$0{,}019$ sequencial),
 mantida re-tunada; em $\tau{=}0{,}90$, 18/20 ($p{=}0{,}0002$), ganho
 ${\sim}8\%$ nas caudas; combinação destilado$+$conformal não medida
 junta nos 20 (Seções~\ref{sec:destil-dist},
@@ -455,7 +480,8 @@ tamanho \\
 Latência de microssegundos por linha exigida &
 GBDT nativo; destilação recupera parte da vantagem distribucional &
 0,33~\us/linha (XGBoost) vs.\ 43.262 (TabFM), $131.097\times$;
-recomendação FM inverte com 10--20\% de peso na latência (E2)
+recomendação FM inverte com 10--20\% de peso na latência (pela
+mediana do \emph{regret}; E2)
 (Seções~\ref{sec:cap5-ato2}, \ref{sec:regret-ponderado}) &
 Rank do topo --- perda $<$1~p.p.\ de AUC no pelotão do núcleo (ROPE
 vs.\ TabPFN: 8/10 no critério brando, 3/10 no estrito); vs.\ TabFM a
@@ -556,7 +582,14 @@ conjuntos: o
 veredito agregado sobrevive ao controle re-ajustado (16 de 20, mediana
 0,124 contra 0,192 herdada, queda declarada), restando a retenção por
 conjunto como dependente do orçamento de ajuste
-(Seção~\ref{sec:destil-retune}).
+(Seção~\ref{sec:destil-retune}). As ressalvas de desenho
+relacionadas estão consolidadas onde são declaradas: o desenho de
+seleção não aninhado --- propriedade do benchmark (QP1) que a QP3
+herda pelos hiperparâmetros dos alunos --- com seu otimismo
+confinado a papéis internos, na Seção~\ref{sec:met-protocolo}; o
+professor distribucional único (TabPFN-2.5) e o escopo restrito à
+regressão, nas limitações e na síntese do
+Capítulo~\ref{chap:destilacao}.
 
 \textbf{Erros de identidade de conjuntos.} Dois erros de rotulagem
 herdados da criação do projeto (\texttt{diamonds}/\texttt{kin8nm};
@@ -615,7 +648,11 @@ um trabalho futuro (Seção~\ref{sec:conc-futuros}).
 \textbf{Regime delimitado.} Dezoito conjuntos OpenML (mais os quinze da
 extensão CTR23 na destilação), teto de 100~mil amostras e uma única GPU
 de 16~GB delimitam o regime estudado a dados tabulares de pequeno e
-médio porte em hardware de porte comum. As ordens de grandeza entre
+médio porte em hardware de porte comum. Quatro conjuntos elegíveis
+da CTR23 ficaram fora da população de destilação; a sensibilidade
+com eles, medida em cinco splits de dados, mantém o veredito (17/24,
+$p=0{,}032$; recorte conservador 16/22, $p=0{,}026$;
+Capítulo~\ref{chap:destilacao}). As ordens de grandeza entre
 famílias tendem a transferir; os valores absolutos, não.
 
 \textbf{O campo move-se em ciclos de meses.} TabPFN-2.5 em novembro de
@@ -696,7 +733,9 @@ Listam-se apenas direções com lastro direto na evidência dos capítulos
     rota conformal pós-hoc sobre o próprio professor \citep{park2026}
     entrega garantias de cobertura sem aluno rápido --- ao preço da
     latência do \emph{foundation model}. Incorporá-la à fronteira (e
-    aplicá-la também sobre o aluno destilado) poria à prova a vantagem
+    aplicá-la sobre o aluno destilado além do piloto de cinco
+    conjuntos do Apêndice~\ref{sec:app-pilot-conformal}) poria à
+    prova a vantagem
     de calibração observada na
     Seção~\ref{sec:destil-oof} contra um método com garantia formal.
   \item \textbf{Quantização como quarto braço da fronteira.} A
@@ -710,7 +749,8 @@ Listam-se apenas direções com lastro direto na evidência dos capítulos
     (Seção~\ref{sec:regret-ponderado}); a extensão natural é incorporar
     custo de treino, robustez e interpretabilidade ao score e elicitar
     funções de utilidade de praticantes reais --- testando se o ponto de
-    inversão (10--20\% de peso na latência) se move com critérios
+    inversão (10--20\% de peso na latência, pela mediana do
+    \emph{regret}) se move com critérios
     adicionais.
   \item \textbf{KANs sob ajuste dedicado.} O resultado negativo do
     Capítulo~\ref{chap:benchmark} usa o protocolo uniforme da grade ---
