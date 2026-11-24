@@ -88,7 +88,7 @@ a policy: it gathers what the three studies show, plus two
 admissibility constraints (architectural limits and
 interpretability) that none of the studies measures.
 
-\section{The negative result: meta-feature routing does not generalize}
+\section[The negative result: routing does not generalize]{The negative result: meta-feature routing does not generalize}
 \label{sec:resultado-negativo}
 
 The meta-learning literature, going back to the algorithm selection
@@ -143,7 +143,7 @@ The decision framework should not contain a winning-family predictor
 --- a conclusion corroborated by independent evidence
 \citep{herre2026}.
 
-\section{The positive result: the ``FM first'' policy and its evolution}
+\section[The positive result: the ``FM first'' policy]{The positive result: the ``FM first'' policy and its evolution}
 \label{sec:resultado-positivo}
 
 If learned routing does not work, the natural alternative is
@@ -254,7 +254,7 @@ variance in Chapter~\ref{chap:benchmark}); the caveat is that this
 result holds for the primary metric in isolation, a question the
 next section confronts.
 
-\section{Weighted multi-criteria regret: when the recommendation flips}
+\section[Weighted multi-criteria regret]{Weighted multi-criteria regret: when the recommendation flips}
 \label{sec:regret-ponderado}
 
 The positive result of the previous section has a declared
@@ -469,7 +469,10 @@ flowchart in its final form, with the full study's 14 models.
 \centering
 \includegraphics[width=0.88\linewidth]{images/decision_flowchart_14_en.pdf}
 \caption[Decision flowchart]{Decision flowchart, 14-model study: each
-diamond is a constraint verifiable \emph{a priori}.}
+diamond is a constraint verifiable \emph{a priori}. The label of
+diamond 3 (``intrinsically interpretable'') is read in the sense of
+the text: explanations by attribution accepted in regulated
+practice, not strict intrinsic interpretability.}
 \label{fig:flowchart-14}
 \end{figure}
 
@@ -501,16 +504,15 @@ checks them:
     limit) or overflowing the context limit are objective structural
     exclusions --- the \texttt{helena} case (100 classes) in the
     benchmark itself.
-  \item \textbf{Intrinsic interpretability required.} When the
-    domain's regulation demands intrinsically interpretable models,
-    the recommendation is the GBDTs --- the family whose
+  \item \textbf{Auditable explanations required.} When the
+    domain's regulation demands auditable, attribution-explainable
+    models, the recommendation is the GBDTs --- the family whose
     attribution-based explanations are commonly accepted in
     regulated practice, and the only one with a simultaneously
     strong latency profile in the matrix of
-    Figure~\ref{fig:decision-matrix}; a boosted ensemble of
-    hundreds of trees is not intrinsically interpretable in the
-    strict sense, and domains demanding that should look at shallow
-    trees or additive models, outside this benchmark.
+    Figure~\ref{fig:decision-matrix}; domains demanding strictly
+    intrinsic interpretability should look at shallow trees or
+    additive models, outside this benchmark.
   \item \textbf{No active constraint.} The regret-optimal default
     applies: foundation model, with TabPFN \citep{hollmann2025} as
     the mature option and TabFM \citep{tabfm2026} as the frontier,
