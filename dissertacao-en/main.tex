@@ -1,0 +1,116 @@
+%% =========================================================================
+%% Master's Dissertation — PPGCC, CIn-UFPE — ENGLISH VERSION
+%% Template: risethesis (CIn class), option [en]
+%% Adapted (not literally translated) from dissertacao/ — the frozen
+%% Portuguese version remains the deposit reference; this version targets
+%% international dissemination (conference/journal adaptation).
+%% Compile: tectonic main.tex (or pdflatex -> bibtex -> pdflatex x2)
+%% =========================================================================
+\documentclass[en,oneside,onehalfspacing,msc]{risethesis}
+
+\usepackage{babel}% the class passes [brazil,english]; english is primary
+\usepackage{color}
+\usepackage[table]{xcolor}
+\usepackage{microtype}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{amsmath,amssymb}
+\usepackage{textcomp}
+% Escape valve for paragraphs with long tokens (artifact paths in \texttt):
+\emergencystretch=1.5em
+% tikz is not in the preamble: diagrams are pre-compiled into
+% images/tikz-*-en.pdf (editable sources in tikz-src/).
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+
+%% ---- Title format following the CIn dissertation standard ----
+\titleformat{\chapter}[hang]
+  {\normalsize\bfseries}{\thechapter}{1em}{\MakeUppercase}
+\titleformat{name=\chapter,numberless}[hang]
+  {\normalsize\bfseries\filcenter}{}{0pt}{\MakeUppercase}
+\titlespacing*{\chapter}{0pt}{0pt}{24pt}
+\titleformat{\section}
+  {\normalsize}{\thesection}{1em}{\MakeUppercase}
+\titleformat{\subsection}
+  {\normalsize\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalsize\itshape}{\thesubsubsection}{1em}{}
+\captionsetup{font=small,labelfont=small,skip=6pt}
+
+\newcommand{\us}{\textmu s}
+
+\address{RECIFE}
+\universitypt{Universidade Federal de Pernambuco}
+\universityen{Federal University of Pernambuco}
+\institutept{Centro de Informática}
+\instituteen{Center for Informatics}
+\programpt{Pós-graduação em Ciência da Computação}
+\programen{Graduate Program in Computer Science}
+\majorfieldpt{Ciência da Computação}
+\majorfielden{Computer Science}
+
+% PROVISIONAL title — mirrors the Portuguese title; the word "Validated"
+% (like "Validado" in the PT version) is pending the author's decision.
+\title{Models for Tabular Data in the Era of Foundation Models:
+a Multi-Criteria Benchmark, a Validated Decision Framework, and
+Distributional Distillation}
+
+\date{2026}
+\author{João Gabriel de Araújo Vasconcelos}
+\adviser{Germano Crispim Vasconcelos}
+
+% \includeonly{chapters/cap7-destilacao}
+
+\begin{document}
+
+\frontpage
+\presentationpage
+
+\begin{fichacatalografica}
+% Blank page: the catalog card is produced by the library at deposit time.
+\end{fichacatalografica}
+
+% Approval sheet: produced by the graduate office after the defense.
+
+\acknowledgements
+\input{pretext/agradecimentos}
+
+\abstract
+\input{pretext/abstract}
+
+\resumo
+\input{pretext/resumo}
+
+\input{pretext/declaracao-ia}
+
+\listoffigures
+\listoftables
+\input{pretext/acronimos}
+\tableofcontents
+\clearpage
+\pagestyle{fancy}
+
+\include{chapters/cap1-introducao}
+\include{chapters/cap2-fundamentacao}
+\include{chapters/cap3-trabalhos-relacionados}
+\include{chapters/cap4-metodologia}
+\include{chapters/cap5-benchmark}
+\include{chapters/cap6-framework}
+\include{chapters/cap7-destilacao}
+\include{chapters/cap8-conclusao}
+
+\cleardoublepage
+\markboth{REFERENCES}{REFERENCES}
+\bibliographystyle{abnt}
+\bibliography{references}
+
+\theappendix
+\include{appendix/apendice-a-tabelas}
+\include{appendix/apendice-b-espacos-busca}
+\include{appendix/apendice-c-suplementares}
+
+\end{document}
