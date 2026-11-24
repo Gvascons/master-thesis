@@ -10,7 +10,10 @@ grade completa de 14 (cheia).
 
 Fontes: results/aggregated/test_results.csv, results/latency/latency_adult.csv
 Saída:  dissertacao/images/pareto_binary_pt.pdf (+ results/figures/)
+Com argumento "en": rótulos em inglês, saída
+dissertacao-en/images/pareto_binary_en.pdf (não toca na PT).
 """
+import sys
 from pathlib import Path
 
 import matplotlib
@@ -50,6 +53,7 @@ def fronteira(df, xcol, ycol):
 
 
 def main():
+    en = len(sys.argv) > 1 and sys.argv[1] == "en"
     t = pd.read_csv(REPO / "results/aggregated/test_results.csv")
     b = t[t.task_type == "binary"]
     piv = b.pivot(index="dataset", columns="model", values="roc_auc")
@@ -60,12 +64,21 @@ def main():
     lat = pd.read_csv(REPO / "results/latency/latency_adult.csv").set_index("model")["us_per_row"]
 
     fig, axes = plt.subplots(1, 2, figsize=(12.5, 5.6), sharey=True)
-    for ax, (custo, xlabel, titulo) in zip(axes, [
-        (treino, "Tempo mediano de treino (s, escala log)",
-         "(a) rank binário × custo de treino"),
-        (lat, "Latência de inferência (µs/linha, escala log; adult)",
-         "(b) rank binário × latência"),
-    ]):
+    if en:
+        paineis = [
+            (treino, "Median training time (s, log scale)",
+             "(a) binary rank × training cost"),
+            (lat, "Inference latency (µs/row, log scale; adult)",
+             "(b) binary rank × latency"),
+        ]
+    else:
+        paineis = [
+            (treino, "Tempo mediano de treino (s, escala log)",
+             "(a) rank binário × custo de treino"),
+            (lat, "Latência de inferência (µs/linha, escala log; adult)",
+             "(b) rank binário × latência"),
+        ]
+    for ax, (custo, xlabel, titulo) in zip(axes, paineis):
         df = pd.DataFrame({"rank14": rank14, "custo": custo}).dropna()
         df["fam"] = [FAM[m] for m in df.index]
         f14 = fronteira(df.reset_index(), "custo", "rank14")
@@ -98,21 +111,29 @@ def main():
         ax.set_title(titulo, fontsize=10)
         ax.grid(alpha=0.3, which="both")
     axes[0].invert_yaxis()
-    axes[0].set_ylabel("Rank binário médio (menor é melhor; eixo invertido)")
+    if en:
+        axes[0].set_ylabel("Mean binary rank (lower is better; axis inverted)")
+        leg = ["on the frontier (14-model grid)", "frontier, 14-model grid",
+               "frontier, 11-model core (ranks within the cut)"]
+        outs = (REPO / "dissertacao-en/images/pareto_binary_en.pdf",
+                REPO / "results/figures/pareto_binary_en.pdf")
+    else:
+        axes[0].set_ylabel("Rank binário médio (menor é melhor; eixo invertido)")
+        leg = ["na fronteira (grade de 14)", "fronteira, grade de 14",
+               "fronteira, núcleo de 11 (ranks do recorte)"]
+        outs = (REPO / "dissertacao/images/pareto_binary_pt.pdf",
+                REPO / "results/figures/pareto_binary_pt.pdf")
     handles = [Line2D([], [], marker="o", ls="", color=c, ms=8, label=f)
                for f, c in CORES.items()]
     handles += [
-        Line2D([], [], marker="*", ls="", color="#555", ms=13,
-               label="na fronteira (grade de 14)"),
-        Line2D([], [], ls="-", color="#424242", label="fronteira, grade de 14"),
-        Line2D([], [], ls="--", color="#9e9e9e",
-               label="fronteira, núcleo de 11 (ranks do recorte)"),
+        Line2D([], [], marker="*", ls="", color="#555", ms=13, label=leg[0]),
+        Line2D([], [], ls="-", color="#424242", label=leg[1]),
+        Line2D([], [], ls="--", color="#9e9e9e", label=leg[2]),
     ]
     axes[0].legend(handles=handles, fontsize=7.5, frameon=False,
                    loc="lower left")
     plt.tight_layout()
-    for out in (REPO / "dissertacao/images/pareto_binary_pt.pdf",
-                REPO / "results/figures/pareto_binary_pt.pdf"):
+    for out in outs:
         plt.savefig(out, bbox_inches="tight")
     print("fronteira 14 (treino):", list(fronteira(
         pd.DataFrame({"rank14": rank14, "custo": treino}).dropna().reset_index(),

@@ -7,7 +7,10 @@ texto; células vazias = exclusões estruturais (helena).
 
 Fonte: results/aggregated/test_results.csv
 Saída: dissertacao/images/heatmap_classification_pt.pdf (+ results/figures/)
+Com argumento "en": rótulos em inglês, ponto decimal, saída
+dissertacao-en/images/heatmap_classification_en.pdf (não toca na PT).
 """
+import sys
 from pathlib import Path
 
 import matplotlib
@@ -29,6 +32,7 @@ FAMORD = {"xgboost": 0, "lightgbm": 0, "catboost": 0,
           "tabpfn": 2, "tabfm": 2}
 
 def main():
+    en = len(sys.argv) > 1 and sys.argv[1] == "en"
     t = pd.read_csv(REPO / "results/aggregated/test_results.csv")
     cls = t[t.task_type.isin(["binary", "multiclass"])].copy()
     cls["val"] = np.where(cls.task_type == "binary", cls.roc_auc, cls.log_loss)
@@ -56,7 +60,7 @@ def main():
                 ax.text(j, i, "—", ha="center", va="center", fontsize=8, color="#777")
                 continue
             r = ranks.iloc[i, j]
-            ax.text(j, i, f"{v:.3f}".replace(".", ","), ha="center",
+            ax.text(j, i, f"{v:.3f}" if en else f"{v:.3f}".replace(".", ","), ha="center",
                     va="center", fontsize=7.2,
                     color="white" if r <= 4 else "#1b1b1b")
     ax.set_xticks(range(len(cols)))
@@ -68,13 +72,22 @@ def main():
     ax.axvline(11.5, color="white", lw=2)
     ax.axhline(9.5, color="white", lw=2)
     cbar = fig.colorbar(im, ax=ax, shrink=0.8)
-    cbar.set_label("Rank dentro do conjunto (1 = melhor)")
-    ax.set_title("Métrica primária por modelo e conjunto "
-                 "(AUC nas binárias; log-loss nas multiclasse); cor = rank na linha",
-                 fontsize=10)
+    if en:
+        cbar.set_label("Within-dataset rank (1 = best)")
+        ax.set_title("Primary metric per model and dataset "
+                     "(AUC on binary; log-loss on multiclass); color = within-row rank",
+                     fontsize=10)
+        outs = (REPO / "dissertacao-en/images/heatmap_classification_en.pdf",
+                REPO / "results/figures/heatmap_classification_en.pdf")
+    else:
+        cbar.set_label("Rank dentro do conjunto (1 = melhor)")
+        ax.set_title("Métrica primária por modelo e conjunto "
+                     "(AUC nas binárias; log-loss nas multiclasse); cor = rank na linha",
+                     fontsize=10)
+        outs = (REPO / "dissertacao/images/heatmap_classification_pt.pdf",
+                REPO / "results/figures/heatmap_classification_pt.pdf")
     plt.tight_layout()
-    for out in (REPO / "dissertacao/images/heatmap_classification_pt.pdf",
-                REPO / "results/figures/heatmap_classification_pt.pdf"):
+    for out in outs:
         plt.savefig(out, bbox_inches="tight")
     print("ok")
 
