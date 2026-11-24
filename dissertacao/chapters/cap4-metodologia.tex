@@ -341,8 +341,7 @@ de hiperparâmetros por validação cruzada interna (3 \emph{folds}) sobre o
     fixados, e o \emph{early stopping} das redes usa o próprio
     \emph{fold} em avaliação. Este desenho \emph{não} é a validação
     cruzada aninhada clássica --- nela, a busca se repetiria dentro de
-    cada \emph{fold} externo ---, e uma versão anterior deste texto
-    usava o termo indevidamente (retificação de 23/11/2026). A consequência é circunscrita, e vale
+    cada \emph{fold} externo. A consequência é circunscrita, e vale
     dizê-la com precisão: as métricas dos \emph{folds} externos são
     otimistas como estimativa de generalização, porque a seleção
     observou esses mesmos dados; elas cumprem aqui apenas papéis
@@ -775,8 +774,7 @@ conhecidas e as decisões tomadas diante delas.
     \emph{foundation models} são pré-treinados antes e fora do nosso
     protocolo, de modo que o \emph{hold-out} intocado protege contra o nosso
     vazamento, não contra o deles. O risco é heterogêneo entre os dois
-    modelos --- e aqui uma correção factual, registrada em
-    23/11/2026, substitui a afirmação de versões anteriores. O
+    modelos. O
     \emph{modelo-base} TabPFN é pré-treinado em dados sintéticos
     amostrados de um \emph{prior} \citep{hollmann2025}; o
     \emph{checkpoint} \textbf{padrão do classificador} v2.5 que o
@@ -791,7 +789,10 @@ conhecidas e as decisões tomadas diante delas.
     Medimos a consequência repetindo o ajuste final com o
     \emph{checkpoint} alternativo só-sintético
     (\texttt{v2.5\_default-2}) em cinco conjuntos de classificação: no
-    próprio \texttt{higgs} --- o único com sobreposição documentada ---
+    próprio \texttt{higgs} --- um dos conjuntos com sobreposição
+    documentada: a lista da fonte traz ainda um ``Cardio Disease'' do
+    Kaggle, provável origem do \texttt{cardiovascular\_disease}
+    (correspondência por nome, não verificada linha a linha) ---
     o checkpoint sintético é \emph{ligeiramente melhor} (AUC 0,8113
     contra 0,8111), sem qualquer sinal de memorização, e nos demais a
     diferença fica em milésimos
@@ -805,9 +806,10 @@ conhecidas e as decisões tomadas diante delas.
     escapa. Para o TabFM, o relatório técnico declara pré-treino
     \emph{exclusivamente sintético} --- tabelas amostradas de modelos
     causais estruturais com dependências funcionais aleatorizadas
-    \citep{kong2026} ---, o que, como no TabPFN, exclui por construção a
+    \citep{kong2026} ---, o que exclui por construção a
     contaminação direta por conjuntos do OpenML (verificação na fonte
-    primária em 05/10/2026). Permanece o risco mais fraco e não
+    primária em 05/10/2026) --- diferentemente, como visto, do
+    \emph{checkpoint} padrão do classificador TabPFN. Permanece o risco mais fraco e não
     endereçável: \emph{priors} desenhados por equipes que conhecem os
     benchmarks públicos. Tratamos esse risco residual com três cuidados: ele é
     declarado aqui e retomado na interpretação dos resultados; as

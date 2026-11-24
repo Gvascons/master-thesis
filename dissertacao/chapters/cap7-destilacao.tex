@@ -195,10 +195,9 @@ ponta a ponta com
 resultados idênticos --- uma verificação involuntária, e por isso
 valiosa, de reprodutibilidade exata.
 
-A \textbf{segunda etapa} exige o mesmo rigor de relato --- e uma
-retificação datada de 23/11/2026, registrada em adendo ao documento
-de desenho, fixa o relato correto, porque a formulação anterior dizia
-mais do que o registro sustenta. O instrumento
+A \textbf{segunda etapa} exige o mesmo rigor de relato, e o seu
+registro canônico é o adendo de 23/11/2026 ao documento de desenho.
+O instrumento
 confirmatório da manchete --- o teste de sinal --- e a regra de
 elegibilidade da extensão (conjuntos da suíte CTR23 com 3 a 100 mil
 linhas) foram fixados em 20/07/2026, \emph{após} uma leitura
@@ -367,9 +366,9 @@ suíte OpenML-CTR23
 3 mil a 100 mil linhas, ids de versão fixados, e dois conjuntos da
 suíte excluídos por vazamento de alvo descoberto na verificação (o
 alvo é soma de atributos em \texttt{brazilian\_\allowbreak houses} e
-\texttt{wave\_energy}). Uma versão anterior deste texto chamava os
-quinze de ``pool elegível completo''; a recontagem registrada em
-23/11/2026 mostra que a regra alcança \textbf{dezenove} elegíveis.
+\texttt{wave\_energy}). Os quinze não esgotam a regra: a recontagem
+registrada no adendo de 23/11/2026 mostra que ela alcança
+\textbf{dezenove} elegíveis.
 Os quatro ausentes, nomeados e com o status de cada um:
 \texttt{white\_\allowbreak wine} (44971; subconjunto do
 \texttt{wine\_\allowbreak quality} do núcleo),
@@ -595,9 +594,8 @@ manchete repousa sobre ele. Terceiro, nenhuma retenção é exatamente zero, mas
 positivos quase nulos como o \texttt{miami\_housing} ($+0{,}016$)
 contam como sucesso sob o teste de sinal --- a varredura de ROPE acima
 delimita o efeito de tratá-los como equivalências. Quarto, as
-falhas são diagnosticáveis --- mas cada uma pela própria causa, e o
-diagnóstico ``comum'' que uma formulação anterior oferecia não
-sobreviveu à verificação por linhas (retificação de 23/11/2026). No \texttt{wine\_quality},
+falhas são diagnosticáveis --- mas cada uma pela própria causa; não
+há diagnóstico comum. No \texttt{wine\_quality},
 a causa é um artefato do conjunto: 27,6\% do teste tem gêmeo exato de
 covariáveis no \emph{pool} (o conjunto original traz 1.179 linhas
 duplicadas), o controle \emph{pinball} memoriza os gêmeos e o aluno,
@@ -609,8 +607,7 @@ retenção $+0{,}10$
 (\texttt{results/\allowbreak distillation/\allowbreak wine\_\allowbreak dedup.csv});
 a ``derrota'' publicada é memorização de duplicatas, não limitação da
 destilação, e permanece na tabela porque o conjunto original é o da
-população registrada. O \texttt{health\_\allowbreak insurance}, descrito em
-versão anterior como alvo de escala de preço, tem na verdade por alvo
+população registrada. O \texttt{health\_\allowbreak insurance} tem por alvo
 \texttt{whrswk} --- horas trabalhadas por semana, com 29,9\% de zeros
 e assimetria \emph{negativa} ($-0{,}34$) --- e sua retenção vai de
 $-0{,}26$ (herdado) a $+0{,}65$ (re-tunado): uma falha sensível à
@@ -652,8 +649,8 @@ que esse caso repousa sobre vantagem absoluta de $0{,}0006$ de
 CRPS --- a latências de microssegundos. As quatro falhas são
 discutidas uma a uma na
 Seção~\ref{sec:destil-regra}, com os diagnósticos que a análise por
-linhas e o teste de deduplicação sustentam --- e sem o diagnóstico
-comum que uma versão anterior deste texto alegava.
+linhas e o teste de deduplicação sustentam --- sem diagnóstico comum
+entre elas.
 
 \section{A fronteira de \emph{serving}: destilar, comprimir ou reduzir
 ensemble}
@@ -719,8 +716,7 @@ Seção~\ref{sec:destil-regra} --- quando a vantagem do professor é
 pequena, o menu de engenharia barata resolve antes que a destilação
 entre em cena.
 
-O veredito de H3, que uma versão anterior deixava implícito, fica
-explícito: \textbf{confirmada com escopo estreito}. No
+O veredito de H3: \textbf{confirmada com escopo estreito}. No
 \texttt{year\_\allowbreak prediction} o aluno destilado é
 Pareto-dominante no sentido forte --- CRPS melhor que o do professor
 mais subamostrado (4,43 contra 4,70) a $7{,}8\times$ menos latência;
@@ -797,9 +793,9 @@ curva acima da diagonal num $\tau$ significa quantil predito
 \emph{alto} demais naquele nível; a cobertura de um intervalo central
 $[q_{0{,}10}, q_{0{,}90}]$ é a \emph{diferença} entre as frações nos
 dois níveis, de modo que uma curva mais íngreme que a diagonal no
-centro indica intervalos estreitos demais (subcobertura) --- não
-existe um atalho ``acima = sobre-cobre'' válido para a curva inteira,
-como uma versão anterior desta legenda sugeria. No \texttt{california\_\allowbreak housing},
+centro indica intervalos estreitos demais (subcobertura); não
+existe um atalho ``acima = sobre-cobre'' válido para a curva
+inteira. No \texttt{california\_\allowbreak housing},
 o controle de rótulos verdadeiros satura em sobrecobertura extrema e o
 professor exibe a forma em S de caudas mal calibradas, enquanto o
 aluno destilado é o mais próximo da diagonal; no \texttt{cpu\_activity},
@@ -964,8 +960,7 @@ no conjunto de alvo binarizado da errata --- e
 $+0{,}09$ sobre o controle da mesma família); o que o E1 acrescenta é
 que, nesses conjuntos, uma família nativa diferente chega mais longe
 sem professor algum. Terceiro, a leitura sobre a força do controle
-precisa das duas metades --- e uma versão anterior deste texto só
-dava a primeira. O melhor clássico vence o \emph{controle} de
+precisa das duas metades. O melhor clássico vence o \emph{controle} de
 rótulos verdadeiros (o XGBoost-\emph{pinball}) em 5 dos 20 conjuntos;
 mas o próprio \emph{workaround} gaussiano do E3 (ponto $+$ resíduo
 gaussiano global) o vence em 7 --- com ${\sim}21\%$ no
@@ -1132,9 +1127,8 @@ $\to 4{,}91$). Nenhuma família de aluno domina; o que a destilação
 oferece é robustez entre regimes
 (\texttt{results/\allowbreak distillation/\allowbreak mlp\_\allowbreak students.\allowbreak csv}).
 
-\textbf{A cauda pesada é o moderador de falha?} Não --- mas a leitura
-correta é mais modesta do que a que uma formulação anterior extraiu
-(retificação de 23/11/2026).
+\textbf{A cauda pesada é o moderador de falha?} Não --- e a leitura
+correta é modesta.
 Re-executamos professor e alunos sob
 $y' = \log(1+y)$ nos três conjuntos então diagnosticados como falha
 em escala de preço, mais
@@ -1370,8 +1364,7 @@ mediana 0,166). \textbf{Hardware:} medições em uma única GPU
 delimitam, não mapeiam, o espaço de hardware. \textbf{Licença dos
 pesos do professor:} a licença dos pesos do TabPFN-2.5 (TABPFN-2.5
 Non-Commercial License v1.1, reverificada na fonte em 23/11/2026) tem
-três camadas que importam aqui --- e uma versão anterior deste
-parágrafo as comprimia numa só. Primeira: saídas \emph{não} são
+três camadas que importam aqui. Primeira: saídas \emph{não} são
 derivados (``\emph{Outputs are not considered Derivatives under this
 License}'', §1) --- o aluno destilado não é um ``derivado'' no sentido
 da licença. Segunda: o uso licenciado é o não comercial --- treinar,
@@ -1391,7 +1384,7 @@ aluno destilado exige a licença \emph{enterprise} do fornecedor do
 professor (ou um professor de licença permissiva). Os pesos do TabFM
 estão sob licença análoga (TabFM Non-Commercial License v1.0,
 verificada em 23/11/2026; sem cláusula de modelo competitivo) ---
-igualmente não comerciais, o que o texto anterior não dizia.
+igualmente não comerciais.
 
 \section{Síntese do capítulo}
 \label{sec:destil-sintese}
