@@ -5,7 +5,7 @@ Upload Project → zip da pasta, ou copiar os arquivos):
 
 | Pasta | Trabalho | Idioma | Fonte da verdade |
 |---|---|---|---|
-| `ai1/` | Trabalho Individual em Inteligência Computacional 1 — o benchmark 14×18 + arcabouço validado | inglês | `dissertation/cap5-benchmark.md`, `cap6-framework.md`, `notebooks/TABELA_RESULTADOS.md` |
+| `ai1/` | Trabalho Individual em Inteligência Computacional 1 — o benchmark 14×18 + arcabouço avaliado | inglês | `dissertation/cap5-benchmark.md`, `cap6-framework.md`, `notebooks/TABELA_RESULTADOS.md` |
 | `ai2/` | Atividade de Orientação Individual — destilação distribucional + fronteira de Pareto | inglês | `paper/draft.md` (auditado 2×; este LaTeX também serve de base para o arXiv em out/2026) |
 
 Idioma: inglês nos dois, por preferência registrada em 24/07/2026.

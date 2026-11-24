@@ -82,7 +82,8 @@ clássico —, testes frequentistas e
 bayesianos) mostra três fatos encadeados: (1) entre os modelos clássicos e
 DL, o topo é um empate estatístico — e a decisão migra para custo, latência,
 robustez e estrutura da tarefa; (2) a geração 2026 de foundation models
-(TabFM) quebra esse empate em acurácia, mas ao custo de latência ~5 ordens de
+(TabFM) desloca o topo desse empate em acurácia (líder consistente, sem
+separação estatística confirmada), mas ao custo de latência ~5 ordens de
 magnitude acima dos GBDTs — tornando o arcabouço multicritério MAIS
 necessário, não menos; (3) o obstáculo que impede a política ótima validada
 ("foundation model primeiro") é removível por destilação — e a fronteira
@@ -132,7 +133,7 @@ sinal p=0,006, Wilcoxon p=0,045, bayesiano P=0,70); regra de decisão
 paper draft v1 completo. Relatório: `docs/relatorio-ai2.md`. Meta de
 preprint (out/2026) folgada.
 
-**Pilar B — Framework de decisão validado (o produto). CONCLUÍDO em
+**Pilar B — Framework de decisão avaliado (o produto). CONCLUÍDO em
 essência (18/07):** (i) resultado negativo rigoroso — roteamento por
 meta-features não generaliza sob LODO (hit 0.11 vs baseline 0.44 no estudo
 @11); (ii) política "FM primeiro, desvie por restrição" com regret mediano
@@ -164,14 +165,14 @@ existente indicado):
    (fonte: `docs/metodologia-estatistica.md` — praticamente pronto)
 5. **Benchmark multicritério** — resultados dos 4 atos com 14 modelos.
    (fonte: notebooks 01-10 + deck)
-6. **Framework de decisão validado** — matriz, flowchart, LODO, política
+6. **Framework de decisão avaliado** — matriz, flowchart, LODO, política
    FM-primeiro. (fonte: notebooks 08-09 + piloto LODO)
 7. **Destilação distribucional** — desenho, resultados, Pareto 3 estratégias.
    (fonte: `docs/desenho-experimental-destilacao.md` + `results/distillation`)
 8. **Conclusão** — síntese, limitações, trabalhos futuros.
 
 **Tese mínima defensável** (se o Pilar A der resultado negativo): benchmark
-14×18 rigoroso + framework validado + resultado negativo informativo de
+14×18 rigoroso + framework avaliado + resultado negativo informativo de
 destilação em regressão com análise de causa — ainda é uma dissertação
 sólida. **Tese plena:** o acima com destilação funcionando + preprint.
 
