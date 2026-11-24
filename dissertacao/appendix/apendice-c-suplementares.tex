@@ -256,7 +256,8 @@ pesada/escala de preço; a hipótese viva era que a transformação
 $\log(1+y)$ recuperaria a retenção. \emph{O que aconteceu:} a ablação
 dedicada refutou a hipótese --- o log não resgata as falhas
 (\texttt{fifa} $-1{,}69$); a leitura adicional de que ele
-``colapsaria'' a vantagem do professor foi retificada em 23/11/2026
+``colapsaria'' a vantagem do professor foi retirada em correção
+registrada
 (comparava unidades incomensuráveis --- em termos relativos a
 vantagem persiste; Tabela~\ref{tab:app-abl-log}). \emph{Por que está aqui:} a refutação
 é mais útil que a hipótese --- virou a cláusula (i) da regra de
@@ -323,9 +324,10 @@ correção, e a medição virou argumento adicional \emph{contra} o
 professor de contexto completo em GPUs de 16~GB. \emph{Por que está
 aqui:} retratações públicas fazem parte do contrato de conduta; o
 episódio também ilustra que ``imensurável'' exige verificação
-exaustiva dos modos de operação antes de ser afirmado. Registros:
-commit \texttt{64b410a} (\emph{``ai2: correction --- year@50K WAS
-measurable''}), \texttt{docs/\allowbreak relatorio-\allowbreak ai2.\allowbreak md} (fase 3), comentário em
+exaustiva dos modos de operação antes de ser afirmado. Registros: a
+correção está no histórico do repositório,
+em \texttt{docs/\allowbreak relatorio-\allowbreak ai2.\allowbreak md}
+(fase 3) e em comentário de
 \texttt{scripts/\allowbreak pareto\_\allowbreak strategies.\allowbreak py}.
 
 \subsection{Errata \texttt{diamonds}/\texttt{kin8nm}}
@@ -349,8 +351,9 @@ aqui:} é o desvio de registro mais sério do trabalho e a origem de
 duas salvaguardas (verificação nome\slash ID\slash %
 dimensões no download; divergência de \texttt{approx\_\allowbreak samples} como
 sinal de investigação obrigatória). Registro canônico:
-\texttt{docs/\allowbreak errata-\allowbreak diamonds-\allowbreak kin8nm.\allowbreak md}; commits \texttt{d1168fa}
-(erratum) e \texttt{c407ef6} (reexecução das análises).
+\texttt{docs/\allowbreak errata-\allowbreak diamonds-\allowbreak kin8nm.\allowbreak md},
+com os commits da errata e da reexecução identificados no histórico do
+repositório.
 
 \subsection{Errata de identidade do núcleo de regressão}
 \emph{O que era:} a salvaguarda prometida na errata anterior --- a
@@ -387,9 +390,9 @@ calibração]{Troca \texttt{year\_\allowbreak prediction} $\to$
 \emph{O que era:} a figura de calibração da destilação usaria
 \texttt{california\_\allowbreak housing} e \texttt{year\_\allowbreak prediction} como
 exemplos. \emph{O que aconteceu:} a passada do professor com contexto de
-50~mil linhas no \texttt{year\_\allowbreak prediction} excedeu o orçamento de
-tempo da sessão de geração de figuras
-(\emph{time-box}); o conjunto foi substituído por
+50~mil linhas no \texttt{year\_\allowbreak prediction} excedeu o
+orçamento de tempo disponível para a geração da figura; o conjunto foi
+substituído por
 \texttt{cpu\_activity}, que carrega a mesma mensagem --- retenção
 distribucional forte ($+0{,}50$) --- a cerca de 1/50 do custo
 computacional. \emph{Por que está aqui:} é um desvio operacional, não
@@ -474,8 +477,9 @@ versão não binarizada do conjunto do núcleo),
 sobreposto ao núcleo, crença que a errata de 19/10 desfez --- e a
 omissão não foi revisitada) e
 \texttt{naval\_propulsion\_plant} (44969; sem justificativa
-registrada). A sensibilidade com os quatro, sob o mesmo protocolo (um
-split, sementes $\{0,1,2\}$), está na tabela de robustez do
+registrada). A sensibilidade com os quatro, sob o mesmo protocolo
+(cinco splits de dados, sementes $\{0,1,2\}$; ver o bloco de
+multisplit abaixo), está na tabela de robustez do
 Capítulo~\ref{chap:destilacao}; proveniência e limites em
 \texttt{results/\allowbreak distillation/\allowbreak
 ctr23\_\allowbreak omitidos/\allowbreak PROVENANCE.md}.

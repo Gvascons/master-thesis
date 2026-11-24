@@ -17,7 +17,7 @@
   node distance=8mm and 13mm]
 
 \node[box] (pool) {Pool de treino\\(80\% dos dados)};
-\node[box, right=of pool] (professor) {Teacher\\TabPFN v2.5};
+\node[box, right=of pool] (professor) {Professor\\TabPFN v2.5};
 \node[box, right=of professor] (oof) {Alvos OOF em cache\\média $+$ 19 curvas de\\quantis ($\tau{=}0{,}05\,{\ldots}\,0{,}95$)};
 
 \node[box, below=11mm of professor] (hard) {Alunos hard\\(controle)\\XGB ponto $\cdot$ XGB quantil\\$\cdot$ MLP quantil\\rótulos verdadeiros};

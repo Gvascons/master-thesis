@@ -57,8 +57,9 @@ Esta dissertação produz as duas coisas. O retrato que emerge contraria
 a máxima em dois pontos. Primeiro, na
 geração de modelos anterior a 2026, o topo da acurácia é um \emph{empate
 estatístico}: sob região de equivalência prática de um ponto percentual de
-AUC, 8 dos 10 modelos não-líderes são praticamente equivalentes ao líder,
-e a variância de desempenho é dominada pela interação
+AUC, 8 dos 10 modelos não-líderes são praticamente equivalentes ao
+líder no critério brando (3 dos 10, os GBDTs, no corte estrito de
+0,95), e a variância de desempenho é dominada pela interação
 modelo$\times$conjunto (o vencedor depende do conjunto, não da
 família); ``\emph{boosting} sempre vence'' não encontra margem de
 acurácia que a sustente (Capítulo~\ref{chap:benchmark}). Segundo, a
@@ -66,7 +67,8 @@ geração 2026 desloca o topo em direção inesperada: quem passou à
 frente não foi o aprendizado profundo ajustado, e sim o pré-treino. O
 TabFM, avaliado \emph{zero-shot}, sem qualquer ajuste, é o melhor
 modelo em \textbf{13 dos 18 conjuntos} do benchmark e lidera o rank
-médio nas três tarefas --- uma liderança consistente entre conjuntos,
+médio nas três tarefas (na multiclasse, sobre os dois conjuntos em que
+opera) --- uma liderança consistente entre conjuntos,
 que os testes, de baixo poder com poucos conjuntos por tarefa, não
 chegam a confirmar como separação estatística
 (Capítulo~\ref{chap:benchmark}). O preço, contudo, muda a natureza da
@@ -264,8 +266,9 @@ o recorte e a evidência que faltavam. Em ordem de apresentação:
     pela seleção,
     inferência frequentista e bayesiana e três eixos de custo sob o mesmo
     protocolo. Dele saem os dois fatos que estruturam a dissertação: o
-    empate estatístico da geração anterior (8 de 10 modelos praticamente
-    equivalentes ao líder, no critério declarado; variância de rank
+    empate estatístico da geração anterior (8 de 10 modelos
+    praticamente equivalentes ao líder no critério brando, 3 de 10 no
+    corte estrito; variância de rank
     dominada pela interação modelo$\times$conjunto) e a
     liderança consistente da geração 2026 (TabFM com melhor rank nas
     três tarefas e
@@ -422,10 +425,11 @@ separação estatística ---, com o resultado negativo das redes de
 Kolmogorov--Arnold,
 e a complementaridade por instância entre \emph{foundation models} e
 GBDTs), respondendo à QP1. O \textbf{Capítulo~\ref{chap:framework}} submete o
-arcabouço de decisão a três estudos sob
-\emph{leave-one-dataset-out} (o resultado negativo do roteamento por
-meta-características, o positivo da política ``\emph{foundation model}
-primeiro'' e o experimento registrado de \emph{regret} multicritério
+arcabouço de decisão a três estudos (o resultado negativo do
+roteamento por meta-características, este sob
+\emph{leave-one-dataset-out}; a avaliação descritiva da política
+``\emph{foundation model}
+primeiro''; e o experimento registrado de \emph{regret} multicritério
 ponderado), consolidando o fluxograma de quatro restrições que responde
 à QP2. O \textbf{Capítulo~\ref{chap:destilacao}} apresenta a contribuição
 de destilação distribucional sob desenho registrado em duas etapas: a refutação da

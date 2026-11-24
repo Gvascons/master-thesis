@@ -224,7 +224,8 @@ def fig_flowchart14_pt():
                    "(FMs custam 4\u20135 ordens de magnitude mais por linha)")
     arrow(0.5, 0.93, 0.5, 0.87)
     box(0.13, 0.66, "Fam\u00edlia GBDT\n(XGBoost / LightGBM / CatBoost)\n"
-                    "a destila\u00e7\u00e3o recupera parte\nda vantagem do FM (Cap. 7)",
+                    "em regress\u00e3o distribucional, a destila\u00e7\u00e3o\n"
+                    "recupera parte da vantagem do TabPFN (Cap. 7)",
         "#fde")
     arrow(0.36, 0.80, 0.17, 0.71, "sim")
     box(0.5, 0.62, "2. Limites arquiteturais atingidos?\n"
@@ -238,7 +239,7 @@ def fig_flowchart14_pt():
     arrow(0.36, 0.40, 0.17, 0.30, "sim")
     box(0.5, 0.18, "4. Nenhuma restri\u00e7\u00e3o ativa \u2192 FOUNDATION MODEL PRIMEIRO\n"
                    "TabPFN (maduro) \u00b7 TabFM (fronteira, ressalvas v1.0.1)\n"
-                   "regret normalizado mediano 0,000 @14 modelos (LODO)",
+                   "regret mediano 0,000 com 14 modelos (descritivo;\nexecutável sempre-TabFM: 0,000 mediana, 0,080 média)",
         "#efe")
     arrow(0.5, 0.37, 0.5, 0.25, "n\u00e3o")
     ax.set_ylim(0.08, 1.0)

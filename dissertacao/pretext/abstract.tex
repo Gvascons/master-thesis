@@ -11,15 +11,18 @@ benchmark evaluates 14 models from three families (gradient boosting,
 deep learning, and foundation models) on 18 public OpenML datasets, with
 a hold-out that no selection stage ever observes, frequentist and
 Bayesian inference, and measured training, tuning, and latency costs.
-Second, a decision framework is assessed by leaving one dataset out at a
-time (leave-one-dataset-out). Third, the distillation of the TabPFN
+Second, a decision framework is assessed: its learned component by
+leaving one dataset out at a
+time (leave-one-dataset-out), its fixed policies descriptively on the
+same datasets. Third, the distillation of the TabPFN
 teacher's quantile curves into gradient-boosting students is studied on
 20 regression datasets, under registered hypotheses. Among the 11
 pre-2026 models, the top of the accuracy ranking is a tie: 3 to 8 of the
 10 non-leading models are practically equivalent to the leader,
 depending on the Bayesian criterion adopted, within one percentage point
 of AUC. In the 2026 generation, TabFM, with no tuning at all, has the
-best average rank in all three tasks and is the best model on 13 of the
+best average rank in all three tasks (in multiclass, over the two
+datasets where it operates) and is the best model on 13 of the
 18 datasets; the lead is consistent across datasets, but the tests,
 underpowered with so few datasets per task, do not confirm it as a
 statistical separation, and it costs four to five orders of magnitude

@@ -32,8 +32,10 @@ topo da acurácia é um empate estatístico aferido por equivalência prática
 e a interação modelo$\times$conjunto (somada ao ruído) domina a
 variância de rank, de modo que a decisão
 migra para custo, latência, robustez e estrutura da tarefa; a geração
-2026 desloca o topo --- o TabFM, \emph{zero-shot}, lidera o rank médio nas
-três tarefas, ao custo de quatro a cinco ordens de magnitude em latência
+2026 desloca o topo --- o TabFM, \emph{zero-shot}, lidera o rank
+médio nas
+três tarefas (na multiclasse, sobre os dois conjuntos em que opera),
+ao custo de quatro a cinco ordens de magnitude em latência
 de inferência --- liderança consistente entre conjuntos, que os testes
 de baixo poder não confirmam como separação estatística. Além disso,
 discutem-se o teste independente desfavorável
@@ -648,7 +650,8 @@ mais ``qual família vence?'', e sim ``\emph{a latência do foundation
 model cabe no caso de uso?}''.
 
 \emph{A geração 2026 desloca o topo: o TabFM lidera o rank médio
-nas três tarefas e é o melhor modelo em 13 dos 18 conjuntos, zero-shot
+nas três tarefas (na multiclasse, sobre 2 conjuntos) e é o melhor
+modelo em 13 dos 18 conjuntos, zero-shot
 --- liderança consistente, que os testes de baixo poder não confirmam
 como separação estatística --- ao preço de quatro a cinco ordens de
 magnitude em latência de
@@ -903,7 +906,8 @@ em que os modelos diferem por ordens de magnitude. Em multiclasse
 afirmar nem para negar o empate.
 
 \textbf{Com o TabFM, não.} Ele lidera o \emph{rank} médio nas três
-tarefas e é o melhor modelo em 13 dos 18 conjuntos, sem ajuste por
+tarefas (na multiclasse, sobre os dois conjuntos em que opera) e é o
+melhor modelo em 13 dos 18 conjuntos, sem ajuste por
 conjunto. Essa liderança apoia-se na consistência entre conjuntos e no
 tamanho de efeito ($d{=}0{,}68$ contra o XGBoost); nem o
 \emph{post-hoc} frequentista nem o teste bayesiano a separam de forma
@@ -927,7 +931,8 @@ $p$-valor na regressão), distância crítica larga na grade completa,
 latência medida em lote amortizado com cada modelo em seu dispositivo,
 e TabFM avaliado em versão fixada anterior à revisão por pares de seu
 relatório técnico. O Capítulo~\ref{chap:framework} converte esses
-resultados em um arcabouço de decisão por restrições e o avalia por
-\emph{leave-one-dataset-out}; o Capítulo~\ref{chap:destilacao}
+resultados em um arcabouço de decisão por restrições e o avalia ---
+fora da amostra no componente aprendido; o
+Capítulo~\ref{chap:destilacao}
 investiga se a latência do \emph{foundation model} pode ser reduzida
 por destilação.

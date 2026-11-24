@@ -95,9 +95,10 @@ conservative estimate.
 
 \section{Introduction}
 
-Tabular foundation models (TFMs) have ended the decade-long accuracy
+Tabular foundation models (TFMs) have shifted the decade-long accuracy
 argument for gradient-boosted decision trees (GBDTs)
-\citep{grinsztajn2022,mcelfresh2023}; what they have not ended is the
+\citep{grinsztajn2022,mcelfresh2023} --- a consistent lead, not a
+confirmed statistical separation; what they have not changed is the
 cost argument. In a uniform-protocol benchmark we ran of 14 models
 $\times$ 18 OpenML datasets (selection by inner CV separated from an untouched hold-out, per-family
 preprocessing, equal tuning budgets; companion report
@@ -113,7 +114,8 @@ we measure 7{,}416\,\us/row for TabPFN and 43{,}262\,\us/row for TabFM on
 the \texttt{adult} dataset, against 0.33\,\us/row for tuned XGBoost --- a
 factor of 22{,}000$\times$ and 131{,}000$\times$, respectively.
 % results/latency/latency_adult.csv
-A leave-one-dataset-out policy analysis over the same benchmark shows that
+A policy analysis over the same benchmark (descriptive for fixed
+policies; leave-one-dataset-out for the learned router) shows that
 ``use the foundation model by default'' has median normalized regret 0.000
 --- the \emph{only} obstacle to that policy is serving cost.
 % results/aggregated/lodo_validation_14.csv
@@ -139,8 +141,7 @@ answer RQ1, \S\ref{sec:frontier} RQ2, and
   \item \textbf{A robust negative:} point distillation of TFMs fails as a
     rule at realistic pool sizes (soft targets beat the hard-label control
     in only 4/20 datasets), replicated with a second teacher on the
-    five core datasets
-    on the five core datasets, with a pool-size sweep showing the residual
+    five core datasets, with a pool-size sweep showing the residual
     gain is a small-data phenomenon on some datasets only.
   \item \textbf{A positive on the open axis:} distributional distillation
     via quantile-curve transfer is positive in 16/20 datasets --- the
@@ -474,10 +475,10 @@ tested}
 
 Across all 20 datasets, the point student trained on teacher means beats
 its hard-label control in only 4; with the TabFM teacher --- whose
-anchor gap, measured on one dataset, is almost $6\times$ larger ---
-whose hold-out advantage over the shared hard-label control (the anchor
+hold-out advantage over the shared hard-label control (the anchor
 gap that retention normalizes against) is almost 6$\times$ TabPFN's on
-\texttt{california\_\allowbreak housing}: 0.028 vs.\ 0.005 RMSE --- the picture is
+\texttt{california\_\allowbreak housing}$^\dagger$: 0.028 vs.\ 0.005
+RMSE --- the picture is
 unchanged --- only
 california's two soft-target cells beat the hard-label control at all, with
 best within-pipeline retention 0.11 (california/mixed); the remaining eight

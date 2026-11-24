@@ -238,7 +238,8 @@ multiclasse e regressão --- em linha com a literatura crítica e
 consistente com a hipótese de \emph{baselines} subajustados nos artigos
 originais, com a ressalva, declarada no
 Capítulo~\ref{chap:metodologia}, de que o TabKAN é reimplementação
-própria e o KAN teve o regime de treino adaptado: a conclusão vale
+própria (AdamW em mini-lotes em lugar do L-BFGS original) e o KAN teve
+normalização e faixa de \emph{grid} adaptadas: a conclusão vale
 para o protocolo desta grade.
 
 \section{Aceleração e \emph{serving} de \emph{foundation models} tabulares}
@@ -472,7 +473,8 @@ recomendação raramente reporta nesse regime. Nossa análise LODO
 não supera \emph{baselines} triviais como preditor (taxa de acerto 0,11
 contra 0,44 do \emph{baseline} de classe majoritária, no estudo de 11
 modelos), e que a política fixa ``\emph{foundation model} primeiro,
-desviar por restrições'' domina por \emph{regret}. O arcabouço resultante é
+desviar por restrições'' é a de menor \emph{regret} na avaliação
+descritiva. O arcabouço resultante é
 deliberadamente orientado a restrições verificáveis
 (\emph{constraint-driven}) em vez de roteamento aprendido --- uma posição
 metodológica que evita sobreajustar recomendadores a poucas
@@ -539,8 +541,8 @@ Cap.~\ref{chap:destilacao} \\
 Seleção de algoritmos &
 Meta-características desde \citet{rice1976}; fragilidade na era TFM
 \citep{herre2026} &
-Validação LODO honesta com $N$ pequeno; política por restrições validada
-por \emph{regret} &
+Roteador testado sob LODO com $N$ pequeno; política por restrições
+avaliada por \emph{regret} &
 Cap.~\ref{chap:framework} \\
 \bottomrule
 \end{tabular}

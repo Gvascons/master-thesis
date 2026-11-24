@@ -86,9 +86,12 @@ def main():
                        s=230 if na_f else 70, zorder=3,
                        edgecolors="white", linewidths=0.7)
             OFF = {"saint": (5, -11), "ft_transformer": (5, 6),
-                   "catboost": (5, -10), "lightgbm": (5, -10)}
+                   "catboost": (5, -10), "lightgbm": (-8, -11),
+                   "tabm": (5, 5)}
+            HA = {"lightgbm": "right"}
             ax.annotate(DISPLAY[m], (r.custo, r.rank14), fontsize=8,
                         textcoords="offset points",
+                        ha=HA.get(m, "left"),
                         xytext=OFF.get(m, (5, 4)))
         ax.set_xscale("log")
         ax.set_xlabel(xlabel)

@@ -63,7 +63,8 @@ acurácia --- liderança consistente, sem confirmação como separação
 estatística; o
 Capítulo~\ref{chap:framework}, que a política fixa ``\emph{foundation model}
 primeiro'' é regret-ótima na métrica primária, com \emph{regret}
-mediano 0,000 na avaliação descritiva sobre os 18 conjuntos. O único obstáculo a
+mediano 0,000 na avaliação descritiva, sobre os 17 conjuntos em que a
+família participa. O único obstáculo a
 essa política é o custo de servir --- e ele não é um detalhe de
 implementação, mas uma propriedade constitutiva do paradigma: modelos
 de aprendizado em contexto (\emph{in-context learning}) carregam o
@@ -672,8 +673,11 @@ os maiores ganhos sem inverter o quadro. $^\dagger$alvo binarizado.}
 veredito sob todas as variantes de desenho. ``Sem binarizado'' exclui
 o \texttt{california\_housing}$^\dagger$; ``re-ajustados'' re-otimiza
 os hiperparâmetros dos dois braços; os dois últimos cenários ampliam a
-população com os quatro conjuntos elegíveis omitidos
-(Seção~\ref{sec:destil-setup}).}
+população com os quatro conjuntos elegíveis omitidos, medidos em cinco
+splits de dados --- o placar mostrado é o agregado pelo sinal da
+retenção média; a variação por split (18/24 e 17/22 num único split)
+está na Seção~\ref{sec:destil-setup} e no
+Apêndice~\ref{app:suplementares}.}
 \label{tab:destil-robustez}
 \small
 \begin{tabular}{lcccc}
@@ -948,7 +952,8 @@ capítulo depende dele (Apêndice~\ref{sec:app-abl-sort}).
 \caption[Confiabilidade no \emph{hold-out}]{Curvas de
 confiabilidade no \emph{hold-out}
 (\texttt{california\_housing}$^\dagger$, \texttt{cpu\_activity}):
-professor TabPFN, aluno destilado e controle; a mecânica dos eixos é a
+professor TabPFN, aluno destilado e controle (rótulos internos em
+inglês); a mecânica dos eixos é a
 da Figura~\ref{fig:quantis-cobertura}.}
 \label{fig:destil-calibration}
 \end{figure}

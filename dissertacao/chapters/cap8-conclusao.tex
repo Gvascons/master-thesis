@@ -45,7 +45,8 @@ aprendizado profundo'' é uma abstração fraca para esses dados; entre
 gerações, não --- o
 paradigma pré-treinado separa-se do pelotão (TabFM \emph{zero-shot}
 com \emph{ranks}
-médios 2,7/1,0/1,2 nas três tarefas, melhor modelo em 13 dos 18
+médios 2,7/1,0/1,2 nas três tarefas --- a multiclasse sobre os dois
+conjuntos em que opera ---, melhor modelo em 13 dos 18
 conjuntos; TabPFN como vice consistente),
 sustentado pela consistência entre conjuntos e pelos tamanhos de
 efeito pareados --- não pelo \emph{post-hoc} frequentista de baixo
@@ -216,7 +217,8 @@ positivos, conforme o contrato de conduta do estudo
     a correção sequencial; probabilidade posterior
     bayesiana de 0,96 em retenção positiva, com massa posterior
     esperada 0,70), incluindo um aluno
-    \emph{born-again} (que supera o próprio professor), servindo na
+    \emph{born-again} (que iguala o próprio professor, a menos de
+    $10^{-4}$ de CRPS), servindo na
     casa de cem microssegundos por linha.
   \item \textbf{Refutação da destilação pontual em \emph{pool} realista
     (evidência negativa; Capítulo~\ref{chap:destilacao}).} O aluno
@@ -415,7 +417,8 @@ concentrado na classe rara não se confirmou; o
 melhor AUC do conjunto é de um GBDT (CatBoost 0,887) --- vantagem de
 limiar fixo, em um conjunto &
 Precisão (0,706 $\to$ 0,621) e latência; a vantagem é frequente, não
-lei (\texttt{give\_me\_some\_credit}: recalls a $<$0,02) \\
+lei (\texttt{give\_me\_some\_credit}: recalls que diferem menos de
+0,02 entre si) \\
 \addlinespace
 Regressão com decisão de cauda e orçamento de \us &
 Aluno destilado (correção conformal da cobertura: piloto em 5
@@ -449,7 +452,7 @@ trivial (Seções~\ref{sec:cap5-ato5}, \ref{sec:resultado-negativo}) &
 A promessa de ``um vencedor universal''; a vantagem não encolhe com o
 tamanho \\
 \addlinespace
-Latência de microssegundos (serviço \emph{online}) &
+Latência de microssegundos por linha exigida &
 GBDT nativo; destilação recupera parte da vantagem distribucional &
 0,33~\us/linha (XGBoost) vs.\ 43.262 (TabFM), $131.097\times$;
 recomendação FM inverte com 10--20\% de peso na latência (E2)
@@ -523,7 +526,8 @@ validade interna; a licença dos professores, em validade externa.
 endereçável.} O TabFM declara pré-treino exclusivamente sintético; o
 \emph{checkpoint} padrão do classificador TabPFN v2.5, porém, é
 afinado em 43 conjuntos reais que incluem o \texttt{higgs} deste
-benchmark (com a
+benchmark --- e, por correspondência de nome não verificada linha a
+linha, provavelmente o \texttt{cardiovascular\_disease} --- (com a
 sensibilidade medida nos doze conjuntos de classificação: diferenças
 de AUC entre $-0{,}0051$ e $+0{,}0002$, e no \texttt{higgs} o
 checkpoint só-sintético é até ligeiramente melhor, 0,8113 contra
@@ -547,7 +551,8 @@ destilação, a capacidade é herdada do \emph{tuning} do benchmark, sem
 re-ajuste por alvo de destilação --- um controle deliberado, com a
 ressalva declarada de que entre os braços mudam o rótulo \emph{e} a
 perda; o custo da assimetria foi medido pelo
-re-ajuste pré-registrado nos 20 conjuntos: o
+re-ajuste registrado em adendo datado, antes da execução, nos 20
+conjuntos: o
 veredito agregado sobrevive ao controle re-ajustado (16 de 20, mediana
 0,124 contra 0,192 herdada, queda declarada), restando a retenção por
 conjunto como dependente do orçamento de ajuste

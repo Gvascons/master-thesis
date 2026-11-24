@@ -32,12 +32,17 @@ REAL com o núcleo (white_wine + california contínuo, este uma vitória
 do destilado): 16/22, p = 0,026 (ctr23_sensitivity.csv).
 
 Limite original: um único split por conjunto (como na auditoria). A
-extensão de 5 splits FOI executada na madrugada de 24→25/11/2026
-(runner `scripts/ctr23_omitted_multisplit.py`, splits 43–46; artefato
-`multisplit.csv`); resultados integrados pela regra abaixo — todos os
+extensão de 5 splits FOI executada na madrugada de 23→24/11/2026
+(runner `scripts/ctr23_omitted_multisplit.py`, splits 43–46, disparado
+após a regra de relato abaixo entrar no git em 23/11 22:36; artefato
+`multisplit.csv`); resultados integrados pela regra — todos os
 splits reportados, agregado 17/24 (p=0,032) e, no recorte conservador,
 16/22 (p=0,026); 18/24 apenas no split 45 (naval +0,022, único
-cruzamento de zero).
+cruzamento de zero). Diferença de versionamento declarada: para o
+split 42 os intermediários (tuning JSON, OOF parquet, caches) estão
+versionados; para os splits 43–46 versionou-se o agregado
+`multisplit.csv`, e os 32 intermediários permanecem locais,
+reproduzíveis pelo runner com as sementes registradas.
 
 ## Regra de relato dos splits adicionais (fixada em 24/11/2026, ANTES de qualquer leitura dos splits 43–46)
 

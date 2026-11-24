@@ -89,10 +89,11 @@ mediu, mas não foram testados contra conjuntos que não participaram de
 sua construção. Um arcabouço de recomendação que nunca foi exposto a
 esse teste está sujeito à mesma crítica de \emph{overclaiming} que
 atinge parte da literatura de recomendação de algoritmos. Este capítulo
-submete o arcabouço a avaliação fora da amostra, com dois resultados
-complementares --- um negativo (o que o arcabouço \emph{não} deve tentar
-fazer) e um positivo (a política que os dados sustentam) --- e, em
-seguida, com um terceiro estudo, registrado, que estende a avaliação
+submete o arcabouço a avaliação --- fora da amostra no componente
+aprendido ---, com dois resultados
+complementares: um negativo (o que o arcabouço \emph{não} deve tentar
+fazer) e um positivo, descritivo (a política que os dados sustentam);
+em seguida, um terceiro estudo, registrado, estende a avaliação
 ao cenário multicritério.
 
 Convém separar desde já o que cada estudo testa. O teste fora da
@@ -263,8 +264,8 @@ primeiro, com as verificações baratas de contorno''
 
 \emph{``Foundation model primeiro'' é a política regret-ótima na
 métrica primária.} Na geração 2026, o teto da família FM atinge
-\emph{regret} médio 0,021 e mediano 0,000 (descritivo sobre os
-mesmos 18 conjuntos) --- nenhuma política
+\emph{regret} médio 0,021 e mediano 0,000 (descritivo, sobre os 17
+conjuntos em que a família participa) --- nenhuma política
 aprendida ou fixa o supera, e a executável sempre-TabFM preserva a
 mediana zero. A escolha de \emph{família} pela métrica primária deixou de
 depender do conjunto de dados --- a escolha do \emph{modelo} dentro
@@ -286,8 +287,8 @@ acurácia \emph{e} custo de inferência pode, legitimamente, chegar a
 outra recomendação. Esta seção fecha essa lacuna com o experimento E2, que pergunta: a
 política ``FM primeiro'' continua regret-ótima quando a métrica de
 decisão pondera acurácia e custo? O desenho (grade de pesos, políticas
-e métrica) foi escrito antes da leitura do resultado, mas o commit
-que registra as hipóteses já carrega o resultado --- não há carimbo
+e métrica) foi escrito antes da leitura do resultado, mas o registro
+das hipóteses já carrega o resultado --- não há carimbo
 independente que prove a anterioridade ---, de modo que o rótulo
 correto é \emph{análise registrada}, não pré-registro.
 
