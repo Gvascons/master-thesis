@@ -1,6 +1,7 @@
-% Abstract — same text as the (checked) abstract of the Portuguese
-% version, 2026-11-24. To be re-closed after chapters 5–7 of this
-% English version are checked (work order of the final EN review).
+% Abstract — re-closed after chapters 5–7 of the EN version were
+% checked. Deliberate EN divergence from the frozen PT resumo/abstract:
+% "(by median regret)" added to the 10–20% claim (Banca rule: the mean
+% crossover is 20–30%).
 For a decade, model selection for tabular data relied on the maxim that
 gradient boosting always wins. Tabular foundation models, pre-trained
 networks that predict without task-specific training, have cast doubt on
@@ -32,8 +33,8 @@ third on all three tasks. For the decision, a router learned from
 meta-features is less accurate than the trivial rule (0.11 vs.\ 0.44);
 the fixed ``foundation model first'' policy has median regret of zero on
 the primary metric, but stops being the recommendation once 10 to 20
-percent of the decision weight shifts from accuracy to latency, under
-the rank normalization adopted.
+percent of the decision weight shifts from accuracy to latency (by
+median regret), under the rank normalization adopted.
 In distillation, the student trained on the teacher's means beats the
 control on only 4 of 20 datasets; the student trained on the quantile
 curves retains, at the median, 12 to 19 percent of the teacher's
