@@ -41,9 +41,11 @@ the maxim on two counts. First, in the generation of models preceding
 2026, the top of the accuracy ranking is a \emph{statistical tie}:
 under a region of practical equivalence of one percentage point of
 AUC, 8 of the 10 non-leading models are practically equivalent to the
-leader under the lenient criterion (3 of the 10, the GBDTs, under the
+leader --- itself already a foundation model, TabPFN, at average rank
+3.2 --- under the lenient criterion (3 of the 10, the GBDTs, under the
 strict 0.95 cutoff), and performance variance is dominated by the
-model$\times$dataset interaction (the winner depends on the dataset,
+model$\times$dataset interaction together with noise (the winner
+depends on the dataset,
 not on the family); ``boosting always wins'' finds no accuracy margin
 to support it (Chapter~\ref{chap:benchmark}). Second, the 2026
 generation shifts the top in an unexpected direction: what moved ahead
@@ -247,7 +249,8 @@ evidence that were missing. In order of presentation:
     structure the dissertation: the statistical tie of the previous
     generation (8 of 10 models practically equivalent to the leader
     under the lenient criterion, 3 of 10 under the strict cutoff;
-    rank variance dominated by the model$\times$dataset interaction)
+    rank variance dominated by the model$\times$dataset interaction
+    together with noise)
     and the consistent lead of the 2026 generation (TabFM with the
     best rank in all three tasks and best model on 13 of 18
     datasets, zero-shot, without confirmation as a statistical
@@ -265,12 +268,14 @@ evidence that were missing. In order of presentation:
     with tuning under paired conditions, the original papers' claims
     do not hold up (Chapter~\ref{chap:benchmark}).
   \item \textbf{A decision framework that is evaluated, not merely
-    described.} Three studies put the flowchart to the test --- the
+    described.} Three studies evaluate the framework's components (the flowchart
+    itself is their synthesis, not an evaluated policy) --- the
     learned component under leave-one-dataset-out: meta-feature
     routing does not generalize (hit rate 0.11 against 0.44 for the
     trivial baseline in the 11-model study; 0.72 against 0.78 with
     14); the fixed ``foundation model first'' policy is
-    regret-optimal on the primary metric, with median regret of zero
+    regret-optimal on the primary metric in a descriptive
+    evaluation, with median regret of zero
     in the 2026 generation; and experiment E2 locates the inversion
     point (shifting 10 to 20\% of the weight from accuracy to
     latency, by median regret under the rank normalization adopted,

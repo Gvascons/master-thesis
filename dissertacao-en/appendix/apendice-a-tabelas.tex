@@ -42,10 +42,7 @@ As for provenance, all numbers come from
 the benchmark's versioned aggregate; the tables themselves are
 generated automatically by
 \texttt{scripts/\allowbreak gen\_\allowbreak appendix\_\allowbreak tables.\allowbreak py}
-from that artifact (no value is transcribed by hand; the English
-variants are produced by
-\texttt{scripts/\allowbreak gen\_\allowbreak appendix\_\allowbreak en.py},
-which only translates fixed strings and the decimal separator). The
+from that artifact (no value is transcribed by hand). The
 per-fold cross-validation results feed only the variability table;
 the inference of Chapter~\ref{chap:benchmark} operates on the
 hold-out, one value per dataset. The per-fold artifact
@@ -59,7 +56,7 @@ reading --- intact in a single table per task.
 The appendix is completed by the remaining instruments of
 Chapter~\ref{chap:metodologia}'s statistical protocol, all generated
 the same way (no value transcribed by hand): the \textbf{secondary}
-metrics of each task, summarized as mean rank per model
+metrics of each task, summarized as average rank per model
 (Tables~\ref{tab:app-secundarias-binary},
 \ref{tab:app-secundarias-multiclass}
 and~\ref{tab:app-secundarias-regression} --- ranks because log-loss,

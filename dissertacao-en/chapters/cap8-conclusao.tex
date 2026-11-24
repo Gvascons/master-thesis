@@ -28,8 +28,10 @@ under the declared criteria (8/10 equivalent under a ROPE of
 $\pm0.01$ on the lenient $E[\theta]>0.5$ criterion, and 3/10 --- the
 GBDTs --- at the strict 0.95 cutoff; sensitivity
 $0.005/0.01/0.02 \to 2/8/10$ on the lenient criterion), with the
-model$\times$dataset interaction dominating the rank variance (0.69,
-against 0.20 for the family and 0.11 for the model-within-family), so
+model$\times$dataset interaction --- bundled with noise, the two
+inseparable at one observation per cell --- dominating the rank
+variance (0.69, against 0.20 for the family and 0.11 for the
+model-within-family), so
 that the ``GBDT vs.\ deep learning'' axis is a weak abstraction for
 these data. Across generations, no: the pre-trained paradigm pulls
 away from the pack (TabFM zero-shot with average ranks 2.7/1.0/1.2 in
@@ -64,7 +66,7 @@ datasets, Section~\ref{sec:cap5-ato5}). What the data support is a
 framework of constraints verifiable before any training (latency,
 architectural limits, interpretability), with the ``foundation model
 first'' policy as the zero-median-regret default on the primary
-metric (a descriptive evaluation, on the same 17 datasets). When the decision weighs accuracy against cost, the answer
+metric (a descriptive evaluation over the 17 datasets on which the FMs operate). When the decision weighs accuracy against cost, the answer
 changes early: the recommendation stops being the foundation model
 between $w{=}0.9$ and $w{=}0.8$ of accuracy weight, under the rank
 normalization adopted (experiment E2,
@@ -76,7 +78,7 @@ answer earliest.
 a tabular foundation model in regression, at what serving cost, and
 under which conditions verifiable a priori?} It transfers part of the
 shape of the predictive distribution, not the mean --- with
-TabPFN-2.5 as the sole distributional teacher. The essential of what
+TabPFN-2.5 as the sole distributional teacher. Most of what
 the teacher knows about the mean, a tuned GBDT learns on its own from
 the raw labels: the student trained on the teacher's means beats the
 control on 4 of 20 datasets with TabPFN, and the replication with
@@ -91,8 +93,9 @@ The distributional student's serving cost is on the order of
 $10^{2}$~\us{} per row in the measured frontier cases (99 and
 169~\us/row; Section~\ref{sec:destil-fronteira}) --- above the point
 control, and $2.5\times$ to $27\times$ below the teacher's cheapest
-competitive configuration where the teacher's absolute advantage is
-large. The
+competitive configuration in the two measured frontier cases
+(where no cheap teacher configuration reaches the student's latency
+tier). The
 verifiable conditions are three, and the out-of-fold labeling that
 measures them costs minutes: transform the target, test a strong
 native distributional baseline, and distill only the advantage that
@@ -122,7 +125,7 @@ same status as positive ones, per the study's conduct contract
     hold-out untouched by selection, frequentist \emph{and} Bayesian
     inference with ROPE and sensitivity analysis, and three cost
     axes under the same protocol. From it come the previous
-    generation's positive tie, the shift of the top by the 2026
+    generation's positively gauged tie, the shift of the top by the 2026
     generation (a consistent lead, not a statistically confirmed
     separation) and, as far as the dated checks reach, the first
     neutral TabPFN~$\times$~TabFM comparison under an identical
@@ -204,7 +207,7 @@ same status as positive ones, per the study's conduct contract
     of distributional distillation is cited as a precedent in
     Section~\ref{sec:rel-destilacao}). The evidence: median
     retention of 12\% to 19\% of the CRPS gap, depending on how the
-    arms are tuned, positive on 16 of 20 datasets ($p=0.006$,
+    arms are tuned, positive on 16 of 20 datasets ($p=0.006$ single-stage,
     $p\approx0.019$ under the sequential correction; Bayesian
     posterior probability of 0.96 on positive retention, with
     expected posterior mass 0.70), including a \emph{born-again}
@@ -227,9 +230,9 @@ same status as positive ones, per the study's conduct contract
   \item \textbf{Three-strategy serving frontier (evidence;
     Chapter~\ref{chap:destilacao}).} Distilling, compressing the
     context and shrinking the ensemble measured for the first time
-    on the same hold-outs: where the teacher's absolute advantage is
-    large, the distilled student is, among the teacher-derived
-    strategies,
+    on the same hold-outs: where no cheap teacher configuration
+    reaches the student's latency tier, the distilled student is,
+    among the teacher-derived strategies,
     the CRPS-optimal distributional system below its cheapest
     competitive configuration ($2.5\times$ and $27\times$ the
     student's latency in the two measured cases --- E1 shows a
@@ -248,7 +251,9 @@ same status as positive ones, per the study's conduct contract
   \item \textbf{Confrontation with classical distributional
     natives --- E1 (evidence; Chapter~\ref{chap:destilacao}).} The
     distilled student beats the best of QRF and NGBoost on 17 of 20
-    datasets ($p=0.0013$, one-sided), with the three upsets
+    datasets ($p=0.0013$, one-sided; against the best teacher-free
+    alternative chosen per dataset by an oracle, 12 of 20,
+    $p=0.25$), with the three upsets
     diagnosable --- on \texttt{wine\_quality}, where the
     pre-registered gate already advised against distilling, the
     default QRF beats even the teacher. The negative complement has
@@ -274,7 +279,7 @@ same status as positive ones, per the study's conduct contract
     precondition measurable by a minutes-long OOF labeling. It is
     the operational form of the answer to RQ3.
   \end{enumerate}
-  \item \textbf{Reusable infrastructure and conduct (transversal;
+  \item \textbf{Reusable infrastructure and conduct (cross-cutting;
     Chapters~\ref{chap:metodologia} to~\ref{chap:destilacao}).} An
     end-to-end versioned protocol --- configurations, seeds, data
     hashes, pre-registrations with dated addenda, dated novelty
@@ -304,7 +309,7 @@ asked --- each item traces to the result that supports it.
   \item \textbf{If microsecond latency matters, GBDT.} With 40\% or
     more of the utility weight on latency, ``always-GBDT'' has a
     zero median regret; the ``FM first'' recommendation already
-    flips with 10--20\% of the weight on latency (by the median;
+    flips with 10--20\% of the weight on latency (by median regret;
     E2, Section~\ref{sec:regret-ponderado}).
   \item \textbf{If no constraint is active, foundation model
     first.} Median regret 0.000 in the 2026 generation
@@ -335,7 +340,7 @@ asked --- each item traces to the result that supports it.
     A single OOF labeling, at a cost of minutes, directly measures
     the teacher's genuine advantage; distill only if it persists
     (Section~\ref{sec:destil-regra}). Do not distill the mean: at
-    realistic pools, there is nothing to transfer on the point axis
+    realistic pool sizes, there is nothing to transfer on the point axis
     (Section~\ref{sec:destil-ponto}).
   \item \textbf{Always label out-of-fold.} The cost is modest, and
     the safeguard protects what accuracy metrics do not see: the
@@ -393,7 +398,7 @@ No active constraint; latency-tolerant &
 Foundation model first (TabPFN mature; TabFM frontier) &
 Median regret 0.000 with 14 models in
 Chapter~\ref{chap:framework}'s evaluation (the family's ceiling,
-measured on the same 18 datasets; the executable always-TabFM
+measured on the 17 datasets on which the FMs operate; the executable always-TabFM
 preserves the median, with mean 0.080 and worst case 1.0;
 always-TabPFN: median 0.242); absolute best on 13 of 18
 (Sections~\ref{sec:resultado-positivo}, \ref{sec:cap5-ato4}) &
@@ -417,7 +422,7 @@ rare-class-gain hypothesis was not confirmed; the dataset's best AUC
 belongs to a GBDT (CatBoost 0.887, Table~\ref{tab:app-binaria}) ---
 a fixed-threshold advantage, on one dataset &
 Precision (0.706 $\to$ 0.621) and latency; the advantage is
-frequent, not law (\texttt{give\_me\_some\_credit}: recalls that
+frequent, not a law (\texttt{give\_me\_some\_credit}: recalls that
 differ by less than 0.02 from one another) \\
 \addlinespace
 Regression with tail decisions and a \us{} budget &

@@ -49,7 +49,8 @@ for TabPFN and 43{,}262~\us/row for TabFM, against 0.33~\us/row for
 the tuned XGBoost --- factors of approximately $22{,}000\times$ and
 $131{,}000\times$, respectively.
 Section~\ref{sec:regret-ponderado} showed, moreover, that shifting
-10--20\% of the weight from accuracy to latency is enough to flip the
+10--20\% of the weight from accuracy to latency (by median regret)
+is enough to flip the
 recommendation: reducing that cost is what decides whether the policy
 can be used where latency counts. This chapter measures one of the
 routes --- distillation --- in a specific framing: regression, with
@@ -405,9 +406,12 @@ picture on 15 datasets (11 positive retentions, sign $p=0.059$), and
 the population was then completed to 20. A design with an interim
 reading inflates the type~I error; treated as sequential in two
 stages, the final result's $p$-value goes from 0.006 to
-approximately \textbf{0.019}, and that is the confirmatory value
-(the full computation --- global error, extension alone, Bonferroni
-bound --- is in Appendix~\ref{app:suplementares}).
+approximately \textbf{0.019}, and that is the confirmatory value ---
+the stagewise-ordered adjustment is adopted over the smaller
+Bonferroni bound (0.0118) because it respects the order in which the
+two readings actually occurred, a conservative choice (the full
+computation --- global error, extension alone, Bonferroni bound ---
+is in Appendix~\ref{app:suplementares}).
 Table~\ref{tab:destil-hipoteses} lists each hypothesis and analysis
 of the chapter, its registration status, and the verdict.
 
@@ -429,8 +433,8 @@ H2 (distribution) & distilled beats the control in CRPS, with
 coverage within $\pm$5~p.p. & yes & CRPS: confirmed (16/20);
 coverage: not met (10/20) \\
 H3 (Pareto) & there is a latency band where the distilled student
-dominates the compressed teacher & yes & confirmed with narrow
-scope \\
+dominates the compressed teacher & yes & band met at 99~\us{}
+(california$^\dagger$), exceeded at 169~\us{} (year) \\
 Sign test & confirmatory instrument of the 16/20 & no (fixed at the
 interim reading) & $p\approx0.019$ sequential \\
 E1 (classical) & distilled beats the best of QRF and NGBoost & yes
@@ -438,8 +442,8 @@ E1 (classical) & distilled beats the best of QRF and NGBoost & yes
 E3 (utility) & lower realized cost at $\tau{=}0.90$ & registered
 (before any reading) & confirmed (18/20) \\
 Re-tuning & inherited hyperparameters are a floor on retention &
-yes (addendum of 2026-11-12) & refuted per dataset (9/20); aggregate
-upheld \\
+yes (addendum of 2026-11-12) & refuted (9/20 per dataset; median
+0.19$\to$0.12): sign upheld, magnitude reduced \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -522,9 +526,7 @@ control, so positive retention is equivalent to ``the distilled
 student beats the control''. On \texttt{pumadyn32nh} the distilled
 student sits below its own teacher by less than $10^{-4}$, invisible
 at this rounding. $^\dagger$binarized target
-(Section~\ref{sec:met-datasets}). Sources:
-\texttt{retune\_analysis.csv}, \texttt{bootstrap\_lines.csv},
-\texttt{paper\_retention.csv}.}
+(Section~\ref{sec:met-datasets}).}
 \label{tab:destil-retencao}
 \scriptsize
 \setlength{\tabcolsep}{4pt}
@@ -848,7 +850,8 @@ case in the decision rule's relative metric
 (Section~\ref{sec:destil-regra}): the cheap engineering menu settles
 the matter before distillation enters the scene.
 
-H3's verdict: \textbf{confirmed with narrow scope}. On
+H3's verdict: \textbf{the pre-registered band is met on one dataset
+and exceeded on the other}. On
 \texttt{year\_\allowbreak prediction} the distilled student is
 Pareto-dominant in the strong sense --- better CRPS than the most
 subsampled teacher (4.43 against 4.70) at $7.8\times$ less latency;
@@ -858,10 +861,11 @@ configuration operates (and which the native QRF occupies with a
 better CRPS, as E1 would measure); on \texttt{kin8nm} the
 hypothesis \emph{fails} --- ensemble shrinking delivers the
 student's latency with a much better CRPS. H3 holds, therefore,
-where the teacher's absolute advantage is large and no cheap teacher
-configuration reaches the student's latency tier; where one does,
-as on \texttt{kin8nm}, cheap engineering replaces distillation ---
-a latency condition, complementary to the decision rule's
+where no cheap teacher configuration reaches the student's latency
+tier (\texttt{california\_\allowbreak housing}$^\dagger$,
+\texttt{year\_\allowbreak prediction}); where one does, as on
+\texttt{kin8nm}, cheap engineering replaces distillation --- a
+latency condition, complementary to the decision rule's
 relative-advantage gate. The pre-registered ${\lesssim}100$~\us/row
 band is met at 99~\us/row on
 \texttt{california\_\allowbreak housing}$^\dagger$ and exceeded at
@@ -879,13 +883,13 @@ latency (148.6 against 45.1~ms/row) for an RMSE gain of 0.05: on
 GPUs of common size, the full-context teacher does not pay for
 itself.
 
-\emph{Where the teacher's absolute advantage is large, the distilled
-student is, among the teacher-derived strategies, the CRPS-optimal
-distributional system below the teacher's cheapest competitive
-configuration; where a single-member teacher already reaches the
-student's latency tier, as on \texttt{kin8nm}, shrinking the
-ensemble suffices --- and, before either, the classical native of
-E1 should be tried.} On the frontier measured end to end, the cheapest teacher
+\emph{Where no cheap teacher configuration reaches the student's
+latency tier, the distilled student is, among the teacher-derived
+strategies, the CRPS-optimal distributional system below the
+teacher's cheapest competitive configuration; where a single-member
+teacher already reaches that tier, as on \texttt{kin8nm}, shrinking
+the ensemble suffices --- and, before either, the classical native
+of E1 should be tried.} On the frontier measured end to end, the cheapest teacher
 configuration that beats the distilled student costs $2.5\times$ its
 latency on \texttt{california\_\allowbreak housing}$^\dagger$ and
 $27\times$ on \texttt{year\_\allowbreak prediction}; on
@@ -932,9 +936,12 @@ with the diagonal as perfect calibration. The correct reading rule
 level: a curve above the diagonal at some $\tau$ means the predicted
 quantile is too \emph{high} at that level; the coverage of a central
 interval $[q_{0.10}, q_{0.90}]$ is the \emph{difference} between the
-fractions at the two levels, so a curve steeper than the diagonal in
-the center indicates too-narrow intervals (undercoverage); there is
-no shortcut ``above = overcovers'' valid for the whole curve. On
+fractions at the two levels, so what decides an interval's coverage
+is the curve's \emph{slope} between its two levels, not its
+position: steeper than the diagonal means too-wide intervals
+(overcoverage), flatter means too-narrow ones (undercoverage), and
+there is no shortcut ``above = overcovers'' valid for the whole
+curve. On
 \texttt{california\_\allowbreak housing}$^\dagger$, the true-label
 control saturates in extreme overcoverage and the teacher exhibits
 the S shape of badly calibrated tails, while the distilled student
@@ -1077,8 +1084,7 @@ and Table~\ref{tab:destil-e1-reveses} lays them out in full.
 \centering
 \caption[The three upsets of E1]{The three upsets of E1: CRPS where
 the best classical baseline beats the distilled student (mean of 3
-seeds; lower is better; \textbf{bold} = best in row). Source:
-\texttt{results/\allowbreak distillation/\allowbreak baselines\_\allowbreak analysis.\allowbreak csv}.}
+seeds; lower is better; \textbf{bold} = best in row).}
 \label{tab:destil-e1-reveses}
 \small
 \begin{tabular}{lrrrr}
@@ -1327,15 +1333,19 @@ and how much it moves your dataset is measured in minutes);
 costs seconds, and a quantile MLP covers the small, numeric
 datasets. Distill when a genuine teacher advantage persists after
 both --- a single OOF labeling, at a cost of minutes, measures that
-advantage directly. Where it is large, distillation is the only
-measured strategy that carries part of it below the teacher's
-cheapest competitive configuration; where it is small, simple
-ensemble shrinking may close the case.}
+advantage directly. Where the teacher's relative advantage is large,
+distillation is the teacher-derived strategy that carries part of it
+below the teacher's cheapest competitive configuration (a strong
+native such as the QRF can occupy the same latency regime, and on
+one dataset outperformed it); where a single teacher member already
+runs at the student's latency, ensemble shrinking may close the
+case.}
 \end{quote}
 
 A declared descriptive analysis supports the rule's gate:
-conditioning retention on the teacher's \emph{relative} advantage,
-the half of the datasets with advantage above the median has
+conditioning retention on the teacher's \emph{relative} advantage
+(population median ${\approx}13.6\%$, oracle version), the half of
+the datasets with advantage above the median has
 positive retention on 10 of 10, and the four failures all
 concentrate in the low-advantage half (one-sided Fisher exact
 $p{=}0.043$; $p{=}0.033$ without the binarized
@@ -1349,11 +1359,13 @@ structural: the rule is derived on the same 20 datasets on which it
 is illustrated, with no out-of-sample test of the rule itself.
 
 Each clause of the rule is a result of this chapter: clause (i) is
-the log ablation; (ii) is the MLP student plus E1; the OOF check is
+a heuristic salvaged from the refuted heavy-tail hypothesis (the
+log ablation); (ii) is the MLP student plus E1; the OOF check is
 Section~\ref{sec:destil-oof}; and the verdict's two ends are the
 frontier of Section~\ref{sec:destil-fronteira} --- the
 \texttt{california\_\allowbreak housing}$^\dagger$/\texttt{year\_\allowbreak prediction}
-cases on one side and \texttt{kin8nm} on the other.
+cases on one side and \texttt{kin8nm} (a latency case) on the
+other.
 
 \emph{The decision rule --- transform, test a strong native, and
 distill only the advantage that remains --- is verifiable in
@@ -1503,9 +1515,10 @@ on 16 of 20 datasets (median retention of 12\% to 19\%: a median
 CRPS gain of 2.8\% shrinking to 1.4\% when both arms are re-tuned),
 at up to three orders of
 magnitude less latency depending on the dataset ($7.4\times$ to
-$880\times$ against the full-context teacher; against its cheapest
-competitive configuration, $2.5\times$ and $27\times$ where the
-teacher's absolute advantage is large ---
+$880\times$ against the full-context teacher, computed from the
+frontier measurements, \texttt{pareto.csv}; against its cheapest
+competitive configuration, $2.5\times$ and $27\times$ in the two
+measured frontier cases ---
 Section~\ref{sec:destil-fronteira}), and
 beats the best of QRF and NGBoost on 17 of 20 in the pre-registered
 E1 (12 of 20 against the best of four teacher-free alternatives

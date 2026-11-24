@@ -163,8 +163,10 @@ sensitivity analysis shows the progression
 $0.005/0.01/0.02 \to 2/8/10$ equivalents under the $E[\theta]>0.5$
 criterion (and $0/3/5$ under the strict one): the tie conclusion
 holds within one percentage point of AUC, stronger for the GBDTs than
-for the networks. On the $E[\theta]$ reading, XGBoost ($0.65$) clears
-the 0.5 bar even at the strict 0.005 threshold, with CatBoost at the
+for the networks --- it holds for ROPE $\geq 0.01$ and weakens at
+the tighter 0.005 radius (2/10 lenient; 0/10 strict). On the
+$E[\theta]$ reading, XGBoost ($0.65$) clears
+the 0.5 bar even at the tighter 0.005 radius, with CatBoost at the
 edge (0.54). The tie at the top is therefore not an artifact of low
 power: it is practical equivalence positively gauged --- under the
 criteria declared above
@@ -184,8 +186,8 @@ secondary-metric rank tables and the across-fold variability.
 statistical tie: 8 of the 10 non-leading models are practically
 equivalent to the leader under a ROPE of $\pm$0.01 AUC on the
 $E[\theta]>0.5$ criterion --- 3 of the 10, the GBDTs, at the strict
-0.95 cutoff --- and the conclusion survives variation of the
-threshold.} The omnibus rejects global equality, but the post-hoc
+0.95 cutoff --- and the conclusion holds for ROPE $\geq 0.01$,
+weakening at the tighter 0.005 radius.} The omnibus rejects global equality, but the post-hoc
 does not separate the leading pack and the Bayesian instrument
 declares practical equivalence --- the maxim ``boosting always wins''
 finds, in this generation, no accuracy margin to support it.
@@ -317,8 +319,7 @@ GPU).
 \includegraphics[width=0.95\linewidth]{images/inference_time_en.pdf}
 \caption[Inference latency on \texttt{adult}]{Inference latency on
 \texttt{adult}, in \us{} per row (median of 5 passes, log scale;
-colors by family). Source:
-\texttt{results/\allowbreak latency/\allowbreak latency\_\allowbreak adult.\allowbreak csv}.}
+colors by family).}
 \label{fig:cap5-latencia}
 \end{figure}
 
@@ -339,7 +340,7 @@ serving on the hardware declared in Chapter~\ref{chap:metodologia};
 single-row online serving narrows the differences --- but not the
 orders of magnitude. The measured factors are TabPFN $22{,}473\times$
 and TabFM $131{,}097\times$ XGBoost on \texttt{adult} --- and the
-ratio varies with the dataset, from $3{,}079\times$
+TabFM/XGBoost ratio varies with the dataset, from $3{,}079\times$
 (\texttt{credit\_g}) to $247{,}402\times$
 (\texttt{cardiovascular\_\allowbreak disease}) in the multi-dataset
 measurement
@@ -420,17 +421,15 @@ The second reversal appears when the classification datasets are
 stratified by imbalance ratio. Figure~\ref{fig:cap5-imbalance}
 presents the average ranks aggregated by family (lower is better;
 axis inverted in the figure) in three severity bands of the
-majority/minority ratio: mild ($<$2:1), moderate (2--5:1), and severe
-($\geq$5:1).
+majority/minority ratio over the 10 binary datasets: mild ($<$2:1),
+moderate (2--5:1), and severe ($\geq$5:1).
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\linewidth]{images/imbalance_robustness.png}
 \caption[Robustness to imbalance]{Robustness to imbalance: average
 rank aggregated by family and severity band on the classification
-datasets. Source:
-\texttt{results/\allowbreak figures/\allowbreak imbalance\_\allowbreak robustness.\allowbreak png}
-(\texttt{notebooks/\allowbreak 07\_\allowbreak segmented\_\allowbreak robustness.\allowbreak ipynb}).}
+datasets.}
 \label{fig:cap5-imbalance}
 \end{figure}
 
@@ -466,26 +465,28 @@ family's curve permanently crosses the other's.
 \centering
 \includegraphics[width=\linewidth]{images/learning_curves_diss_en.pdf}
 \caption[Learning curves --- 6 models, 5 datasets]{Learning curves of
-6 models on 5 datasets, from 500 samples to the full pool (3 seeds).
-Source:
-\texttt{scripts/\allowbreak fig\_\allowbreak learning\_\allowbreak curves\_\allowbreak diss.\allowbreak py}
-on \texttt{results/\allowbreak learning\_\allowbreak curve/\allowbreak curve.\allowbreak csv}.}
+6 models on 5 datasets, from 500 samples to the full pool (3 seeds).}
 \label{fig:cap5-curvas}
 \end{figure}
 
 Three readings come out of the figure. First: the leadership
 crossover between GBDTs and DL exists, but is dataset-specific --- on
-3 of the 5 swept datasets (\texttt{higgs}, \texttt{jannis}, and
-\texttt{year\_\allowbreak prediction}), DL overtakes the GBDTs and
-does not give the lead back; on \texttt{adult}, the GBDT retakes it
-at $n \approx 4{,}000$; and on
+3 of the 5 swept datasets DL overtakes the GBDTs and does not give
+the lead back (\texttt{higgs} and \texttt{jannis} via TabM;
+\texttt{year\_\allowbreak prediction} via RealMLP alone, by
+${\sim}0.8\%$ of RMSE from $n{=}1{,}000$ on --- a margin not
+visible at the figure's scale, and the other DL curves on that panel
+reflect the unstandardized target declared in
+Chapter~\ref{chap:metodologia}; without it, the count is 2 of 4);
+on \texttt{adult}, the GBDT takes the lead at
+$n \approx 4{,}000$; and on
 \texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit},
 the GBDT leads from start to finish. There is, therefore, no
 universal ``critical $n$'' to recommend: the honest answer to the
 practitioner is that the crossover depends on the dataset, not only
 on the size. Second: TabPFN has the best average regime metric on the
 five swept datasets for $n \leq 4{,}000$ (average rank 1.0 in that
-regime, against XGBoost's 2.8) --- the quantification of the
+regime, on average over the swept sizes, against XGBoost's 2.8) --- the quantification of the
 zero-shot paradigm's strength in the low-data regime (a result of
 subsampling \emph{within} each dataset; it does not confine the
 foundation models' advantage to small datasets --- see
@@ -497,8 +498,8 @@ axis, it does not reorder it.
 DL takes the multiclass top (descriptive), the GBDTs gain relative
 advantage under severe imbalance, attention sinks at the categorical
 extreme --- and the GBDT$\leftrightarrow$DL size crossover is real
-but dataset-specific, with TabPFN dominating the $n \leq 4{,}000$
-regime on all swept datasets.} The reversals do not restore the maxim
+but dataset-specific, with TabPFN leading the $n \leq 4{,}000$
+regime on average over sizes.} The reversals do not restore the maxim
 of a single winning family: they show that the right answer is
 conditional --- and conditions verifiable a priori are exactly what a
 decision framework can encode.
@@ -506,9 +507,10 @@ decision framework can encode.
 \section{Act IV --- the shift of the top: the 2026 generation}
 \label{sec:cap5-ato4}
 
-The expansion to the full 14-model grid changes the picture --- a
-consistent lead which, as this section's caveats detail, the
-underpowered tests do not confirm as a statistical separation. TabFM
+The expansion to the full 14-model grid changes the picture: a new,
+consistent leader emerges, which --- as this section's caveats
+detail --- the underpowered tests do not confirm as statistically
+separated. TabFM
 --- a foundation model released in June 2026, evaluated here
 zero-shot, with no per-dataset tuning --- leads the average rank
 \textbf{in all three tasks}: 2.7 in binary, 1.00 in multiclass (a
@@ -530,8 +532,7 @@ to the table's 14-model ranks, in which the foundation models
 \caption[Average rank per task: the 2026 extension]{Average rank per
 task, 2026 generation \emph{versus} references ($k{=}14$ models;
 lower is better; \textbf{bold} = best in column; the foundation
-models' multiclass ranks exclude \texttt{helena}). Source:
-\texttt{notebooks/\allowbreak TABELA\_\allowbreak RESULTADOS.\allowbreak md}.}
+models' multiclass ranks exclude \texttt{helena}).}
 \label{tab:cap5-ranks}
 \begin{tabular}{lccc}
 \toprule
@@ -550,9 +551,10 @@ TabKAN              & 11.4         & 13.3          & 11.8 \\
 \centering
 \includegraphics[width=0.92\linewidth]{images/average_ranks.pdf}
 \caption[Average ranks per task on the full grid]{Average ranks per
-task on the full grid (multiclass panel restricted to the 12 models
-evaluated on the three datasets). Source:
-\texttt{latex/\allowbreak ai1/\allowbreak figures/\allowbreak average\_\allowbreak ranks.\allowbreak pdf}.}
+task on the full grid. The multiclass panel re-ranks the 12 models
+with results on all three datasets, so its values do not coincide
+with Table~\ref{tab:cap5-ranks}, which ranks all 14 (the foundation
+models over their two eligible datasets).}
 \label{fig:cap5-ranks}
 \end{figure}
 
@@ -572,7 +574,8 @@ justified in Chapter~\ref{chap:metodologia} by feasibility and
 parity. And TabPFN, in turn, consolidates as the grid's consistent
 runner-up (average ranks 4.2/2.5/3.0 in the three tasks): the result
 is not confined to one model --- the two foundation models occupy the
-top two places in every task.
+top two places in every task (in multiclass, over the two datasets
+where they operate).
 
 Regression, the task with the fewest datasets, deserves its own
 paragraph. On the full grid, the order of the average RMSE ranks is
@@ -732,8 +735,7 @@ refuting them would displace the explanation elsewhere.
 \caption[Instance-level complementarity]{Instance-level
 complementarity on the hold-out: (a)~net FM wins per 1{,}000
 instances (asterisk: McNemar $p<0.01$); (b)~balance per quintile of
-XGBoost's margin on the 10 binary datasets. Source:
-\texttt{results/\allowbreak complementarity/}.}
+XGBoost's margin on the 10 binary datasets.}
 \label{fig:cap5-complementaridade}
 \end{figure}
 
@@ -846,8 +848,7 @@ application.
 \includegraphics[width=\linewidth]{images/metricas_operacionais_diss_en.pdf}
 \caption[Operational reading of the fringe]{Operational reading:
 (a)~accuracy and minority recall on \texttt{amazon\_employee};
-(b)~minority recall on the 10 binary datasets. Source:
-\texttt{results/aggregated/}.}
+(b)~minority recall on the 10 binary datasets.}
 \label{fig:cap5-operacionais}
 \end{figure}
 
@@ -896,7 +897,8 @@ generation of foundation models. The answer has three parts.
 leader (TabPFN) under the strict criterion (equivalence probability
 of at least 0.95 with a ROPE of $\pm0.01$ AUC), and 8 of the 10
 non-leaders are under the more lenient criterion ($E[\theta]>0.5$)
---- a conclusion robust to threshold variation for the top quartet.
+--- a conclusion that holds for ROPE $\geq 0.01$ for the top
+quartet and weakens at the tighter 0.005 radius.
 The model$\times$dataset interaction, together with noise, dominates
 the rank variance (0.69); rational decision-making therefore
 migrates to cost, latency, robustness, and task structure, exactly
@@ -904,8 +906,9 @@ the axes on which the models differ by orders of magnitude. In
 multiclass ($N{=}3$) and regression ($N{=}5$), the benchmark has no
 power to affirm or deny the tie.
 
-\textbf{With TabFM, no.} It leads the average rank in all three
-tasks (in multiclass, over the two datasets where it operates) and
+\textbf{With TabFM, a consistent leader emerges --- without the
+statistical tie being rejected.} It leads the average rank in all
+three tasks (in multiclass, over the two datasets where it operates) and
 is the best model on 13 of the 18 datasets, with no per-dataset
 tuning. That lead rests on consistency across datasets and on the
 effect size ($d{=}0.68$ against XGBoost); neither the frequentist

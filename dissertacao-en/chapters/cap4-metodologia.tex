@@ -73,8 +73,7 @@ the repository.
 \begin{table}[htbp]
 \centering
 \caption[The 18 datasets of the benchmark]{The 18 OpenML datasets of
-the benchmark (approximate sizes before the 100{,}000-sample cap).
-Source: \texttt{configs/\allowbreak datasets.\allowbreak yaml}.}
+the benchmark (approximate sizes before the 100{,}000-sample cap).}
 \label{tab:datasets}
 \small
 \begin{tabular}{llrrrrl}
@@ -131,9 +130,10 @@ investigation:
     others drawn from curated suites such as OpenML-CTR23
     \citep{fischer2023}) is a condition for the RQ2 decision
     framework not being an artifact of a single task type.
-  \item \textbf{Three orders of magnitude in sample size.} The
+  \item \textbf{Wide range of sample sizes.} The
     datasets range from about a thousand (\texttt{credit\_g}) to
-    581{,}000 samples (\texttt{covertype}). RQ1 asks, among other
+    581{,}000 samples (\texttt{covertype}) --- two orders of
+    magnitude after the 100{,}000-sample cap. RQ1 asks, among other
     things, where the lead changes hands along the size axis;
     without wide variation on that axis, the question would be
     unanswerable by construction.
@@ -159,11 +159,7 @@ structural condition for RQ1's conditional analysis.
   \centering
   \includegraphics[width=0.85\textwidth]{images/dataset_landscape.pdf}
   \caption[Dataset landscape: samples $\times$ attributes]{Landscape
-  of the 18 datasets on the samples $\times$ attributes plane.
-  Source:
-  \texttt{results/\allowbreak figures/\allowbreak dataset\_\allowbreak landscape.\allowbreak pdf},
-  generated from
-  \texttt{configs/\allowbreak datasets.\allowbreak yaml}.}
+  of the 18 datasets on the samples $\times$ attributes plane.}
   \label{fig:dataset-landscape}
 \end{figure}
 
@@ -773,11 +769,11 @@ known limitations and the decisions taken in response to them.
     a categorical with 6{,}531 levels --- under the ordinal encoding
     fitted on the training data, the vast majority of the hold-out
     receives the unknown-category code. The treatment is identical
-    for the 14 models, and the effect was measured on 2026-11-23 on
+    for the 14 models, and the effect was measured on
     the \textbf{14 models}, with both arms
     (\texttt{results/\allowbreak aggregated/\allowbreak telco\_\allowbreak totalcharges\_\allowbreak sensitivity.csv};
-    13 of the 14 ``published'' arms reproduce the exact published
-    AUC; STab, with stochastic inference, differs by
+    13 of the 14 re-evaluated arms reproduce the recorded AUC
+    exactly; STab, with stochastic inference, differs by
     $8\times10^{-4}$): the effect ranges from $-0.003$ to $+0.006$
     on the other models, but is $+0.028$ for TabFM, which jumps from
     last (0.8233) to the \textbf{best AUC on the dataset among the
@@ -787,7 +783,7 @@ known limitations and the decisions taken in response to them.
     this caveat.
   \item \textbf{Regression networks train on the raw target ---
     effect measured.} The pipeline does not standardize the target
-    for the networks in regression. The 2026-11-23 measurement (5
+    for the networks in regression. A dedicated measurement (5
     networks $\times$ 5 datasets $\times$ 3 seeds, inherited
     hyperparameters --- a floor on the effect, since the search was
     done on the raw target) finds RMSE improvement in 17 of the 25

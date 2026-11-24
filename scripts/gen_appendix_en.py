@@ -3,9 +3,12 @@
 
 Lê os arquivos GERADOS da versão PT (dissertacao/appendix/*.tex), traduz
 as strings fixas (captions, cabeçalhos) por pares exatos e converte o
-separador decimal {,} -> . — nenhum valor numérico é alterado (apenas o
-separador), e cada par de tradução é verificado com assert quando
-esperado em todos os arquivos. Saída: dissertacao-en/appendix/.
+formato numérico (separador decimal {,} -> . e, no bloco da tabela de
+custos, o formato PT sem chaves). Nenhum valor numérico é alterado,
+apenas o formato. Checagens reais ao final: (i) cada par de tradução
+precisa ter sido aplicado em ao menos um arquivo; (ii) nenhuma célula
+ou legenda pode restar em formato numérico PT (vírgula decimal nua ou
+híbrido milhar+decimal). Saída: dissertacao-en/appendix/.
 
 Uso: uv run python scripts/gen_appendix_en.py
 """
@@ -102,7 +105,6 @@ PAIRS = [
     ("Variabilidade entre \\emph{folds}", "Across-fold variability"),
     ("AUC-ROC", "ROC-AUC"),
     ("Mean rank (1 = best)", "Average rank (1 = best)"),
-    ("$B{=}10\\,000$", "$B{=}10{,}000$"),
     ("<conjunto>", "<dataset>"),
     ("Mediana, sobre os conjuntos da tarefa, do coeficiente de variação "
      "entre \\emph{folds} da métrica primária (\\%; menor = mais "
@@ -173,26 +175,33 @@ def check_en_numbers(name: str, s: str) -> None:
     explicitamente por convert_custos_block."""
     bad = []
     for i, line in enumerate(s.splitlines(), 1):
-        if "&" not in line:
+        if "&" not in line and "caption" not in line:
             continue
         if re.search(r"\d,\d{1,2}(?!\d)(?!\})", line):
             bad.append((i, "virgula decimal PT", line.strip()[:60]))
         if re.search(r"\d{1,3}\.\d{3},\d", line):
             bad.append((i, "hibrido milhar+decimal PT", line.strip()[:60]))
+        if re.search(r"\{=\}\d{1,3}\.\d{3}\$", line):
+            bad.append((i, "milhar com ponto em expressao", line.strip()[:60]))
     assert not bad, f"{name}: formato PT residual: {bad[:5]}"
 
 
 def main():
     DST.mkdir(exist_ok=True)
+    applied = {pt: 0 for pt, _ in PAIRS}
     for name in FILES:
         s = (SRC / name).read_text()
         for pt, en in PAIRS:
+            if pt in s:
+                applied[pt] += s.count(pt)
             s = s.replace(pt, en)
         # separador decimal: 0{,}123 -> 0.123 (apenas entre dígitos)
         s, n = re.subn(r"(?<=\d)\{,\}(?=\d)", ".", s)
         s = convert_custos_block(s)
-        # intervalos de IC: "[a; b]" -> "[a, b]"
-        s = re.sub(r"\[(\d[\d.]*);\s*(\d[\d.]*)\]", r"[\1, \2]", s)
+        # B=10\,000 (thin space PT) -> 10{,}000 — APOS o regex do decimal,
+        # para nao virar 10.000 (erro do lote anterior)
+        s = s.replace("$B{=}10\\,000$", "$B{=}10{,}000$")
+        # intervalos mantem o padrao dos capitulos: "[a;\ b]"
         resid = re.findall(r"[çãõáéíóúâêô]", s)
         check_en_numbers(name, s)
         header = ("% Gerado por scripts/gen_appendix_en.py a partir de "
@@ -200,6 +209,10 @@ def main():
         (DST / name).write_text(header + s)
         print(f"{name}: {n} decimais convertidos; residuo acentos: "
               f"{len(resid)}; checagem de formato EN: ok")
+    unused = [pt[:50] for pt, c in applied.items() if c == 0]
+    assert not unused, f"pares nunca aplicados (desatualizados?): {unused}"
+    print(f"pares aplicados: {sum(1 for c in applied.values() if c)}/"
+          f"{len(applied)}")
 
 
 if __name__ == "__main__":
