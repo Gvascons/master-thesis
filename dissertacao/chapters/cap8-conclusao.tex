@@ -25,7 +25,7 @@ futuros que a evidência acumulada deixa armados.
 \label{sec:conc-finais}
 
 Esta dissertação partiu da pergunta que organizou uma década de
-literatura sobre dados tabulares --- ``árvores ainda vencem?'' --- e
+literatura sobre dados tabulares (``árvores ainda vencem?'') e
 terminou respondendo a uma pergunta diferente, porque a evidência
 coletada mostrou que a original expirou. O primeiro movimento do
 trabalho estabeleceu isso em duas etapas. Na geração de modelos anterior
@@ -38,41 +38,44 @@ declarado no Capítulo~\ref{chap:benchmark} (3 dos 10 no corte estrito
 de 0,95), conclusão
 robusta à variação do limiar, e a interação modelo$\times$conjunto
 domina a variância de \emph{rank} (0,69, contra 0,20 da família e
-0,11 do modelo-dentro-da-família) --- o eixo ``GBDT vs.\ aprendizado
+0,11 do modelo-dentro-da-família), de modo que o eixo ``GBDT vs.\
+aprendizado
 profundo'' é uma abstração fraca para esses dados
 (Capítulo~\ref{chap:benchmark}). Na etapa seguinte, a geração 2026
-quebrou o empate pelo flanco que a controvérsia não previa: não foi o
-aprendizado profundo ajustado que alcançou as árvores, foi o pré-treino
-que ultrapassou ambos. O TabFM, \emph{zero-shot}, lidera o \emph{rank}
-médio nas três tarefas e é o melhor modelo em 13 dos 18 conjuntos ---
+quebrou o empate pelo flanco que a controvérsia não previa: quem
+alcançou e ultrapassou as árvores não foi o aprendizado profundo
+ajustado, e sim o pré-treino. O TabFM, \emph{zero-shot}, lidera o \emph{rank}
+médio nas três tarefas e é o melhor modelo em 13 dos 18 conjuntos,
 ao preço de quatro a cinco ordens de magnitude em latência de serviço
 (43.262 contra 0,33~\us/linha do XGBoost no protocolo padronizado).
 
-Com o empate expirado, o custo virou o eixo da decisão --- e o segundo
-movimento da dissertação deu a esse deslocamento forma validada. O
+Com o empate expirado, o custo virou o eixo da decisão, e o segundo
+movimento da dissertação submeteu esse deslocamento a avaliação fora
+da amostra. O
 roteamento aprendido por meta-características, a resposta clássica da
-literatura de seleção de algoritmos, não sobrevive à validação honesta
+literatura de seleção de algoritmos, não sobrevive ao teste
 no regime em que benchmarks reais operam: sob
 \emph{leave-one-dataset-out} com $N{=}18$ conjuntos, a árvore de
 meta-características não supera o \emph{baseline} de classe majoritária em
 nenhuma das duas gerações (taxa de acerto 0,11 contra 0,44 no estudo com
-11 modelos; 0,72 contra 0,78 com 14). O que os dados sustentam é mais
-modesto e mais útil: uma política fixa --- \emph{foundation model}
-primeiro --- com \emph{regret} mediano zero na geração 2026, cercada por
-restrições verificáveis \emph{a priori}. E o experimento E2,
-pré-registrado, quantificou a fragilidade dessa política ao custo:
-basta deslocar 10--20\% do peso da acurácia para a latência para que a
+11 modelos; 0,72 contra 0,78 com 14). O que os dados sustentam é uma
+política fixa (\emph{foundation model}
+primeiro) com \emph{regret} mediano zero na geração 2026, cercada por
+restrições verificáveis \emph{a priori}. O experimento E2,
+registrado, quantificou a sensibilidade dessa política ao custo:
+basta deslocar 10--20\% do peso da acurácia para a latência, na
+normalização por postos adotada, para que a
 recomendação se inverta em favor dos GBDTs
-(Capítulo~\ref{chap:framework}). A primeira pergunta do fluxograma de
-decisão --- ``o orçamento de latência comporta o \emph{foundation
-model}?'' --- não é uma heurística decorativa: é a fronteira medida.
+(Capítulo~\ref{chap:framework}). É por isso que a primeira pergunta
+do fluxograma é a do orçamento de latência: é a que mais cedo muda a
+resposta.
 
 O terceiro movimento atacou o preço, e atacou-o seletivamente, porque a
 evidência mostrou que ele não é removível por inteiro. A destilação
 \emph{pontual} --- treinar um aluno rápido nas médias do professor ---
 falha em escala de \emph{pool} realista com qualquer um dos dois professores
 testados: o essencial do que o professor sabe sobre a média, um GBDT
-ajustado aprende sozinho dos rótulos brutos --- a vantagem pontual que
+ajustado aprende sozinho dos rótulos brutos; a vantagem pontual que
 o líder retém existe, mas é uma franja pequena e heterogênea
 (Seção~\ref{sec:cap5-ato5}) que os rótulos pontuais não transferem. O
 que o professor carrega, o aluno não aprende sozinho e a destilação
@@ -88,8 +91,8 @@ E1) e, onde a vantagem do professor é grande, é a estratégia
 competitiva mais barata
 dele (Capítulo~\ref{chap:destilacao}). As falhas não são
 aleatórias: concentram-se onde não há vantagem genuína a transferir, e a
-pré-condição é verificável em minutos --- o que converte o resultado em
-regra de decisão, não em promessa.
+pré-condição é verificável em minutos, o que converte o resultado em
+regra de decisão.
 
 As três perguntas
 enunciadas no Capítulo~\ref{chap:introducao} recebem, ao final do
@@ -97,22 +100,24 @@ percurso, respostas diretas. \textbf{QP1} --- \emph{o empate de acurácia entre
 as famílias de modelos tabulares sobrevive a um protocolo rigoroso e à
 chegada da geração 2026 de foundation models?} O Capítulo~\ref{chap:benchmark} responde em
 dois tempos: dentro da geração anterior a 2026, sim --- o topo é
-equivalência prática positivamente aferida (8/10 equivalentes sob ROPE
+equivalência prática aferida sob os critérios declarados (8/10 equivalentes sob ROPE
 $\pm0{,}01$; sensibilidade $0{,}005/0{,}01/0{,}02 \to 2/8/10$ no
 critério $E[\theta]>0{,}5$), com a interação modelo$\times$conjunto
 dominando a variância de \emph{rank}; entre gerações, não --- o
 paradigma pré-treinado separa-se do pelotão (TabFM com \emph{ranks}
 médios 2,7/1,0/1,2 nas três tarefas; TabPFN como vice consistente),
-sustentado pela consistência entre conjuntos e pelo instrumento
-bayesiano, não pelo \emph{post-hoc} frequentista de baixo poder. A
+sustentado pela consistência entre conjuntos e pelos tamanhos de
+efeito pareados --- não pelo \emph{post-hoc} frequentista de baixo
+poder nem pelo instrumento bayesiano, que não separa o TabFM de
+XGBoost e CatBoost em equivalência prática. A
 camada por instância (Seção~\ref{sec:cap5-ato5}) diz ainda \emph{onde}
 a quebra mora: XGBoost e \emph{foundation models} concordam em
 ${\ge}93{,}6\%$ das instâncias (mediana), a franja disputada é
 convertida de forma fortemente heterogênea entre conjuntos, e as
-explicações fáceis --- margem baixa, classe minoritária, poucos dados
---- foram refutadas sob critérios pré-registrados.
+explicações fáceis (margem baixa, classe minoritária, poucos dados)
+não foram confirmadas sob os critérios pré-registrados.
 \textbf{QP2} --- \emph{que artefato de decisão um benchmark com $N$
-realista de conjuntos consegue, honestamente, sustentar --- um roteador
+realista de conjuntos consegue de fato sustentar, um roteador
 aprendido ou uma política por restrições --- e como essa resposta muda
 quando a decisão pondera acurácia e custo?} As reversões
 condicionais são reais --- o aprendizado profundo recente toma o topo
@@ -123,7 +128,7 @@ desbalanceamento severo, o TabPFN domina o regime de poucos dados
 Seção~\ref{sec:cap5-ato5}), e o cruzamento GBDT$\leftrightarrow$DL por
 tamanho é específico por conjunto ---, mas o Capítulo~\ref{chap:framework} mostra
 que essa variação \emph{não é roteável} por meta-características no regime de
-$N$ pequeno: a forma validada de usá-la é um arcabouço de restrições
+$N$ pequeno: a forma sustentada de usá-la é um arcabouço de restrições
 verificáveis antes de qualquer treino (latência, limites arquiteturais,
 interpretabilidade), com a política ``\emph{foundation model} primeiro''
 como \emph{default} regret-ótimo e o ponto de inversão por custo
@@ -135,8 +140,8 @@ parcialmente, e sob condições verificáveis --- não a média (negativo
 robusto, 4/20), mas a distribuição (positivo, 16/20, mediana de 19\% de
 retenção do gap de CRPS, com um caso \emph{born-again}), com a rotulagem
 \emph{out-of-fold} como salvaguarda de calibração (0,5--5,1~p.p.\ de
-PICP80) e uma regra prática --- transformar o alvo, testar um nativo
-forte, destilar só a vantagem que sobrar --- cuja pré-condição se mede
+PICP80) e uma regra prática (transformar o alvo, testar um nativo
+forte, destilar só a vantagem que sobrar) cuja pré-condição se mede
 com uma única rotulagem OOF de custo de minutos.
 
 \section{Contribuições}
@@ -157,9 +162,10 @@ conforme o contrato de conduta do programa
     \emph{hold-out} intocado pela seleção, inferência frequentista \emph{e}
     bayesiana com ROPE e análise de sensibilidade, e três eixos de custo
     sob o mesmo protocolo. Dele saem o empate positivo da geração
-    anterior, a quebra pela geração 2026 e --- até onde alcançam as verificações
-    datadas --- a primeira comparação neutra
-    TabPFN~$\times$~TabFM sob protocolo idêntico --- enquadrada como
+    anterior, a quebra pela geração 2026 e, até onde alcançam as
+    verificações
+    datadas, a primeira comparação neutra
+    TabPFN~$\times$~TabFM sob protocolo idêntico, enquadrada como
     replicação inter-laboratórios do paradigma, com versões fixadas e
     políticas espelhadas.
   \item \textbf{Análise de complementaridade por instância (evidência;
@@ -169,9 +175,10 @@ conforme o contrato de conduta do programa
     de sanidade), estabelece que XGBoost e \emph{foundation models}
     concordam em ${\ge}93{,}6\%$ das instâncias (mediana), que a
     vantagem do FM é fortemente heterogênea entre conjuntos (McNemar
-    exato por par) e --- como negativos informativos --- refuta as
+    exato por par) e, como negativos informativos, não confirma as
     explicações de margem baixa, classe minoritária e vantagem restrita
-    a poucos dados (esta última com sinal contrário).
+    a poucos dados (esta última com sinal descritivo contrário no
+    agregado).
   \item \textbf{Teste independente desfavorável da família
     Kolmogorov--Arnold (evidência negativa;
     Capítulo~\ref{chap:benchmark}).} No primeiro confronto da família
@@ -192,16 +199,16 @@ conforme o contrato de conduta do programa
     modelos; 0,72 vs.\ 0,78 com 14) --- corroborado por evidência
     independente contemporânea \citep{herre2026}. A consequência de
     desenho: o arcabouço não contém preditor de família vencedora.
-  \item \textbf{Arcabouço de decisão validado por \emph{regret}
+  \item \textbf{Arcabouço de decisão avaliado por \emph{regret}
     (evidência~$+$~regra; Capítulo~\ref{chap:framework}).} A política
     fixa ``\emph{foundation model} primeiro'' é regret-ótima na métrica
-    primária (\emph{regret} mediano 0,000 na geração 2026 sob LODO), e o
+    primária (\emph{regret} mediano 0,000 na geração 2026 sob LODO,
+    preservado na política executável de modelo único), e o
     arcabouço final é um fluxograma de quatro restrições verificáveis
-    \emph{a priori} --- deliberadamente modesto na forma, porque é essa
-    a forma que os dados sustentam.
+    \emph{a priori} --- a forma que os dados sustentam.
   \item \textbf{Regret multicritério ponderado --- E2 (evidência;
     Capítulo~\ref{chap:framework}; inédito em relação ao AI-1).} O
-    experimento pré-registrado que localiza o ponto de inversão da
+    experimento registrado que localiza o ponto de inversão da
     recomendação: ``FM primeiro'' só é ótima na mediana para
     $w \geq 0{,}9$ de peso na acurácia; com $w \leq 0{,}6$,
     ``sempre-GBDT'' tem \emph{regret} mediano zero. É a justificativa
@@ -213,10 +220,10 @@ conforme o contrato de conduta do programa
     quantis \emph{de um professor foundation model tabular} para um
     aluno GBDT, avaliando por CRPS e cobertura --- foi verificado como
     sem trabalho \emph{acadêmico} anterior nas varreduras datadas de
-    15--20/07, 04/10, 15/10, 05/11, 12/11, 17/11 e 23/11/2026 --- um
+    15--20/07, 04/10, 15/10, 05/11, 12/11, 17/11 e 23/11/2026 (um
     repositório público de set/2026 destila o TabFM em XGBoost para
     classe e regressão \emph{pontual}, sem tocar o recorte
-    distribucional --- (a de 15/10 cobrindo também a linhagem não tabular
+    distribucional; a de 15/10 cobrindo também a linhagem não tabular
     de destilação distribucional, citada como antecedente na
     Seção~\ref{sec:rel-destilacao}). A evidência: retenção mediana de 19\% do gap de CRPS,
     positiva em 16 de 20 conjuntos ($p=0{,}006$, $p\approx0{,}019$ sob
@@ -275,8 +282,9 @@ conforme o contrato de conduta do programa
     cabeça distribucional é o ativo arquitetural decisivo para a
     destilação.
   \item \textbf{Regra de decisão para destilar (regra;
-    Capítulo~\ref{chap:destilacao}).} Derivada de duas hipóteses
-    refutadas (ponto e cauda pesada) e do E1: transformar o alvo, testar
+    Capítulo~\ref{chap:destilacao}).} Derivada de duas hipóteses que
+    não se sustentaram (ponto: refutada; cauda pesada: não confirmada)
+    e do E1: transformar o alvo, testar
     um nativo forte, e destilar somente a vantagem genuína que
     sobreviver --- pré-condição mensurável por uma rotulagem OOF de
     minutos. É a forma operacional da resposta à QP3.
@@ -489,20 +497,20 @@ O \emph{pipeline} de destilação inteiro --- e é ganho, não perda \\
 \end{tabular}
 \end{table}
 
-Três leituras fecham o quadro. Primeiro, os perfis em que a
+Três leituras fecham o quadro. Primeiro, nos perfis em que a
 recomendação contraria a métrica primária (latência,
-interpretabilidade, classe rara) não pedem fé: pedem a contabilidade
-explícita das duas colunas finais, e em todos eles a perda na primária
-é limitada por medição --- pelo ROPE no pelotão, pelo limiar declarado
-nas operacionais --- enquanto o ganho na métrica da aplicação é de
+interpretabilidade, classe rara), a troca está contabilizada nas duas
+colunas finais: a perda na primária
+é limitada por medição (pelo ROPE no pelotão, pelo limiar declarado
+nas operacionais), enquanto o ganho na métrica da aplicação é de
 fatores inteiros a ordens de magnitude. Segundo, os perfis negativos
 são tão informativos quanto os positivos: o quadro diz quando
 \emph{não} usar o \emph{foundation model} (microssegundos, 100
 classes, regulação) e quando \emph{não} destilar (\texttt{kin8nm},
-\texttt{wine\_\allowbreak quality}) --- com os conjuntos do próprio
-\emph{benchmark} como testemunhas. Terceiro, nenhuma linha é um
+\texttt{wine\_\allowbreak quality}), com os casos medidos no próprio
+\emph{benchmark}. Terceiro, nenhuma linha é um
 \emph{ranking}: cada uma é uma condição verificável antes de qualquer
-treino, na forma que o Capítulo~\ref{chap:framework} validou ---
+treino, na forma que o Capítulo~\ref{chap:framework} avaliou ---
 restrições, não predições.
 
 \section{Limitações e ameaças à validade}
@@ -520,27 +528,27 @@ resultados (Seção~\ref{sec:met-limitacoes}).
 endereçável.} O TabFM declara pré-treino exclusivamente sintético; o
 \emph{checkpoint} padrão do classificador TabPFN v2.5, porém, é
 afinado em 43 conjuntos reais que incluem o \texttt{higgs} deste
-benchmark --- correção factual da auditoria de 23/11/2026, com a
-sensibilidade medida (no \texttt{higgs}, o checkpoint só-sintético é
-até ligeiramente melhor: 0,8113 contra 0,8111 de AUC;
+benchmark (correção factual da auditoria de 23/11/2026, com a
+sensibilidade medida: no \texttt{higgs}, o checkpoint só-sintético é
+até ligeiramente melhor, 0,8113 contra 0,8111 de AUC;
 Seção~\ref{sec:met-limitacoes}); o regressor padrão é sintético puro,
 preservando a parte distribucional. Permanece, além disso, o risco mais fraco de
 \emph{priors} e políticas de inferência iterativamente ajustados, ao
-longo das versões, ao desempenho em benchmarks públicos --- uma forma
+longo das versões, ao desempenho em benchmarks públicos: uma forma
 branda de sobreajuste da comunidade da qual nenhum benchmark público
 escapa. O tratamento foi declarar o risco, enunciar conclusões no nível
 de regime (consistência entre conjuntos, não células individuais) e
-manter o eixo de custo --- imune a contaminação --- em toda conclusão
+manter o eixo de custo, imune a contaminação, em toda conclusão
 prática (Seção~\ref{sec:met-limitacoes}).
 
 \textbf{Assimetrias declaradas nos experimentos complementares.} No E1,
 NGBoost e QRF rodam em configuração \emph{default} documentada, sem
 ajuste específico, e a QRF recebe imputação por mediana (ajustada no
-\emph{pool}, aplicada ao teste) nos três conjuntos com valores ausentes --- a
+\emph{pool}, aplicada ao teste) nos três conjuntos com valores ausentes; a
 interpretação autorizada é ``\emph{default} forte'', não ``clássico
 ajustado ao limite'' (Seção~\ref{sec:destil-e1}). Nos alunos de
 destilação, a capacidade é herdada do \emph{tuning} do benchmark, sem
-re-ajuste por alvo de destilação --- um controle deliberado que isola o
+re-ajuste por alvo de destilação, um controle deliberado que isola o
 efeito do alvo; o teto com capacidade re-otimizada foi medido pelo
 re-tuning pré-registrado nos 20 conjuntos (executado em 17/11/2026): o
 veredito agregado sobrevive ao controle re-tunado (16 de 20, mediana
@@ -553,13 +561,13 @@ processo.} Um erro de rotulagem presente desde a origem (a chave
 \texttt{diamonds} apontava para o identificador OpenML do
 \texttt{kin8nm}) foi descoberto durante o estudo e tratado pelo rito do
 contrato de conduta: errata canônica pública, retificação sem reescrita
-de histórico e re-derivação de todos os números afetados --- todo número
+de histórico e re-derivação de todos os números afetados; todo número
 desta dissertação é posterior à retificação
 (Seções~\ref{sec:met-datasets} e~\ref{sec:met-conduta}). A leitura
 positiva do episódio merece registro: a execução duplicada acidental que
 ele produziu reproduziu o \emph{pipeline} de ponta a ponta com resultados
-idênticos --- uma verificação involuntária, e por isso particularmente
-convincente, de reprodutibilidade exata
+idênticos, o que funciona como verificação não planejada de
+reprodutibilidade exata
 (Seção~\ref{sec:destil-desenho}). A ameaça residual é a que erratas não
 removem: a possibilidade de erros análogos ainda não descobertos; a
 mitigação é estrutural (\emph{hashes} de dados, configurações
@@ -569,18 +577,18 @@ versionadas, números rastreáveis a artefatos).
 
 \textbf{$N$ pequeno por tarefa e os pisos aritméticos.} Com 10/3/5
 conjuntos por tarefa, o poder dos testes é baixo por construção: em
-regressão, o menor p-valor bilateral do Wilcoxon é 0,0625 ---
-significância a 5\% é matematicamente impossível, antes de qualquer
-correção --- e a multiclasse ($N{=}3$) é tratada como descritiva em todo
-o texto. As mitigações declaradas --- equivalências sustentadas pela
+regressão, o menor p-valor bilateral do Wilcoxon é 0,0625
+(significância a 5\% é matematicamente impossível, antes de qualquer
+correção) e a multiclasse ($N{=}3$) é tratada como descritiva em todo
+o texto. As mitigações declaradas (equivalências sustentadas pela
 camada bayesiana, nenhuma conclusão apoiada em significância onde não há
-poder --- limitam o dano, mas não o eliminam: as conclusões por tarefa
+poder) limitam o dano, mas não o eliminam: as conclusões por tarefa
 têm a precisão que $N$ permite, não mais
 (Seção~\ref{sec:met-limitacoes}).
 
 \textbf{A exclusão dupla do \texttt{helena}.} Os \emph{ranks}
 multiclasse dos dois \emph{foundation models} são médias sobre apenas 2
-conjuntos --- fato repetido em toda tabela afetada. A alternativa
+conjuntos, fato repetido em toda tabela afetada. A alternativa
 (remover o conjunto) esconderia exatamente o tipo de restrição
 arquitetural que um estudo de decisão prática deve expor; o preço é que
 a liderança multiclasse da geração 2026 repousa sobre a menor base
@@ -591,7 +599,7 @@ Todos os resultados referem-se à versão v1.0.1 (julho de 2026, commit
 fixado); o relatório técnico oficial \citep{kong2026} apareceu no fim de
 setembro de 2026 e, até a escrita desta dissertação, não passou por
 revisão por pares \citep{tabfm2026}. As conclusões sobre o modelo são
-sobre \emph{essa} versão --- e a sensibilidade de versão é, ela própria,
+sobre \emph{essa} versão; e a sensibilidade de versão é, ela própria,
 um trabalho futuro (Seção~\ref{sec:conc-futuros}).
 
 \textbf{Regime delimitado.} Dezoito conjuntos OpenML (mais os quinze da
@@ -602,12 +610,12 @@ famílias tendem a transferir; os valores absolutos, não.
 
 \textbf{O campo move-se em ciclos de meses.} TabPFN-2.5 em novembro de
 2025, Pocket~FM em maio de 2026, TabFM em junho, a colisão parcial de
-\citet{jeong2026} em outubro --- a diferença entre as colunas @11 e @14
+\citet{jeong2026} em outubro; a diferença entre as colunas @11 e @14
 da validação LODO é a demonstração interna de quão rápido as conclusões
 datam. Por isso toda afirmação de novidade e toda caracterização de
 lacuna carrega data de verificação (13--20/07/2026; re-varreduras em 04/10,
 14/10, 19/10, 05/11 e 12/11/2026), e deve ser lida como ``aberta até onde verificamos, nas
-datas declaradas'' --- nunca como certeza atemporal
+datas declaradas'', nunca como certeza atemporal
 (Capítulo~\ref{chap:related}).
 
 \textbf{Identidade dos conjuntos do núcleo de regressão.} A auditoria
@@ -618,7 +626,7 @@ projeto: o rótulo ``superconduct'' designava o
 renomeação datada) e o \texttt{california\_\allowbreak housing} é a variante de
 alvo binarizado do \emph{tabular-benchmark}. O segundo caso é o
 substantivo: cada resultado-manchete da destilação carrega análise de
-sensibilidade com o conjunto excluído --- o teste de sinal, o E3, o
+sensibilidade com o conjunto excluído: o teste de sinal, o E3, o
 Friedman de cinco sistemas e as ablações sobrevivem; o Wilcoxon
 unilateral da retenção passa de $0{,}045$ a $0{,}067$ e deixa de
 rejeitar a 5\%, degradação declarada com a mesma proeminência do
@@ -628,7 +636,7 @@ resultado (Capítulo~\ref{chap:destilacao};
 \subsection{Validade de construto}
 
 \textbf{O \emph{proxy} de latência do \texttt{adult}.} A latência entra
-nas análises --- inclusive no score ponderado do E2 --- pela medição
+nas análises (inclusive no score ponderado do E2) pela medição
 padronizada em um único regime (lote amortizado, cada modelo em seu
 dispositivo natural), com o \texttt{adult} como referência. A direção do
 viés foi declarada no pré-registro e a sua magnitude foi depois medida
@@ -659,7 +667,7 @@ Três limitações já declaradas nos capítulos de origem merecem ecoar
 nesta consolidação, porque tocam o uso prático dos resultados.
 \textbf{Licença dos professores:} os pesos do TabPFN-2.5 e do TabFM
 são não comerciais, e a licença do TabPFN veda ainda destilar das
-suas saídas um modelo ``competitivo'' --- o aluno destilado deste
+suas saídas um modelo ``competitivo''; o aluno destilado deste
 estudo opera em regime de pesquisa, e implantação comercial exigiria
 licenciamento próprio (Seção~\ref{sec:destil-limitacoes}).
 \textbf{Subcobertura do aluno destilado puro:} a cláusula
@@ -678,14 +686,14 @@ Seção~\ref{sec:destil-desenho}).
 \label{sec:conc-futuros}
 
 Listam-se apenas direções com lastro direto na evidência dos capítulos
---- extensões que este estudo deixa armadas, não especulações.
+(extensões que este estudo deixa armadas, não especulações).
 
 \begin{itemize}
   \item \textbf{Professores mais novos: sensibilidade de versão da
     destilação.} O estudo fixou o TabPFN v2.5 por comparabilidade com o
     benchmark; TabPFN-3 e 3.5 \citep{tabpfn3-2026} já existem, e a
-    colisão parcial de \citet{jeong2026} --- ganhos pontuais com
-    professores mais novos, sob protocolo distinto --- sugere que a
+    colisão parcial de \citet{jeong2026} (ganhos pontuais com
+    professores mais novos, sob protocolo distinto) sugere que a
     fronteira professor-aluno é sensível à versão. Repetir o protocolo
     distribucional com os professores da geração seguinte mediria
     diretamente se a retenção de 19\% cresce com a força do professor
@@ -728,16 +736,14 @@ Listam-se apenas direções com lastro direto na evidência dos capítulos
 
 \vspace{1em}
 
-Ao fim, o que esta dissertação oferece não é um vencedor, e sim um mapa
-datado e verificável: a evidência de que a pergunta de uma década
-expirou, um arcabouço que converte essa evidência em decisões sob
-restrições explícitas, e uma regra --- testada também nos seus
-fracassos --- para transferir ao regime de microssegundos a parte
-destilável do que o novo líder sabe e os modelos baratos não aprendem
-sozinhos: a forma da sua distribuição preditiva. Cada
-número aqui citado rastreia a um artefato versionado, cada alegação de
-novidade carrega a data em que foi verificada, e cada limitação
-declarada é um convite concreto de continuação. Num campo que se move em
-ciclos de meses, essa é a forma de contribuição que envelhece melhor:
-não a resposta definitiva, mas a resposta honesta --- com o protocolo
-público que permite, a quem vier depois, corrigi-la.
+Em síntese, a dissertação entrega três peças: um benchmark datado da
+geração 2026, com os eixos de custo medidos nas mesmas condições que a
+acurácia; um arcabouço de restrições avaliado fora da amostra, com o
+ponto de inversão por custo localizado; e uma regra, testada também
+nos seus fracassos, para decidir quando destilar a distribuição
+preditiva de um \emph{foundation model} em um aluno de
+microssegundos. As três dependem das versões de modelo, dos conjuntos
+e do hardware declarados, e devem ser reavaliadas quando eles mudarem;
+o protocolo público, com sementes, artefatos e erratas versionados,
+existe para que essa reavaliação, e qualquer correção que ela traga,
+custe pouco a quem vier depois.

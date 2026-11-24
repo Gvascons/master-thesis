@@ -56,7 +56,18 @@ protocolos de comparação para o aprendizado profundo tabular ---
 arquiteturas de referência, \emph{tuning} equalizado, múltiplas sementes.
 Mais recentemente, o TabArena \citep{tabarena2025} mantém um benchmark ``vivo'' com dezenas
 de conjuntos e ranking contínuo, atualizado à medida que novos modelos são
-lançados.
+lançados. A mesma onda de consolidação produziu três recursos que
+registramos pela complementaridade com o nosso recorte (citações
+acrescentadas na revisão de 23/11/2026, com metadados verificados na
+fonte): o \emph{toolbox} TALENT \citep{talent2024} e o estudo amplo
+associado \citep{ye2024closer}, que padronizam a avaliação de métodos
+profundos tabulares em grande escala de conjuntos; o TabReD
+\citep{tabred2024}, que examina lacunas dos benchmarks acadêmicos de
+aprendizado profundo tabular; e o resultado de que até um
+\emph{baseline} de vizinhos mais próximos, revisitado com ferramental
+moderno, volta a ser competitivo \citep{modernnca2025} --- um lembrete,
+convergente com o nosso, de que protocolos uniformes reordenam
+rankings estabelecidos.
 
 Paralela aos benchmarks
 corre a literatura sobre \emph{como} comparar classificadores em múltiplos
@@ -90,7 +101,8 @@ A lacuna que ocupamos nesse eixo não é de largura: nosso benchmark não
 compete nela (18 conjuntos é
 menos do que o TabArena cobre); diferencia-se em três frentes que
 permaneciam abertas. Primeira, profundidade de protocolo por célula:
-validação cruzada aninhada com \emph{tuning} uniforme por família, e
+seleção de hiperparâmetros separada da medição, com \emph{tuning}
+uniforme por família, e
 inferência frequentista \emph{e} bayesiana --- esta última com a camada de
 equivalência prática via ROPE \citep{benavoli2017} e análise de
 sensibilidade do raio --- sobre as mesmas células. Segunda, avaliação
@@ -99,7 +111,13 @@ multicritério: latência de inferência, custo de treinamento e de
 e não apenas acurácia. Terceira, atualidade verificada: inclusão simultânea
 da geração 2026 de \emph{foundation models} (TabFM, medido semanas após o
 lançamento) e da família Kolmogorov--Arnold, ambas ausentes dos benchmarks
-neutros à data das nossas verificações (13--15/07/2026). O
+neutros à data das nossas verificações (13--15/07/2026). Dois recortes
+do elenco ficam declarados: o estudo compara modelos individuais, não
+sistemas de AutoML por combinação de modelos como o AutoGluon
+\citep{erickson2020}, cuja camada de \emph{ensembling} responde a uma
+pergunta diferente da nossa; e os lançamentos posteriores ao
+congelamento de versões (TabICLv2, TabPFN-3/3.5) ficam fora por
+datação, não por julgamento. O
 Capítulo~\ref{chap:benchmark} executa esse desenho.
 
 \section{\emph{Foundation models} tabulares e sua avaliação}
@@ -128,8 +146,8 @@ repositório. Desde o final de setembro de 2026 existe um relatório técnico
 oficial \citep{kong2026}, ainda sem revisão por pares --- que, entre outras
 coisas, confirma em fonte primária a cabeça de regressão escalar que
 havíamos verificado arquiteturalmente (fato que importa ao
-Capítulo~\ref{chap:destilacao}). O enquadramento honesto, que adotamos em
-toda a dissertação, é o de \emph{replicação inter-laboratórios} do
+Capítulo~\ref{chap:destilacao}). O enquadramento que adotamos em
+toda a dissertação é o de \emph{replicação inter-laboratórios} do
 paradigma PFN/ICL --- Google vs.\ Prior Labs ---, não o de um segundo
 paradigma.
 
@@ -138,7 +156,11 @@ TabFM à data do lançamento provinham do próprio proponente (avaliação do
 Google sobre o TabArena), com verificação independente apenas parcial ---
 prática padrão em lançamentos industriais, mas que deixa a comunidade sem
 evidência neutra justamente no período em que as decisões de adoção são
-tomadas. Em paralelo, uma linha recente avalia \emph{foundation models}
+tomadas. Na linha do TabPFN, a análise independente de
+\citet{ye2025tabpfnv2} disseca os pontos fortes do TabPFN~v2 e
+extensões de capacidade (citação acrescentada na revisão de
+23/11/2026) --- um exame em profundidade de um único modelo, distinto
+da comparação neutra entre famílias que faltava. Em paralelo, uma linha recente avalia \emph{foundation models}
 tabulares diretamente como estimadores de densidade condicional em
 regressão, com regras de pontuação próprias
 \citep{izbicki2026,landsgesell2026} --- avaliação distribucional do
@@ -455,8 +477,8 @@ modelos), e que a política fixa ``\emph{foundation model} primeiro,
 desviar por restrições'' domina por \emph{regret}. O arcabouço resultante é
 deliberadamente orientado a restrições verificáveis
 (\emph{constraint-driven}) em vez de roteamento aprendido --- uma posição
-metodológica que registramos como contribuição de honestidade frente à
-tentação de sobreajustar recomendadores a poucas observações.
+metodológica que evita sobreajustar recomendadores a poucas
+observações.
 
 \section{Síntese das lacunas}
 \label{sec:rel-sintese}
