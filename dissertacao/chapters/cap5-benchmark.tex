@@ -140,7 +140,7 @@ estatisticamente inseparável (RealMLP/SAINT/FT-Transformer, ranks a
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\linewidth]{images/cd_diagram_binary.pdf}
-\caption{Diagrama de distância crítica (Nemenyi) para a classificação
+\caption[Diagrama de distância crítica (binária)]{Diagrama de distância crítica (Nemenyi) para a classificação
 binária, grade completa de 14 modelos ($N{=}10$ conjuntos, CD $= 6{,}27$;
 rótulos internos da figura em inglês). Fonte:
 \texttt{latex/\allowbreak ai1/\allowbreak figures/\allowbreak cd\_\allowbreak diagram\_\allowbreak binary.\allowbreak pdf}.}
@@ -258,7 +258,7 @@ linhas.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{images/heatmap_classification.pdf}
-\caption{Mapa de calor da classificação: métrica primária por modelo
+\caption[Mapa de calor da classificação]{Mapa de calor da classificação: métrica primária por modelo
 (colunas) e conjunto (linhas); células vazias em \texttt{helena} são as
 duas exclusões estruturais (rótulos internos da figura em inglês). Fonte:
 \texttt{results/\allowbreak figures/\allowbreak heatmap\_\allowbreak classification.\allowbreak pdf}.}
@@ -380,7 +380,7 @@ inferência são as reportadas acima.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.92\linewidth]{images/pareto_binary.pdf}
-\caption{Fronteira de Pareto: rank binário médio \emph{versus} tempo
+\caption[Fronteira de Pareto: rank $\times$ tempo de treino]{Fronteira de Pareto: rank binário médio \emph{versus} tempo
 mediano de treino, grade completa de 14 modelos (rótulos internos da
 figura em inglês). Fonte: \texttt{latex/\allowbreak ai1/\allowbreak figures/\allowbreak pareto\_\allowbreak binary.\allowbreak pdf}.}
 \label{fig:cap5-pareto}
@@ -431,7 +431,7 @@ majoritária/minoritária: leve ($<$2:1), moderada (2--5:1) e severa
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\linewidth]{images/imbalance_robustness.png}
-\caption{Robustez ao desbalanceamento: rank médio agregado por família e
+\caption[Robustez ao desbalanceamento]{Robustez ao desbalanceamento: rank médio agregado por família e
 faixa de severidade nos conjuntos de classificação (rótulos internos da
 figura em inglês). Fonte: \texttt{results/\allowbreak figures/\allowbreak imbalance\_\allowbreak robustness.\allowbreak png}
 (\texttt{notebooks/\allowbreak 07\_\allowbreak segmented\_\allowbreak robustness.\allowbreak ipynb}).}
@@ -444,14 +444,15 @@ por gradiente sobre perda média --- mas uma ressalva é parte do
 resultado: com poucos conjuntos por faixa, trata-se de direção
 descritiva, não de teste. Duas observações
 completam o quadro
-condicional: no extremo de cardinalidade categórica, a codificação
-one-hot penaliza os modelos de atenção (o caso
-\texttt{amazon\_\allowbreak employee} visível na Figura~\ref{fig:cap5-heatmap}); e o
-TabPFN combina, dentro do núcleo, o melhor rank médio com o melhor
-pior-caso --- é o modelo que mais raramente falha de forma catastrófica,
-um atributo de robustez que rank médio sozinho não captura (a
-variabilidade entre \emph{folds} que sustenta essa leitura está
-tabulada no Apêndice~\ref{app:tabelas}).
+condicional. No extremo de cardinalidade categórica
+(\texttt{amazon\_\allowbreak employee}), os modelos de atenção ficam
+no fundo da tabela (Figura~\ref{fig:cap5-heatmap}); a codificação
+\emph{one-hot} e o teto de 50 categorias por coluna
+(Capítulo~\ref{chap:metodologia}) são candidatos a explicação, não
+causas testadas. E o TabPFN combina, dentro do núcleo, o melhor rank
+médio com o melhor pior rank entre conjuntos --- em nenhum conjunto
+ele cai ao fundo da tabela, um atributo que o rank médio sozinho não
+captura.
 
 Nenhuma das análises anteriores responde à pergunta mais frequente do
 praticante: ``com \emph{meu} volume de dados, quem vence?''. As curvas
@@ -493,7 +494,7 @@ conjuntos; ela qualifica o eixo do tamanho, não o reordena.
 
 \emph{A melhor família depende da estrutura do problema --- o DL
 recente toma o topo multiclasse (descritivo), os GBDTs ganham vantagem
-relativa sob desbalanceamento severo, o one-hot penaliza a atenção no
+relativa sob desbalanceamento severo, a atenção afunda no
 extremo categórico --- e o cruzamento GBDT$\leftrightarrow$DL por
 tamanho é real mas específico por conjunto, com o TabPFN dominando o
 regime $n \leq 4.000$ em todos os conjuntos varridos.} As reversões não
@@ -523,7 +524,7 @@ desse subconjunto --- e por isso não diretamente comparável aos ranks de
 
 \begin{table}[htbp]
 \centering
-\caption{Rank médio por tarefa, geração 2026 \emph{versus} referências
+\caption[Rank médio por tarefa: extensão 2026]{Rank médio por tarefa, geração 2026 \emph{versus} referências
 ($k{=}14$ modelos; menor é melhor; \textbf{negrito} = melhor da coluna;
 ranks multiclasse dos \emph{foundation models} excluem \texttt{helena}).
 Fonte: \texttt{notebooks/\allowbreak TABELA\_\allowbreak RESULTADOS.\allowbreak md}.}
@@ -544,7 +545,7 @@ TabKAN              & 11,4         & 13,3          & 11,8 \\
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.92\linewidth]{images/average_ranks.pdf}
-\caption{Ranks médios por tarefa na grade completa (painel multiclasse
+\caption[Ranks médios por tarefa na grade completa]{Ranks médios por tarefa na grade completa (painel multiclasse
 restrito aos 12 modelos avaliados nos três conjuntos; rótulos internos da
 figura em inglês). Fonte: \texttt{latex/\allowbreak ai1/\allowbreak figures/\allowbreak average\_\allowbreak ranks.\allowbreak pdf}.}
 \label{fig:cap5-ranks}
@@ -629,12 +630,18 @@ KAN (ranks 11,0/12,0/9,8 em binária/multiclasse/regressão) e TabKAN
 (11,4/13,3/11,8) ocupam o último terço nas três tarefas, com o TabKAN
 atrás até do TabNet em multiclasse e regressão. Surpreendente à luz das
 alegações dos artigos originais \citep{kan2024,tabkan2025}, o resultado
-pede explicação: sob protocolo uniforme com orçamento de ajuste
-fixado por família, as alegações não se sustentam, e a explicação mais provável
-é que as comparações originais usaram \emph{baselines} subajustados ---
+pede explicação. Sob protocolo uniforme com orçamento de ajuste
+fixado por família, as alegações não se reproduzem --- com a ressalva,
+declarada no Capítulo~\ref{chap:metodologia}, de que o TabKAN é
+reimplementação própria (AdamW em mini-lotes em lugar do L-BFGS
+original) e o KAN teve normalização e faixa de \emph{grid}
+adaptadas: um desempenho fraco de modelo reimplementado confunde a
+qualidade do método com a da implementação, e a conclusão vale para o
+protocolo desta grade. Uma explicação compatível, não testada aqui, é
+que as comparações originais usaram \emph{baselines} subajustados ---
 leitura consistente com a crítica de paridade de custo
-\citep{kancritical2024} --- e que explica por que \citet{poeta2024},
-sem \emph{baselines} GBDT e com treino de dez épocas, chegou a
+\citep{kancritical2024} e com o fato de \citet{poeta2024},
+sem \emph{baselines} GBDT e com treino de dez épocas, ter chegado a
 resultados \emph{favoráveis} ao KAN em acurácia: a comparação
 subajustada favorece quem treina mais rápido. Até onde alcança nossa verificação
 datada de novidade, este é o primeiro teste da família contra a grade
@@ -643,7 +650,7 @@ as avaliações independentes anteriores
 \citep{poeta2024,kancritical2024} comparam KANs apenas contra MLPs e não
 medem eixos de custo. A contraparte de engenharia merece registro
 simétrico: ambas habitam o \emph{tier} rápido de latência (2,3--3,1~\us/linha)
-e custam VRAM desprezível --- \textbf{o problema é o desempenho, não o
+--- \textbf{o problema é o desempenho, não o
 custo}.
 
 \emph{Sob protocolo uniforme, KAN e TabKAN ficam no último terço
@@ -703,7 +710,7 @@ explicação para outro lugar.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{images/complementarity_diss.pdf}
-\caption{Complementaridade por instância no \emph{hold-out}: (a)~saldo
+\caption[Complementaridade por instância]{Complementaridade por instância no \emph{hold-out}: (a)~saldo
 de vitórias líquidas do FM por 1.000 instâncias (asterisco: McNemar
 $p<0{,}01$); (b)~saldo por quintil de margem do XGBoost nas 10 binárias.
 Fonte: \texttt{results/\allowbreak complementarity/}.}
@@ -749,8 +756,9 @@ extremo segue eloquente --- no \texttt{amazon\_\allowbreak employee},
 16{,}3:1 de desbalanceamento, o saldo do TabFM na classe minoritária é
 $+266$ por 1.000 instâncias minoritárias, contra $-10$ na majoritária
 --- mas não generaliza para a população. E H-C4 (a vantagem decresce
-com o tamanho do \emph{pool}, como sugeriria o prior de pré-treino com
-contexto de até 16\,384 linhas, Seção~\ref{sec:fund-fm}) não se
+com o tamanho do \emph{pool}, como sugeriria o pré-treino em tabelas
+de até 16\,384 linhas --- embora a inferência aceite contextos de até
+50 mil (Seção~\ref{sec:fund-fm})) não se
 confirma, com sinal descritivo \emph{contrário} no agregado: a
 correlação de Spearman entre
 tamanho do \emph{pool} e vantagem é $+0{,}14$ (TabPFN) e $+0{,}26$
@@ -804,7 +812,7 @@ duas camadas em vez de escolher pela aplicação.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{images/metricas_operacionais_diss.pdf}
-\caption{Leitura operacional: (a)~acurácia e recall da minoritária no
+\caption[Leitura operacional da franja]{Leitura operacional: (a)~acurácia e recall da minoritária no
 \texttt{amazon\_employee}; (b)~recall da minoritária nas 10 binárias.
 Fonte: \texttt{results/aggregated/}.}
 \label{fig:cap5-operacionais}

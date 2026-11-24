@@ -69,7 +69,7 @@ no repositório.
 
 \begin{table}[htbp]
 \centering
-\caption{Os 18 conjuntos de dados OpenML do benchmark (tamanhos aproximados
+\caption[Os 18 conjuntos de dados do benchmark]{Os 18 conjuntos de dados OpenML do benchmark (tamanhos aproximados
 antes do teto de 100~mil amostras). Fonte: \texttt{configs/\allowbreak datasets.\allowbreak yaml}.}
 \label{tab:datasets}
 \small
@@ -152,7 +152,7 @@ condicional da QP1.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.85\textwidth]{images/dataset_landscape.pdf}
-  \caption{Paisagem dos 18 conjuntos de dados no plano amostras $\times$
+  \caption[Paisagem dos conjuntos: amostras $\times$ atributos]{Paisagem dos 18 conjuntos de dados no plano amostras $\times$
   atributos (rótulos internos da figura em inglês). Fonte:
   \texttt{results/\allowbreak figures/\allowbreak dataset\_\allowbreak landscape.\allowbreak pdf}, gerado a partir de
   \texttt{configs/\allowbreak datasets.\allowbreak yaml}.}
@@ -196,7 +196,7 @@ proveniência de cada implementação.
 
 \begin{table}[htbp]
 \centering
-\caption{Os 14 modelos do benchmark, por família, com a proveniência de
+\caption[Os 14 modelos do benchmark, por família]{Os 14 modelos do benchmark, por família, com a proveniência de
 cada implementação (``própria'' indica reimplementação a partir do artigo
 original).}
 \label{tab:modelos}
@@ -291,7 +291,7 @@ marcam os dados e a etapa que nenhum estágio de seleção observa.
 % Diagrama pré-compilado (fonte editável: tikz-src/tikz-cap4-1.tex;
 % recompilar com: tectonic tikz-src/tikz-cap4-1.tex && mv tikz-cap4-1.pdf images/)
 \includegraphics{images/tikz-cap4-1.pdf}
-\caption{Protocolo experimental: \emph{hold-out} prévio de 20\%; seleção
+\caption[Protocolo experimental]{Protocolo experimental: \emph{hold-out} prévio de 20\%; seleção
 de hiperparâmetros por validação cruzada interna (3 \emph{folds}) sobre o
 \emph{pool}, executada uma única vez, seguida de reavaliação em 5
 \emph{folds} externos com os hiperparâmetros fixados.}
@@ -453,7 +453,7 @@ esquema adotado.
 
 \begin{table}[htbp]
 \centering
-\caption{Métricas por tipo de tarefa (setas indicam a direção de
+\caption[Métricas por tipo de tarefa]{Métricas por tipo de tarefa (setas indicam a direção de
 otimização).}
 \label{tab:metricas}
 \footnotesize
@@ -611,8 +611,9 @@ prática de benchmarks abertos de declarar falhas em vez de omiti-las:
 \section{Eixos de custo e experimentos complementares}
 \label{sec:met-custo}
 
-As QP1 e QP2 exigem medir mais que desempenho preditivo. Três eixos de custo e dois
-experimentos complementares completam o protocolo:
+As QP1 e QP2 exigem medir mais que desempenho preditivo. Três eixos
+de custo (treino, busca e latência) e as análises complementares
+completam o protocolo:
 
 \begin{itemize}
   \item \textbf{Custo de treinamento e de \emph{tuning}.} Tempo de parede
