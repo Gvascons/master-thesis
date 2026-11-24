@@ -1,5 +1,241 @@
-%% STUB
-\chapter{Hyperparameter search spaces}
+%% ============================================================================
+%% Appendix B — Hyperparameter search spaces (English version; same labels).
+%% ============================================================================
+
+\chapter{Hyperparameter Search Spaces}
 \label{app:espacos-busca}
-[Translation pending.]
-\section{Pending}\label{app:hp-escolhidos}
+
+This appendix transcribes, for each tuned model of the benchmark, the
+hyperparameter search space exactly as defined in the versioned
+artifact \texttt{configs/\allowbreak models.\allowbreak yaml} --- the
+single source the runner
+(\texttt{scripts/\allowbreak run\_\allowbreak all.\allowbreak py})
+consumes. Optimization follows the protocol of
+Chapter~\ref{chap:metodologia}: Optuna with the TPE sampler and
+MedianPruner, with an asymmetric budget of \textbf{100 trials} for the
+GBDTs and \textbf{25 trials} for the deep-learning models, on the
+internal 3-fold cross-validation (the justification of the asymmetry
+is in the corresponding section of Chapter~\ref{chap:metodologia},
+next to the protocol discussion).
+
+Table conventions: ``int'' and ``float'' denote uniform sampling in
+the indicated closed interval (on the log scale when marked ``log'');
+``cat.'' denotes a categorical choice from the listed set. Parameter
+names are the literal strings of the configuration file, for direct
+traceability.
+
+The two foundation models --- \textbf{TabPFN} and \textbf{TabFM} ---
+are applied zero-shot and, by protocol definition, \textbf{have no
+search space}: no hyperparameter is optimized per dataset. For
+TabPFN, the subsampling-ensemble settings are in
+\texttt{configs/\allowbreak experiment.\allowbreak yaml}; for TabFM,
+the 50{,}000-row context cap and the ensemble size are fixed in the
+wrapper
+(\texttt{src/\allowbreak models/\allowbreak tabfm\_\allowbreak model.\allowbreak py}),
+mirroring TabPFN's policy. This budget asymmetry (full search for the
+others, none for the FMs) is part of the experimental design and is
+discussed in Chapter~\ref{chap:metodologia}.
+
+\begin{table}[htbp]
+\centering\small
+\caption[Search spaces --- GBDTs]{Search spaces of the GBDTs (100
+trials). Source: \texttt{configs/\allowbreak models.\allowbreak yaml}.}
+\label{tab:app-busca-gbdt}
+\begin{tabular}{lll}
+\toprule
+Parameter & Type & Range / values \\
+\midrule
+\multicolumn{3}{l}{\textbf{XGBoost}} \\
+\texttt{n\_estimators}      & int   & $[100,\ 2000]$ \\
+\texttt{max\_depth}         & int   & $[3,\ 12]$ \\
+\texttt{learning\_rate}     & float (log) & $[0.005,\ 0.3]$ \\
+\texttt{subsample}          & float & $[0.5,\ 1.0]$ \\
+\texttt{colsample\_\allowbreak bytree}  & float & $[0.5,\ 1.0]$ \\
+\texttt{min\_\allowbreak child\_\allowbreak weight} & float & $[1.0,\ 10.0]$ \\
+\texttt{reg\_alpha}         & float (log) & $[10^{-8},\ 10]$ \\
+\texttt{reg\_lambda}        & float (log) & $[10^{-8},\ 10]$ \\
+\midrule
+\multicolumn{3}{l}{\textbf{LightGBM}} \\
+\texttt{n\_estimators}       & int   & $[100,\ 2000]$ \\
+\texttt{max\_depth}          & int   & $[3,\ 12]$ \\
+\texttt{learning\_rate}      & float (log) & $[0.005,\ 0.3]$ \\
+\texttt{num\_leaves}         & int   & $[16,\ 256]$ \\
+\texttt{subsample}           & float & $[0.5,\ 1.0]$ \\
+\texttt{colsample\_\allowbreak bytree}   & float & $[0.5,\ 1.0]$ \\
+\texttt{min\_\allowbreak child\_\allowbreak samples} & int   & $[5,\ 100]$ \\
+\texttt{reg\_alpha}          & float (log) & $[10^{-8},\ 10]$ \\
+\texttt{reg\_lambda}         & float (log) & $[10^{-8},\ 10]$ \\
+\midrule
+\multicolumn{3}{l}{\textbf{CatBoost}} \\
+\texttt{iterations}           & int   & $[100,\ 2000]$ \\
+\texttt{depth}                & int   & $[3,\ 10]$ \\
+\texttt{learning\_rate}       & float (log) & $[0.005,\ 0.3]$ \\
+\texttt{l2\_leaf\_reg}        & float & $[1.0,\ 10.0]$ \\
+\texttt{bagging\_\allowbreak temperature} & float & $[0.0,\ 1.0]$ \\
+\texttt{random\_\allowbreak strength}     & float & $[0.0,\ 10.0]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering\small
+\caption[Search spaces --- MLPs and parametric ensembles]{Search
+spaces of MLP, RealMLP, and TabM (25 trials). Source:
+\texttt{configs/\allowbreak models.\allowbreak yaml}.}
+\label{tab:app-busca-mlp}
+\begin{tabular}{lll}
+\toprule
+Parameter & Type & Range / values \\
+\midrule
+\multicolumn{3}{l}{\textbf{MLP}} \\
+\texttt{n\_blocks}      & int   & $[1,\ 4]$ \\
+\texttt{d\_hidden}      & cat.  & $\{64,\ 128,\ 256,\ 512\}$ \\
+\texttt{dropout}        & float & $[0.0,\ 0.5]$ \\
+\texttt{learning\_rate} & float (log) & $[10^{-5},\ 10^{-3}]$ \\
+\texttt{weight\_decay}  & float (log) & $[10^{-6},\ 10^{-3}]$ \\
+\midrule
+\multicolumn{3}{l}{\textbf{RealMLP}} \\
+\texttt{learning\_rate}    & float (log) & $[0.02,\ 0.3]$ \\
+\texttt{hidden\_width}     & cat. & $\{64,\ 256,\ 512\}$ \\
+\texttt{n\_\allowbreak hidden\_\allowbreak layers} & int  & $[1,\ 5]$ \\
+\texttt{dropout}           & cat. & $\{0.0,\ 0.15,\ 0.3\}$ \\
+\texttt{weight\_decay}     & cat. & $\{0.0,\ 0.02\}$ \\
+\texttt{activation}        & cat. & \{\texttt{selu}, \texttt{mish},
+  \texttt{relu}\} \\
+\texttt{num\_emb\_type}    & cat. & \{\texttt{none}, \texttt{pbld},
+  \texttt{pl}, \texttt{plr}\} \\
+\texttt{add\_\allowbreak front\_\allowbreak scale} & cat. & \{\texttt{true}, \texttt{false}\} \\
+\texttt{ls\_eps}           & cat. & $\{0.0,\ 0.1\}$ \\
+\midrule
+\multicolumn{3}{l}{\textbf{TabM}} \\
+\texttt{arch\_type}     & cat.  & \{\texttt{tabm}, \texttt{tabm-mini}\} \\
+\texttt{k}              & int   & $[8,\ 64]$ \\
+\texttt{d\_block}       & cat.  & $\{128,\ 256,\ 512\}$ \\
+\texttt{n\_blocks}      & int   & $[1,\ 4]$ \\
+\texttt{dropout}        & float & $[0.0,\ 0.5]$ \\
+\texttt{learning\_rate} & float (log) & $[10^{-5},\ 10^{-3}]$ \\
+\texttt{weight\_decay}  & float (log) & $[10^{-6},\ 10^{-3}]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering\small
+\caption[Search spaces --- attention architectures]{Search spaces of
+FT-Transformer, SAINT, STab, and TabNet (25 trials). Source:
+\texttt{configs/\allowbreak models.\allowbreak yaml}.}
+\label{tab:app-busca-atencao}
+\begin{tabular}{lll}
+\toprule
+Parameter & Type & Range / values \\
+\midrule
+\multicolumn{3}{l}{\textbf{FT-Transformer}} \\
+\texttt{n\_blocks}                  & int   & $[1,\ 6]$ \\
+\texttt{d\_block}                   & cat.  & $\{64,\ 128,\ 192,\ 256\}$ \\
+\texttt{attention\_\allowbreak n\_\allowbreak heads}        & cat.  & $\{4,\ 8\}$ \\
+\texttt{attention\_\allowbreak dropout}         & float & $[0.0,\ 0.5]$ \\
+\texttt{ffn\_\allowbreak d\_\allowbreak hidden\_\allowbreak multiplier} & float & $[1.333,\ 2.666]$ \\
+\texttt{ffn\_dropout}               & float & $[0.0,\ 0.5]$ \\
+\texttt{residual\_\allowbreak dropout}          & float & $[0.0,\ 0.2]$ \\
+\texttt{learning\_rate}             & float (log) & $[10^{-5},\ 10^{-3}]$ \\
+\texttt{weight\_decay}              & float (log) & $[10^{-6},\ 10^{-3}]$ \\
+\midrule
+\multicolumn{3}{l}{\textbf{SAINT}} \\
+\texttt{depth}          & int   & $[1,\ 6]$ \\
+\texttt{heads}          & cat.  & $\{4,\ 8\}$ \\
+\texttt{dim}            & cat.  & $\{32,\ 64,\ 128,\ 256\}$ \\
+\texttt{attn\_dropout}  & float & $[0.0,\ 0.4]$ \\
+\texttt{ff\_dropout}    & float & $[0.0,\ 0.4]$ \\
+\texttt{learning\_rate} & float (log) & $[10^{-5},\ 10^{-3}]$ \\
+\texttt{weight\_decay}  & float (log) & $[10^{-6},\ 10^{-3}]$ \\
+\midrule
+\multicolumn{3}{l}{\textbf{STab}} \\
+\texttt{depth}          & int   & $[2,\ 7]$ \\
+\texttt{dim}            & cat.  & $\{64,\ 96,\ 128,\ 192,\ 256\}$ \\
+\texttt{heads}          & cat.  & $\{4,\ 8\}$ \\
+\texttt{attn\_dropout}  & float & $[0.0,\ 0.3]$ \\
+\texttt{ff\_dropout}    & float & $[0.0,\ 0.3]$ \\
+\texttt{cases}          & cat.  & $\{4,\ 8,\ 16\}$ \\
+\texttt{learning\_rate} & float (log) & $[10^{-5},\ 10^{-3}]$ \\
+\texttt{weight\_decay}  & float (log) & $[10^{-5},\ 10^{-3}]$ \\
+\midrule
+\multicolumn{3}{l}{\textbf{TabNet}} \\
+\texttt{n\_d}           & cat.  & $\{8,\ 16,\ 32,\ 64\}$ \\
+\texttt{n\_a}           & cat.  & $\{8,\ 16,\ 32,\ 64\}$ \\
+\texttt{n\_steps}       & int   & $[3,\ 10]$ \\
+\texttt{gamma}          & float & $[1.0,\ 2.0]$ \\
+\texttt{lambda\_sparse} & float (log) & $[10^{-6},\ 10^{-3}]$ \\
+\texttt{learning\_rate} & float (log) & $[0.005,\ 0.05]$ \\
+\texttt{mask\_type}     & cat.  & \{\texttt{sparsemax},
+  \texttt{entmax}\} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering\small
+\caption[Search spaces --- KAN networks]{Search spaces of KAN and
+TabKAN (25 trials). Source:
+\texttt{configs/\allowbreak models.\allowbreak yaml}.}
+\label{tab:app-busca-kan}
+\begin{tabular}{lll}
+\toprule
+Parameter & Type & Range / values \\
+\midrule
+\multicolumn{3}{l}{\textbf{KAN}} \\
+\texttt{n\_layers}      & int   & $[1,\ 3]$ \\
+\texttt{d\_hidden}      & cat.  & $\{32,\ 64,\ 128,\ 256\}$ \\
+\texttt{grid\_size}     & cat.  & $\{3,\ 5,\ 10,\ 20\}$ \\
+\texttt{learning\_rate} & float (log) & $[10^{-4},\ 10^{-2}]$ \\
+\texttt{weight\_decay}  & float (log) & $[10^{-6},\ 10^{-3}]$ \\
+\texttt{reg\_lambda}    & float (log) & $[10^{-8},\ 10^{-2}]$ \\
+\midrule
+\multicolumn{3}{l}{\textbf{TabKAN}} \\
+\texttt{n\_layers}      & int   & $[1,\ 4]$ \\
+\texttt{d\_hidden}      & cat.  & $\{16,\ 32,\ 64,\ 128\}$ \\
+\texttt{degree}         & int   & $[2,\ 5]$ \\
+\texttt{learning\_rate} & float (log) & $[10^{-4},\ 10^{-2}]$ \\
+\texttt{weight\_decay}  & cat.  & $\{0,\ 10^{-6},\ 10^{-5},\ 10^{-4}\}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two scope notes, recorded as comments in
+\texttt{configs/\allowbreak models.\allowbreak yaml} itself: in
+\textbf{KAN}, the spline order ($3$), the SiLU base function, and the
+grid range $[-2,\ 2]$ after per-layer LayerNorm stay \emph{fixed}
+(outside the search; see
+\texttt{src/\allowbreak models/\allowbreak kan\_\allowbreak model.\allowbreak py});
+in \textbf{TabKAN}, the ChebyKAN variant is fixed and the ranges
+follow the original paper's NAS section, trimmed to the 25-trial
+budget (see
+\texttt{src/\allowbreak models/\allowbreak tabkan\_\allowbreak model.\allowbreak py}).
+
+\clearpage
+\section{Chosen hyperparameters per dataset}
+\label{app:hp-escolhidos}
+
+The following tables complete the traceability: for each tuned model,
+the search's \emph{winning} configuration on each dataset --- exactly
+what the final refit and the external folds consumed. No value is
+transcribed by hand: the tables are generated by
+\texttt{scripts/\allowbreak gen\_\allowbreak chosen\_\allowbreak hparams.\allowbreak py}
+from the \texttt{best\_params} field of
+\texttt{results/\allowbreak raw/\allowbreak <model>\_\allowbreak <dataset>.\allowbreak json}
+(the English variants, by
+\texttt{scripts/\allowbreak gen\_\allowbreak appendix\_\allowbreak en.py}).
+Two readings they support: (i)~the search does \emph{not} converge to
+a single configuration per model --- depths and learning rates vary
+by orders of magnitude across datasets, which reinforces the need for
+the per-dataset search protocol; and (ii)~values touching the edge of
+the space (for example, \texttt{n\_estimators} close to the cap)
+signal where a wider space could help --- a limitation discussed in
+Chapter~\ref{chap:metodologia}. One reading note: identical winning
+configurations across different datasets of the same model (it
+happens with STab, MLP, and TabNet) are legitimate and expected ---
+the \texttt{TPESampler} with fixed seed 42 proposes the same candidate
+sequence per model, and when the same candidate wins on two datasets
+the parameters coincide; the raw JSONs confirm. Notation:
+\mbox{$a.b\,$e$-n$} denotes $a.b \times 10^{-n}$.
+
+\input{appendix/hiperparametros-escolhidos}

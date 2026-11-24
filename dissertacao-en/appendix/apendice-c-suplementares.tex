@@ -1,6 +1,530 @@
-%% STUB
-\chapter{Supplementary results}
+%% ============================================================================
+%% Appendix C — Supplementary results and process record (English version;
+%% same labels as the frozen PT appendix at 64f9adf).
+%% ============================================================================
+
+\chapter{Supplementary Results and Process Record}
 \label{app:suplementares}
-[Translation pending.]
-\section{Pending}\label{sec:app-abl-sort}
-\section{Pending}\label{sec:app-pilot-conformal}
+
+This appendix gathers two kinds of material: the disaggregated tables
+of the two distillation ablations discussed in
+Chapter~\ref{chap:destilacao}, and the work's process record ---
+hypotheses that did not survive contact with the data and documented
+operational deviations.
+
+For traceability with the repository's design documents
+(\texttt{docs/\allowbreak desenho-\allowbreak experimental-\allowbreak destilacao.\allowbreak md}
+and
+\texttt{docs/\allowbreak desenho-\allowbreak melhorias-\allowbreak finais.\allowbreak md}),
+the registry codenames correspond to the following parts of the text:
+E1 = classical baselines (Section~\ref{sec:destil-e1}); E2 = weighted
+regret (Section~\ref{sec:regret-ponderado}); E3 = decision utility
+(Section~\ref{sec:destil-e3}); E4 = conformal pilot
+(Section~\ref{sec:app-pilot-conformal}); E5 = routers under LODO
+(Chapter~\ref{chap:framework}); E6 = sampling variant (in this
+appendix); A-GRID = dense-grid CRPS estimator ablation; A-SORT =
+sort repair (Section~\ref{sec:app-abl-sort}); R-COND = conditional
+retention; R-TUNE = student re-tuning (pilot of 10-15 extended to the
+20 datasets on 11-17); SEEDS-10 = the 10-seed re-run (the last four
+in the limitations of Chapter~\ref{chap:destilacao}).
+
+\section{Distillation ablations: disaggregated tables}
+\label{sec:suple-ablacoes}
+
+The values below are means over the 3 seeds (0, 1, 2) of the
+distillation protocol, aggregated with \texttt{pandas} directly from
+the versioned artifacts cited in each table.
+
+\subsection{OOF \emph{vs.} in-sample labeling}
+
+Table~\ref{tab:app-abl-oof} disaggregates the ablation of
+Section~\ref{sec:destil-oof}: the quantile-XGBoost student trained
+with TabPFN teacher targets labeled under three regimes ---
+out-of-fold (OOF), in-sample with the context fixed at 80\% of the
+pool (\emph{ctx-80}, which isolates the leakage effect while keeping
+OOF's context size), and full in-sample. The pattern documented in
+the chapter is legible in the columns: RMSE does \emph{not} degrade
+with leakage (it even improves slightly) and the CRPS moves at most
+${\sim}0.003$ on three of the four datasets --- the exception is
+\texttt{wine\_quality}, where the CRPS \emph{improves} by $0.029$
+under full leakage, consistent with the duplicate-memorization
+mechanism documented in Chapter~7 --- but interval coverage
+(PICP~80\%, nominal $0.80$) falls consistently on all four datasets
+when moving from OOF to \emph{ctx-80} --- the pure effect of leakage
+on the student's calibration.
+
+\begin{table}[htbp]
+\centering\small
+\caption[OOF \emph{vs.} in-sample ablation --- disaggregated]{OOF
+\emph{vs.} in-sample ablation --- quantile-XGBoost student, TabPFN
+teacher; mean of 3 seeds. Nominal PICP~80\% $= 0.80$. Source:
+\texttt{results/\allowbreak distillation/\allowbreak ablation\_\allowbreak insample.\allowbreak csv}.}
+\label{tab:app-abl-oof}
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{lccccccccc}
+\toprule
+ & \multicolumn{3}{c}{OOF} & \multicolumn{3}{c}{\emph{In-sample}
+ ctx-80} & \multicolumn{3}{c}{\emph{In-sample}} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}
+\emph{Dataset} & RMSE & CRPS & PICP & RMSE & CRPS & PICP
+               & RMSE & CRPS & PICP \\
+\midrule
+\texttt{california\_\allowbreak housing} & 0.277 & 0.109 & 0.596
+  & 0.270 & 0.111 & 0.545 & 0.268 & 0.111 & 0.532 \\
+\texttt{kin8nm}              & 0.110 & 0.064 & 0.617
+  & 0.108 & 0.064 & 0.571 & 0.107 & 0.064 & 0.574 \\
+\texttt{online\_news}         & 0.860 & 0.454 & 0.770
+  & 0.858 & 0.453 & 0.765 & 0.857 & 0.453 & 0.767 \\
+\texttt{wine\_quality}       & 0.683 & 0.365 & 0.707
+  & 0.629 & 0.338 & 0.661 & 0.615 & 0.336 & 0.602 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For the point-XGBoost student (no distributional component), the same
+artifact shows the same non-damage in RMSE: in-sample is equal to or
+slightly better than OOF on all four datasets
+(\texttt{california\_\allowbreak housing} $0.262$ \emph{vs.} $0.268$;
+\texttt{kin8nm} $0.109$ \emph{vs.} $0.111$; \texttt{online\_news}
+$0.833$ \emph{vs.} $0.835$; \texttt{wine\_quality} $0.617$ \emph{vs.}
+$0.667$) --- the cost of leakage in regression lies in calibration,
+not accuracy.
+
+\subsection{Logarithmic target transformation}
+
+Table~\ref{tab:app-abl-log} disaggregates the ablation of
+Section~\ref{sec:destil-regra}: TabPFN teacher and quantile-XGBoost
+students re-run under $y' = \log(1+y)$ on the three datasets then
+diagnosed as price-scale failures (the target of
+\texttt{health\_insurance} is, in fact, hours worked per week ---
+Chapter~\ref{chap:destilacao}) and on two positive controls. The
+metrics are measured in log space. The retention column uses the
+definition of Chapter~\ref{chap:destilacao},
+$(\mathrm{CRPS}_{\text{hard}} - \mathrm{CRPS}_{\text{soft}}) /
+(\mathrm{CRPS}_{\text{hard}} - \mathrm{CRPS}_{\text{teacher}})$,
+computed on the means before rounding. The documented reading: the
+log does \emph{not} recover the failures (\texttt{fifa} remains
+strongly negative); the absolute teacher--student gaps go to the
+$0.004$--$0.025$ range \emph{because the metric's scale changes} ---
+in relative advantage, the teacher even widens its lead on the three
+failures (the full reading is in Section~\ref{sec:destil-regra}).
+
+\begin{table}[htbp]
+\centering\small
+\caption[Log-target ablation --- disaggregated]{Ablation of the
+logarithmic target transformation --- CRPS in log space, mean of 3
+seeds (deterministic teacher, 1 run). ``Hard'' = true-label student;
+``soft'' = distilled student. Source:
+\texttt{results/\allowbreak distillation/\allowbreak ablation\_\allowbreak logtarget.\allowbreak csv}.}
+\label{tab:app-abl-log}
+\begin{tabular}{llcccc}
+\toprule
+Group & \emph{Dataset} & Teacher & Hard student & Soft student &
+Retention \\
+\midrule
+\multirow{3}{*}{Failure}
+ & \texttt{fifa}              & 0.3405 & 0.3499 & 0.3656 & $-1.69$ \\
+ & \texttt{diamonds\_real}    & 0.0411 & 0.0449 & 0.0451 & $-0.03$ \\
+ & \texttt{health\_\allowbreak insurance} & 0.5713 & 0.5961 & 0.5951 & $+0.04$ \\
+\midrule
+\multirow{2}{*}{Control}
+ & \texttt{kings\_county}     & 0.0783 & 0.0862 & 0.0859 & $+0.04$ \\
+ & \texttt{miami\_housing}    & 0.0654 & 0.0736 & 0.0724 & $+0.15$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Quantile sort repair}
+\label{sec:app-abl-sort}
+
+The text of Chapter~\ref{chap:destilacao} states that curve transfer
+with sort repair ``acts as a calibration regularizer''; this
+pre-registered ablation (2026-10-14; executed on 10-15) isolates the
+component. The same \emph{hard} and \emph{soft} quantile students of
+the 20 datasets (3 seeds) were evaluated with and without the
+post-hoc sorting of the 19 predicted quantiles. Quantile crossing is
+the rule, not the exception: the median fraction of hold-out rows
+with at least one crossing is 96.2\% (minimum 0, maximum 100\%). The
+repair improves or ties the CRPS on 20 of 20 datasets in both arms;
+strict improvement is 20 of 20 in the \emph{hard} arm (one-sided
+sign test $p<10^{-5}$) and 18 of 20 in the \emph{soft} one
+($p=0.0002$, one-sided --- the same directional convention of the
+whole work --- with two exact ties: \texttt{online\_news} and
+\texttt{pumadyn32nh}), and it brings PICP90 closer to nominal on 19
+of 20 and 14 of 20, respectively. The median effect, however, is
+small --- 0.7\% (\emph{hard}) and 0.3\% (\emph{soft}) of relative
+CRPS, with a tail up to 28.8\% on the datasets where crossing is
+most damaging --- so no conclusion of the chapter depends on the
+repair: it is a consistent, zero-cost regularizer, not a source of
+advantage. Source:
+\texttt{results/\allowbreak distillation/\allowbreak ablation\_\allowbreak sort.\allowbreak csv}.
+
+\subsection{Post-hoc conformal calibration (declared pilot)}
+\label{sec:app-pilot-conformal}
+
+A pre-registered exploratory pilot (2026-10-14, executed on 10-15;
+pilot $\neq$ result): if \emph{both} students receive per-quantile
+split-conformal calibration (CQR style, with 10\% of the pool
+reserved for calibration), does the distilled student's advantage
+survive? On 5 datasets (3 of positive retention, 2 upsets; 3 seeds),
+conformalization fixes the coverage --- on the criterion of the
+distance to nominal decreasing --- on 5 of 5 datasets in the
+\emph{soft} arm and 3 of 5 in the \emph{hard} one (PICP90 from
+0.77--0.93 to 0.89--0.95 in the \emph{hard} arm and from 0.71--0.89
+to 0.88--0.91 in the \emph{soft}; the exceptions are the
+california-\emph{hard}, which already overcovered and whose coverage
+it moves away from nominal, with a PICP80 distance from $8.06$ to
+$9.63$~p.p., and the cps88wages-\emph{hard}, already within 1~p.p.\
+of nominal, which moves by less than 1~p.p.), but leaves the CRPS
+essentially intact (movements below 1\% in all 10 arms). The
+distilled student's shape advantage survives in full
+(\texttt{cpu\_activity} 1.18 \emph{vs.} 1.29; \texttt{cps88wages}
+160.5 \emph{vs.} 161.0; \texttt{california} 0.108 \emph{vs.} 0.181
+--- with the erratum's binarized-target caveat; the pattern holds on
+the 4 remaining datasets), and the two upsets remain upsets.
+Reading: conformalization buys \emph{calibration} and distillation
+buys \emph{shape} --- they are complementary interventions, not
+substitutes. A caveat declared before execution: in the \emph{soft}
+arm, the teacher's OOF labels were generated over the full pool, so
+the calibration split participated (via the teacher's context) in
+the training targets --- a weak exchangeability asymmetry the
+\emph{hard} arm does not have; an extension beyond the pilot would
+require regenerating the OOF labels within the 90\%. Source:
+\texttt{results/\allowbreak distillation/\allowbreak pilot\_\allowbreak conformal.\allowbreak csv}.
+
+\section{Graveyard of hypotheses and deviations}
+\label{sec:suple-cemiterio}
+
+In the tradition of the transparency appendix of
+\citet{grinsztajn2022}, we record here the hypotheses that were
+tested and did not survive, and the process deviations that affected
+the work's artifacts --- each with the rubric \emph{what it was /
+what happened / why it is here} and the pointer to the primary
+record. The research program's conduct contract requires negative
+results to be reported and corrections to be made by dated
+rectification, never by rewriting history; this record is the
+consolidation of those episodes.
+
+\subsection{H1 --- point distillation}
+\emph{What it was:} the hypothesis that a distilled GBDT student
+would retain $\geq 50\%$ of the teacher's RMSE gap on $\geq 3$ of
+the 5 regression datasets, pre-registered in
+\texttt{docs/\allowbreak desenho-\allowbreak experimental-\allowbreak destilacao.\allowbreak md}
+(\S1). \emph{What happened:} refuted on the five central datasets
+with the TabPFN teacher; the refutation replicated with the TabFM
+teacher, of larger point gaps, and in the confirmatory extension to
+the full 20-dataset pool (CTR23), in which the distilled point
+student beats the true-label control on only 4 of 20 datasets.
+\emph{Why it is here:} it is the most important negative result of
+Chapter~\ref{chap:destilacao} (Section~\ref{sec:destil-ponto}) ---
+at full pool, the student does not absorb the foundation model's
+\emph{point} advantage, regardless of the gap's size; what transfers
+is the distribution. Records:
+\texttt{docs/\allowbreak desenho-\allowbreak experimental-\allowbreak destilacao.\allowbreak md}
+(pre-registration),
+\texttt{docs/\allowbreak relatorio-\allowbreak ai2.\allowbreak md}
+(phases 1--2), Sections~\ref{sec:destil-ponto}
+and~\ref{sec:destil-e1}.
+
+The pool-size sweep that scopes this refutation --- and supports the
+reconciliation with the point gains of \citet{jeong2026} via the
+low-data moderator --- is in Table~\ref{tab:app-cap-sweep}: the
+distilled student's point advantage only appears on
+\texttt{wine\_quality} with the pool capped at 800 rows, and
+disappears (or inverts) from 2{,}000 on.
+
+\begin{table}[htb]
+\centering
+\small
+\caption[Pool-size sweep (point distillation)]{Pool-size sweep of
+point distillation (TabPFN teacher): $\Delta$RMSE = \emph{hard} $-$
+\emph{soft} (positive = distilled better), mean of 3 seeds. Source:
+\texttt{results/\allowbreak distillation/\allowbreak distill\_\allowbreak cap\{800,\allowbreak 2000,\allowbreak 8000\}.\allowbreak csv}.}
+\label{tab:app-cap-sweep}
+\begin{tabular}{lccc}
+\toprule
+\emph{Dataset} & pool 800 & pool 2{,}000 & pool 8{,}000 \\
+\midrule
+\texttt{california\_\allowbreak housing} & $-0.008$ & $+0.005$ & $-0.007$ \\
+\texttt{wine\_quality}       & $+0.026$ & $-0.079$ & $-0.081$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Heavy tail as failure moderator (log-target)}
+\emph{What it was:} with the extension to $N{=}15$, three of the
+four distributional-retention failures concentrated on
+heavy-tailed/price-scale targets; the live hypothesis was that the
+$\log(1+y)$ transformation would recover the retention. \emph{What
+happened:} the dedicated ablation refuted the hypothesis --- the log
+does not rescue the failures (\texttt{fifa} $-1.69$); the additional
+reading that it would ``collapse'' the teacher's advantage was
+withdrawn in a recorded correction (it compared incommensurable
+units --- in relative terms the advantage persists;
+Table~\ref{tab:app-abl-log}). \emph{Why it is here:} the refutation
+is more useful than the hypothesis --- it became clause (i) of the
+``when to distill'' decision rule (Section~\ref{sec:destil-regra}):
+before distilling, apply cheap target transformations. Records:
+\texttt{docs/\allowbreak relatorio-\allowbreak ai2.\allowbreak md}
+(phase 6a),
+\texttt{results/\allowbreak distillation/\allowbreak ablation\_\allowbreak logtarget.\allowbreak csv}.
+
+\subsection{Distillation by sampling (own methodological variant)}
+\emph{What it was:} a pre-registered exploratory hypothesis (H-X1,
+2026-10-14) that sampling $K{=}8$ pseudo-labels per row from the
+teacher's distribution (inverse of the OOF quantile function) and
+training the quantile student with the native pinball loss on the
+augmented pool --- genuine quantile regression instead of curve
+imitation by MSE --- would match or beat the MSE student in CRPS on
+the positive-advantage datasets. \emph{What happened:} refuted in
+the 5-dataset pilot (3 seeds): the variant only beats the MSE
+student on \texttt{california\_\allowbreak housing} ($+2.2\%$), ties
+on \texttt{cps88wages}, and loses on the rest (down to $-5.6\%$ on
+\texttt{cpu\_activity}), costing 2.8--44$\times$ the training time.
+Sampling improves calibration where the MSE student undercovers
+(\texttt{california}: PICP80 from 0.60 to 0.80), but the conformal
+pilot (Appendix~\ref{sec:app-pilot-conformal}) shows the same
+calibration can be bought at a fraction of the cost. \emph{Why it is
+here:} it was the candidate for the final round's own
+methodological contribution; the pre-registered criterion required,
+in case of refutation, recording it as a tested variant without a
+claim --- and that is what this record does. Post-erratum note
+(2026-10-19): the variant's only win is exactly on the erratum's
+binarized-target dataset; without it, the scoreboard is 0 of 4, and
+the refutation strengthens. Records:
+\texttt{docs/\allowbreak desenho-\allowbreak melhorias-\allowbreak finais.\allowbreak md}
+(dated pre-registration and verdict),
+\texttt{results/\allowbreak distillation/\allowbreak pilot\_\allowbreak sampling.\allowbreak csv}.
+
+\subsection{Meta-feature routing}
+\emph{What it was:} the promise, inherited from the meta-learning
+literature, that descriptive dataset characteristics (meta-features)
+could predict the winning family --- the decision framework would be
+a predictor, not a flowchart. \emph{What happened:} under
+leave-one-dataset-out validation, the depth-2 tree does not beat the
+majority-class baseline in either model generation (hit rate $0.11$
+\emph{vs.} $0.44$ with 11 models; $0.72$ \emph{vs.} $0.78$ with 14).
+\emph{Why it is here:} the negative result is what justifies the
+framework's final form (decision by constraints, not by prediction);
+the tree remains in the work only as a descriptive illustration.
+Records: Section~\ref{sec:resultado-negativo} of
+Chapter~\ref{chap:framework},
+\texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak validation.\allowbreak csv}
+and \texttt{lodo\_\allowbreak validation\_\allowbreak 14.\allowbreak csv},
+\texttt{scripts/\allowbreak lodo\_\allowbreak validation.\allowbreak py}.
+
+\subsection{The retracted claim of the ``deterministic'' OOM on
+\texttt{year\_\allowbreak prediction}}
+\emph{What it was:} during the Pareto-frontier measurement, it was
+claimed that the TabPFN teacher point with a 50{,}000-row context on
+\texttt{year\_\allowbreak prediction} was unmeasurable on the 16~GB
+GPU due to a deterministic OOM. \emph{What happened:} re-analysis of
+the execution logs showed the claim was wrong --- the culprit was
+the automatic memory mode's estimate; with
+\texttt{memory\_\allowbreak saving\_\allowbreak mode} forced, the
+point was measured ($148.6$~ms/row, $\sim$3.3$\times$ the latency of
+the 25{,}000 point, for an RMSE gain of only $8.661 \to 8.610$). The
+claim was retracted per the correction policy, and the measurement
+became an additional argument \emph{against} the full-context
+teacher on 16~GB GPUs. \emph{Why it is here:} public retractions are
+part of the conduct contract; the episode also illustrates that
+``unmeasurable'' demands exhaustive verification of the operating
+modes before being claimed. Records: the correction is in the
+repository history, in
+\texttt{docs/\allowbreak relatorio-\allowbreak ai2.\allowbreak md}
+(phase 3), and in a comment of
+\texttt{scripts/\allowbreak pareto\_\allowbreak strategies.\allowbreak py}.
+
+\subsection{\texttt{diamonds}/\texttt{kin8nm} erratum}
+\emph{What it was:} the \texttt{diamonds} entry of
+\texttt{configs/\allowbreak datasets.\allowbreak yaml} pointed, since
+the project's creation, to \texttt{openml\_id} 44980 --- which is
+\texttt{kin8nm} (8{,}192 samples), not \texttt{diamonds} (44979;
+53{,}940 samples). \emph{What happened:} the error was discovered on
+2026-07-20, when the consolidated analysis of the CTR23 extension
+flagged metrics identical to the 4th decimal place between
+``\texttt{kin8nm} (extension)'' and ``\texttt{diamonds} (core)''; an
+earlier clue (a 6{,}553-row pool, incompatible with $\sim$43
+thousand) had been wrongly accepted as a configuration approximation
+--- a recorded lapse. Experimental validity was not affected (only
+the label was wrong); the labels were corrected by a rectification
+commit with history preserved, the involuntary duplicate became an
+end-to-end reproducibility test
+(\texttt{extension\_\allowbreak kin8nm\_\allowbreak repro\_\allowbreak check.\allowbreak csv}:
+numbers reproduced exactly under the same seeds), and the real
+\texttt{diamonds} entered the extension as \texttt{diamonds\_real}.
+\emph{Why it is here:} it is the work's most serious record
+deviation and the origin of two safeguards (name/ID/dimension
+verification at download; an \texttt{approx\_\allowbreak samples}
+divergence as a mandatory investigation signal). Canonical record:
+\texttt{docs/\allowbreak errata-\allowbreak diamonds-\allowbreak kin8nm.\allowbreak md},
+with the erratum and re-execution commits identified in the
+repository history.
+
+\subsection{Identity erratum of the regression core}
+\emph{What it was:} the safeguard promised in the previous erratum
+--- the name/ID/dimension verification --- remained pending.
+\emph{What happened:} executed on 2026-10-19 over the study's 33
+identifiers, it found the two remaining cases, both inherited from
+the project's creation commit. The label ``superconduct'' had always
+designated OnlineNewsPopularity (OpenML 44064; a legitimate
+continuous log-shares regression) --- the config's old metadata
+described the intended superconduct, never the loaded data; the
+label was renamed to \texttt{online\_news} in all artifacts by a
+versioned rectification script, with history preserved. And
+\texttt{california\_\allowbreak housing} (OpenML 44090) is the
+\textbf{binarized-target} variant of the \emph{tabular-benchmark}
+classification suite: kept as executed (the 20-dataset population
+was the one registered in the two-stage design
+(Section~\ref{sec:destil-desenho}); removing it a posteriori would
+be post-hoc curation), with an exclusion sensitivity analysis
+attached to every headline result of Chapter~\ref{chap:destilacao}
+--- sign test, E3, Friedman, A-SORT, R-COND, and A-GRID survive; the
+one-sided Wilcoxon of the retention moves from 0.045 to 0.067; E6's
+only win and R-TUNE's showcase case were on the degenerate dataset.
+\emph{Why it is here:} it closes the cycle opened by the previous
+erratum --- the lesson recorded there, executed, found exactly what
+it predicted; the new recorded lesson is that curated suites reuse
+the same name across classification and regression variants of the
+same data, so identity requires checking the source suite. Canonical
+record:
+\texttt{docs/\allowbreak errata-\allowbreak datasets-\allowbreak core-\allowbreak regressao.\allowbreak md};
+sensitivity:
+\texttt{results/\allowbreak distillation/\allowbreak sensitivity\_\allowbreak california.\allowbreak csv}.
+
+\subsection[Dataset swap in the calibration figure]{Swap
+\texttt{year\_\allowbreak prediction} $\to$ \texttt{cpu\_activity} in
+the calibration figure}
+\emph{What it was:} the distillation calibration figure would use
+\texttt{california\_\allowbreak housing} and
+\texttt{year\_\allowbreak prediction} as examples. \emph{What
+happened:} the teacher pass with a 50{,}000-row context on
+\texttt{year\_\allowbreak prediction} exceeded the time budget
+available for figure generation; the dataset was replaced by
+\texttt{cpu\_activity}, which carries the same message --- strong
+distributional retention ($+0.50$) --- at about 1/50 of the
+computational cost. \emph{Why it is here:} it is an operational, not
+scientific, deviation, but it alters a presented artifact; the
+decision and its justification are commented in the generating
+script itself. Record: comment in
+\texttt{scripts/\allowbreak plot\_\allowbreak calibration.\allowbreak py}
+(the \texttt{DATASETS} definition); \texttt{cpu\_activity} retention
+in \texttt{docs/\allowbreak relatorio-\allowbreak ai2.\allowbreak md}
+(phase 6a).
+
+\section{Design record, searches, and licenses of Chapter~7}
+\label{sec:app-registro-cap7}
+
+This section concentrates the registry material that the body of
+Chapter~\ref{chap:destilacao} summarizes and points to.
+
+\textbf{Novelty searches (scope $\times$ dates).} The
+distributional-distillation framing was checked against the
+literature and public repositories in dated sweeps: 2026-07-15 to
+07-20 (initial sweep; versioned memo in
+\texttt{docs/\allowbreak memo-\allowbreak novidade-\allowbreak destilacao.md}),
+10-04 (pre-delivery; it recorded the partial collision of
+\citealp{jeong2026} and TabFM's technical report), 10-14 to 10-19
+(post-erratum re-sweeps), 11-05, 11-12, 11-17, and 11-23 (the last).
+The wider-scope sweeps (all the study's gaps, not only distillation)
+are those of 07-13 to 07-20, 10-04, 10-14, 10-19, 11-05, and 11-12,
+recorded in the memo and in the repository history. One claim
+correction belongs to this record: the July 2026 checks stated that
+no independent benchmark of tabular KANs existed; the 2026-10-04
+re-sweep identified \citet{poeta2024} as earlier (June 2024), and
+the claim was re-scoped in a dated addendum to ``first test of the
+family against the full grid of families under a multi-criteria
+protocol''.
+
+\textbf{Chronology of the two-stage design and sequential
+correction.} The pre-registration of 2026-07-15 fixed H1--H3, the
+post-pilot criteria, and the forecast of an 8-to-10-dataset
+extension. The sign test and the eligibility rule (3--100 thousand
+rows) were fixed on 2026-07-20, after an interim reading on 15
+datasets (11 positives, $p=0.059$), and the population was completed
+to 20. Treating the two readings as a two-stage sequential design
+(nominal 5\% level at each): the procedure's global type~I error is
+0.0283; the stage-ordered adjusted $p$-value for 16/20 is 0.0189;
+the extension alone gave 5 positives out of 5 ($p=0.03125$); the
+Bonferroni upper bound with two readings is 0.0118
+(\texttt{scripts/\allowbreak interim\_\allowbreak sequencial.py}).
+Execution deviations recorded in dated addenda in the design
+document: a 50{,}000-row cap on the teacher's context (mirroring the
+benchmark); block prediction under VRAM constraints; failure-tolerant
+chaining; inherited hyperparameters in place of per-student Optuna
+(cost measured by the re-tuning of the 20, addendum of 11-12,
+executed on 11-17); the mixture variant executed only at
+$\lambda{=}0.8$; the MUNGE transfer set not executed. The
+dataset-identity corrections (\texttt{diamonds}/\texttt{kin8nm};
+\texttt{online\_news}; the binarized target of
+\texttt{california\_housing}) are in the canonical errata cited in
+Chapter~\ref{chap:metodologia}; the accidental duplicated run of the
+\texttt{diamonds} episode reproduced the pipeline end to end with
+identical results.
+
+\textbf{Teacher licenses (clause text).} TabPFN-2.5 (TABPFN-2.5
+Non-Commercial License v1.1, checked at the source on 2026-11-23):
+(i) outputs are not derivatives --- ``\emph{Outputs are not
+considered Derivatives under this License}'' (\S1); (ii) the
+licensed use is non-commercial, and training, fine-tuning, or
+distilling other models \emph{for commercial use} is explicitly
+outside the definition of \emph{Non-Commercial Purpose}; (iii)
+\S2(d) forbids using the outputs to ``\emph{train, fine-tune, or
+distill a model that is competitive with the TABPFN-2.5 Model}'' ---
+this study's student retains 12--19\% of the distributional
+advantage and does not compete with the teacher in quality, but the
+final word on ``competitive'' belongs to the licensor. TabFM (TabFM
+Non-Commercial License v1.0, checked on 2026-11-23): non-commercial,
+outputs are not derivatives, no competitive-model clause.
+
+\textbf{Eligible datasets omitted from the distillation
+population.} The eligibility rule (CTR23, 3--100 thousand rows)
+reaches nineteen datasets; the fifteen selected left four out:
+\texttt{white\_wine} (ID 44971; a subset of the core's
+\texttt{wine\_quality}), the \emph{continuous}
+\texttt{california\_housing} (44977; the non-binarized version of
+the core's dataset), \texttt{superconductivity} (44964; at
+selection time believed to overlap the core, a belief the 10-19
+erratum undid --- and the omission was not revisited), and
+\texttt{naval\_propulsion\_plant} (44969; with no recorded
+justification). The sensitivity with the four, under the same
+protocol (five data splits, seeds $\{0,1,2\}$; see the multisplit
+block below), is in the robustness table of
+Chapter~\ref{chap:destilacao}; provenance and limits in
+\texttt{results/\allowbreak distillation/\allowbreak ctr23\_\allowbreak omitidos/\allowbreak PROVENANCE.md}.
+
+\textbf{Multisplit of the omitted eligible datasets.} The
+measurement of the four omitted datasets was repeated on four
+additional data splits (43--46; split 42 is the original record's),
+under a reporting rule fixed before any reading: all splits
+reported, per-split scoreboard, and per-dataset aggregate by the
+sign of the mean retention, with no later cut. Retention per dataset
+and split (student seeds \{0, 1, 2\}):
+
+\begin{table}[htbp]
+\centering
+\caption[Multisplit of the omitted CTR23 datasets]{CRPS retention
+per omitted dataset and split (student seeds \{0, 1, 2\}). Source:
+\texttt{results/\allowbreak distillation/\allowbreak ctr23\_\allowbreak omitidos/\allowbreak multisplit.csv}
+(splits 43--46) and \texttt{resultados.csv} (split 42).}
+\label{tab:app-multisplit}
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+Dataset & 42 & 43 & 44 & 45 & 46 \\
+\midrule
+continuous california & $+$0.212 & $+$0.332 & $+$0.294 & $+$0.320 & $+$0.232 \\
+naval\_propulsion\_plant & $-$0.098 & $-$0.087 & $-$0.022 & $+$0.022 & $-$0.104 \\
+superconductivity & $-$0.788 & $-$0.001 & $-$0.152 & $-$0.156 & $-$0.254 \\
+white\_wine & $-$1.582 & $-$1.087 & $-$1.000 & $-$1.524 & $-$1.343 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Enlarged-population scoreboard per split: 17/24 ($p=0.032$) on
+splits 42, 43, 44, and 46; 18/24 ($p=0.011$) on split 45 (the only
+one in which \texttt{naval} crosses zero). Aggregate by the sign of
+the mean retention across splits: 17/24 ($p=0.032$). Conservative
+cut (without \texttt{white\_wine} and the continuous
+\texttt{california}): 16/22 ($p=0.026$) on four splits, 17/22 on
+one; aggregate 16/22.

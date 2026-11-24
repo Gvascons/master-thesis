@@ -1,9 +1,106 @@
-%% STUB
-\chapter{Complete result tables}
+%% ============================================================================
+%% Appendix A — Complete result tables (English version; same labels).
+%% Generated tables come from scripts/gen_appendix_en.py over the PT files.
+%% ============================================================================
+
+\chapter{Complete Result Tables per Dataset}
 \label{app:tabelas}
-[Translation pending.]
-\begin{table}[h]\caption{Pending}\label{tab:app-operacionais}\end{table}
-\begin{table}[h]\caption{Pending}\label{tab:app-custos}\end{table}
-\begin{table}[h]\caption{Pending}\label{tab:app-regressao}\end{table}
-\begin{table}[h]\caption{Pending}\label{tab:app-secundarias-regression}\end{table}
-\begin{table}[h]\caption{Pending}\label{tab:app-ks}\end{table}
+
+This appendix presents the benchmark's master table in disaggregated
+form: the primary metric of each of the 14 models on each of the 18
+datasets, on the test hold-out (20\%, seed 42), per the protocol of
+Chapter~\ref{chap:metodologia}. These are
+Tables~\ref{tab:app-binaria}, \ref{tab:app-multiclasse}
+and~\ref{tab:app-regressao} --- one per task, because the primary
+metric differs across tasks and values of different metrics are not
+comparable to each other.
+
+In each table, each row is a dataset and each column a model, in the
+benchmark's canonical order (the three GBDTs, the deep models, the
+KAN networks, and the two foundation models). The primary metric
+follows the protocol's definition:
+\begin{itemize}
+  \item \textbf{binary classification} (10 datasets): ROC-AUC ---
+    higher is better (Table~\ref{tab:app-binaria});
+  \item \textbf{multiclass classification} (3 datasets): log-loss ---
+    lower is better (Table~\ref{tab:app-multiclasse});
+  \item \textbf{regression} (5 datasets): RMSE on the scale in which
+    the source suite ships each dataset's target --- lower is better
+    (Table~\ref{tab:app-regressao}). The scales differ across
+    datasets (notes of Table~\ref{tab:datasets}:
+    \texttt{california\_\allowbreak housing} has a binarized target,
+    so its RMSE is the square root of the Brier score;
+    \texttt{online\_news} has a log-shares target), which is why no
+    RMSE aggregation across datasets is done anywhere in the study
+    --- comparisons are always within a row or by rank.
+\end{itemize}
+The best value in each row is in \textbf{bold}. Values carry four
+decimal places. The two cells marked ``---'' (\texttt{helena}
+$\times$ TabPFN/TabFM) are the study's structural exclusions: the
+dataset has 100 classes, above both foundation models' architectural
+limit. The complete state is therefore 250 measured cells out of
+$14 \times 18 = 252$ possible.
+
+As for provenance, all numbers come from
+\texttt{results/\allowbreak aggregated/\allowbreak test\_\allowbreak results.\allowbreak csv},
+the benchmark's versioned aggregate; the tables themselves are
+generated automatically by
+\texttt{scripts/\allowbreak gen\_\allowbreak appendix\_\allowbreak tables.\allowbreak py}
+from that artifact (no value is transcribed by hand; the English
+variants are produced by
+\texttt{scripts/\allowbreak gen\_\allowbreak appendix\_\allowbreak en.py},
+which only translates fixed strings and the decimal separator). The
+per-fold cross-validation results feed only the variability table;
+the inference of Chapter~\ref{chap:benchmark} operates on the
+hold-out, one value per dataset. The per-fold artifact
+(\texttt{results/\allowbreak aggregated/\allowbreak fold\_\allowbreak results.\allowbreak csv},
+$\sim$300~MB) is the only exception to the public-repository rule: it
+stays out of remote version control for size, and is reproducible
+from \texttt{results/raw} and the recorded seeds. The 15-column
+tables use rotated pages, with the within-row comparison --- the main
+reading --- intact in a single table per task.
+
+The appendix is completed by the remaining instruments of
+Chapter~\ref{chap:metodologia}'s statistical protocol, all generated
+the same way (no value transcribed by hand): the \textbf{secondary}
+metrics of each task, summarized as mean rank per model
+(Tables~\ref{tab:app-secundarias-binary},
+\ref{tab:app-secundarias-multiclass}
+and~\ref{tab:app-secundarias-regression} --- ranks because log-loss,
+RMSE and MAE have incommensurable scales across datasets; per-cell
+values are in the artifact), with one exception opened in full: the
+\textbf{KS} statistic, the credit industry's standard metric, gets
+its own table with per-dataset values (Table~\ref{tab:app-ks}) ---
+KS is commensurable across binary datasets, and it is the reading
+that connects the benchmark to risk practice; the \textbf{effect
+size} matrices (paired Cohen's $d$,
+Tables~\ref{tab:app-cohensd-binary}
+and~\ref{tab:app-cohensd-regression}); the \textbf{bootstrap
+confidence intervals} of the mean AUC in binary
+(Table~\ref{tab:app-bootstrap-auc}; in the other tasks, $N{=}3$ and
+$N{=}5$ datasets and incommensurable scales would make the
+across-dataset mean uninterpretable, and the instrument is not
+reported --- the same reason the study does not aggregate RMSE); the
+\textbf{consolidated costs} per model (Table~\ref{tab:app-custos});
+and the \textbf{across-fold variability} of the primary metric
+(Table~\ref{tab:app-foldvar}), which supports the worst-case reading
+of Chapter~\ref{chap:benchmark}.
+
+Finally, Table~\ref{tab:app-operacionais} opens the confusion matrix
+of the central question's three protagonists (XGBoost, TabPFN, and
+TabFM) on the hold-out: minority-class precision and recall and
+balanced accuracy, at the standard threshold of 0.5 (argmax), with no
+cutoff optimization --- the operational picture that complements the
+threshold-free reading of AUC, per the trade-off discussed in
+Section~\ref{sec:fund-metricas-clf} and declared in
+Section~\ref{sec:met-metricas}. The table is computed by
+\texttt{scripts/\allowbreak secondary\_\allowbreak metrics\_\allowbreak report.py}
+on the per-instance predictions of the complementarity experiment
+(Section~\ref{sec:cap5-ato5}), with its own sanity gate: each cell's
+recomputed accuracy reproduces the benchmark aggregate's (divergence
+$\leq 10^{-3}$ in all 37 cells). Per-cell F1 and specificity are in
+the artifact
+(\texttt{secondary\_\allowbreak metrics\_\allowbreak holdout.csv}).
+
+\input{appendix/tabelas-geradas}
+\input{appendix/tabela-metricas-operacionais}
