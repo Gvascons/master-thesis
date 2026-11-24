@@ -513,10 +513,12 @@ decision framework can encode.
 \section{Act IV --- the shift of the top: the 2026 generation}
 \label{sec:cap5-ato4}
 
-The expansion to the full 14-model grid changes the picture. TabFM
+The expansion to the full 14-model grid changes the picture --- a
+consistent lead which, as this section's caveats detail, the
+underpowered tests do not confirm as a statistical separation. TabFM
 --- a foundation model released in June 2026, evaluated here
 zero-shot, with no per-dataset tuning --- leads the average rank
-\textbf{in all three tasks}: 2.7 in binary, 1.0 in multiclass (a
+\textbf{in all three tasks}: 2.7 in binary, 1.00 in multiclass (a
 perfect score over its two eligible datasets; \texttt{helena} is a
 structural exclusion), and 1.2 in regression. It is the absolute best
 model on \textbf{13 of the 18 datasets}, competing in 17.
@@ -577,7 +579,7 @@ justified in Chapter~\ref{chap:metodologia} by feasibility and
 parity. And TabPFN, in turn, consolidates as the grid's consistent
 runner-up (average ranks 4.2/2.5/3.0 in the three tasks): the result
 is not confined to one model --- the two foundation models occupy the
-top two posts in every task.
+top two places in every task.
 
 Regression, the task with the fewest datasets, deserves its own
 paragraph. On the full grid, the order of the average RMSE ranks is
@@ -630,7 +632,7 @@ lead rests on consistency across datasets and on effect sizes.}
 \label{fig:cap5-cd14}
 \end{figure}
 
-The counterweight is frontal, and it is the chapter's central
+The counterweight is head-on, and it is the chapter's central
 finding: the accuracy leader is the grid's worst model in serving
 latency --- 43{,}262~\us/row under the standard protocol,
 $131{,}097\times$ XGBoost, and more in larger contexts, reaching
@@ -650,7 +652,7 @@ necessary --- and pointed to its single obstacle.
 
 In the same movement of the extension, the benchmark produces the
 independent test of the Kolmogorov--Arnold family --- and the result
-is the negative of value. KAN (ranks 11.0/12.0/9.8 in
+is a negative finding of value. KAN (ranks 11.0/12.0/9.8 in
 binary/multiclass/regression) and TabKAN (11.4/13.3/11.8) occupy the
 bottom third in all three tasks, with TabKAN behind even TabNet in
 multiclass and regression. Surprising in light of the original
@@ -673,7 +675,7 @@ test against the full GBDT/DL/foundation-model grid in a
 multi-criteria tabular benchmark; the previous independent
 evaluations \citep{poeta2024,kancritical2024} compare KANs only
 against MLPs and do not measure cost axes. The engineering
-counterpart deserves symmetric record: both inhabit the fast latency
+counterpart deserves symmetric mention: both inhabit the fast latency
 tier (2.3--3.1~\us/row) --- \textbf{the problem is the performance,
 not the cost}.
 
@@ -717,8 +719,8 @@ criteria, deserve explicit statement, because the verdicts below are
 measured against them. \textbf{H-C1} (dominant redundancy): the
 models share most of the signal --- label agreement above 85\% in
 the median across datasets; refuted if below. \textbf{H-C2} (the
-gain lives in uncertainty): the FM's wins concentrate where XGBoost
-hesitates --- a larger balance in the lowest-margin quintile than in
+gain lives in uncertainty): the foundation model's (FM's) wins
+concentrate where XGBoost hesitates --- a larger balance in the lowest-margin quintile than in
 the highest, in most binary datasets (one-sided sign test,
 $\alpha=0.05$). \textbf{H-C3} (minority class): the FM's balance is
 larger on the rare class than on the majority one, in most binary
@@ -737,7 +739,8 @@ refuting them would displace the explanation elsewhere.
 \caption[Instance-level complementarity]{Instance-level
 complementarity on the hold-out: (a)~net FM wins per 1{,}000
 instances (asterisk: McNemar $p<0.01$); (b)~balance per quintile of
-XGBoost's margin on the 10 binary datasets. Source:
+XGBoost's margin on the 10 binary datasets (internal labels in
+Portuguese; EN regeneration pending in the figure pass). Source:
 \texttt{results/\allowbreak complementarity/}.}
 \label{fig:cap5-complementaridade}
 \end{figure}
@@ -759,8 +762,13 @@ extremes, TabFM converts the fringe overwhelmingly on
 \texttt{covertype} ($+33.7$, $p \sim 10^{-94}$), and \texttt{higgs}
 ($+26.0$, $p \sim 10^{-25}$) --- but \emph{loses} the fringe on
 \texttt{telco\_\allowbreak customer\_\allowbreak churn} ($-29.8$,
-$p = 6 \times 10^{-4}$), just as TabPFN loses it on \texttt{adult}
-($-8.2$, $p = 1.2 \times 10^{-5}$). The foundation models' aggregate
+$p = 6 \times 10^{-4}$) --- a loss measured under the published
+preprocessing, in which \texttt{TotalCharges} enters as a
+categorical and which penalizes TabFM alone
+(Chapter~\ref{chap:metodologia}: with the column numeric, its AUC
+rises from last to the dataset's best); the per-instance analysis
+was not repeated under the corrected arm --- just as TabPFN loses
+it on \texttt{adult} ($-8.2$, $p = 1.2 \times 10^{-5}$). The foundation models' aggregate
 win is therefore not uniform dominance: it is a sum of large local
 wins and real local defeats.
 
@@ -792,7 +800,7 @@ advantage of \emph{TabPFN} goes in the hypothesis's direction,
 $\rho=-0.61$, $p=0.060$, also non-significant --- the mixing of
 metrics across tasks is part of what the aggregate dilutes) ---
 descriptively, the largest balance is on \texttt{jannis} (the 5th
-largest dataset of the grid), but the next posts belong to one
+largest dataset of the grid), but the next places belong to one
 medium and one small dataset (\texttt{magictelescope},
 \texttt{phoneme}): the reading the data support is that the
 advantage \emph{does not shrink} with size, not that it grows with
@@ -817,7 +825,8 @@ XGBoost detects 3 in every 100 requests that should be denied;
 TabFM, 30 --- at the price of some precision (0.706 against 0.621):
 in an application where the false negative is the expensive error,
 the difference accuracy cannot see is the one that matters. And on
-\texttt{telco\_\allowbreak customer\_\allowbreak churn} the choice of
+\texttt{telco\_\allowbreak customer\_\allowbreak churn} (published
+preprocessing; see Chapter~\ref{chap:metodologia}) the choice of
 metric \emph{inverts the verdict}: TabFM loses the fringe on McNemar
 and loses in accuracy (0.771 against 0.801), but has the highest
 minority recall (0.663 against 0.570) and the highest balanced
@@ -866,8 +875,9 @@ for ``the hard cases'': it is an inductive bias that suits some
 datasets --- typically the dense, numeric, multiclass ones (an
 \emph{a posteriori} descriptive reading, not a routing rule) ---
 where it converts the disagreement fringe almost entirely in its
-favor --- and unhelps on others, where XGBoost remains the fringe's
-owner. For practical decision-making, the consequence is direct and
+favor --- and hurts on others, where XGBoost remains the fringe's
+owner (on \texttt{telco}, under the preprocessing caveat of
+Chapter~\ref{chap:metodologia}). For practical decision-making, the consequence is direct and
 feeds Chapter~\ref{chap:framework}: with median agreement above
 0.93 and an advantage whose sign changes from dataset to dataset ---
 without margin or class predicting it stably --- model choice is, in
@@ -912,7 +922,9 @@ post-hoc nor the Bayesian test separates it decisively. The
 instance layer (Act~V) qualifies it: XGBoost and the foundation
 models agree on 93.6\% to 95.0\% of instances (median across
 datasets), the rank difference arises from a small fringe of
-disagreements that TabFM wins on some datasets and loses on others,
+disagreements that TabFM wins on some datasets and loses on others
+(on \texttt{telco}, under the preprocessing caveat of
+Chapter~\ref{chap:metodologia}),
 and the three pre-registered explanations for the advantage were
 not confirmed.
 

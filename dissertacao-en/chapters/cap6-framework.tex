@@ -4,7 +4,7 @@
 %% Deliberate EN divergence: chapter title uses "Evaluated" (the PT title
 %% keeps "Validado", at odds with the body's own convention — author list).
 %% EN figures: decision_matrix.png and lodo_weighted_regret.pdf have English
-%% internal labels; decision_flowchart_14.pdf is the EN flowchart.
+%% internal labels; decision_flowchart_14_en.pdf is the EN flowchart.
 %% ============================================================================
 
 \chapter{The Decision Framework, Evaluated}
@@ -18,7 +18,7 @@ the fixed policy ``foundation model first'' is regret-optimal on the
 primary metric; and a registered experiment on weighted
 multi-criteria regret, which locates the latency weight at which that
 recommendation flips --- shifting 10--20\% of the weight from
-accuracy to latency is enough. The resulting framework is a flowchart
+accuracy to latency (by the median; 20--30\% by the mean) is enough. The resulting framework is a flowchart
 of four constraints verifiable \emph{a priori}, in which the first
 question --- latency --- is now quantitatively justified.
 
@@ -114,8 +114,8 @@ which is why we report it with the protocol in plain view. In the
 0.44 for the majority-class baseline}; in the 14-model study
 (including the 2026 generation), 0.72 against the baseline's 0.78.
 In neither configuration does the learned router beat the trivial
-rule ``always predict the family that wins most often''. Upon
-investigation, the attribution is direct: with $N{=}18$ datasets,
+rule ``always predict the family that wins most often''. The cause
+is straightforward: with $N{=}18$ datasets,
 each LODO round trains on 17 examples --- a sample in which any
 partition by meta-features is dominated by the noise of individual
 reversals, and in which the price of a wrong leaf is high. The
@@ -171,7 +171,7 @@ foundation model: recommending the FM family has regret 0;
 recommending GBDT, 0.10; recommending deep learning, 0.60. Two
 reading notes. The policy is credited with the best model of the
 recommended family --- it is a measure of the family's ceiling; the
-single-model policies come shortly. And the normalization depends on
+single-model policies are reported below. And the normalization depends on
 the dataset's worst model, so the regret compares policies within a
 study, and the @11 and @14 columns of Table~\ref{tab:regret-lodo}
 are not comparable line by line. Table~\ref{tab:regret-lodo}
@@ -217,7 +217,7 @@ study's 11-model core, ``use the foundation model by default'' was
 the best fixed policy (mean regret 0.115; median 0.018). Second,
 with the 2026 generation, the policy's median regret drops to
 \textbf{zero}: on half or more of the datasets, the FM family
-contains the best model, period. The question ``which family
+contains the best model outright. The question ``which family
 wins?'' dissolves --- and with it the value of any performance
 router. Third, the apparent tie between the tree and the always-FM
 policy at the @14 median (both 0.000) deserves explanation, and the
@@ -272,9 +272,10 @@ recommendation. This section closes that gap with experiment E2,
 which asks: does the ``FM first'' policy remain regret-optimal when
 the decision metric weighs accuracy against cost? The design (weight
 grid, policies, and metric) was written before the result was read,
-but the hypothesis record already carries the result --- there is no
-independent stamp proving precedence --- so the correct label is
-\emph{registered analysis}, not pre-registration.
+but the hypothesis record already carries the result --- no
+independent timestamp proves that the design preceded the result ---
+so the correct label is \emph{registered analysis}, not
+pre-registration.
 
 \subsection{Registered design}
 \label{sec:e2-desenho}
@@ -299,7 +300,8 @@ fastest ($r_{\text{lat}}{=}0$) and fourth in accuracy out of 14
 ($r_{\text{acc}} \approx 0.23$) has $S = 0.23\,w$. The two tie at
 $w \approx 0.81$: with less than ${\sim}80\%$ of the weight on
 accuracy, the GBDT moves ahead. The rank normalization ignores
-whether the slowest model is two or a hundred thousand times slower
+whether the slowest model is twice as slow or a hundred thousand
+times slower
 --- whoever is last in latency carries the whole $(1-w)$ term ---
 and, since the accuracy leader (TabFM) is the slowest of the grid
 and TabPFN is among the three slowest, the crossover point is
@@ -355,7 +357,8 @@ Reading: lower is better; the axis runs from $w{=}0$ (latency only)
 to $w{=}1$ (accuracy only) --- Table~\ref{tab:weighted-regret} walks
 the same spectrum in reverse order. What to look at: the always-FM
 curve is the best on the right and the worst on the left, and
-crosses the others between $w{=}0.9$ and $w{=}0.8$.}
+crosses the others between $w{=}0.9$ and $w{=}0.8$ (median panel;
+between 0.8 and 0.7 on the mean panel).}
 \label{fig:lodo-weighted}
 \end{figure}
 
@@ -417,7 +420,7 @@ against 0.021 there) because the original study's regret is
 normalized on the primary-metric scale and E2's on the rank scale.
 The medians coincide at 0.000.}
 
-The interpretation pre-fixed in the experiment's record applies
+The interpretation pre-specified in the experiment's record applies
 directly: whatever $w^{*}$ turned out to be, the result would enrich
 the framework by quantifying the trade-off it already encoded
 qualitatively. The value found --- a crossover between $w{=}0.9$ and
@@ -454,10 +457,10 @@ on latency therefore does not depend on the dataset on which latency
 was measured. A second dependency is declared: the band is measured
 under the design's \textbf{rank normalization} --- deliberately
 chosen for robustness to the five orders of magnitude separating the
-latencies --- and alternative normalizations (logarithmic, linear)
-shift the exact crossover point without changing the qualitative
-reading, which is the one the framework uses: there is a minority
-latency weight beyond which the recommendation flips.
+latencies --- and the specific 10--20\% band is a property of that
+design: alternative normalizations (logarithmic, linear) would shift
+the crossover point, and no versioned artifact measures them, so the
+framework relies only on the rank-based reading established above.
 
 \section{The resulting framework: decision by constraints}
 \label{sec:arcabouco-resultante}
@@ -496,10 +499,12 @@ checks them:
     microseconds, the FM family is excluded in its native form.
     Experiment E2 quantifies why this is the first question: the
     recommendation flips with just 10--20\% of the weight on latency
-    (Section~\ref{sec:regret-ponderado}).
-    Chapter~\ref{chap:destilacao} measures one route into that
+    (by the median; 20--30\% by the mean;
+    Section~\ref{sec:regret-ponderado}).
+    Chapter~\ref{chap:destilacao} measures one route toward that
     budget --- distilling TabPFN's predictive distribution in
-    regression --- with a positive result delimited to that framing.
+    regression, with the student serving at hundreds of microseconds
+    per row --- with a positive result delimited to that framing.
   \item \textbf{Architectural limits.} More than 10 classes (TabFM's
     limit) or overflowing the context limit are objective structural
     exclusions --- the \texttt{helena} case (100 classes) in the
