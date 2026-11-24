@@ -39,7 +39,7 @@ $\pm0{,}01$ no critério brando $E[\theta]>0{,}5$, e 3/10 --- os
 GBDTs --- no corte estrito de 0,95; sensibilidade
 $0{,}005/0{,}01/0{,}02 \to 2/8/10$ no
 critério brando), com a interação modelo$\times$conjunto ---
-embrulhada com o ruído, os dois inseparáveis a uma observação por
+somada ao ruído, os dois inseparáveis a uma observação por
 célula --- dominando a variância de \emph{rank} (0,69, contra 0,20
 da família e
 0,11 do modelo-dentro-da-família), de modo que o eixo ``GBDT vs.\
@@ -319,7 +319,8 @@ e~\ref{chap:destilacao}, na ordem em que as perguntas devem ser feitas
 \begin{itemize}
   \item \textbf{Comece pelas restrições, não pelo desempenho.} Quatro
     perguntas verificáveis antes de qualquer treino: orçamento de
-    latência, limites arquiteturais, exigência de interpretabilidade,
+    latência, limites arquiteturais, exigência de explicações
+    auditáveis,
     e só então o \emph{default} (fluxograma da
     Seção~\ref{sec:arcabouco-resultante}). Não tente aprender um
     roteador por meta-características com poucas dezenas de conjuntos: sob
@@ -444,12 +445,14 @@ uma lei (\texttt{give\_me\_some\_credit}: recalls que diferem
 menos de
 0,02 entre si) \\
 \addlinespace
-Regressão com decisão de cauda e orçamento de \us &
+Regressão com decisão de cauda e orçamento na casa de
+$10^2$~\us/linha &
 Aluno destilado (correção conformal da cobertura: piloto em 5
 conjuntos) &
 Retenção positiva em 16/20 ($p{=}0{,}006$ em estágio único;
 $0{,}019$ sequencial),
-mantida re-tunada; em $\tau{=}0{,}90$, 18/20 ($p{=}0{,}0002$), ganho
+mantida re-tunada, com ganho mediano de CRPS de 1,4--2,8\%; em
+$\tau{=}0{,}90$, 18/20 ($p{=}0{,}0002$), ganho
 ${\sim}8\%$ nas caudas; combinação destilado$+$conformal não medida
 junta nos 20 (Seções~\ref{sec:destil-dist},
 \ref{sec:destil-e3}) &
@@ -478,7 +481,8 @@ A promessa de ``um vencedor universal''; a vantagem não encolhe com o
 tamanho \\
 \addlinespace
 Latência de microssegundos por linha exigida &
-GBDT nativo; destilação recupera parte da vantagem distribucional &
+GBDT nativo (a destilação, a ${\sim}10^2$~\us/linha, só cabe em
+orçamentos dessa ordem) &
 0,33~\us/linha (XGBoost) vs.\ 43.262 (TabFM), $131.097\times$;
 recomendação FM inverte com 10--20\% de peso na latência (pela
 mediana do \emph{regret}; E2)
@@ -488,14 +492,15 @@ vs.\ TabPFN: 8/10 no critério brando, 3/10 no estrito); vs.\ TabFM a
 equivalência é
 incerta ($P$ 0,33; $E[\theta]$ 0,40) \\
 \addlinespace
-Interpretabilidade intrínseca exigida (regulação) &
+Explicações auditáveis exigidas (regulação) &
 GBDT &
-Única família forte em latência \emph{e} interpretabilidade na matriz
-multicritério --- atribuição qualitativa por família, declarada, não
+Família cujas explicações por atribuição são aceitas na prática
+regulada; a única com perfil de latência forte na matriz
+multicritério --- avaliação qualitativa por família, declarada, não
 medida; portão 3 do fluxograma
 (Seção~\ref{sec:arcabouco-resultante}) &
-Rank do topo, sob a mesma contabilidade ROPE; sem destilação (o aluno
-herda rótulos de um professor opaco) \\
+Rank do topo, sob a mesma contabilidade ROPE; sem destilação (o
+aluno, embora GBDT, aprende rótulos de um professor opaco) \\
 \addlinespace
 Limite arquitetural ($>$10 classes; contexto estourado) &
 GBDT ou DL recente conforme a tarefa &
@@ -504,11 +509,14 @@ descritivo: STab/TabM 3,67 vs.\ XGBoost 6,0, $N{=}3$
 (Seções~\ref{sec:cap5-ato3}, \ref{sec:arcabouco-resultante}) &
 Nada: a exclusão é estrutural, não preferência \\
 \addlinespace
-Vantagem pequena do professor; alvo de preço; nativo forte disponível &
+Vantagem relativa do professor pequena (\emph{gate} OOF), ou
+professor de um membro já no \emph{tier} do aluno; alvo de preço;
+nativo forte disponível &
 \emph{Não} destilar: QRF primeiro, $\log(1{+}y)$, redução de
 \emph{ensemble} &
 E1: QRF vence o destilado em 3 de 20 (no \texttt{wine\_quality},
-até o professor); \texttt{kin8nm}: 1 membro à latência do aluno; o log
+até o professor); \texttt{kin8nm}: 1 membro à latência do aluno (um
+caso de latência); o log
 muda o regime de erro de graça, sem eliminar a vantagem relativa do
 professor (Seções~\ref{sec:destil-e1},
 \ref{sec:destil-fronteira}, \ref{sec:destil-regra}) &
@@ -519,7 +527,7 @@ O \emph{pipeline} de destilação inteiro --- e é ganho, não perda \\
 
 Três leituras fecham o quadro. Primeiro, nos perfis em que a
 recomendação contraria a métrica primária (latência,
-interpretabilidade, classe rara), a troca está contabilizada nas duas
+explicações auditáveis, classe rara), a troca está contabilizada nas duas
 colunas finais: a perda na primária
 é limitada por medição (pelo ROPE no pelotão, pelo limiar declarado
 nas operacionais), enquanto o ganho na métrica da aplicação é de
@@ -658,7 +666,7 @@ famílias tendem a transferir; os valores absolutos, não.
 \textbf{O campo move-se em ciclos de meses.} TabPFN-2.5 em novembro de
 2025, Pocket~FM em maio de 2026, TabFM em junho, a colisão parcial de
 \citet{jeong2026} em outubro; a diferença entre as colunas @11 e @14
-da validação LODO é a demonstração interna de quão rápido as conclusões
+da avaliação LODO é a demonstração interna de quão rápido as conclusões
 datam. Por isso toda afirmação de novidade e toda caracterização de
 lacuna carrega data de verificação, nas buscas datadas deste estudo,
 de julho a novembro de 2026 (registro completo no

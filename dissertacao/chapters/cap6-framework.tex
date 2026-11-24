@@ -474,10 +474,21 @@ depende, portanto, do
 conjunto em que a latência foi medida. Uma segunda dependência fica
 declarada: a faixa é medida na \textbf{normalização por postos} do
 desenho --- escolhida deliberadamente pela robustez às cinco ordens de
-magnitude que separam as latências. Normalizações alternativas
-(logarítmica, linear) poderiam deslocar o ponto do cruzamento;
-nenhum artefato versionado as mede, e o arcabouço se apoia apenas na
-leitura por postos estabelecida acima.
+magnitude que separam as latências. Normalizações alternativas ---
+acurácia e latência em min--max por conjunto, com a latência em
+$\log_{10}$ ou em escala linear --- deslocam o cruzamento na direção
+de \emph{mais} tolerância à latência: pela mediana, a recomendação
+``FM primeiro'' deixa de ser ótima com 20--25\% do peso na latência
+na versão logarítmica e 30--35\% na linear, contra 10--20\% por
+postos (15--20\% na mesma grade fina de 0,05); pela média, 25--30\%
+e 35--40\%, contra 20--25\%
+(\texttt{results/\allowbreak aggregated/\allowbreak
+lodo\_\allowbreak weighted\_\allowbreak regret\_\allowbreak
+norms.csv}; análise pós-hoc, adendo de 24/11/2026 em
+\texttt{docs/\allowbreak adendo-e2-normalizacoes.md}). A leitura
+que o arcabouço usa mantém-se nas três --- um peso minoritário de
+latência basta para inverter a recomendação ---, e a normalização
+por postos, adotada no desenho, é a que inverte mais cedo.
 
 \section{O arcabouço resultante: decisão por restrições}
 \label{sec:arcabouco-resultante}

@@ -300,7 +300,7 @@ asked --- each item traces to the result that supports it.
 \begin{itemize}
   \item \textbf{Start from the constraints, not from performance.}
     Four questions verifiable before any training: latency budget,
-    architectural limits, interpretability requirement, and only
+    architectural limits, auditable-explanation requirement, and only
     then the default (flowchart of
     Section~\ref{sec:arcabouco-resultante}). Do not try to learn a
     meta-feature router with a few dozen datasets: under LODO, it
@@ -425,12 +425,13 @@ Precision (0.706 $\to$ 0.621) and latency; the advantage is
 frequent, not a law (\texttt{give\_me\_some\_credit}: recalls that
 differ by less than 0.02 from one another) \\
 \addlinespace
-Regression with tail decisions and a \us{} budget &
+Regression with tail decisions and a ${\sim}10^2$~\us/row budget &
 Distilled student (conformal coverage correction: piloted on 5
 datasets) &
 Positive retention on 16/20 ($p{=}0.006$ single-stage; $0.019$
 sequential), held
-re-tuned; at $\tau{=}0.90$, 18/20 ($p{=}0.0002$), ${\sim}8\%$ gain
+re-tuned, with a median CRPS gain of 1.4--2.8\%; at $\tau{=}0.90$,
+18/20 ($p{=}0.0002$), ${\sim}8\%$ gain
 in the tails; the distilled$+$conformal combination not measured
 jointly on the 20 (Sections~\ref{sec:destil-dist},
 \ref{sec:destil-e3}) &
@@ -459,8 +460,8 @@ The promise of ``a universal winner''; the advantage does not
 shrink with size \\
 \addlinespace
 Microseconds-per-row latency required &
-Native GBDT; distillation recovers part of the distributional
-advantage &
+Native GBDT (distillation, at ${\sim}10^2$~\us/row, fits only
+budgets of that order) &
 0.33~\us/row (XGBoost) vs.\ 43{,}262 (TabFM), $131{,}097\times$;
 the FM recommendation flips with 10--20\% of latency weight (by
 median regret; E2)
@@ -469,14 +470,15 @@ The top rank --- a loss $<$1~p.p.\ of AUC in the core's pack (ROPE
 vs.\ TabPFN: 8/10 lenient, 3/10 strict); vs.\ TabFM the equivalence
 is uncertain ($P$ 0.33; $E[\theta]$ 0.40) \\
 \addlinespace
-Intrinsic interpretability required (regulation) &
+Auditable explanations required (regulation) &
 GBDT &
-The only family strong in latency \emph{and} interpretability in
-the multi-criteria matrix --- a qualitative per-family attribution,
+The family whose attribution-based explanations are accepted in
+regulated practice; the only one with a strong latency profile in
+the multi-criteria matrix --- a qualitative per-family rating,
 declared, not measured; gate 3 of the flowchart
 (Section~\ref{sec:arcabouco-resultante}) &
 The top rank, under the same ROPE accounting; no distillation (the
-student inherits labels from an opaque teacher) \\
+student, though a GBDT, learns labels from an opaque teacher) \\
 \addlinespace
 Architectural limit ($>$10 classes; context overflow) &
 GBDT or recent DL depending on the task &
@@ -485,13 +487,16 @@ multiclass top: STab/TabM 3.67 vs.\ XGBoost 6.0, $N{=}3$
 (Sections~\ref{sec:cap5-ato3}, \ref{sec:arcabouco-resultante}) &
 Nothing: the exclusion is structural, not a preference \\
 \addlinespace
-Small teacher advantage; price-scale target; strong native
+Small relative teacher advantage (OOF gate), or a single-member
+teacher already at the student's tier; price-scale target; strong
+native
 available &
 Do \emph{not} distill: QRF first, $\log(1{+}y)$, ensemble
 shrinking &
 E1: the QRF beats the distilled student on 3 of 20 (on
 \texttt{wine\_quality}, even the teacher); \texttt{kin8nm}: 1
-member at the student's latency; the log changes the error regime
+member at the student's latency (a latency case); the log changes
+the error regime
 for free, without eliminating the teacher's relative advantage
 (Sections~\ref{sec:destil-e1}, \ref{sec:destil-fronteira},
 \ref{sec:destil-regra}) &
@@ -502,7 +507,7 @@ The whole distillation pipeline --- and that is a gain, not a loss \\
 
 Three readings close the table. First, in the profiles where the
 recommendation goes against the primary metric (latency,
-interpretability, rare class), the trade is accounted for in the two
+auditable explanations, rare class), the trade is accounted for in the two
 final columns: the loss on the primary is bounded by measurement (by
 the ROPE in the pack, by the declared threshold in the operational
 metrics), while the gain on the application's metric is of whole

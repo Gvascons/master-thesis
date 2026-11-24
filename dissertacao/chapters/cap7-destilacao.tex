@@ -74,7 +74,8 @@ TabPFN e 43.262~\us/linha para o TabFM, contra 0,33~\us/linha do
 XGBoost ajustado --- fatores de aproximadamente $22.000\times$ e
 $131.000\times$, respectivamente. A Seção~\ref{sec:regret-ponderado}
 mostrou, ademais, que basta deslocar 10--20\% do peso da acurácia para
-a latência para que a recomendação se inverta: reduzir esse custo é o
+a latência (pela mediana do \emph{regret}) para que a recomendação se
+inverta: reduzir esse custo é o
 que decide se a política pode ser usada onde a latência conta. Este
 capítulo mede uma das rotas --- a destilação --- num recorte
 específico: regressão, com o TabPFN como professor distribucional.
@@ -712,7 +713,8 @@ Sem os 2 sobrepostos ao núcleo (5 splits) & 16/22 & --- & 0,026 & --- \\
 A sensibilidade que mais importa é a do
 \texttt{california\_housing}$^\dagger$ (alvo binarizado;
 Seção~\ref{sec:met-datasets}): excluído, a retenção fica positiva em
-15 de 19, com mediana $+0{,}17$, sinal $p=0{,}010$ e IC de
+15 de 19, com mediana $+0{,}17$, teste de sinal unilateral
+$p=0{,}010$ e IC de
 \emph{bootstrap} da mediana inteiramente positivo $[0{,}08;\,0{,}42]$
 --- mas o Wilcoxon unilateral passa a $p=0{,}067$ e deixa de rejeitar
 a 5\%. A conclusão qualitativa não depende do conjunto; o par de
@@ -851,7 +853,8 @@ visível: não há nada que a destilação pontual pudesse acrescentar ali.
 No plano \textbf{distribucional} (linha inferior), abaixo de
 ${\sim}250$~\us/linha no \texttt{california\_\allowbreak housing}$^\dagger$ e de
 ${\sim}1.300$~\us/linha no \texttt{year\_\allowbreak prediction}, as estratégias
-derivadas do professor deixam os alunos sozinhos, e o destilado é o
+derivadas do professor deixam os alunos sem concorrência, e o
+destilado é o
 CRPS-ótimo entre eles (a floresta quantílica nativa também
 habita esse regime --- e no \texttt{california\_\allowbreak housing}$^\dagger$
 o supera;
@@ -1098,7 +1101,8 @@ $p = 0{,}0013$; Wilcoxon unilateral $p = 0{,}0008$). O melhor clássico
 é a QRF em 19 dos 20 conjuntos (o NGBoost só a supera no
 \texttt{cps88wages}). \textbf{H-B2 também}: as latências medianas por
 conjunto dos clássicos ficam entre 4,1 e 31,9~\us/linha (QRF
-4,1--21,4; NGBoost 12,2--31,9) --- o \emph{tier} dos alunos, duas a quatro
+4,1--21,4; NGBoost 12,2--31,9) --- o \emph{tier} dos alunos, de
+menos de uma a quatro
 ordens de magnitude abaixo dos professores, conforme o professor e o
 contexto. Os clássicos competem com o
 aluno destilado em acurácia, nunca em custo, e a leitura da fronteira
@@ -1112,8 +1116,7 @@ Tabela~\ref{tab:destil-e1-reveses} os expõe por extenso.
 \centering
 \caption[Os três reveses do E1]{Os três reveses do E1: CRPS onde o melhor \emph{baseline}
 clássico vence o aluno destilado (média de 3 sementes; menor é melhor;
-\textbf{negrito} = melhor da linha). Fonte:
-\texttt{results/\allowbreak distillation/\allowbreak baselines\_\allowbreak analysis.\allowbreak csv}.}
+\textbf{negrito} = melhor da linha).}
 \label{tab:destil-e1-reveses}
 \small
 \begin{tabular}{lrrrr}

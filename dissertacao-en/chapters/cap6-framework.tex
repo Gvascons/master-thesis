@@ -452,9 +452,21 @@ on which latency was measured. A second dependency is declared: the band is meas
 under the design's \textbf{rank normalization} --- deliberately
 chosen for robustness to the five orders of magnitude separating the
 latencies --- and the specific 10--20\% band is a property of that
-design: alternative normalizations (logarithmic, linear) could shift
-the crossover point; no versioned artifact measures them, so the
-framework relies only on the rank-based reading established above.
+design. Alternative normalizations
+--- accuracy and latency in per-dataset min--max, with latency in
+$\log_{10}$ or on a linear scale --- shift the crossover toward
+\emph{more} latency tolerance: by the median, the ``FM first''
+recommendation stops being optimal with 20--25\% of the weight on
+latency in the logarithmic version and 30--35\% in the linear one,
+against 10--20\% by ranks (15--20\% on the same fine 0.05 grid);
+by the mean, 25--30\% and 35--40\%, against 20--25\%
+(\texttt{results/\allowbreak aggregated/\allowbreak
+lodo\_\allowbreak weighted\_\allowbreak regret\_\allowbreak
+norms.csv}; post-hoc analysis, addendum of 2026-11-24 in
+\texttt{docs/\allowbreak adendo-e2-normalizacoes.md}). The reading
+the framework uses holds in all three --- a minority latency weight
+suffices to flip the recommendation --- and the rank normalization,
+adopted in the design, is the one that flips earliest.
 
 \section{The resulting framework: decision by constraints}
 \label{sec:arcabouco-resultante}

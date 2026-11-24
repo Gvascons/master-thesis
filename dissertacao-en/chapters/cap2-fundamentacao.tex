@@ -898,7 +898,10 @@ below the predicted $\tau$ quantile --- and plots the result against
 $\tau$ itself. A perfectly calibrated model produces the diagonal
 (the 0.2 quantile is exceeded by 80\% of the targets, the 0.8 by
 20\%, and so on); curves above the diagonal expose quantiles that
-are too high (overcoverage), below it, too low, and the S shape
+are too high at that level (one-sided overcoverage,
+$\hat P(y\le q_\tau)>\tau$), below it, too low --- a central
+interval's coverage depends on the curve's \emph{slope} between its
+two levels (Section~\ref{sec:destil-oof}) --- and the S shape
 around the diagonal is the signature of badly calibrated tails with
 a correct center. Figure~\ref{fig:quantis-cobertura} makes the
 mechanism concrete with real data from the distillation study

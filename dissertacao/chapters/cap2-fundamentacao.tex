@@ -845,7 +845,11 @@ dos alvos de teste que caem abaixo do quantil $\tau$ predito --- e
 plota-se o resultado contra o próprio $\tau$. Um modelo perfeitamente
 calibrado produz a diagonal (o quantil 0,2 é excedido por 80\% dos alvos,
 o 0,8 por 20\%, e assim por diante); curvas acima da diagonal denunciam
-quantis altos demais (sobrecobertura), abaixo dela, baixos demais, e a
+quantis altos demais naquele nível (sobrecobertura unilateral,
+$\hat P(y\le q_\tau)>\tau$), abaixo dela, baixos demais --- a
+cobertura de um intervalo central depende da \emph{inclinação} da
+curva entre os seus dois níveis
+(Seção~\ref{sec:destil-oof}) --- e a
 forma em S em torno da diagonal é a assinatura de caudas mal calibradas
 com centro correto. A Figura~\ref{fig:quantis-cobertura} torna o
 mecanismo concreto com dados reais do próprio estudo de destilação: no
