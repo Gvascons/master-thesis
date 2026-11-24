@@ -76,7 +76,9 @@
 
 Em dados tabulares, o ditado "GBDT sempre vence" foi formado antes da geração
 2024-2026 de deep learning tabular e dos foundation models. Nosso benchmark
-neutro (14 modelos × 18 datasets, nested CV, testes frequentistas e
+neutro (14 modelos × 18 datasets, seleção por CV interna com hold-out
+intocado — retificação de 23/11/2026: o desenho não é nested CV
+clássico —, testes frequentistas e
 bayesianos) mostra três fatos encadeados: (1) entre os modelos clássicos e
 DL, o topo é um empate estatístico — e a decisão migra para custo, latência,
 robustez e estrutura da tarefa; (2) a geração 2026 de foundation models

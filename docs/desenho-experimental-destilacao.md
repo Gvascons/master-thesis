@@ -163,3 +163,51 @@ hipóteses, métricas ou critérios de decisão pré-registrados:
 3. **Encadeamento tolerante a falhas**: o estágio de alunos executa com os
    datasets rotulados disponíveis mesmo se um OOF falhar (o dataset faltante
    é pulado e reportado).
+
+---
+
+## Adendo de 23/11/2026 — correção sequencial, pool ampliado e análises de incerteza (pós-revisão adversarial)
+
+Uma revisão adversarial automatizada (23/11/2026; material em repositório
+separado do autor) confrontou este registro com o git e exigiu três
+retificações e três análises, todas incorporadas:
+
+1. **Estatuto do registro em duas etapas.** O teste de sinal (instrumento
+   confirmatório da manchete) e a regra de elegibilidade 3k–100k foram
+   fixados em 20/07/2026, APÓS leitura intermediária em 15 conjuntos
+   (11/15, p=0,059) — não constavam do pré-registro de 15/07. O relato
+   confirmatório passa a carregar a correção sequencial do desenho em
+   dois estágios: α global 0,0283; p ajustado por ordenação de estágios
+   ≈ 0,019 para o 16/20; extensão isolada 5/5 (p=0,031); Bonferroni×2
+   0,0118. Script: `scripts/interim_sequencial.py`.
+2. **Pool CTR23.** A regra declarada alcança 19 elegíveis; foram rodados
+   15. Os 4 ausentes (white_wine 44971, california contínuo 44977,
+   superconductivity 44964, naval 44969) foram nomeados, justificados e
+   medidos sob o protocolo (1 split, sementes {0,1,2}); sensibilidade:
+   17/24 (p=0,032); recorte conservador 16/22 (p=0,026).
+   `scripts/ctr23_omitted_verify.py`; proveniência em
+   `results/distillation/ctr23_omitidos/PROVENANCE.md`.
+3. **Bootstrap por linhas (promessa de 15/07, cumprida em 23/11).**
+   B=10.000, alunos re-treinados nas 3 sementes, CRPS por linha do
+   hold-out: 12 vitórias claras + 1 na margem (online_news) + 4 empates
+   + 3 derrotas. `scripts/perline_bootstrap.py` →
+   `results/distillation/bootstrap_lines.csv`.
+4. **Teste causal das duplicatas do wine_quality.** 27,6% do teste com
+   gêmeo exato no pool; no conjunto deduplicado (professor re-rotulado
+   OOF), o destilado vence 3/3 sementes (+0,85%, retenção +0,10).
+   `scripts/wine_dedup_check.py` → `results/distillation/wine_dedup.csv`.
+5. **Sensibilidade ao checkpoint do TabPFN (classificador).** O default é
+   afinado em dados reais (lista inclui higgs); re-ajuste com o
+   checkpoint só-sintético em 5 conjuntos: sem sinal de contaminação
+   (higgs: sintético 0,8113 vs 0,8111).
+   `scripts/tabpfn_checkpoint_sensitivity.py`.
+6. **Posterior bayesiana da retenção nas duas convenções.**
+   `scripts/gen_qp3_bayes.py` → `results/distillation/qp3_bayes.csv`
+   (P(ret>0)=0,96 na convenção de Benavoli; E[θ]=0,70).
+
+Adendos de 24/11/2026 (medições de acompanhamento): sensibilidade do
+telco ao TotalCharges numérico
+(`scripts/tabfm_telco_totalcharges.py` →
+`results/aggregated/telco_totalcharges_sensitivity.csv`; TabFM
+0,8233→0,8515) e redes de regressão com alvo padronizado
+(`scripts/dl_target_standardization.py`, HPs herdados — piso do efeito).

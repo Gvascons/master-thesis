@@ -127,7 +127,7 @@ Com $N{=}18$ conjuntos, um roteador aprendido (árvore de profundidade
 2) não supera o \emph{baseline} de classe majoritária em nenhuma das duas
 gerações de modelos (0,11 vs.\ 0,44 com 11 modelos; 0,72 vs.\ 0,78 com
 14). O resultado tampouco depende da classe de roteador: em experimento
-pré-registrado de robustez (14/10/2026), árvore de profundidade 3,
+de robustez registrado em 14/10/2026, árvore de profundidade 3,
 $k$NN ($k{=}3$, meta-características padronizadas) e regressão
 logística multinomial, sob o mesmo protocolo LODO, também não superam o
 \emph{baseline} em nenhuma das duas grades --- 0 de 8 células,
@@ -191,15 +191,17 @@ mas mantendo taxa de acerto \emph{abaixo} do \emph{baseline} de classe majoritá
 \emph{regret} sem esse modo de falha; o colapso da árvore é mais um sintoma de
 que não há estrutura aprendível, não uma vitória do roteador.
 
-Uma quarta leitura é obrigatória, e a auditoria externa de 23/11/2026
-exigiu que ela viesse com destaque: a linha ``Sempre-FM'' escolhe, em
+Uma quarta leitura é obrigatória: a linha ``Sempre-FM'' escolhe, em
 cada conjunto, o \emph{melhor} dos dois \emph{foundation models}
 olhando o resultado --- é um \textbf{oráculo intrafamília}, que mede o
 teto da família, não uma política que um praticante consiga executar.
 As políticas executáveis de modelo único, pela mesma régua:
 \textbf{sempre-TabFM} tem \emph{regret} médio 0,080, mediano 0,000 e
 pior caso \textbf{1,000} (o \texttt{telco\_customer\_churn}, onde o
-TabFM é o último de 14 na métrica primária);
+TabFM é o último de 14 na métrica primária --- um último lugar que a
+medição de 23--24/11/2026 mostrou ser sensível ao pré-processamento:
+com a coluna \texttt{TotalCharges} numérica, o TabFM passa ao melhor
+AUC do conjunto, Capítulo~\ref{chap:metodologia});
 \textbf{sempre-TabPFN}, média 0,261. A mediana zero, portanto,
 sobrevive na política executável ``TabFM por padrão'' --- mas a média
 0,080 e o pior caso 1,000 são dela, e é por isso que a recomendação
@@ -227,8 +229,8 @@ para servir que um GBDT; um praticante cuja função de utilidade pondere
 acurácia \emph{e} custo de inferência pode, legitimamente, chegar a
 outra recomendação. Esta seção fecha essa lacuna com o experimento E2,
 registrado em \texttt{docs/\allowbreak desenho-\allowbreak melhorias-\allowbreak finais.\allowbreak md}
-(05/10/2026) --- com uma precisão de relato que a auditoria externa de
-23/11/2026 exigiu: o commit que registra as hipóteses do E2 já carrega
+(05/10/2026) --- com uma precisão de relato devida: o commit que
+registra as hipóteses do E2 já carrega
 o seu resultado, de modo que o rótulo honesto é \emph{análise
 registrada}, não pré-registro; o desenho (grade de pesos, políticas e
 métrica) estava escrito antes da leitura, mas não há carimbo
@@ -498,8 +500,10 @@ Capítulo~\ref{chap:benchmark} em um arcabouço validado por três
 estudos sob LODO: o roteamento aprendido por meta-características não
 generaliza (taxa de acerto 0,11 vs.\ 0,44 com 11 modelos; 0,72 vs.\ 0,78 com
 14); a política fixa ``\emph{foundation model} primeiro'' é regret-ótima na
-métrica primária (\emph{regret} mediano 0,000 na geração 2026); e o \emph{regret}
-multicritério ponderado, pré-registrado como experimento E2, localiza o
+métrica primária (\emph{regret} mediano 0,000 na geração 2026,
+preservado na política executável sempre-TabFM, cuja média é 0,080 e
+cujo pior caso é 1,000); e o \emph{regret}
+multicritério ponderado, o experimento registrado E2, localiza o
 ponto em que essa recomendação vira --- entre $w{=}0{,}9$ e $w{=}0{,}8$
 de peso na acurácia pela mediana --- e com isso justifica
 quantitativamente a arquitetura do fluxograma: a latência é a primeira

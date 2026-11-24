@@ -14,7 +14,11 @@
   (estratificado para classificação), com `seed=42` fixo. Todo número
   reportado como "resultado final" vem desse conjunto, que nenhum passo de
   tuning jamais viu.
-- **Validação cruzada aninhada**: laço externo de 5 folds (medição), laço
+- **Seleção e medição** (retificação de 23/11/2026 — o termo anterior,
+  "validação cruzada aninhada", estava errado: a busca roda UMA vez
+  sobre o pool, com CV interna de 3 folds, e os 5 folds externos
+  reavaliam com os hiperparâmetros fixados; nenhum resultado reportado
+  sai dos folds externos — tudo vem do hold-out): laço externo de 5 folds (reavaliação), laço
   interno de 3 folds (seleção de hiperparâmetros via Optuna TPE com
   MedianPruner). GBDTs: 100 trials; deep learning: 25 trials (custo por trial
   ~4× maior; TPE captura o grosso do landscape nesse orçamento — Akiba et
@@ -184,7 +188,7 @@ que a família".
   baixo poder. Por isso (i) não afirmamos vencedor único, (ii) usamos
   bayesiano+ROPE para sustentar *equivalência* com rigor, (iii) declaramos o
   piso do Wilcoxon em regressão. O benchmark prioriza profundidade de
-  protocolo (nested CV honesto) sobre largura de N.
+  protocolo (seleção separada da medição, hold-out intocado) sobre largura de N.
 - **"Por que ROPE de 0.01 AUC?"** Limiar de irrelevância prática alinhado à
   indústria; sensibilidade a 0.005/0.02 é a robustez planejada.
 - **"Os folds não são réplicas?"** Não — pseudo-replicação. A unidade é o
@@ -207,3 +211,18 @@ que a família".
 3. ~~CD @14~~ **FEITO**, com a cautela declarada: com k=14 e N=10 o CD é
    largo; a separação do TabFM se sustenta na consistência entre datasets
    (13/18) e no bayesiano, não no Nemenyi.
+
+
+---
+
+## Retificação de 23/11/2026 — camada bayesiana
+
+A função `bayesian_signed_rank` devolve a massa posterior esperada
+E[theta] por região, não a convenção do baycomp (fração de amostras em
+que a região é a mais provável; prior default do baycomp é 0,5, o 0,6
+daqui é escolha nossa declarada). As duas grandezas estão implementadas
+(`bayesian_signed_rank_probs` adicionada) e `rope_sensitivity.csv` traz
+os dois critérios: 8/10 equivalentes a E[theta]>0,5 (igual no corte 0,5
+da convenção baycomp); 3/10 a P>=0,95 (os três GBDTs); nenhuma
+superioridade a P>=0,95. Todo texto que cite a análise deve declarar a
+grandeza e o corte.

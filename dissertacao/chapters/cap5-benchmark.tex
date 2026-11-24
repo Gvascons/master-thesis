@@ -84,9 +84,10 @@ extensão muda; e o Ato~V desce ao nível da instância para localizar onde
 os \emph{foundation models} e os GBDTs divergem.
 
 Para a leitura autocontida deste capítulo, vale recapitular o essencial
-do Capítulo~\ref{chap:metodologia}: validação cruzada aninhada ($5$
-folds externos $\times$ $3$ internos, com hiperparâmetros selecionados
-apenas nos internos), ajuste bayesiano via Optuna/TPE \citep{akiba2019}
+do Capítulo~\ref{chap:metodologia}: seleção de hiperparâmetros por
+validação cruzada interna ($3$ folds sobre o \emph{pool}, uma única
+vez), reavaliação em $5$ folds externos com a configuração fixada,
+ajuste bayesiano via Optuna/TPE \citep{akiba2019}
 com orçamento fixado por família (100 tentativas para GBDTs, 25 para
 DL; assimetria de custo medida e declarada na Seção~\ref{sec:met-protocolo}), \emph{hold-out} fixo de 20\% (semente 42) que nenhuma etapa de seleção
 jamais observa, e pré-processamento por família (one-hot para atenção,
@@ -209,7 +210,7 @@ capítulo depende de significância em tarefa sem poder para aferi-la.
 Se o topo empata, resta perguntar o que, afinal, explica a variação de
 desempenho que existe. A decomposição de variância de ranks responde
 --- e a leitura completa exige as três parcelas, não duas (a correção
-de interpretação é da auditoria externa de 23/11/2026):
+de interpretação registrada em 23/11/2026):
 $\eta^2_{\text{família}} = 0{,}20$ do total; a identidade do modelo
 como um todo explica 0,31; a diferença, 0,11, é o
 modelo-dentro-da-família; e os 0,69 restantes são interação
@@ -285,7 +286,7 @@ efetivamente treinados da grade:
 LightGBM e XGBoost ajustam o modelo final em ${\sim}0{,}7$~s, enquanto
 SAINT e STab consomem ${\sim}200$~s por ajuste --- e a diferença se
 multiplica pelo número de tentativas de ajuste de hiperparâmetros e de
-folds da validação cruzada aninhada. Os \emph{foundation models} invertem o
+folds da validação cruzada. Os \emph{foundation models} invertem o
 eixo: por serem \emph{zero-shot}, o ``treino'' do TabFM custa 0,18~s e o
 do TabPFN 1,35~s, com custo de ajuste \textbf{zero} --- não há busca de
 hiperparâmetros a pagar. Essa inversão, cujo outro lado aparece já no

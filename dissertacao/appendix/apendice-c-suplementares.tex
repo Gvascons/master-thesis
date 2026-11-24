@@ -41,7 +41,7 @@ contexto do OOF) e \emph{in-sample} pleno. O padrão documentado no
 capítulo é legível nas colunas: o RMSE \emph{não} degrada com o
 vazamento (chega a melhorar levemente) e o CRPS move no máximo
 ${\sim}0{,}003$ em três dos quatro conjuntos --- a exceção é o
-\texttt{wine\_quality}, onde o CRPS \emph{melhora} $0{,}028$ com o
+\texttt{wine\_quality}, onde o CRPS \emph{melhora} $0{,}029$ com o
 vazamento pleno, coerente com o mecanismo de memorização de
 duplicatas documentado no Capítulo~7 ---, mas a cobertura dos
 intervalos (PICP~80\%, nominal $0{,}80$) cai de forma consistente nos
@@ -90,8 +90,11 @@ calibração, não na acurácia.
 
 A Tabela~\ref{tab:app-abl-log} desagrega a ablação da
 Seção~\ref{sec:destil-regra}: professor TabPFN e alunos XGBoost-quantil
-re-executados sob $y' = \log(1+y)$ nos três conjuntos de falha da
-extensão (alvos em escala de preço) e em dois controles positivos. As
+re-executados sob $y' = \log(1+y)$ nos três conjuntos então
+diagnosticados como falha de escala de preço (o diagnóstico do
+\texttt{health\_insurance} foi retificado em 23/11/2026: o alvo é
+horas trabalhadas por semana --- Capítulo~\ref{chap:destilacao}) e em
+dois controles positivos. As
 métricas são medidas no espaço logarítmico. A coluna de retenção usa a
 definição do Capítulo~\ref{chap:destilacao},
 $(\mathrm{CRPS}_{\text{hard}} - \mathrm{CRPS}_{\text{soft}}) /
@@ -99,9 +102,11 @@ $(\mathrm{CRPS}_{\text{hard}} - \mathrm{CRPS}_{\text{soft}}) /
 calculada sobre as médias antes do arredondamento. A leitura
 documentada: o log
 \emph{não} recupera as falhas (\texttt{fifa} segue fortemente
-negativo) e os gaps professor--aluno colapsam para a casa de
-$0{,}004$--$0{,}025$ --- boa parte da vantagem distribucional do
-\emph{foundation model} nesses alvos é tratamento de escala.
+negativo); os gaps absolutos professor--aluno vão à casa de
+$0{,}004$--$0{,}025$ \emph{porque a escala da métrica muda} --- em
+vantagem relativa, o professor até amplia a dianteira nas três
+falhas (retificação de 23/11/2026; a leitura completa está na
+Seção~\ref{sec:destil-regra}).
 
 \begin{table}[htbp]
 \centering\small
@@ -250,9 +255,10 @@ retenção distribucional concentravam-se em alvos de cauda
 pesada/escala de preço; a hipótese viva era que a transformação
 $\log(1+y)$ recuperaria a retenção. \emph{O que aconteceu:} a ablação
 dedicada refutou a hipótese --- o log não resgata as falhas
-(\texttt{fifa} $-1{,}69$) e ainda encolhe os sucessos, porque colapsa
-a própria vantagem do professor no espaço logarítmico
-(Tabela~\ref{tab:app-abl-log}). \emph{Por que está aqui:} a refutação
+(\texttt{fifa} $-1{,}69$); a leitura adicional de que ele
+``colapsaria'' a vantagem do professor foi retificada em 23/11/2026
+(comparava unidades incomensuráveis --- em termos relativos a
+vantagem persiste; Tabela~\ref{tab:app-abl-log}). \emph{Por que está aqui:} a refutação
 é mais útil que a hipótese --- virou a cláusula (i) da regra de
 decisão ``quando destilar'' (Seção~\ref{sec:destil-regra}): antes de
 destilar, aplique transformações baratas de alvo. Registros:
@@ -360,7 +366,8 @@ pretendido, nunca o dado carregado; o rótulo foi renomeado para
 versionado, com histórico preservado. E o \texttt{california\_\allowbreak housing}
 (OpenML 44090) é a variante de \textbf{alvo binarizado} da suíte de
 classificação do \emph{tabular-benchmark}: mantido como executado (a
-população de 20 era pré-registrada; removê-lo a posteriori seria
+população de 20 era a registrada no desenho em duas etapas
+(Seção~\ref{sec:destil-desenho}); removê-lo a posteriori seria
 curadoria pós-hoc), com análise de sensibilidade de exclusão anexada a
 cada resultado-manchete do Capítulo~\ref{chap:destilacao} --- sinal,
 E3, Friedman, A-SORT, R-COND e A-GRID sobrevivem; o Wilcoxon

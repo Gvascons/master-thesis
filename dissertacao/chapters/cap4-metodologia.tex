@@ -342,8 +342,7 @@ de hiperparâmetros por validação cruzada interna (3 \emph{folds}) sobre o
     \emph{fold} em avaliação. Este desenho \emph{não} é a validação
     cruzada aninhada clássica --- nela, a busca se repetiria dentro de
     cada \emph{fold} externo ---, e uma versão anterior deste texto
-    usava o termo indevidamente (correção apontada pela auditoria
-    externa de 23/11/2026). A consequência é circunscrita, e vale
+    usava o termo indevidamente (retificação de 23/11/2026). A consequência é circunscrita, e vale
     dizê-la com precisão: as métricas dos \emph{folds} externos são
     otimistas como estimativa de generalização, porque a seleção
     observou esses mesmos dados; elas cumprem aqui apenas papéis
@@ -531,9 +530,13 @@ múltiplos classificadores em múltiplos conjuntos \citep{demsar2006,
 benavoli2017}, acrescida de uma camada bayesiana e de uma decomposição de
 variância. Toda a cadeia foi submetida a auditoria de corretude (julho de
 2026), que incluiu a recomputação manual da estatística de Friedman
-(idêntica à da implementação: $\chi^2 = 31{,}309$ nos dados binários) e o
-cotejo linha a linha da implementação bayesiana com a formulação de
-referência; o registro completo está em
+(idêntica à da implementação: $\chi^2 = 31{,}309$ nos dados binários);
+na camada bayesiana, a reconferência de 23/11/2026 constatou que a
+implementação devolve a massa posterior esperada $E[\theta]$, e não a
+fração de amostras da convenção de \citet{benavoli2017} --- as duas
+grandezas estão hoje implementadas e declaradas
+(\texttt{src/evaluation/enrichments.py}), e o Capítulo~\ref{chap:benchmark}
+reporta os dois critérios; o registro está em
 \texttt{docs/\allowbreak metodologia-\allowbreak estatistica.\allowbreak md}.
 
 \begin{enumerate}
@@ -744,19 +747,36 @@ conhecidas e as decisões tomadas diante delas.
     categórica de 6.531 níveis --- na codificação ordinal ajustada no
     treino, a grande maioria do \emph{hold-out} recebe o código de
     categoria desconhecida. O tratamento é idêntico para os 14
-    modelos, mas o efeito por modelo não foi medido para os
-    \emph{foundation models} (uma verificação externa de 23/11/2026
-    estimou efeito de milésimos de AUC nos GBDTs) --- e o conjunto é
+    modelos, e o efeito foi medido em 23--24/11/2026
+    (\texttt{results/\allowbreak aggregated/\allowbreak
+    telco\_\allowbreak totalcharges\_\allowbreak sensitivity.csv}):
+    milésimos de AUC nos GBDTs e no TabPFN, mas $+0{,}028$ no TabFM,
+    que salta de último para o melhor AUC do conjunto com a coluna
+    numérica --- e o conjunto é
     exatamente o pior caso da política ``sempre-TabFM''
     (Capítulo~\ref{chap:framework}), leitura que fica com esta
     ressalva.
+  \item \textbf{Redes de regressão treinam no alvo bruto --- efeito
+    medido.} O \emph{pipeline} não padroniza o alvo das redes em
+    regressão. A medição de 24/11/2026 (5 redes $\times$ 5 conjuntos
+    $\times$ 3 sementes, hiperparâmetros herdados --- um piso do
+    efeito, já que a busca foi feita no alvo bruto) encontra melhora
+    de RMSE em 17 das 25 células, tipicamente abaixo de 2\%, com os
+    ganhos maiores onde a escala do alvo é grande ou o modelo é
+    sensível (MLP: $+9{,}6\%$ no \texttt{kin8nm}, $+5{,}3\%$ no
+    \texttt{year\_\allowbreak prediction}; TabM: $+3{,}4\%$ no
+    \texttt{year\_\allowbreak prediction}) e pioras pequenas nas
+    demais (máximo $-4{,}3\%$). Os \emph{baselines} de DL em
+    regressão estão, portanto, levemente subestimados nesses casos
+    (\texttt{results/\allowbreak aggregated/\allowbreak
+    dl\_\allowbreak target\_\allowbreak standardization.csv}).
   \item \textbf{Potencial contaminação do pré-treino dos \emph{foundation
     models}.} Os 18 conjuntos são públicos e amplamente usados --- e
     \emph{foundation models} são pré-treinados antes e fora do nosso
     protocolo, de modo que o \emph{hold-out} intocado protege contra o nosso
     vazamento, não contra o deles. O risco é heterogêneo entre os dois
-    modelos --- e aqui uma correção factual da auditoria externa de
-    23/11/2026 substitui a afirmação de versões anteriores. O
+    modelos --- e aqui uma correção factual, registrada em
+    23/11/2026, substitui a afirmação de versões anteriores. O
     \emph{modelo-base} TabPFN é pré-treinado em dados sintéticos
     amostrados de um \emph{prior} \citep{hollmann2025}; o
     \emph{checkpoint} \textbf{padrão do classificador} v2.5 que o

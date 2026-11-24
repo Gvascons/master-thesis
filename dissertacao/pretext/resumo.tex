@@ -3,26 +3,28 @@
 % nas fontes dos capítulos).
 A escolha de modelos para dados tabulares foi guiada, por uma década, pela
 máxima de que o \emph{gradient boosting} sempre vence; a chegada dos
-\emph{foundation models} tabulares --- redes pré-treinadas que predizem
-sem treinamento na tarefa --- tornou essa orientação obsoleta sem lhe dar
+\emph{foundation models} tabulares, redes pré-treinadas que predizem
+sem treinamento na tarefa, tornou essa orientação obsoleta sem lhe dar
 um substituto apoiado em evidência neutra. Esta dissertação ataca o
 problema em três frentes encadeadas. Primeiro, um benchmark multicritério
 avalia 14 modelos de três famílias (\emph{gradient boosting}, aprendizado
 profundo e \emph{foundation models}) em 18 conjuntos de dados públicos do
-OpenML (250 das 252 células possíveis; duas exclusões estruturais
+OpenML (250 das 252 células possíveis, com duas exclusões estruturais
 declaradas), sob \emph{hold-out} intocado pela seleção e
 inferência estatística frequentista e bayesiana. No núcleo de 11 modelos
-da geração anterior a 2026, o topo da acurácia é um empate estatístico --- 8 dos 10 modelos não
+da geração anterior a 2026, o topo da acurácia é um empate estatístico (8 dos 10 modelos não
 líderes são praticamente equivalentes ao líder sob região de equivalência
-prática de um ponto percentual de AUC, no critério declarado no texto ---, e a geração 2026 o quebra: o
+prática de um ponto percentual de AUC, no critério de massa posterior
+esperada acima de meio, declarado no texto; três de dez no corte
+estrito), e a geração 2026 o quebra: o
 TabFM, avaliado \emph{zero-shot}, lidera o rank médio nas três tarefas
 (2,7 na classificação binária, 1,0 na multiclasse e 1,2 na regressão) e é
 o melhor modelo em 13 dos 18 conjuntos, ao custo de quatro a cinco ordens
 de magnitude em latência de inferência; as redes de Kolmogorov--Arnold,
 testadas de forma independente, terminam no último terço nas três
 tarefas. Segundo, um arcabouço de decisão é avaliado por
-\emph{leave-one-dataset-out} --- validação negativa do roteador
-aprendido e avaliação comparativa das políticas fixas: o roteamento
+\emph{leave-one-dataset-out} (validação negativa do roteador
+aprendido, avaliação comparativa das políticas fixas): o roteamento
 por meta-características não
 generaliza (taxa de acerto de 0,11 contra 0,44 do \emph{baseline}
 trivial), a política fixa ``\emph{foundation model} primeiro'' é ótima em
@@ -32,16 +34,16 @@ experimento registrado de \emph{regret}
 multicritério mostra que basta deslocar 10 a 20 por cento do peso da
 acurácia para a latência (cruzamento entre os pesos 0,9 e 0,8, na
 normalização por postos) para a
-recomendação deixar de ser o \emph{foundation model} ---
+recomendação deixar de ser o \emph{foundation model},
 justificando quantitativamente o fluxograma de quatro restrições verificáveis a priori que
 consolida o arcabouço. Terceiro, a destilação distribucional de
-\emph{foundation models} --- recorte verificado como inédito ---
+\emph{foundation models}, recorte verificado como inédito,
 transfere as curvas de quantis do professor TabPFN para alunos que servem
 em microssegundos: a destilação pontual falha de forma robusta em escala
 realista de dados, mas a distribucional retém mediana de 19 por cento da
-vantagem distribucional do professor com hiperparâmetros herdados ---
-12 por cento com os dois braços re-ajustados, a estimativa
-conservadora ---, positiva em 16 de 20 conjuntos
+vantagem distribucional do professor com hiperparâmetros herdados
+(12 por cento com os dois braços re-ajustados, a estimativa
+conservadora), positiva em 16 de 20 conjuntos
 (teste de sinal com p-valor de 0,006 na leitura direta e de
 aproximadamente 0,019 sob a correção sequencial do desenho em duas
 etapas, declarada no texto; 15 de 19, com p-valor de 0,010,
@@ -49,10 +51,11 @@ na sensibilidade que exclui o conjunto de alvo binarizado da errata),
 vence \emph{baselines}
 distribucionais clássicos em 17 de 20 conjuntos no experimento
 pré-registrado E1 e se condensa numa regra de decisão prática cujas
-pré-condições se verificam em minutos. O conjunto --- evidência sob
-protocolo único, arcabouço avaliado sob LODO e destilação seletiva --- substitui a
-máxima por um procedimento; e o que o \emph{foundation model} sabe e os
-dados brutos não ensinam ao aluno é a distribuição preditiva --- é isso
+pré-condições se verificam em minutos. O conjunto (evidência sob
+protocolo único, arcabouço avaliado sob LODO, destilação seletiva)
+substitui a
+máxima por um procedimento; o que o \emph{foundation model} sabe e os
+dados brutos não ensinam ao aluno é a distribuição preditiva, e é isso
 que se destila.
 
 \vspace{1cm}

@@ -33,3 +33,13 @@ do destilado): 16/22, p = 0,026 (ctr23_sensitivity.csv).
 
 Limite declarado: um único split por conjunto (como na auditoria); repetir em
 5 splits custa ≈ 9 h e fica registrado como extensão possível, não executada.
+
+## Regra de relato dos splits adicionais (fixada em 24/11/2026, ANTES de qualquer leitura dos splits 43–46)
+
+O runner `scripts/ctr23_omitted_multisplit.py` executa os splits 43–46
+(o 42 é o do adendo). Regra fixada antes dos resultados: serão
+reportados TODOS os splits executados — retenção por (split, conjunto),
+placar por split e agregado por conjunto pelo sinal da retenção média
+entre splits — sem recorte posterior de splits ou conjuntos; execuções
+que falharem serão reportadas como ausentes, nunca silenciosamente
+excluídas; nenhum resultado parcial será citado como completo.

@@ -195,9 +195,10 @@ ponta a ponta com
 resultados idênticos --- uma verificação involuntária, e por isso
 valiosa, de reprodutibilidade exata.
 
-A \textbf{segunda etapa} exige o mesmo rigor de relato, e este
-parágrafo existe porque a auditoria externa de 23/11/2026 mostrou que
-o texto anterior dizia mais do que o registro sustenta. O instrumento
+A \textbf{segunda etapa} exige o mesmo rigor de relato --- e uma
+retificação datada de 23/11/2026, registrada em adendo ao documento
+de desenho, fixa o relato correto, porque a formulação anterior dizia
+mais do que o registro sustenta. O instrumento
 confirmatório da manchete --- o teste de sinal --- e a regra de
 elegibilidade da extensão (conjuntos da suíte CTR23 com 3 a 100 mil
 linhas) foram fixados em 20/07/2026, \emph{após} uma leitura
@@ -367,8 +368,8 @@ suíte OpenML-CTR23
 suíte excluídos por vazamento de alvo descoberto na verificação (o
 alvo é soma de atributos em \texttt{brazilian\_\allowbreak houses} e
 \texttt{wave\_energy}). Uma versão anterior deste texto chamava os
-quinze de ``pool elegível completo''; a auditoria externa de
-23/11/2026 recontou a regra e encontrou \textbf{dezenove} elegíveis.
+quinze de ``pool elegível completo''; a recontagem registrada em
+23/11/2026 mostra que a regra alcança \textbf{dezenove} elegíveis.
 Os quatro ausentes, nomeados e com o status de cada um:
 \texttt{white\_\allowbreak wine} (44971; subconjunto do
 \texttt{wine\_\allowbreak quality} do núcleo),
@@ -574,11 +575,13 @@ $[2{,}6;\,3{,}2]$) e \texttt{cpu\_activity} ($+0{,}117$). O
 conjunto que o pré-registro de 15/07 prometia e que faltava: refeita
 em 23/11 (B=10.000, alunos re-treinados nas três sementes, CRPS por
 linha do \emph{hold-out}), ela dá à manchete a sua leitura mais
-honesta --- \textbf{13 vitórias claras} (IC95 inteiramente positivo),
+honesta --- \textbf{12 vitórias claras} (IC95 inteiramente positivo),
+\textbf{uma vitória na margem} (\texttt{online\_news}, ganho
+$0{,}32\%$ com IC95 $[0{,}01;\,0{,}63]$),
 \textbf{4 empates} (\texttt{cps88wages}, \texttt{miami\_\allowbreak housing},
 \texttt{space\_ga}, \texttt{health\_\allowbreak insurance}) e
 \textbf{3 derrotas claras}: o teste de sinal conta empates ruidosos
-como vitórias, e o 16/20 deve ser lido como ``13 claras $+$ 3
+como vitórias, e o 16/20 deve ser lido como ``12 claras $+$ 4
 limítrofes''
 (\texttt{results/\allowbreak distillation/\allowbreak bootstrap\_\allowbreak lines.csv}).
 Segundo, o segundo maior sucesso
@@ -592,9 +595,9 @@ manchete repousa sobre ele. Terceiro, nenhuma retenção é exatamente zero, mas
 positivos quase nulos como o \texttt{miami\_housing} ($+0{,}016$)
 contam como sucesso sob o teste de sinal --- a varredura de ROPE acima
 delimita o efeito de tratá-los como equivalências. Quarto, as
-falhas são diagnosticáveis --- mas cada uma pela própria causa, e a
-auditoria externa de 23/11/2026 derrubou o diagnóstico ``comum'' que
-uma versão anterior deste texto oferecia. No \texttt{wine\_quality},
+falhas são diagnosticáveis --- mas cada uma pela própria causa, e o
+diagnóstico ``comum'' que uma formulação anterior oferecia não
+sobreviveu à verificação por linhas (retificação de 23/11/2026). No \texttt{wine\_quality},
 a causa é um artefato do conjunto: 27,6\% do teste tem gêmeo exato de
 covariáveis no \emph{pool} (o conjunto original traz 1.179 linhas
 duplicadas), o controle \emph{pinball} memoriza os gêmeos e o aluno,
@@ -829,7 +832,7 @@ em contexto do professor transfere-se ao aluno. E a destilação chega a
 destilado tem o menor desvio médio da diagonal entre os três sistemas
 --- mas, no critério de cobertura do intervalo central, ele
 \emph{subcobre} (PICP80 de 0,596, contra sobrecobertura de
-${\sim}0{,}94$ do professor): ``mais bem calibrado'' vale no primeiro
+0,951 do professor): ``mais bem calibrado'' vale no primeiro
 critério, não no segundo, e é o passo conformal que fecha a cobertura
 (com as ressalvas da errata: ali o alvo é binarizado, e ``calibração''
 é a de uma Bernoulli).
@@ -970,8 +973,9 @@ gaussiano global) o vence em 7 --- com ${\sim}21\%$ no
 --- e, em união, alguma alternativa sem professor bate o controle em
 9 dos 20
 (\texttt{results/\allowbreak distillation/\allowbreak decision\_\allowbreak utility.csv}).
-O controle segue sendo a comparação pareada certa --- mesma família,
-mesmo objetivo quantílico, só o rótulo muda de origem --- mas não é o
+O controle segue sendo a comparação pareada certa --- mesma família e
+mesma capacidade, com as diferenças de rótulo e de perda declaradas na
+Seção~\ref{sec:destil-alunos} --- mas não é o
 teto sem professor: contra a \emph{melhor} alternativa sem professor
 de cada conjunto (controle, gaussiana, QRF ou NGBoost --- uma seleção
 por oráculo, favorável demais à alternativa), o destilado vence em 12
@@ -1023,7 +1027,7 @@ modelo pontual --- ponto + resíduo gaussiano global, com desvio
 estimado em validação interna de 10\% do pool e refit no pool
 completo.
 
-As duas hipóteses pré-registradas confirmaram com folga. Em
+As duas hipóteses registradas confirmaram com folga. Em
 $\tau{=}0{,}90$ --- o nível de serviço típico de reserva de capital ou
 provisão de cauda ---, o custo realizado do aluno destilado é menor ou
 igual ao do controle \emph{hard} em \textbf{18 de 20} conjuntos
@@ -1069,9 +1073,17 @@ ponto 953 erra os dois (a linha está no percentil ${\sim}99$ da
 discrepância média--realizado; o gêmeo é o contraexemplo que a média
 esconde). Na carteira inteira, com o \emph{mesmo} corte de 500 dos
 dois lados, 86,6\% das linhas que a média aprova (12.247 de 14.141)
-têm quantil~0,10 abaixo do corte: para um subscritor que pergunta
-``quanto ganha com 90\% de confiança?'', a decisão muda na maior
-parte da carteira, não numa curiosidade. No
+têm quantil~0,10 abaixo do corte --- e a fração depende do corte, por
+isso a grade vai declarada: 48\% em 300, 74\% em 400, 95\% em 600 e
+100\% a partir de 700 dólares. O que a regra compra também vai dito
+pelos dois lados: ela é \emph{conservadora} --- recusa muito, e o
+bloco recusado realiza abaixo de 500 em apenas 32\% dos casos, pouco
+acima dos 29\% da carteira toda --- mas o que ela \emph{mantém} é
+limpo: só 9,6\% das aprovações pela q$_{0,10}$ realizam abaixo do
+corte, três vezes menos que a base. É exatamente isso que ``quanto
+ganha com 90\% de confiança?'' significa: pureza da carteira aprovada,
+paga em volume --- uma troca que o ponto único não permite sequer
+enunciar. No
 \texttt{fps\_\allowbreak benchmark}, entre as 326 configurações com
 previsão pontual na faixa 107--109~FPS, os intervalos centrais de
 80\% vão de 1,1 a 8,7~FPS --- o par exibido aqui são as duas pontas
@@ -1082,8 +1094,11 @@ desempenho mínimo (o quantil~0,10) distingue o que a média não vê
 previsão pontual estoura em 53,2\% dos \emph{jobs} --- a média é
 próxima da mediana, e metade fica acima por construção ---, enquanto a
 provisão pelo quantil~0,90 estoura em 5,2\%: abaixo dos 10\% nominais
-(o professor sobrecobre neste conjunto), e com folga muito menor do
-que qualquer margem fixa que entregasse a mesma garantia. O
+(o professor sobrecobre neste conjunto), com folga \emph{mediana}
+três vezes menor que a da margem fixa de mesmo estouro (0,19 contra
+0,62) --- na média a ordem inverte (0,76 contra 0,62), porque a
+q$_{0,90}$ concentra folgas grandes exatamente nos \emph{jobs}
+voláteis, que é onde a margem fixa estoura. O
 contraponto fecha a leitura: onde o custo do erro é
 simétrico e a decisão consome só o centro da distribuição, o ganho
 mediano de ${\sim}1\%$ do perfil em~U não paga a complexidade --- o
@@ -1118,8 +1133,8 @@ oferece é robustez entre regimes
 (\texttt{results/\allowbreak distillation/\allowbreak mlp\_\allowbreak students.\allowbreak csv}).
 
 \textbf{A cauda pesada é o moderador de falha?} Não --- mas a leitura
-correta é mais modesta do que a que uma versão anterior deste texto
-extraiu, e o reparo foi apontado pela auditoria de 23/11/2026.
+correta é mais modesta do que a que uma formulação anterior extraiu
+(retificação de 23/11/2026).
 Re-executamos professor e alunos sob
 $y' = \log(1+y)$ nos três conjuntos então diagnosticados como falha
 em escala de preço, mais

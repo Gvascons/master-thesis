@@ -1,6 +1,6 @@
 # Foundation Models vs Gradient-Boosted Decision Trees on Tabular Data
 
-A rigorous empirical comparison of gradient-boosted decision trees, deep learning architectures, and foundation models on tabular prediction tasks. This repository contains the full experimental pipeline for a master's thesis that benchmarks 14 models across 18 OpenML datasets, using nested cross-validation with Bayesian hyperparameter optimization, followed by statistical significance testing and multi-dimensional analysis (scaling behavior, computational cost, and model interpretability).
+A rigorous empirical comparison of gradient-boosted decision trees, deep learning architectures, and foundation models on tabular prediction tasks. This repository contains the full experimental pipeline for a master's thesis that benchmarks 14 models across 18 OpenML datasets, with hyperparameter selection by inner cross-validation strictly separated from an untouched hold-out (correction 2026-11-23: not classical nested CV — the search runs once per model/dataset), Bayesian hyperparameter optimization, followed by statistical significance testing and multi-dimensional analysis (scaling behavior, computational cost, and model interpretability).
 
 ## Research Questions
 

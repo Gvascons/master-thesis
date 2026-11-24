@@ -51,7 +51,9 @@ OUT = REPO / "results" / "distillation" / "extension.csv"
 # 44971, california continuo 44977, superconductivity 44964, naval 44969)
 # estao nomeados, justificados e medidos em
 # results/distillation/ctr23_omitidos/PROVENANCE.md e ctr23_sensitivity.csv
-# (placar 17/24, p=0,032; 17/22 sem os 2 sobrepostos ao nucleo, p=0,0085).
+# (placar 17/24, p=0,032; recorte conservador 16/22 sem os 2 de
+# sobreposicao real — white_wine e california continuo, este vitoria do
+# destilado —, p=0,026).
 # A segunda leva (space_ga..sarcos) foi adicao principiada sob a regra,
 # nao selecao pos-resultado — mas a regra nao foi exaurida.
 DATASETS = ["abalone", "cpu_activity", "diamonds_real", "grid_stability",

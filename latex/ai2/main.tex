@@ -96,7 +96,7 @@ Tabular foundation models (TFMs) have ended the decade-long accuracy
 argument for gradient-boosted decision trees (GBDTs)
 \citep{grinsztajn2022,mcelfresh2023}; what they have not ended is the
 cost argument. In a uniform-protocol benchmark we ran of 14 models
-$\times$ 18 OpenML datasets (nested cross-validation, per-family
+$\times$ 18 OpenML datasets (selection by inner CV separated from an untouched hold-out, per-family
 preprocessing, equal tuning budgets; companion report
 \citep{companion2026}), the zero-shot TabFM ranks first on all three task
 types and is the single best model on 13 of 18 datasets; TabPFN v2.5
@@ -534,9 +534,13 @@ reports the absolute CRPS improvement alongside it: the born-again
 \texttt{pumadyn32nh} rides an absolute edge of only ${\sim}0.001$ CRPS
 (\texttt{online\_news} and \texttt{grid\_\allowbreak stability} are similar), and
 the headline therefore rests on the sign test and the median --- which
-are scale-free --- and on the large-edge successes
-(\texttt{cps88wages} $+0.160$, \texttt{year\_\allowbreak prediction} $+0.130$,
-\texttt{cpu\_activity} $+0.117$; the table's second-largest success,
+are scale-free. The ``large-edge'' label requires a relative reading:
+\texttt{cps88wages}' $+0.160$ sits on a CRPS of ${\sim}160$ --- a
+$0.1\%$ relative gain that the paired per-row bootstrap cannot
+distinguish from zero (\texttt{bootstrap\_lines.csv}); the absolute
+successes that survive are \texttt{year\_\allowbreak prediction}
+($+0.130$; a clear bootstrap win) and
+\texttt{cpu\_activity} ($+0.117$). (Also: the table's second-largest success,
 \texttt{california\_\allowbreak housing} at $+0.072$ CRPS, is precisely the
 binarized-target dataset of the erratum --- there, the
 ``distributional gain'' is calibration of a Bernoulli, and no claim in
@@ -747,12 +751,17 @@ the pilot would regenerate OOF labels within the proper split.)
 \includegraphics[width=\linewidth]{figures/calibration_distill.pdf}
 \caption{Quantile reliability on the hold-out: for each nominal level
 $\tau$ (x-axis), the empirical share of targets below the predicted
-$\tau$-quantile (y-axis). The diagonal is perfect calibration; curves
-above it over-cover, below it under-cover. The distilled student is
-closest to the diagonal on both panels; on
-\texttt{california\_\allowbreak housing} it is better calibrated than the hard
-control and than its own teacher, whose S-shape indicates miscalibrated
-tails (erratum caveat: that panel's target is binarized, so its
+$\tau$-quantile (y-axis). The diagonal is perfect calibration; the
+correct per-level reading: a curve above the diagonal at a given
+$\tau$ means that quantile is predicted too high, and central-interval
+coverage is the \emph{difference} between the shares at the two
+levels (a curve steeper than the diagonal in the middle means
+too-narrow intervals). The distilled student is
+closest to the diagonal on both panels --- by mean diagonal distance;
+by central-interval coverage it under-covers (PICP80 0.596 vs.\ the
+teacher's over-coverage at 0.951), and the conformal step is what
+closes coverage (erratum caveat: the california panel's target is
+binarized, so its
 ``calibration'' is of a Bernoulli). Source: \texttt{scripts/\allowbreak plot\_\allowbreak calibration.\allowbreak py}.}
 \label{fig:calibration}
 \end{figure}
@@ -952,14 +961,25 @@ precisely the binarized-target dataset; without it the score is 0 of
 4, strengthening the refutation).
 % results/distillation/pilot_sampling.csv
 Single-GPU measurements bound, rather than
-survey, the hardware space. One licensing note, verified at the
-primary source (2026-10-19): the TabPFN-2.5 weights license
-(\texttt{tabpfn-2.5-license-v1.1}) forbids commercial or production
-use of the model, \emph{its derivatives and its outputs} --- which
-reaches a student trained on the teacher's outputs. The cheap-serving
+survey, the hardware space. One licensing note, re-verified at the
+primary source (2026-11-23): the TabPFN-2.5 weights license (TABPFN-2.5
+Non-Commercial License v1.1) has three layers that matter here. First,
+outputs are \emph{not} derivatives (``Outputs are not considered
+Derivatives under this License'', §1) --- the distilled student is not
+a ``derivative'' in the license's sense. Second, only non-commercial
+use is licensed, and training, fine-tuning or distilling other models
+\emph{for commercial use} is explicitly outside the Non-Commercial
+Purpose definition. Third, and most specific, §2(d) forbids using
+outputs to ``train, fine-tune, or distill a model that is competitive
+with the TABPFN-2.5 Model''; our student retains 12--19\% of the
+teacher's distributional edge and does not compete with it on quality
+--- its niche is latency --- but the licensor has the final word on
+``competitive''. The cheap-serving
 argument of this paper therefore holds for research and internal
 evaluation; commercial deployment of the distilled student requires
 the vendor's enterprise license (or a permissively licensed teacher).
+The TabFM weights are under an analogous non-commercial license
+(TabFM Non-Commercial License v1.0; no competitive-model clause).
 
 \section{Reproducibility}
 
@@ -978,8 +998,9 @@ the binding constraint, and distillation attacks it selectively. In
 regression, what survives the transfer is the distribution --- a median
 19\%, and in one case more than the entirety, of the teacher's CRPS edge
 at microsecond latency --- under conditions a practitioner can verify in minutes. The rest
-of the teacher's advantage either saturates from raw labels, dissolves
-under a log transform, or waits on architectures that expose what their
+of the teacher's advantage either saturates from raw labels, changes
+error regime under a free log transform (without losing its relative
+edge), or waits on architectures that expose what their
 training already knows.
 
 \bibliographystyle{abbrvnat}

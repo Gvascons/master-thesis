@@ -57,17 +57,18 @@ arquiteturas de referência, \emph{tuning} equalizado, múltiplas sementes.
 Mais recentemente, o TabArena \citep{tabarena2025} mantém um benchmark ``vivo'' com dezenas
 de conjuntos e ranking contínuo, atualizado à medida que novos modelos são
 lançados. A mesma onda de consolidação produziu três recursos que
-registramos pela complementaridade com o nosso recorte (citações
-acrescentadas na revisão de 23/11/2026, com metadados verificados na
-fonte): o \emph{toolbox} TALENT \citep{talent2024} e o estudo amplo
+registramos pela complementaridade com o nosso recorte: o \emph{toolbox} TALENT \citep{talent2024} e o estudo amplo
 associado \citep{ye2024closer}, que padronizam a avaliação de métodos
 profundos tabulares em grande escala de conjuntos; o TabReD
 \citep{tabred2024}, que examina lacunas dos benchmarks acadêmicos de
-aprendizado profundo tabular; e o resultado de que até um
+aprendizado profundo tabular --- mostrando que conclusões mudam quando
+a avaliação muda, a lição convergente com a nossa; e o resultado de
+que até um
 \emph{baseline} de vizinhos mais próximos, revisitado com ferramental
-moderno, volta a ser competitivo \citep{modernnca2025} --- um lembrete,
-convergente com o nosso, de que protocolos uniformes reordenam
-rankings estabelecidos.
+moderno (SGD, representações profundas, amostragem estocástica de
+vizinhos), volta a ser competitivo \citep{modernnca2025} --- um
+lembrete de que \emph{baselines} fortes são pré-condição de qualquer
+comparação justa.
 
 Paralela aos benchmarks
 corre a literatura sobre \emph{como} comparar classificadores em múltiplos
@@ -158,8 +159,8 @@ prática padrão em lançamentos industriais, mas que deixa a comunidade sem
 evidência neutra justamente no período em que as decisões de adoção são
 tomadas. Na linha do TabPFN, a análise independente de
 \citet{ye2025tabpfnv2} disseca os pontos fortes do TabPFN~v2 e
-extensões de capacidade (citação acrescentada na revisão de
-23/11/2026) --- um exame em profundidade de um único modelo, distinto
+extensões de capacidade --- um exame em profundidade de um único
+modelo, distinto
 da comparação neutra entre famílias que faltava. Em paralelo, uma linha recente avalia \emph{foundation models}
 tabulares diretamente como estimadores de densidade condicional em
 regressão, com regras de pontuação próprias

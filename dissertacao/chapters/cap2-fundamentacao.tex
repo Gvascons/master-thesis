@@ -79,8 +79,8 @@ simplesmente memorizando $D$ (\emph{sobreajuste}), sem generalizar. Por
 isso toda avaliação honesta mede o desempenho em dados que o modelo --- e,
 igualmente importante, o processo de \emph{escolha} do modelo --- jamais
 viu; o Capítulo~\ref{chap:metodologia} traduz esse princípio em protocolo (conjunto de teste
-separado antes de tudo, validação cruzada aninhada para a seleção de
-hiperparâmetros).
+separado antes de tudo, validação cruzada interna para a seleção de
+hiperparâmetros, com o papel de cada laço declarado).
 
 Este trabalho considera os três tipos
 canônicos de tarefa supervisionada sobre tabelas: \emph{classificação
@@ -295,11 +295,16 @@ dos pesos --- que disciplina o crescimento de cada árvore. O
 expandir a árvore nível a nível, expande sempre a \emph{folha} de maior
 ganho (crescimento folha-a-folha), com histogramas de atributos que tornam
 o treino substancialmente mais rápido em dados grandes. O
-\textbf{CatBoost} \citep{prokhorenkova2018} distingue-se pelo tratamento
-nativo de variáveis categóricas via \emph{ordered boosting}: as estatísticas
-de alvo usadas para codificar categorias são computadas apenas sobre
-exemplos ``anteriores'' numa permutação aleatória, evitando o vazamento de
-alvo das codificações ingênuas.
+\textbf{CatBoost} \citep{prokhorenkova2018} distingue-se por dois
+mecanismos baseados em permutações aleatórias dos exemplos. O primeiro
+é o tratamento nativo de variáveis categóricas por \emph{estatísticas
+de alvo ordenadas} (\emph{ordered target statistics}): a codificação
+de cada categoria usa apenas os exemplos ``anteriores'' na permutação,
+evitando o vazamento de alvo das codificações ingênuas. O segundo é o
+\emph{ordered boosting} propriamente dito: os resíduos de cada
+exemplo são estimados por modelos treinados sem ele, atacando o viés
+de deslocamento de predição (\emph{prediction shift}) do
+\emph{boosting} clássico.
 
 Na prática, o comportamento de um GBDT é
 governado por um punhado de hiperparâmetros com papéis interpretáveis à luz

@@ -39,7 +39,7 @@ ensemble reduction); (3) out-of-fold labeling matters for the student's
 classification findings; and (4) failures are diagnosable, yielding a
 practical decision rule: try target transforms and a strong native student
 first, and distill when a genuine teacher edge persists — cheaply verifiable
-via OOF labeling. All experiments are pre-registered, seed-controlled, and
+via OOF labeling. Hypotheses and gates were registered in advance (the confirmatory sign test and the extension's eligibility rule were fixed at an interim look; headline p-values carry the two-stage sequential correction, p≈0.019), and all experiments are seed-controlled and
 publicly reproducible on a single 16 GB GPU.
 
 ## 1. Introduction
@@ -48,7 +48,7 @@ For a decade, the practical advice for tabular prediction was stable:
 gradient-boosted decision trees (GBDTs) win. The 2024–2026 generation of
 tabular deep learning and, decisively, of tabular foundation models (TFMs)
 has overturned the accuracy half of that advice. In a uniform-protocol
-benchmark we ran of 14 models × 18 OpenML datasets (nested cross-validation,
+benchmark we ran of 14 models × 18 OpenML datasets (selection by inner CV separated from an untouched hold-out,
 per-family preprocessing, equal tuning budgets), the zero-shot TabFM ranks
 first on all three task types and is the single best model on 13 of 18
 datasets; TabPFN v2.5 is the consistent runner-up.
@@ -169,7 +169,7 @@ all student variants.
 
 **Students and targets.** All students inherit the tuned hyperparameters of
 the corresponding baseline from the companion benchmark — capacity is held
-fixed and only the target changes, isolating the distillation effect.
+fixed; between the quantile control and the distilled student both the target AND the loss change (native pinball vs. multi-output squared error) — the re-tuning of both arms measures this asymmetry (sign holds 16/20; median CRPS gain 2.8%→1.4%, the conservative estimate).
 - *XGBoost point*, trained on true labels (control), on the teacher's OOF
   mean (soft), or on a 0.8/0.2 mixture.
 - *XGBoost multi-quantile*: hard variant uses the native pinball objective on
@@ -242,7 +242,7 @@ reject at the 5% level (one-sided sign test p = 0.006; Wilcoxon p = 0.045)
 and the Bayesian signed-rank places 0.70 posterior mass on positive
 retention at ROPE ±0.05 (0.63–0.71 across ROPE 0.02–0.10). The four
 failures are diagnosable and form the basis of §5.5's decision rule: wine_quality — where the teacher trails the tuned baseline on RMSE (the
-axis of our pre-registered gate) and its small CRPS edge (+0.04) inverts
+axis of our pre-registered gate; note 2026-11-23: the defeat itself traces to duplicate memorization — 27.6% of test rows have exact twins in the pool, and on the deduplicated set the distilled student wins on all three seeds) and its small CRPS edge (+0.04) inverts
 under transfer — and three price-scale, heavy-tailed targets (fifa,
 diamonds, health_insurance) where §5.5 shows the teacher's apparent edge is
 largely reproducible by a log transform.
@@ -359,7 +359,7 @@ survey, the hardware space.
 
 ## 8. Reproducibility
 
-All code, configs, seeds, per-experiment artifacts, the pre-registered
+All code, configs, seeds, per-experiment artifacts, the two-stage registered
 design with dated addenda, and two public corrections (a measurement-claim
 retraction and a dataset-labeling erratum whose accidental duplicate run
 reproduced the pipeline exactly) are in the public repository. Weights of
