@@ -233,13 +233,14 @@ def fig_flowchart14_pt():
     arrow(0.5, 0.77, 0.5, 0.67, "n\u00e3o")
     box(0.13, 0.46, "GBDT ou DL\n(conforme a tarefa; ver revers\u00f5es)", "#fde")
     arrow(0.36, 0.60, 0.17, 0.50, "sim")
-    box(0.5, 0.42, "3. Interpretabilidade intr\u00ednseca exigida?\n(regula\u00e7\u00e3o)")
+    box(0.5, 0.42, "3. Explica\u00e7\u00f5es audit\u00e1veis exigidas?\n(regula\u00e7\u00e3o; atribui\u00e7\u00e3o post-hoc)")
     arrow(0.5, 0.57, 0.5, 0.47, "n\u00e3o")
-    box(0.13, 0.26, "GBDT\n(intrinsecamente interpret\u00e1vel)", "#fde")
-    arrow(0.36, 0.40, 0.17, 0.30, "sim")
+    box(0.11, 0.29, "GBDT\n(explic\u00e1vel por atribui\u00e7\u00e3o,\naceito em pr\u00e1tica regulada)", "#fde")
+    arrow(0.36, 0.40, 0.15, 0.33, "sim")
     box(0.5, 0.18, "4. Nenhuma restri\u00e7\u00e3o ativa \u2192 FOUNDATION MODEL PRIMEIRO\n"
                    "TabPFN (maduro) \u00b7 TabFM (fronteira, ressalvas v1.0.1)\n"
-                   "regret mediano 0,000 com 14 modelos (descritivo;\nexecutável sempre-TabFM: 0,000 mediana, 0,080 média)",
+                   "regret mediano 0,000 com 14 modelos (descritivo; execut\u00e1vel:\n"
+                   "sempre-TabFM 0,000 mediana / 0,080 m\u00e9dia; sempre-TabPFN 0,242 mediana)",
         "#efe")
     arrow(0.5, 0.37, 0.5, 0.25, "n\u00e3o")
     ax.set_ylim(0.08, 1.0)
@@ -280,14 +281,14 @@ def fig_flowchart14(ref="AI-2", out="decision_flowchart_14"):
     arrow(0.5, 0.77, 0.5, 0.67, "no")
     box(0.13, 0.46, "GBDT or DL\n(task-matched; see reversals)", "#fde")
     arrow(0.36, 0.60, 0.17, 0.50, "yes")
-    box(0.5, 0.42, "3. Intrinsic interpretability required?\n(regulation)")
+    box(0.5, 0.42, "3. Auditable explanations required?\n(regulation; post-hoc attribution)")
     arrow(0.5, 0.57, 0.5, 0.47, "no")
-    box(0.13, 0.26, "GBDT\n(intrinsically interpretable)", "#fde")
-    arrow(0.36, 0.40, 0.17, 0.30, "yes")
+    box(0.11, 0.29, "GBDT\n(attribution-explainable,\naccepted in regulated practice)", "#fde")
+    arrow(0.36, 0.40, 0.15, 0.33, "yes")
     box(0.5, 0.18, "4. No active constraint → FOUNDATION MODEL FIRST\n"
                    "TabPFN (mature) · TabFM (frontier, v1.0.1 caveats)\n"
-                   "median normalized regret 0.000 @14 models (descriptive;\n"
-                   "executable always-TabFM: 0.000 median, 0.080 mean)",
+                   "median normalized regret 0.000 @14 models (descriptive; executable:\n"
+                   "always-TabFM 0.000 median / 0.080 mean; always-TabPFN 0.242 median)",
         "#efe")
     arrow(0.5, 0.37, 0.5, 0.25, "no")
     ax.set_ylim(0.08, 1.0)

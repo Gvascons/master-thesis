@@ -24,13 +24,13 @@
 \node[qp, right=of qp2] (qp3) {\textbf{QP3}\\o que a destilação\\transfere, a que custo?};
 
 \node[capbox, below=of qp1] (c5) {Capítulo~5\\Benchmark\\multicritério};
-\node[capbox, below=of qp2] (c6) {Capítulo~6\\Arcabouço de\\decisão validado};
+\node[capbox, below=of qp2] (c6) {Capítulo~6\\Arcabouço de\\decisão avaliado};
 \node[capbox, below=of qp3] (c7) {Capítulo~7\\Destilação\\distribucional};
 
 \draw[lig] (qp1) -- (c5);
 \draw[lig] (qp2) -- (c6);
 \draw[lig] (qp3) -- (c7);
-\draw[enc] (qp1.east) -- node[rot] {empate $+$ quebra} (qp2.west);
+\draw[enc] (qp1.east) -- node[rot] {empate $+$ desloc.\ do topo} (qp2.west);
 \draw[enc] (qp2.east) -- node[rot] {obstáculo: latência} (qp3.west);
 \end{tikzpicture}
 \end{document}

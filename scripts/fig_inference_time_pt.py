@@ -29,9 +29,19 @@ def ptnum(v):
     return s.replace(",", "X").replace(".", ",").replace("X", ".")
 
 
+DISPLAY = {
+    "xgboost": "XGBoost", "lightgbm": "LightGBM", "catboost": "CatBoost",
+    "mlp": "MLP", "resnet": "ResNet", "ft_transformer": "FT-Transformer",
+    "realmlp": "RealMLP", "tabm": "TabM", "stab": "STab", "kan": "KAN",
+    "tabkan": "TabKAN", "tabnet": "TabNet", "saint": "SAINT",
+    "tabpfn": "TabPFN", "tabfm": "TabFM",
+}
+
+
 def main():
     lat = pd.read_csv(REPO / "results/latency/latency_adult.csv")
     lat = lat.sort_values("us_per_row")
+    lat["model"] = lat["model"].map(lambda m: DISPLAY.get(m, m))
     fig, ax = plt.subplots(figsize=(10, 6))
     colors = lat["family"].map({"gbdt": "#2196F3", "deep_learning": "#FF9800",
                                 "foundation_model": "#4CAF50"}).fillna("grey")
