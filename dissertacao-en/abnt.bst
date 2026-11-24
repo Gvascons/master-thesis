@@ -857,16 +857,13 @@ FUNCTION {format.publication}
 	""
 	address empty$
 		{
-			"[S.l."
-			format.publisher empty$
-				{":~s.n.]" *}
-				{"]: " format.publisher * *}
-			if$ add.year add.to.item
+			format.publisher
+			add.year add.to.item
 		}
 		{
 			format.address
 			format.publisher empty$
-				{": [s.n.]" *}
+				'skip$
 				{": " format.publisher * *}
 			if$ add.year add.to.item
 		}
@@ -876,7 +873,7 @@ FUNCTION {format.publication}
 FUNCTION {format.proceedings.publication}
 {
 	publisher empty$
-		{"[S.l.:~s.n.]"}
+		{""}
 		{publisher comma.to.colon}
 	if$ add.year
 }
@@ -934,7 +931,6 @@ FUNCTION {article}
 	#0 title format.title add.to.item
 	journal emphasize
 		address empty$ {
-			"[S.l.]" add.to.list
 		}{
 			add.address
 		} if$

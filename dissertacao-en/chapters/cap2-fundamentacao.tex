@@ -409,8 +409,9 @@ Before any layer, there is an awkward decision: how to hand
 \emph{One-hot} encoding --- one binary column per category ---
 explodes the dimensionality when cardinality is high: in this
 dissertation's benchmark, the \texttt{amazon\_\allowbreak employee}
-dataset would reach on the order of 11{,}000 to 16{,}000 columns in
-the training splits without a cardinality cap, penalizing
+dataset would reach roughly 11{,}000 to 14{,}000 columns in the
+training splits (15{,}626 on the full dataset) without a cardinality
+cap, penalizing
 especially the attention models, whose cost grows with the number of
 columns. The standard alternative is learned \emph{embeddings}: each
 category is mapped to a dense low-dimensional vector, trained
