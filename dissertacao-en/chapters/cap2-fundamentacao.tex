@@ -1,5 +1,1216 @@
-%% STUB — translation pending
+%% ============================================================================
+%% Chapter 2 — Theoretical Background (English version, adapted from the
+%% frozen Portuguese chapter of 2026-11-24; same labels).
+%% ============================================================================
+
 \chapter{Theoretical Background}
 \label{chap:fundamentacao}
-[Translation pending.]
-\section{Pending}\label{sec:fund-estatistica}
+
+This chapter builds, from the concrete to the abstract, the technical
+vocabulary the rest of the dissertation needs: tabular data and their
+constitutive heterogeneity, the metrics that measure a classifier and
+the trade-offs among them, decision trees and gradient boosting, the
+three lineages of tabular deep learning, foundation models and
+in-context learning, knowledge distillation, the toolkit of
+distributional regression, and the statistical tests for algorithm
+comparison together with the decision vocabulary. Depth follows use:
+the benchmark's architectures are described by mechanism; in-context
+learning, distributional regression, statistical inference and
+decision receive the detail needed to read the results without
+consulting the sources.
+
+\section{Tabular data and supervised learning}
+\label{sec:fund-tabular}
+
+Let us start with the object. A \emph{tabular dataset} is a table in
+which each row is an observation and each column an attribute --- the
+format of a bank statement, a medical record or a customer registry.
+Table~\ref{tab:adult-exemplo} illustrates the format with rows in the
+style of the \texttt{adult} dataset, a classic of the field in which
+the goal is to predict, from sociodemographic census attributes,
+whether a person's annual income exceeds 50 thousand dollars
+\citep{kohavi1996}.
+
+\begin{table}[htb]
+\centering
+\caption[Illustrative fragment of a tabular dataset]{Illustrative
+fragment, with fictitious rows, of a tabular dataset in the style of
+\texttt{adult}. Source: the author.}
+\label{tab:adult-exemplo}
+\begin{tabular}{rllrl}
+\toprule
+age & education & occupation & hours/week & income $>$ 50K? \\
+\midrule
+39 & college       & management  & 45 & yes \\
+23 & high school   & services    & 40 & no \\
+51 & graduate      & specialist  & 50 & yes \\
+34 & high school   & ?           & 38 & no \\
+28 & college       & technician  & 44 & no \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\emph{Heterogeneity is constitutive.} Table~\ref{tab:adult-exemplo}
+already exhibits everything that makes the format hard: \texttt{age}
+and \texttt{hours/week} are numbers on different scales;
+\texttt{education} is a category with a natural order;
+\texttt{occupation} is a \emph{nominal} category, with neither order
+nor distance between values, and of arbitrary cardinality; and the
+``?'' is a missing value whose absence may itself carry information.
+A single table therefore mixes continuous variables, counts,
+categories and gaps --- and each column is an independent semantic
+axis: swapping two columns does not change the problem, but swapping
+two pixels of an image does.
+
+\emph{Why did the vision and language revolutions not transfer?}
+Convolutional networks exploit the spatial structure of images
+(neighboring pixels are correlated; patterns repeat at any position);
+language Transformers exploit the sequential structure of text.
+Tabular data offer no analogous universal invariance that an
+architecture could exploit \emph{by construction} --- there is no
+notion of neighborhood between \texttt{age} and \texttt{occupation}.
+That absence of shared structure is the usual explanation for a
+persistent empirical fact: for more than a decade, the state of the
+art on tables belonged to another family of models, the ensembles of
+decision trees \citep{grinsztajn2022}. Sections~\ref{sec:fund-gbdt}
+and~\ref{sec:fund-dl} develop the two sides of that dispute.
+
+Let us formalize the minimum needed of the supervised-learning
+problem. Given a training set
+$D = \{(\mathbf{x}_i, y_i)\}_{i=1}^{n}$ of observation--target pairs,
+assumed to be independent samples from an unknown distribution, the
+goal is to learn a function $f$ that predicts the target of \emph{new}
+observations well --- that is, that minimizes the expected error under
+the generating distribution, not the error on the training set itself.
+The distinction is the heart of the problem: a sufficiently flexible
+model can drive the training error to zero simply by memorizing $D$
+(\emph{overfitting}), without generalizing. This is why every honest
+evaluation measures performance on data that the model --- and,
+equally important, the model-\emph{selection} process --- has never
+seen; Chapter~\ref{chap:metodologia} translates this principle into
+protocol (a test set split off before anything else, internal
+cross-validation for hyperparameter selection, with the role of each
+loop declared).
+
+This work considers the three canonical types of supervised task on
+tables: \emph{binary classification} (predicting one of two classes,
+as in Table~\ref{tab:adult-exemplo}), \emph{multiclass
+classification} (predicting one of $K$ classes) and \emph{regression}
+(predicting a continuous value). Regression admits two readings that
+this dissertation distinguishes with care: the \emph{point} reading,
+in which the model returns a single number (an estimate of the
+conditional mean), and the \emph{distributional} reading, in which
+the model returns a complete predictive distribution --- quantiles,
+intervals, densities --- from which calibration is demanded. The
+distinction may seem subtle now, but it is the axis of the
+contribution of Chapter~\ref{chap:destilacao}, and
+Section~\ref{sec:fund-distribucional} gives it its own toolkit. It is
+worth fixing right away a distinction that avoids a common
+misunderstanding: the score a classifier returns (a number in
+$[0,1]$, such as the estimated probability that the row belongs to
+the positive class) is a statement about a \emph{discrete} target,
+and bears no relation to the predictive distribution of a continuous
+target --- the latter lives in the unit of the target itself, and it
+is what the quantiles of Section~\ref{sec:fund-distribucional} are
+about.
+
+\section{Measuring a classifier: from the confusion matrix to ROC-AUC}
+\label{sec:fund-metricas-clf}
+
+Before introducing the competitors, let us fix the yardstick. The
+whole comparison of Chapters~\ref{chap:benchmark}
+and~\ref{chap:framework} depends on measuring classifiers, and the
+metrics involved are not interchangeable: each answers a different
+question, and choosing the wrong one can crown a useless model. This
+section builds the classification metrics from the most elementary
+object of evaluation --- the confusion matrix --- and justifies the
+choice that anchors the benchmark.
+
+In a binary problem, call \emph{positive} the class of interest ---
+in \texttt{adult}, income above 50 thousand dollars; in a diagnosis,
+the disease; in credit, the default. Confronted with the true label,
+each prediction falls into one of four cells: \emph{true positive}
+(TP, the model flags it and it is), \emph{false positive} (FP, flags
+it and it is not), \emph{false negative} (FN, does not flag it and it
+is) and \emph{true negative} (TN). The $2\times 2$ table of these
+counts is the \emph{confusion matrix}, and every decision metric is a
+ratio between its cells \citep{hastie2009,fawcett2006}.
+
+The most immediate ratio is \emph{accuracy},
+$(\mathrm{TP}+\mathrm{TN})/n$ --- the fraction of correct
+predictions. It is also the most treacherous, because it ignores
+\emph{how} the errors are distributed between the classes. The
+example is not hypothetical: on the \texttt{amazon\_employee} dataset
+of this benchmark, in which only 5.8\% of access requests are denied,
+XGBoost reaches 94.3\% accuracy on the hold-out --- and detects only
+3.2\% of the requests that should have been denied. A model that
+answered ``approved'' to every request would have nearly identical
+accuracy and zero utility. Under imbalance, accuracy mostly measures
+prevalence, not the model.
+
+The metrics that see this asymmetry look at the classes separately.
+\emph{Recall} (or \emph{sensitivity}),
+$\mathrm{TP}/(\mathrm{TP}+\mathrm{FN})$, asks: \emph{of the positive
+cases that exist, how many did the model find?} \emph{Precision},
+$\mathrm{TP}/(\mathrm{TP}+\mathrm{FP})$, asks the converse: \emph{of
+the alarms the model raised, how many were true?}
+\emph{Specificity}, $\mathrm{TN}/(\mathrm{TN}+\mathrm{FP})$, is the
+recall of the negative class; \emph{balanced accuracy} is the mean
+of sensitivity and specificity, immune to prevalence; and the
+harmonic mean of precision and recall, the \emph{F1}, summarizes the
+pair in one number --- useful as a synthesis, opaque as a diagnosis,
+because it hides \emph{which} of the two components failed.
+
+Which of them matters depends on the cost asymmetry of the problem,
+which is a property of the application, not of the model. In cancer
+screening, the false negative is the expensive error --- telling a
+sick person ``all is well'' delays treatment --- and the guard
+metric is recall, even at the price of more false alarms; in a spam
+filter, it is the false positive that is intolerable (a legitimate
+contract in the trash), and precision rules. This is why reporting a
+single threshold metric, without declaring the cost that justifies
+it, is telling half the story --- and why the benchmark reports them
+jointly (Chapter~\ref{chap:metodologia}).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{images/metricas_clf_diss.png}
+\caption[ROC curve and threshold choice]{ROC curve of XGBoost on the
+\texttt{adult} hold-out (a) and precision and recall as functions of
+the threshold (b). Source: the author.}
+\label{fig:roc-adult}
+\end{figure}
+
+There is, however, a fact the confusion matrix hides: it is not a
+property of the model, but of the model--threshold pair. The
+classifiers in this work return a \emph{probability}
+$\hat p(\mathbf{x})$, and the matrix is only born when one chooses
+the cutoff that converts probability into decision. Moving the
+cutoff slides errors from one type to the other: on \texttt{adult},
+lowering it from 0.5 to 0.25 raises recall from 0.648 to 0.860 at
+the cost of more than tripling the false-positive rate (from 0.052
+to 0.171); raising it to 0.75 makes the opposite move
+(Figure~\ref{fig:roc-adult}b). None of these points is ``the''
+performance of the model --- they are different operating points of
+the same model.
+
+The \emph{ROC curve} resolves the arbitrariness by sweeping all
+thresholds at once: for each cutoff, it plots the true-positive rate
+(recall) against the false-positive rate ($1-$ specificity); the
+resulting trace describes everything the model can offer, from
+conservative to liberal (Figure~\ref{fig:roc-adult}a). The area
+under that curve, the \emph{ROC-AUC}, summarizes the quality of the
+\emph{ranking} in one number with an exact interpretation: it is the
+probability that a randomly drawn positive receives a higher score
+than a randomly drawn negative \citep{hanley1982}. Chance scores
+0.5; perfection, 1. Because it depends on neither threshold nor
+prevalence \citep{fawcett2006}, AUC compares models --- not
+operating points --- and therefore anchors the benchmark's
+conclusions, with the threshold metrics as a complementary reading
+(Section~\ref{sec:met-metricas}).
+
+AUC has its own blind spot: it measures the \emph{order} of the
+scores, not their value --- a model can rank perfectly by saying
+0.51 for every positive and 0.49 for every negative, with
+probabilities that are useless as probabilities. The quantity that
+charges for that is the \emph{log-loss},
+$-\frac{1}{n}\sum_i \log \hat p_i(y_i)$, a \emph{proper scoring
+rule}: its expected value is minimized by reporting the true
+probability \citep{gneiting2007}, which punishes both error and
+badly calibrated confidence --- and makes it the natural primary
+metric of the multiclass case, where ``positive'' is no longer
+unique and the rates above are read per class (macro-averages). This
+same demand --- getting the uncertainty right, not only the order
+--- reappears on a continuous scale in distributional regression,
+whose toolkit Section~\ref{sec:fund-distribucional} develops.
+
+\section{From decision trees to gradient boosting}
+\label{sec:fund-gbdt}
+
+\subsection{One tree, one guided example}
+
+A \emph{decision tree} predicts through a sequence of questions
+about the attributes, each with a binary answer, until reaching a
+leaf that holds the prediction \citep{cart1984}.
+Figure~\ref{fig:arvore-exemplo} shows a small tree, of depth two,
+trained (illustratively) on data like those of
+Table~\ref{tab:adult-exemplo}.
+
+\begin{figure}[htb]
+\centering
+% Pre-compiled diagram (editable source: tikz-src/tikz-cap2-1-en.tex;
+% recompile with: tectonic tikz-src/tikz-cap2-1-en.tex && mv tikz-cap2-1-en.pdf images/)
+\includegraphics{images/tikz-cap2-1-en.pdf}
+\caption[Illustrative decision tree]{Illustrative decision tree, of
+depth 2, on the example of Table~\ref{tab:adult-exemplo}; in each
+leaf, $\hat{p}$ is the (fictitious) fraction of training examples
+with income $>$ 50K. Source: the author.}
+\label{fig:arvore-exemplo}
+\end{figure}
+
+Follow the third row of Table~\ref{tab:adult-exemplo} through the
+tree: the person has a graduate degree (education $\geq$ college:
+\emph{yes}, right branch) and is 51 years old (age $>$ 30:
+\emph{yes}), landing in the leaf with $\hat{p} = 0.61$ --- the tree
+estimates a 61\% probability of high income and, with a 50\%
+threshold, predicts ``yes''. Training builds these questions from
+the top down, choosing at each node, by greedy search, the attribute
+and cutoff that best separate the classes (according to an impurity
+criterion such as entropy or the Gini index); in regression, the
+leaves hold means and the criterion is variance reduction.
+
+Two properties of this construction deserve note right away, because
+they will reappear as explanations of empirical results. First, the
+partitions are \emph{axis-aligned}: each question involves a single
+attribute, which matches the tabular nature in which each column has
+its own semantics. Second, the tree is \emph{invariant to monotone
+transformations} of each attribute --- asking ``age $>$ 30'' is
+equivalent to asking ``$\log(\text{age}) > \log 30$'' --- so that
+normalizing columns, a mandatory step for neural networks, is
+irrelevant for trees.
+
+\subsection{Why is one tree not enough?}
+
+A single tree faces a dilemma. If it is shallow, it is stable but
+coarse: the example of Figure~\ref{fig:arvore-exemplo} reduces the
+whole population to four groups. If it is deep, it becomes
+expressive but unstable: it memorizes particularities of the
+training sample, and a small perturbation of the data produces a
+very different tree. In the classical language of the
+\emph{bias--variance} decomposition, shallow trees suffer from high
+bias and deep trees from high variance \citep{hastie2009}.
+\emph{Ensembles} --- committees of trees --- attack each horn of the
+dilemma by a different route.
+
+The first route reduces variance in parallel. \emph{Bagging} and its
+most celebrated refinement, random forests, train many deep trees on
+perturbed replicas of the data (resampling with replacement and
+random attribute draws per node) and average the predictions: the
+idiosyncratic errors of each tree, approximately independent, cancel
+in the average, and the committee's variance plummets without
+raising the bias \citep{breiman2001}.
+
+The second route reduces bias in sequence. \emph{Boosting} inverts
+the logic: it starts from \emph{shallow} trees (high bias, low
+variance) and trains them sequentially, each new tree focused on
+correcting the errors the accumulated committee still makes. The
+final prediction is the weighted sum of all the corrections. At each
+round, the badly predicted examples gain prominence, and the
+committee refines exactly the regions where it still errs --- the
+bias falls step by step, while the shallowness of each tree and a
+small learning step hold the variance down.
+
+Formally, gradient boosting is gradient descent in function space
+\citep{friedman2001}: at each round $m$, a tree $h_m$ is fitted to
+the negative gradient of the loss function evaluated at the current
+predictions (in the case of squared error, to the residuals
+$y_i - F_{m-1}(x_i)$), and one updates $F_m = F_{m-1} + \nu\, h_m$
+with a small learning rate $\nu$. One consequence matters later:
+since only the gradient of the loss enters the algorithm, the same
+GBDT can be trained to minimize squared error (and estimate a mean),
+the \emph{pinball} loss (and estimate a quantile,
+Section~\ref{sec:fund-distribucional}) or several outputs at once
+--- which is what allows Chapter~\ref{chap:destilacao} to use an
+XGBoost as a 19-quantile student.
+
+\subsection{XGBoost, LightGBM and CatBoost: one concrete difference each}
+
+Three modern implementations of gradient boosting over trees
+(GBDTs, for gradient-boosted decision trees) dominate practice, and
+the benchmark of Chapter~\ref{chap:benchmark} evaluates all three.
+For the purposes of this dissertation, it suffices to retain one
+concrete difference of each. \textbf{XGBoost} \citep{chen2016}
+consolidated the paradigm with a regularized formulation of the
+objective --- explicit penalties on the number of leaves and the
+magnitude of the weights --- that disciplines the growth of each
+tree. \textbf{LightGBM} \citep{ke2017} changes the growth order:
+instead of expanding the tree level by level, it always expands the
+\emph{leaf} with the largest gain (leaf-wise growth), with attribute
+histograms that make training substantially faster on large data.
+\textbf{CatBoost} \citep{prokhorenkova2018} distinguishes itself by
+two mechanisms based on random permutations of the examples. The
+first is the native treatment of categorical variables through
+\emph{ordered target statistics}: the encoding of each category uses
+only the ``earlier'' examples in the permutation, avoiding the
+target leakage of naive encodings. The second is \emph{ordered
+boosting} proper: each example's residuals are estimated by models
+trained without it, attacking the prediction-shift bias of classical
+boosting.
+
+In practice, a GBDT's behavior is governed by a handful of
+hyperparameters with roles interpretable in the light of the
+bias--variance dilemma: tree \emph{depth} controls the order of the
+interactions each correction can capture; the \emph{number of
+trees} and the \emph{learning rate} form a coupled pair (smaller
+steps require more steps, but regularize); and the row and column
+\emph{subsampling} fractions per tree inject the decorrelation that
+bagging taught. No configuration dominates all datasets --- which
+is why any fair comparison between models must optimize each one's
+hyperparameters under the same budget, as
+Chapter~\ref{chap:metodologia} specifies.
+
+\emph{Why does boosting dominate tabular data?} Gathering the
+threads: axis-aligned partitions capture non-linearities and
+per-attribute interactions without assuming any geometry between
+columns; invariance to monotone transformations dispenses with
+normalization and absorbs heterogeneous scales; greedy cutoff
+selection naturally ignores irrelevant attributes; and boosting
+composes these virtues into a systematic bias reducer. The result
+is consistent performance, with little tuning, exactly in the
+regime of heterogeneous data of small to medium size --- a
+diagnosis corroborated by the evaluation of
+\citet{grinsztajn2022}, with the recorded caveat that
+\citet{mcelfresh2023}, on the wider grid, consider the NN~vs.\ GBDT
+debate overemphasized: on a surprising number of datasets the
+difference is negligible, and light hyperparameter tuning of a GBDT
+matters, on average, more than the choice between the two families.
+For this reason, in this dissertation the GBDTs play the role of
+\emph{null hypothesis}: every new proposal on tabular data must be
+measured against them.
+
+\section{Deep learning for tabular data}
+\label{sec:fund-dl}
+
+Deep learning's answer to the dominance of GBDTs organized itself
+into three lineages: modernizing the MLP, importing the attention of
+Transformers and, more recently, rethinking the neuron itself with
+Kolmogorov--Arnold networks. This section walks through them in
+order.
+
+\subsection{The multi-layer perceptron}
+
+The \emph{multi-layer perceptron} (MLP) is the simplest neural
+network: layers of units that linearly combine the inputs and apply
+a non-linearity. With input $\mathbf{h}^{(0)} = \mathbf{x}$, each
+layer $l$ computes
+\begin{equation}
+  \mathbf{h}^{(l)} \;=\; \phi\!\left(\mathbf{W}^{(l)} \mathbf{h}^{(l-1)}
+  + \mathbf{b}^{(l)}\right),
+  \label{eq:mlp-camada}
+\end{equation}
+where $\mathbf{W}^{(l)}$ and $\mathbf{b}^{(l)}$ are learned
+parameters and $\phi$ is a fixed activation function (typically the
+ReLU, $\phi(z) = \max(0, z)$), and the output of the last layer is
+read as the prediction,
+\begin{equation}
+  f(\mathbf{x}) \;=\; \mathbf{W}^{(L)} \mathbf{h}^{(L-1)} + \mathbf{b}^{(L)},
+  \label{eq:mlp-saida}
+\end{equation}
+followed by a \emph{softmax} in classification. The parameters are
+adjusted by gradient descent on a loss function, with gradients
+computed by backpropagation \citep{rumelhart1986}. In one sentence:
+with enough width, an MLP can approximate any continuous function
+\citep{hornik1989} --- the question on tabular data was never
+expressiveness, but whether training finds, with finite and
+heterogeneous data, solutions as good as those of the GBDTs.
+
+Before any layer, there is an awkward decision: how to hand
+\texttt{occupation} to a network that only consumes numbers?
+\emph{One-hot} encoding --- one binary column per category ---
+explodes the dimensionality when cardinality is high: in this
+dissertation's benchmark, the \texttt{amazon\_\allowbreak employee}
+dataset would reach on the order of 7 to 16 thousand columns
+(depending on the split) without a cardinality cap, penalizing
+especially the attention models, whose cost grows with the number of
+columns. The standard alternative is learned \emph{embeddings}: each
+category is mapped to a dense low-dimensional vector, trained
+together with the network --- a solution all the architectures below
+adopt in some form.
+
+\emph{The recipe matters.} Two recent proposals show that much of
+the MLP's historical disadvantage was one of \emph{recipe}, not
+architecture. \textbf{RealMLP} \citep{realmlp2024} demonstrates that
+an MLP with a careful set of improvements --- numeric embeddings,
+learning-rate scheduling, tuned regularization and preprocessing ---
+competes with tuned GBDTs. \textbf{TabM} \citep{tabm2025} attacks
+another flank: it obtains the stabilizing effect of an ensemble of
+MLPs at a cost close to that of a single model, by efficiently
+parameterizing multiple ``sub-networks'' that share most of their
+weights.
+
+If GBDTs dominate, why does the field keep investing in networks?
+For two promises trees do not make and one that networks fulfill
+more naturally. First, networks learn \emph{representations}:
+category embeddings and reusable intermediate layers, the gateway to
+transfer between tasks and to mixed data (a table alongside text or
+images). Second, and decisive for this dissertation: the whole
+family of foundation models of Section~\ref{sec:fund-fm}, which
+redefines the cost of entry into new tasks, is only possible on top
+of networks. Third, a network swaps its output head with minimal
+architectural change --- multi-target, multi-quantile,
+distributional. This plasticity is not exclusive to networks:
+gradient boosting also optimizes any differentiable loss (that is
+its definition), current implementations support native
+multi-quantile outputs, and it is a multi-quantile XGBoost that is
+the main student of Chapter~\ref{chap:destilacao} --- but in
+networks it comes for free, and the same chapter uses it in the MLP
+comparison student.
+
+\subsection{Attention and Transformers}
+
+The second lineage imports the mechanism that revolutionized
+language processing: \emph{attention} \citep{vaswani2017}. Here the
+mathematical depth is justified: half the models of the benchmark
+and all the foundation models of Section~\ref{sec:fund-fm} are built
+on these equations.
+
+Given a sequence of $n$ input vectors stacked in
+$\mathbf{X} \in \mathbb{R}^{n \times d}$, attention projects each
+vector into three roles --- \emph{query}, \emph{key} and
+\emph{value}:
+\begin{equation}
+  \mathbf{Q} = \mathbf{X}\mathbf{W}_Q, \qquad
+  \mathbf{K} = \mathbf{X}\mathbf{W}_K, \qquad
+  \mathbf{V} = \mathbf{X}\mathbf{W}_V,
+  \label{eq:qkv}
+\end{equation}
+with learned projection matrices, and produces, for each position, an
+average of the values weighted by the affinity between its query and
+all the keys:
+\begin{equation}
+  \text{Attention}(\mathbf{Q}, \mathbf{K}, \mathbf{V})
+  \;=\; \operatorname{softmax}\!\left(
+    \frac{\mathbf{Q}\mathbf{K}^{\top}}{\sqrt{d_k}}
+  \right)\mathbf{V},
+  \label{eq:atencao}
+\end{equation}
+where $d_k$ is the key dimension and the division by $\sqrt{d_k}$
+stabilizes the magnitudes before the softmax. The intuition: each
+element of the sequence ``asks'' (via $\mathbf{Q}$) which other
+elements are relevant to it (via $\mathbf{K}$) and aggregates their
+information (via $\mathbf{V}$) in proportion to that relevance ---
+weights that are \emph{computed from the data}, not fixed by the
+architecture. \emph{Multi-head} attention runs $h$ attentions in
+parallel with independent projections and concatenates the results,
+\begin{equation}
+  \operatorname{MultiHead}(\mathbf{X}) \;=\;
+  \operatorname{concat}(\text{head}_1, \ldots, \text{head}_h)\,
+  \mathbf{W}_O,
+  \label{eq:multihead}
+\end{equation}
+allowing different heads to capture different interaction patterns.
+A \emph{Transformer block} stacks multi-head attention and a
+position-wise MLP, with residual connections and layer
+normalization; the original full architecture stacks these blocks
+into an \emph{encoder} (which processes the whole input at once,
+with unrestricted attention) and a \emph{decoder} (which generates
+text token by token, with causal attention).
+
+\emph{Why do tabular models use only the encoder?} Because there is
+nothing to \emph{generate} sequentially: the prediction for a row is
+a single label or value, not a sequence. Tabular Transformers treat
+the \emph{columns} of a row as the input ``sequence'' --- each
+attribute becomes a token --- and use only the encoder stack:
+attention between attribute tokens learns interactions between
+columns, and the prediction is read from a special aggregator token.
+The decoder and its causal mask, made for the temporal order of
+text, have no counterpart in a table row.
+
+Four attention architectures are part of this work's benchmark.
+\textbf{TabNet} \citep{arik2021} pioneered bringing attention to
+tables, combining it with \emph{sparse} attribute selection: at each
+processing step, a learned mask elects a few relevant attributes,
+which gives the model native interpretability. The
+\textbf{FT-Transformer} \citep{gorishniy2021} is the cleanest
+distillation of the idea: a \emph{Feature Tokenizer} converts each
+attribute (numeric or categorical) into an embedding token and a
+standard Transformer processes the row; it is the architectural
+reference of the lineage. \textbf{SAINT} \citep{somepalli2021} adds
+to the attention between columns an attention \emph{between rows}
+(\emph{intersample}): when classifying a row, the model can consult
+other rows of the batch --- an anticipation, in miniature, of the
+idea of using examples as context that Section~\ref{sec:fund-fm}
+takes to the extreme. \textbf{STab} \citep{stab-ref} completes the
+lineage with a distinct mechanism: instead of deterministic
+activations, its layers use \emph{local stochastic competition}
+units (LWTA, local winner-takes-all), in which blocks of neurons
+compete and a winner is drawn by differentiable Gumbel-softmax
+sampling; at inference, the prediction is the Bayesian average of 64
+stochastic passes. The cost of this sampling-based inference appears
+prominently on the latency axis of Chapter~\ref{chap:benchmark}.
+
+\subsection{Kolmogorov--Arnold networks}
+
+The third lineage, the most recent, changes where the non-linearity
+lives. The Kolmogorov--Arnold representation theorem guarantees that
+every continuous function of several variables can be written as a
+composition of sums of continuous functions of \emph{one} variable
+\citep{kolmogorov1957,arnold1957}. \emph{Kolmogorov--Arnold
+Networks} (KANs) \citep{kan2024} take the theorem as architectural
+inspiration and invert the MLP's design: instead of fixed
+activations at the nodes and scalar weights on the edges
+(Eq.~\ref{eq:mlp-camada}), they place \emph{learnable univariate
+functions} on the edges --- parameterized by B-splines --- and mere
+sums at the nodes. Each connection stops being a number and becomes
+a small adjustable curve. Variants swap the basis of the edge
+functions (Chebyshev polynomials in ChebyKAN, radial basis functions
+in FastKAN), and \textbf{TabKAN} \citep{tabkan2025} organizes these
+variants into a framework aimed at tabular data.
+
+The KANs' promise --- more expressiveness per parameter and
+interpretability of the learned curves --- met empirical skepticism:
+under comparison with parameter and FLOP parity, the MLP beats KANs
+on most machine-learning tasks \citep{kancritical2024}; the
+independent tabular evaluation of \citet{poeta2024}, in turn,
+reached results \emph{favorable} to KAN in accuracy --- but without
+GBDT baselines and under ten-epoch training. None of these
+evaluations, on either side, includes GBDTs and foundation models in
+the same protocol --- the gap Chapter~\ref{chap:benchmark} fills
+under a neutral protocol, with the reimplementation caveats
+disclosed in Chapter~\ref{chap:metodologia}.
+
+\section{Tabular foundation models and in-context learning}
+\label{sec:fund-fm}
+
+Everything seen so far shares a premise so basic that it goes
+unnoticed: for each new dataset, a new model is trained. Tabular
+foundation models abandon that premise, and it is essential to
+understand the mechanism --- not just the effect --- because both
+the inference cost measured in Chapter~\ref{chap:benchmark} and the
+distillation of Chapter~\ref{chap:destilacao} follow directly from
+it.
+
+\emph{Training became conditioning.} An \emph{in-context learning}
+(ICL) model is a pre-trained network that conditions on the training
+set as if it were a \emph{prompt}, at prediction time, with no
+gradient update on the target task. Concretely: the Transformer is
+presented, in a single input, with the entire training set --- pairs
+$(\mathbf{x}_i, y_i)$ --- followed by the query row
+$\mathbf{x}_{\text{new}}$; a single forward pass produces the
+prediction, with the network's weights frozen. ``Training'' on the
+task reduces to assembling the context; all the actual learning
+happened earlier, during pre-training.
+Figure~\ref{fig:icl-mecanismo} diagrams the two phases.
+
+\begin{figure}[htb]
+\centering
+% Pre-compiled diagram (editable source: tikz-src/tikz-cap2-2-en.tex;
+% recompile with: tectonic tikz-src/tikz-cap2-2-en.tex && mv tikz-cap2-2-en.pdf images/)
+\includegraphics{images/tikz-cap2-2-en.pdf}
+\caption[The in-context learning mechanism]{The in-context learning
+(ICL) mechanism, in its two phases: synthetic pre-training and
+prediction by a single forward pass. Source: the author.}
+\label{fig:icl-mecanismo}
+\end{figure}
+
+\emph{Where does the ability to ``learn'' without gradients come
+from?} From pre-training. \emph{Prior-fitted networks} (PFNs) are
+pre-trained on millions of small \emph{synthetic} datasets, sampled
+from a prior over generating mechanisms --- typically structural
+causal models (SCMs): random causal graphs whose variables relate
+through drawn functions and noises \citep{muller2022pfn}. On each
+synthetic task, the network sees a labeled context and is trained to
+predict the held-out labels; doing so at scale, it learns a generic
+inference algorithm: the output of the forward pass approximates the
+\emph{posterior predictive distribution} under the synthetic prior,
+given the context \citep{nagler2023}. \textbf{TabPFN}
+\citep{hollmann2025} and its v2/v2.5 versions \citep{priorlabs2025}
+established the paradigm in practice, with a native context limit
+(50 thousand rows in v2.5) inherited from the quadratic cost of
+attention.
+
+One architectural detail of TabPFN is central to
+Chapter~\ref{chap:destilacao}: in regression, its output layer does
+not return a number but a \emph{bar distribution} --- a discretized
+histogram over the target's range, from which arbitrary quantiles of
+the predictive distribution can be read. The model natively delivers
+\emph{distributional} regression (Section~\ref{sec:fund-tabular}).
+In contrast, \textbf{TabFM} \citep{tabfm2026,kong2026} --- an
+independent implementation of the ICL paradigm, with a hybrid
+architecture that combines attention between columns, compression of
+each row into tokens and an ICL Transformer, and separate
+checkpoints per task --- decodes a single scalar in regression: it
+is an exclusively \emph{point} teacher. This asymmetry of output
+heads, and not any difference in average accuracy, is what will make
+TabPFN the natural teacher for the distributional distillation of
+Chapter~\ref{chap:destilacao}. Note also that both models carry
+architectural limits inherited from pre-training --- TabFM, for
+example, admits at most 10 classes in classification, was
+pre-trained with contexts of up to 16{,}384 rows (larger tables
+depend on length generalization or subsampling, as its own report
+states), and as of this writing is documented in a technical report,
+without a peer-reviewed paper \citep{tabfm2026,kong2026} --- limits
+that become missing cells of the benchmark and require the
+statistical policy declared in Chapter~\ref{chap:metodologia}.
+
+The mechanism of Figure~\ref{fig:icl-mecanismo} has a structural
+price: \emph{the training set travels with the model on every
+prediction}. The training cost is close to zero --- assembling the
+context --- but each inference pass reprocesses the entire context,
+which puts the cost per prediction orders of magnitude above that of
+a GBDT, whose inference walks a few trees. In inference-heavy
+scenarios, that bill dominates any accuracy advantage ---
+Chapter~\ref{chap:benchmark} quantifies it and
+Chapter~\ref{chap:destilacao} proposes a way out.
+
+Three terms follow from this mechanism and return in later chapters.
+The model is said to operate \emph{zero-shot} because nothing in it
+is adjusted to the task: neither weights nor hyperparameters. In
+practice, the prediction does not come from a single pass: the model
+is run several times on perturbed versions of the same context (in
+TabPFN, column permutations and preprocessing variants) and the
+outputs are averaged --- the \emph{inference ensemble}, whose size
+multiplies the cost. And, since the cost grows with the context,
+there are three levers to cheapen inference without changing
+paradigm: shrink the ensemble, shrink the context (by subsampling)
+or replace the model with a distilled student.
+Chapter~\ref{chap:destilacao} measures all three with the same
+yardstick.
+
+\section{Knowledge distillation}
+\label{sec:fund-destilacao}
+
+If an expensive model is too good to discard and too expensive to
+serve, the classical answer is \emph{knowledge distillation}:
+training a fast model (the \emph{student}) to imitate the outputs of
+an expensive one (the \emph{teacher}). The idea is born as
+\emph{model compression} \citep{bucila2006} --- a bulky ensemble
+labels a large mass of unlabeled data, and a small network is
+trained on those labels --- and gains its modern formulation with
+\citet{hinton2015}.
+
+The central observation of \citet{hinton2015} is that the
+\emph{probabilities} the teacher assigns to the wrong classes carry
+information the true label does not have: when classifying the
+fourth row of Table~\ref{tab:adult-exemplo}, a teacher that answers
+``no, with 85\%'' teaches more than the bare label ``no'' --- it
+encodes how ambiguous the case is. To expose that structure, the
+entropy of the output is amplified with a \emph{temperature} $T$ in
+the softmax,
+\begin{equation}
+  p_i(T) \;=\;
+  \frac{\exp(z_i / T)}{\sum_j \exp(z_j / T)},
+  \label{eq:temperatura}
+\end{equation}
+where $z_i$ are the logits; with $T > 1$, the small probabilities
+stop being crushed. The student is trained on a combination of two
+losses: the usual cross-entropy against the true labels and an
+imitation loss against the teacher's \emph{soft targets} at the same
+temperature. In regression, the analogous recipe replaces the label
+with the teacher's predicted value --- and, in the distributional
+extension of Chapter~\ref{chap:destilacao}, with the teacher's
+entire \emph{quantile curve}.
+
+The \emph{born-again} lineage showed early that the student need not
+be a network: \citet{breiman1996} compress an ensemble of trees into
+a single tree trained on the committee's predictions, with
+surprisingly small loss of fidelity; \citet{vidal2020} give ensemble
+compression a modern exact treatment. In the reverse direction,
+\citet{frosst2017} distill a deep network into a soft decision tree
+in search of interpretability, and the distillation of networks into
+networks of equal capacity (\emph{born-again networks}) revealed
+that even self-imitation can improve the student
+\citep{furlanello2018}. The transversal lesson: distillation is
+agnostic to the teacher--student pair; what is transferred is the
+learned \emph{function}, exposed through the outputs. And the target
+of the transfer need not be a point: distilling the teacher's
+predictive \emph{distribution} has its own lineage --- from the
+Bayesian posterior predictive compressed into a single network
+\citep{korattikara2015} to the distribution of ensembles, in
+classification \citep{malinin2020end2} and in regression via a
+Normal--Wishart parameterization \citep{malinin2020rpn}, with the
+same single-pass-inference motivation that drives uncertainty
+distillation in vision \citep{shen2021} --- always, in that lineage,
+with teachers of accessible weights or members and parametric neural
+students.
+
+With ICL teachers, distillation gains an additional attraction: it
+removes exactly the constitutive bottleneck of the family (the
+context that travels with every prediction), converting a teacher of
+expensive inference into a student of cheap inference. \emph{Pocket
+FM} \citep{pocketfm2026} establishes that agenda for
+\emph{classification}, at scale, with a methodological safeguard
+that Chapter~\ref{chap:destilacao} inherits: \emph{out-of-fold}
+labeling --- the teacher labels each example conditioned only on the
+other partitions, never on itself --- so that the student does not
+learn from the teacher's leaks. What remains open in that line, and
+constitutes this dissertation's contribution, is the extension to
+\emph{distributional regression}: distilling not the mean but the
+predictive distribution --- which requires the toolkit of the next
+section. Chapter~\ref{chap:related} situates this framing in the
+state of the art.
+
+\section{Distributional regression: quantiles, CRPS and calibration}
+\label{sec:fund-distribucional}
+
+Predicting a number is useful; predicting a number \emph{with the
+uncertainty around it} is what risk decisions demand. Consider a
+model that appraises real estate: saying ``this property is worth
+500 thousand'' and saying ``it is worth 500 thousand, and with 80\%
+probability between 430 and 580 thousand'' are different products
+--- the second allows pricing risk, setting margins and declining
+decisions when the uncertainty is too large. Two models with the
+same average point error can differ radically in the quality of that
+second answer, and the point metrics (RMSE, MAE) are blind to the
+difference. This section presents the instruments that see it ---
+quantiles and the pinball loss, CRPS, calibration and sharpness ---
+at the depth Chapter~\ref{chap:destilacao} presupposes: here the
+mathematics is deliberately detailed, because these are the
+quantities of the contribution.
+
+Before the distributions, the point yardstick. For a model that
+returns $\hat y_i$ on each of the $n$ test rows, the three measures
+used in this work are the root mean squared error,
+$\mathrm{RMSE} = \sqrt{\tfrac{1}{n}\sum_i (y_i - \hat y_i)^2}$, the
+mean absolute error,
+$\mathrm{MAE} = \tfrac{1}{n}\sum_i \lvert y_i - \hat y_i \rvert$,
+both in the unit of the target, and the coefficient of
+determination,
+$R^2 = 1 - \sum_i (y_i - \hat y_i)^2 / \sum_i (y_i - \bar y)^2$,
+scale-free. RMSE punishes large errors more; comparing RMSE and MAE
+shows when the error is dominated by a few rows. Each loss has an
+implicit target: the prediction that minimizes expected squared
+error is the conditional \emph{mean}, and the one that minimizes
+expected absolute error is the conditional \emph{median}. The
+pinball loss, next, generalizes this second case from the median to
+an arbitrary quantile.
+
+\subsection{Quantiles and the pinball loss}
+
+The conditional quantile $q_\tau(\mathbf{x})$ is the value below
+which the target falls with probability $\tau$, given $\mathbf{x}$:
+the quantile $\tau = 0.5$ is the conditional median; the quantiles
+$0.1$ and $0.9$ delimit a central 80\% interval. Quantile
+regression \citep{koenker1978} estimates $q_\tau$ directly, by
+minimizing the \emph{pinball loss} (or quantile loss): with error
+$u = y - \hat{q}_\tau$,
+\begin{equation}
+  \rho_\tau(u) \;=\;
+  \begin{cases}
+    \tau\, u, & u \geq 0 \quad \text{(underestimated the target)},\\[2pt]
+    (\tau - 1)\, u, & u < 0 \quad \text{(overestimated the target)}.
+  \end{cases}
+  \label{eq:pinball}
+\end{equation}
+
+The loss is a ramp with two slopes (Figure~\ref{fig:pinball}): for
+$\tau = 0.9$, underestimating costs $0.9$ per unit of error and
+overestimating costs only $0.1$. The optimal minimizer therefore
+prefers to err upward --- and errs upward by exactly the right
+amount: the prediction that minimizes the expected loss is precisely
+the $0.9$ quantile of the conditional distribution. It is this
+property --- the minimizer of the level-$\tau$ pinball loss is the
+$\tau$ quantile --- that makes it the canonical instrument of
+quantile regression; with $\tau = 0.5$, it reduces (up to a factor)
+to the absolute error, whose minimizer is the median. Training a
+model on a \emph{grid} of levels $\tau \in \{0.05, \ldots, 0.95\}$
+produces a quantile curve --- a discretization of the entire
+predictive distribution.
+
+\begin{figure}[htb]
+\centering
+% Pre-compiled diagram (editable source: tikz-src/tikz-cap2-3-en.tex;
+% recompile with: tectonic tikz-src/tikz-cap2-3-en.tex && mv tikz-cap2-3-en.pdf images/)
+\includegraphics{images/tikz-cap2-3-en.pdf}
+\caption[The pinball loss and its asymmetry]{The pinball loss and
+its asymmetry, for $\tau = 0.9$ (solid line) and $\tau = 0.5$
+(dashed line). Source: the author.}
+\label{fig:pinball}
+\end{figure}
+
+When the grid's levels are estimated independently, nothing
+guarantees the monotonicity the definition requires --- the model
+can produce $\hat{q}_{0.8} < \hat{q}_{0.7}$ for some row, the
+so-called \emph{quantile crossing}, which makes the
+``distribution'' internally inconsistent. The standard pragmatic
+repair is to re-sort each row's predicted quantiles in increasing
+order, an operation that never worsens the total pinball loss and
+restores the curve's validity; it is the repair adopted in the
+multi-quantile students of Chapter~\ref{chap:destilacao}.
+
+There are, then, two ways to obtain a quantile model, and
+Chapter~\ref{chap:destilacao} uses both. Without a teacher, one
+trains with the pinball loss on the observed targets: the model must
+discover each quantile from a single value of $y$ per row. With a
+teacher, the quantile comes ready-made: for each row and each level
+$\tau$, the teacher provides the number
+$q^{\text{teach}}_\tau(\mathbf{x}_i)$, and the student can learn it
+by ordinary regression, with squared error, one output per level.
+The two arms thus differ in the target \emph{and} in the loss --- an
+asymmetry that Chapter~\ref{chap:destilacao} declares and fences on
+the configuration side, re-tuning the hyperparameters of the two
+arms separately (the effect of the loss difference itself is not
+isolated).
+
+\subsection{CRPS: a yardstick for distributions}
+
+How to compare two predictive distributions? This dissertation's
+yardstick is the \emph{continuous ranked probability score} (CRPS):
+for a predictive distribution with cumulative distribution function
+$F$ and an observed target $y$,
+\begin{equation}
+  \operatorname{CRPS}(F, y) \;=\;
+  \int_{-\infty}^{\infty}
+  \left( F(z) - \mathbf{1}\{z \geq y\} \right)^2 \mathrm{d}z,
+  \label{eq:crps}
+\end{equation}
+the integrated squared distance between the predicted CDF and the
+step CDF of the observed value. Two properties qualify it. First,
+the CRPS is a \emph{proper scoring rule} \citep{gneiting2007}: its
+expected value is minimized when the model reports the true
+conditional distribution --- there is no way to gain score by
+``bluffing'' a distribution different from what the model actually
+believes, which makes it the honest criterion for evaluating
+uncertainty. Second, it \emph{generalizes the absolute error}: if
+$F$ collapses to a point (a point prediction), Eq.~\ref{eq:crps}
+reduces to $|{\hat{y} - y}|$ --- so that the CRPS allows comparing,
+on the same yardstick and in the unit of the target, point and
+distributional models. Lower is better.
+
+In practice, when the model delivers a grid of quantiles instead of
+a continuous CDF, the CRPS is estimated as twice the average pinball
+loss over the grid of levels \citep{gneiting2011},
+\begin{equation}
+  \widehat{\operatorname{CRPS}}(F, y) \;=\;
+  \frac{2}{|\mathcal{T}|} \sum_{\tau \in \mathcal{T}}
+  \rho_\tau\!\left(y - \hat{q}_\tau\right),
+  \label{eq:crps-grade}
+\end{equation}
+the standard estimator of probabilistic-forecasting practice --- and
+the formal link between the two quantities of this section:
+minimizing the pinball loss over the whole grid is, up to a
+constant, optimizing the discretized CRPS. Being a discretization,
+the estimator carries a grid-dependent bias;
+Chapter~\ref{chap:destilacao} reports the validation of that bias
+under this dissertation's protocol and the reading rule that follows
+from it (internal comparisons, never absolute values across works).
+
+\subsection{Calibration and sharpness}
+
+The CRPS summarizes distributional quality in one number; the
+\emph{calibration} diagnostics decompose it. A nominal 80\%
+prediction interval is \emph{calibrated} if it covers the target in
+about 80\% of the test cases. The operational metric is the PICP
+(\emph{prediction interval coverage probability}): the fraction of
+test targets that fall inside the nominal interval --- a PICP80 far
+below 80\% exposes an \emph{overconfident} model (intervals too
+narrow); far above, an \emph{underconfident} one (intervals too
+wide). Coverage, however, is a necessary and not sufficient
+condition: an absurdly wide interval always covers and informs
+nothing. This is why coverage is read together with
+\emph{sharpness} --- the average width of the intervals: among
+equally calibrated models, the one with the narrowest intervals is
+the most informative \citep{gneiting2007calib}. The per-quantile
+analogue is the \emph{reliability curve}: for each nominal level
+$\tau$ of the grid, one measures the \emph{empirical coverage}
+$\hat P(y \leq q_\tau)$ --- the fraction of test targets that fall
+below the predicted $\tau$ quantile --- and plots the result against
+$\tau$ itself. A perfectly calibrated model produces the diagonal
+(the 0.2 quantile is exceeded by 80\% of the targets, the 0.8 by
+20\%, and so on); curves above the diagonal expose quantiles that
+are too high (overcoverage), below it, too low, and the S shape
+around the diagonal is the signature of badly calibrated tails with
+a correct center. Figure~\ref{fig:quantis-cobertura} makes the
+mechanism concrete with real data from the distillation study
+itself: in panel~(a), the prediction for \emph{one} row is a curve
+of 19 quantiles --- 19 numbers in the unit of the target, one per
+grid level --- and the observed target falls below the quantiles of
+level $\tau \geq 0.65$; in panel~(b), repeating that count for all
+rows produces the empirical coverage of each level, and the
+resulting curve exhibits exactly the S shape described above (at
+nominal level $0.20$ the coverage is $8.2\%$: tails too wide,
+center nearly perfect). It is worth underlining what the horizontal
+axis of these curves is \emph{not}: the levels $\tau$ are not
+probabilities estimated by the model --- there is no sigmoid and no
+classifier \texttt{predict\_proba} involved --- but the grid
+levels, fixed by the evaluator \emph{before} any prediction; the
+model answers with values $q_\tau$ in the unit of the target, and
+probability only appears in the \emph{verification}, as the
+frequency with which the test targets fall below each promised
+quantile. It is the reading used in the evaluation of the
+contribution (Figure~\ref{fig:destil-calibration}).
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=\linewidth]{images/quantis_cobertura_diss.pdf}
+\caption[From the quantile curve to coverage]{From the quantile
+curve to coverage (TabPFN, OOF of \texttt{fps\_benchmark}): (a)~the
+prediction for one row; (b)~the empirical coverage per level.
+Source: \texttt{results/\allowbreak distillation/\allowbreak oof/}.}
+\label{fig:quantis-cobertura}
+\end{figure}
+
+When the empirical coverage strays from the nominal one, there is a
+post-hoc repair with a formal guarantee: \emph{conformal
+calibration} (split-conformal) sets aside a calibration set,
+measures the model's residuals on it and adjusts the interval
+bounds by the empirical quantile of those residuals --- which
+guarantees, under exchangeability of the data, marginal coverage at
+the nominal level, whatever the underlying model \citep{vovk2005};
+the quantile variant (CQR, \emph{conformalized quantile
+regression}) applies the same adjustment directly to the predicted
+quantiles \citep{romano2019}. Chapter~\ref{chap:destilacao} uses
+this tool as a declared pilot.
+
+\subsection{Two native distributional baselines}
+
+Two classical models that produce predictive distributions without
+any teacher close the toolkit --- the natural controls for any
+proposal of distributional distillation. \emph{Quantile regression
+forests} (QRF) extend random forests by storing, in each leaf, not
+the mean but \emph{all} the training values that fall there; the
+predictive distribution of a new row is the weighted empirical
+distribution of those values, from which any quantile can be read
+\citep{meinshausen2006}. \emph{NGBoost} follows the parametric
+route: a gradient boosting whose outputs are the \emph{parameters}
+of a distribution (for example, mean and variance of a Gaussian),
+trained by natural gradients on a proper scoring rule
+\citep{duan2020}. The parametric route also includes the LSS family
+--- \emph{XGBoostLSS} and relatives \citep{marz2019} --- which
+takes the same boosting to model all the parameters of the
+distribution; NGBoost represents it in this work as the exponent
+trained by a proper scoring rule. QRF represents the
+non-parametric path; NGBoost, the parametric one --- and both
+appear as competitors in Chapter~\ref{chap:destilacao}.
+
+\section{Statistical comparison of algorithms}
+\label{sec:fund-estatistica}
+
+One last instrument remains: how to claim, with statistical honesty,
+that one model is better than another --- or that two models tie ---
+from results on a collection of datasets? This section presents the
+theory of the tests that Chapter~\ref{chap:metodologia} adopts as
+protocol and Chapter~\ref{chap:benchmark} applies; the exposition
+follows the canonical framework of the field
+\citep{demsar2006,benavoli2017}.
+
+\emph{Why not an ANOVA on the metrics?} Because the metrics are not
+\emph{commensurable} across datasets: an AUC of $0.95$ on an easy
+dataset and one of $0.75$ on a hard one are not on the same scale,
+and means or variances across datasets mix apples and oranges ---
+besides which normality, ANOVA's assumption, has no reason to hold.
+The solution of \citet{demsar2006} is to work with \emph{ranks}: on
+each dataset, the $k$ models are ordered from best ($1$) to worst
+($k$); ranks, unlike metrics, are comparable across datasets by
+construction.
+
+A second decision precedes any test: what counts as an independent
+observation? When each model is evaluated by cross-validation, it is
+tempting to treat each fold as a replicate --- but the folds of the
+same dataset share most of their examples and are not independent;
+using them as replicates would artificially inflate the effective
+$N$ and, with it, the apparent power of the tests
+(\emph{pseudo-replication}). The correct unit is the
+\emph{dataset}: each contributes a single number per model (in this
+study, the measurement on the fixed hold-out), and the folds feed
+only the description of within-dataset variability. All the tests
+below presuppose this choice.
+
+\subsection{Friedman: the omnibus test}
+
+The Friedman test asks whether the differences between the average
+ranks $R_j$ of the $k$ models over the $N$ datasets are explainable
+by chance \citep{friedman1937}. Under the null hypothesis of
+equivalence among all models, the statistic
+\begin{equation}
+  \chi^2_F \;=\; \frac{12N}{k(k+1)}
+  \left[ \sum_{j=1}^{k} R_j^2 \;-\; \frac{k(k+1)^2}{4} \right]
+  \label{eq:friedman}
+\end{equation}
+approximately follows a chi-squared distribution with $k-1$ degrees
+of freedom. This approximation is conservative when $N$ is small
+--- this dissertation's regime --- which is why the Iman--Davenport
+correction is also reported,
+\begin{equation}
+  F_F \;=\; \frac{(N-1)\,\chi^2_F}{N(k-1) - \chi^2_F},
+  \label{eq:iman-davenport}
+\end{equation}
+which follows an $F$ distribution and rejects with more power
+\citep{imandavenport1980}. A significant Friedman says only that
+\emph{some} difference exists; locating it is the job of the
+post-hoc tests.
+
+\subsection{Nemenyi and the critical difference diagram}
+
+The Nemenyi post-hoc compares all pairs of models by their average
+ranks, with built-in control of the family-wise error
+\citep{nemenyi1963}: two models differ significantly if their
+average ranks are further apart than the \emph{critical difference}
+\begin{equation}
+  \mathrm{CD} \;=\; q_\alpha \sqrt{\frac{k(k+1)}{6N}},
+  \label{eq:cd}
+\end{equation}
+where $q_\alpha$ comes from the studentized range distribution
+\citep{demsar2006}. The result is usually presented in a
+\emph{critical difference diagram} (CD diagram), and it is worth
+learning to read it, because Chapter~\ref{chap:benchmark} uses it
+repeatedly: the models are placed on a horizontal axis at the
+position of their average rank (better on one side, worse on the
+other); a ruler indicates the length of the CD; and thick
+horizontal bars connect groups of models whose average ranks are
+less than the CD apart --- \emph{models joined by the same bar are
+not statistically distinguishable} at that level. Two wrong
+readings to avoid: the bar does not say the connected models are
+equal (only that the test does not distinguish them --- absence of
+evidence is not evidence of absence), and Eq.~\ref{eq:cd} shows
+that the CD grows with $k$ and shrinks slowly with $N$: with many
+models and few datasets, wide bars are the expected arithmetic
+consequence, not an anomaly.
+
+\subsection{Paired Wilcoxon with Holm correction}
+
+For specific pairs of models, the Wilcoxon signed-rank test is more
+powerful than the Nemenyi, because it uses the \emph{magnitudes} of
+the per-dataset differences, not only the global ranks
+\citep{wilcoxon1945}. When testing many pairs, however, the chance
+of false positives multiplies; Holm's procedure corrects this by
+ordering the p-values and demanding progressively looser thresholds
+--- family-wise error control less conservative than the simple
+Bonferroni correction \citep{holm1979}. One arithmetic limitation
+matters in this dissertation's regime: with $N$ datasets, the
+smallest two-sided p-value the Wilcoxon can produce is
+$2 \cdot (1/2^N)$ --- with $N = 5$, the floor is $0.0625$, and
+rejecting at $0.05$ is \emph{mathematically impossible}, before any
+correction. Chapter~\ref{chap:metodologia} declares the protocol
+consequences of this floor.
+
+A simpler relative of the Wilcoxon deserves its own note, because
+it is the instrument of the headline of
+Chapter~\ref{chap:destilacao}: the \textbf{sign test}
+\citep{conover1999} ignores the magnitudes and asks only how many
+of the $N$ paired differences are positive --- under the null
+hypothesis of zero median, the number of positives follows a
+Binomial$(N, 1/2)$, and the p-value is exact. The price of
+simplicity is less power; the gain is total robustness to scale and
+to outliers (a difference of $+0.001$ and one of $+1.0$ count the
+same), which makes it the natural test when the differences live on
+incommensurable scales across datasets --- exactly the case of the
+retentions of Chapter~\ref{chap:destilacao}.
+
+\subsection{The Bayesian test with a region of practical equivalence}
+
+The frequentist framework has an uncomfortable asymmetry: it can
+reject equality, but it cannot \emph{affirm} it ---
+non-rejection is not evidence of equivalence, especially with small
+$N$ and little power. \citet{benavoli2017} offer the Bayesian
+complement. One fixes \emph{a priori}, by domain judgment, a
+\emph{region of practical equivalence} (ROPE): an interval
+$[-r, r]$ around zero within which the performance difference
+between two models is considered irrelevant. The $N$ paired
+differences, one per dataset, are treated as a sample from an
+unknown distribution, on which a non-parametric prior is placed (a
+Dirichlet process with a pseudo-observation at zero, of weight 0.6
+in this study). The object of interest is the vector
+$\theta = (\theta_{\text{left}}, \theta_{\text{ROPE}},
+\theta_{\text{right}})$, summing to 1: the probabilities that the
+typical difference between the two models (formally, the mean of
+two drawn differences) falls to the left of the ROPE, inside it or
+to its right. A high $\theta_{\text{ROPE}}$ means practical
+equivalence; a high $\theta_{\text{right}}$, that the first model
+is practically better. The posterior of $\theta$ is obtained by
+sampling, and there are two ways to summarize it, which do not give
+the same number: the \emph{expected mass} in each region,
+$E[\theta_{\text{ROPE}}]$, read in this study with a 0.5 cutoff;
+and the fraction of posterior samples in which
+$\theta_{\text{ROPE}}$ is the largest of the three components,
+which is the convention of \citet{benavoli2017}, usually read with
+a 0.95 cutoff. Chapter~\ref{chap:benchmark} reports both. On
+either, saying that two models are practically equivalent is a
+positive, quantified claim --- not a non-result. One caveat applies
+to this study's regime: the a priori pseudo-observation sits
+inside the ROPE and, with small $N$, pulls the result toward
+equivalence; the choice of the radius $r$ and the sensitivity
+analysis are protocol decisions, specified in
+Chapter~\ref{chap:metodologia}.
+
+\subsection{Effect size and variance decomposition}
+
+Significance does not measure relevance, and two complements close
+the framework. Cohen's effect size in its paired variant,
+$d_z = \bar{d} / s_d$ (mean of the per-dataset differences divided
+by their standard deviation), quantifies \emph{how much} two models
+differ on the scale of the differences' own variability. And the
+correlation ratio
+$\eta^2 = \mathit{SS}_{\text{between}} / \mathit{SS}_{\text{total}}$
+--- here applied to the ranks --- decomposes the total variance
+into parts: that attributable to the family, that attributable to
+the model within the family, and a residual which, with one
+observation per model$\times$dataset, bundles the
+model$\times$dataset interaction and the noise, inseparable. A
+high family $\eta^2$ would say that the family (GBDT, deep
+learning, foundation model) determines performance; a high
+residual, that the winner changes from dataset to dataset.
+Chapter~\ref{chap:benchmark} uses exactly this reading.
+
+\subsection{Resampling and instance-level comparison}
+\label{sec:fund-reamostragem}
+
+Three instruments complete the framework. The \emph{bootstrap}
+estimates the uncertainty of a statistic without assuming the shape
+of its distribution: the data are resampled with replacement $B$
+times, the statistic is recomputed on each replica, and the 95\%
+confidence interval is taken as the interval between the 2.5 and
+97.5 percentiles of the $B$ values (percentile bootstrap;
+\citealp{efron1993}). What is resampled defines the question:
+resampling \emph{datasets} gives the uncertainty of an average
+across datasets; resampling a dataset's \emph{test rows} gives the
+uncertainty of the result on that dataset. When two models are
+evaluated on the same rows, the rows are resampled keeping the pair
+(paired bootstrap), and the interval is that of the
+\emph{difference}: if it does not contain zero, the difference is
+distinguishable from the test's sampling noise.
+
+McNemar's test \citep{mcnemar1947} compares two classifiers on the
+same rows by looking only at the rows where they \emph{disagree}:
+if the two were equivalent, each would be the sole correct one on
+about half of the disagreements, and the number of exclusive
+correct predictions of one of them would follow a Binomial with
+parameter 1/2. It is the sign test applied to instances rather
+than datasets. Finally, Spearman's rank correlation measures
+whether two orderings agree (it is 1 for identical orders, $-1$
+for reversed orders), without assuming a linear relation; it is
+used whenever the question is whether a ranking is stable or
+whether one quantity grows with another.
+
+\section{Choosing a model: algorithm selection, regret and dominance}
+\label{sec:fund-selecao}
+
+The previous instruments compare models. What remains is the
+vocabulary for \emph{choosing} one, which
+Chapter~\ref{chap:framework} uses. The \emph{algorithm selection
+problem} \citep{rice1976} asks whether it is possible to predict,
+from a dataset's \emph{meta-features} --- properties measurable
+before training any model, such as number of rows, number of
+attributes and fraction of categorical attributes --- which
+algorithm will perform best on it. A \emph{learned router} is a
+model trained for that task: each dataset becomes a row, the
+meta-features are the attributes and the label is the winner. The
+alternative is a \emph{fixed policy}: always recommending the same
+family, whatever the dataset.
+
+Two notions make that comparison honest. The first is
+\emph{leave-one-dataset-out} (LODO) validation: with $N$ datasets,
+the router is trained on $N-1$ and evaluated on the one left out,
+repeating for each --- the cross-validation in which the held-out
+unit is the entire dataset, consistent with the unit of analysis of
+Section~\ref{sec:fund-estatistica}. The second is \emph{regret}:
+how much is lost by following a recommendation instead of choosing
+that dataset's best model. So that datasets with metrics on
+different scales can be aggregated, the regret is normalized
+between the best and worst performance observed on the dataset ---
+0 when the recommendation contains the best model, 1 when it
+contains only the worst (the exact formula is in
+Eq.~\ref{eq:regret-normalizado}, in the chapter that uses it). An
+\emph{oracle} is the policy that, looking at the outcome, always
+gets it right; it is not executable and serves only as a ceiling.
+
+When there is more than one criterion --- accuracy and latency, for
+example --- there is no single ``best''. A model \emph{dominates}
+another (in the Pareto sense) if it is at least as good on all
+criteria and strictly better on some; the \emph{Pareto frontier} is
+the set of models that no other dominates.
+Chapters~\ref{chap:benchmark} and~\ref{chap:destilacao} present
+their multi-criteria results in this form.
+
+\section{Chapter closing}
+
+The chapter assembled four toolboxes: the families of models that
+compete (GBDTs, deep networks, in-context-learning foundation
+models), the distributional yardstick (quantiles, pinball, CRPS,
+calibration) by which the distillation is judged, the statistical
+framework that authorizes affirming both differences and
+equivalences, and the decision vocabulary (router, fixed policy,
+LODO, regret, dominance) with which a benchmark becomes a
+recommendation. With it in place, Chapter~\ref{chap:related} maps
+the state of the art and demarcates, with dated checks, the gaps
+that this dissertation's contributions occupy.
