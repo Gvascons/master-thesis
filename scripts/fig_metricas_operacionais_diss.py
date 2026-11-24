@@ -11,7 +11,10 @@ Fonte: results/aggregated/secondary_metrics_holdout.csv (gate 37/37
 contra test_results; gerado por scripts/secondary_metrics_report.py).
 Saída: results/figures/metricas_operacionais_diss.{png,pdf}
 Uso:   uv run python scripts/fig_metricas_operacionais_diss.py
+Com argumento "en": rótulos em inglês, ponto decimal, saída
+dissertacao-en/images/metricas_operacionais_diss_en.{png,pdf} (PT intocada).
 """
+import sys
 from pathlib import Path
 
 import matplotlib
@@ -28,8 +31,12 @@ NAME = {"xgboost": "XGBoost", "tabpfn": "TabPFN", "tabfm": "TabFM"}
 MODELS = ["xgboost", "tabpfn", "tabfm"]
 
 
+EN = len(sys.argv) > 1 and sys.argv[1] == "en"
+
+
 def fmt(v: float) -> str:
-    return f"{v:.3f}".replace(".", ",")
+    s = f"{v:.3f}"
+    return s if EN else s.replace(".", ",")
 
 
 def main():
@@ -53,11 +60,17 @@ def main():
                     ha="center", va="bottom", fontsize=8.5, color="#333")
         print(f"amazon {m}: acc={vals[0]:.3f} recall_min={vals[1]:.3f}")
     a1.set_xticks(xs)
-    a1.set_xticklabels(["acurácia", "recall da classe\nminoritária"])
+    if EN:
+        a1.set_xticklabels(["accuracy", "minority-class\nrecall"])
+        a1.set_ylabel("metric value (threshold 0.5)")
+        a1.set_title("(a) amazon_employee (minority: 5.8%)",
+                     fontsize=11, loc="left")
+    else:
+        a1.set_xticklabels(["acurácia", "recall da classe\nminoritária"])
+        a1.set_ylabel("valor da métrica (limiar 0,5)")
+        a1.set_title("(a) amazon_employee (minoritária: 5,8%)",
+                     fontsize=11, loc="left")
     a1.set_ylim(0, 1.06)
-    a1.set_ylabel("valor da métrica (limiar 0,5)")
-    a1.set_title("(a) amazon_employee (minoritária: 5,8%)",
-                 fontsize=11, loc="left")
     a1.legend(loc="upper right", fontsize=9, frameon=False)
 
     # ---- painel (b): recall da minoritária nas 10 binárias -----------------
@@ -85,13 +98,19 @@ def main():
                     mew=1.6, zorder=3, label=NAME[m] if y == ypos[0] else None)
     frac = bi.reset_index().groupby("dataset").minority_frac.first()
     a2.set_yticks(ypos)
-    a2.set_yticklabels(
-        [f"{labels[d]} ({frac[d] * 100:.1f}%)".replace(".", ",") for d in order],
-        fontsize=9)
+    ylabs = [f"{labels[d]} ({frac[d] * 100:.1f}%)" for d in order]
+    if not EN:
+        ylabs = [s.replace(".", ",") for s in ylabs]
+    a2.set_yticklabels(ylabs, fontsize=9)
     a2.set_xlim(0, 1.0)
-    a2.set_xlabel("recall da classe minoritária (limiar 0,5)")
-    a2.set_title("(b) As 10 binárias, da mais à menos desbalanceada",
-                 fontsize=11, loc="left")
+    if EN:
+        a2.set_xlabel("minority-class recall (threshold 0.5)")
+        a2.set_title("(b) The 10 binary datasets, most to least imbalanced",
+                     fontsize=11, loc="left")
+    else:
+        a2.set_xlabel("recall da classe minoritária (limiar 0,5)")
+        a2.set_title("(b) As 10 binárias, da mais à menos desbalanceada",
+                     fontsize=11, loc="left")
     a2.legend(loc="upper right", fontsize=9, frameon=False)
 
     for ax in (a1, a2):
@@ -101,10 +120,15 @@ def main():
         ax.set_axisbelow(True)
 
     fig.tight_layout()
-    out = REPO / "results/figures/metricas_operacionais_diss"
-    fig.savefig(f"{out}.png", dpi=180)
-    fig.savefig(f"{out}.pdf")
-    print(f"OK: {out}.png/.pdf")
+    if EN:
+        outs = [REPO / "dissertacao-en/images/metricas_operacionais_diss_en",
+                REPO / "results/figures/metricas_operacionais_diss_en"]
+    else:
+        outs = [REPO / "results/figures/metricas_operacionais_diss"]
+    for out in outs:
+        fig.savefig(f"{out}.png", dpi=180)
+        fig.savefig(f"{out}.pdf")
+        print(f"OK: {out}.png/.pdf")
 
 
 if __name__ == "__main__":

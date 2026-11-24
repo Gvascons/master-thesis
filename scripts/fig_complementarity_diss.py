@@ -9,7 +9,10 @@ binárias (linhas finas: conjuntos; grossa: mediana) — H-C2.
 Fonte: results/complementarity/complementarity_{pairs,margens}.csv.
 Saída: results/figures/complementarity_diss.{png,pdf}
 Uso:   uv run python scripts/fig_complementarity_diss.py
+Com argumento "en": rótulos em inglês, ponto decimal, saída
+dissertacao-en/images/complementarity_diss_en.{png,pdf} (PT intocada).
 """
+import sys
 from pathlib import Path
 
 import matplotlib
@@ -25,6 +28,7 @@ DISPLAY = {"tabpfn": "TabPFN", "tabfm": "TabFM"}
 
 
 def main():
+    en = len(sys.argv) > 1 and sys.argv[1] == "en"
     pairs = pd.read_csv(REPO / "results/complementarity/complementarity_pairs.csv")
     marg = pd.read_csv(REPO / "results/complementarity/complementarity_margens.csv")
     cla = pairs[pairs.task_type.isin(["binary", "multiclass"])].copy()
@@ -51,10 +55,16 @@ def main():
     a1.set_yticks(ypos)
     a1.set_yticklabels([d.replace("_", "\\_") if False else d for d in order],
                        fontsize=9)
-    a1.set_xlabel("vitórias líquidas do FM por 1.000 instâncias\n"
-                  "($\\leftarrow$ XGBoost melhor $\\;|\\;$ FM melhor $\\rightarrow$)")
-    a1.set_title("(a) Onde cada FM ganha do XGBoost (classificação)",
-                 fontsize=11, loc="left")
+    if en:
+        a1.set_xlabel("net FM wins per 1,000 instances\n"
+                      "($\\leftarrow$ XGBoost better $\\;|\\;$ FM better $\\rightarrow$)")
+        a1.set_title("(a) Where each FM beats XGBoost (classification)",
+                     fontsize=11, loc="left")
+    else:
+        a1.set_xlabel("vitórias líquidas do FM por 1.000 instâncias\n"
+                      "($\\leftarrow$ XGBoost melhor $\\;|\\;$ FM melhor $\\rightarrow$)")
+        a1.set_title("(a) Onde cada FM ganha do XGBoost (classificação)",
+                     fontsize=11, loc="left")
     a1.legend(loc="lower right", fontsize=9, frameon=False)
     a1.grid(axis="x", alpha=0.25, lw=0.6)
     a1.set_axisbelow(True)
@@ -68,15 +78,23 @@ def main():
             a2.plot(piv.columns, row.values, color=CMAP[fm], alpha=0.22, lw=0.9)
         med = piv.median(axis=0)
         a2.plot(med.index, med.values, color=CMAP[fm], lw=2.6, marker="o",
-                ms=5, label=f"{DISPLAY[fm]} (mediana)")
+                ms=5, label=f"{DISPLAY[fm]} ({'median' if en else 'mediana'})")
     a2.axhline(0, color="#555", lw=1)
     a2.set_xticks(sorted(marg.quintil_margem.unique()))
-    a2.set_xticklabels(["Q1\nincerto", "Q2", "Q3", "Q4", "Q5\nconfiante"],
-                       fontsize=9)
-    a2.set_xlabel("quintil de margem do XGBoost ($|\\hat p - 0{,}5|$)")
-    a2.set_ylabel("vitórias líquidas do FM por 1.000 instâncias")
-    a2.set_title("(b) Ganho por margem do XGBoost (10 binárias)",
-                 fontsize=11, loc="left")
+    if en:
+        a2.set_xticklabels(["Q1\nuncertain", "Q2", "Q3", "Q4", "Q5\nconfident"],
+                           fontsize=9)
+        a2.set_xlabel("XGBoost margin quintile ($|\\hat p - 0.5|$)")
+        a2.set_ylabel("net FM wins per 1,000 instances")
+        a2.set_title("(b) Gain by XGBoost margin (10 binary datasets)",
+                     fontsize=11, loc="left")
+    else:
+        a2.set_xticklabels(["Q1\nincerto", "Q2", "Q3", "Q4", "Q5\nconfiante"],
+                           fontsize=9)
+        a2.set_xlabel("quintil de margem do XGBoost ($|\\hat p - 0{,}5|$)")
+        a2.set_ylabel("vitórias líquidas do FM por 1.000 instâncias")
+        a2.set_title("(b) Ganho por margem do XGBoost (10 binárias)",
+                     fontsize=11, loc="left")
     a2.legend(loc="upper right", fontsize=9, frameon=False)
     a2.grid(axis="y", alpha=0.25, lw=0.6)
     a2.set_axisbelow(True)
@@ -86,10 +104,15 @@ def main():
             ax.spines[s].set_visible(False)
 
     fig.tight_layout()
-    out = REPO / "results/figures/complementarity_diss"
-    fig.savefig(f"{out}.png", dpi=180)
-    fig.savefig(f"{out}.pdf")
-    print(f"OK: {out}.png/.pdf")
+    if en:
+        outs = [REPO / "dissertacao-en/images/complementarity_diss_en",
+                REPO / "results/figures/complementarity_diss_en"]
+    else:
+        outs = [REPO / "results/figures/complementarity_diss"]
+    for out in outs:
+        fig.savefig(f"{out}.png", dpi=180)
+        fig.savefig(f"{out}.pdf")
+        print(f"OK: {out}.png/.pdf")
 
 
 if __name__ == "__main__":
