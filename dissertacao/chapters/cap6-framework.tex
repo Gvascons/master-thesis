@@ -21,18 +21,19 @@
 %%     (gerada por scripts/figures_ai1_display.py)
 %% ============================================================================
 
-\chapter{O Arcabouço de Decisão Validado}
+\chapter{O Arcabouço de Decisão Avaliado}
 \label{chap:framework}
 
 Este capítulo tem como objetivo submeter o arcabouço de decisão,
-até aqui descritivo, a avaliação por três estudos sobre os mesmos 18
-conjuntos de dados do benchmark: um resultado negativo, em que o
+até aqui descritivo, a avaliação por três estudos sobre os próprios
+conjuntos do benchmark (18; 17 onde a família FM participa): um resultado negativo, em que o
 roteamento por meta-características não generaliza sob validação
 \emph{leave-one-dataset-out}; um resultado positivo, em que a política
 fixa ``\emph{foundation model} primeiro'' é regret-ótima na métrica
 primária; e um experimento registrado de \emph{regret} multicritério
 ponderado, que localiza o peso de latência em que essa recomendação se
-inverte --- basta deslocar 10--20\% do peso da acurácia para a latência.
+inverte --- basta deslocar 10--20\% do peso da acurácia para a
+latência (pela mediana; 20--30\% pela média).
 O arcabouço resultante é um fluxograma de quatro restrições verificáveis
 \emph{a priori}, no qual a primeira pergunta --- latência --- é agora
 quantitativamente justificada.
@@ -61,8 +62,10 @@ desempenho (C1, \emph{regret} normalizado médio), custo de treino
 (C6), custo de ajuste (C8), latência de inferência (C7), robustez
 (C10, pior rank entre dobras) e interpretabilidade (C9). As estrelas
 são terços do \emph{ranking} dos 14 modelos no critério (3 = terço
-melhor), exceto C9, qualitativa por família (GBDTs intrinsecamente
-interpretáveis; arquiteturas de atenção, parcial), e o ajuste dos
+melhor), exceto C9, qualitativa por família (GBDTs avaliados pela
+aceitação de explicações por atribuição na prática regulada, não por
+interpretabilidade intrínseca estrita; arquiteturas de atenção,
+parcial), e o ajuste dos
 \emph{foundation models}, 3 por construção (zero busca de
 hiperparâmetros). O que a matriz mostra: na resolução de terços, o
 XGBoost é a única linha com três estrelas em todas as colunas --- o
@@ -210,7 +213,7 @@ estudos com 11 e com 14 modelos (\textbf{negrito} = melhor política da
 coluna). ``Sempre-FM'' toma o \emph{melhor} FM de cada conjunto --- um
 oráculo intrafamília ---, e as duas últimas linhas são as políticas de
 modelo único que um praticante consegue executar (no estudo @11 a
-família FM tem um único modelo, e a linha sempre-FM já é executável). Fonte: \texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak validation\{,\allowbreak \_\allowbreak 14\}.\allowbreak csv}.}
+família FM tem um único modelo, e a linha sempre-FM já é executável).}
 \label{tab:regret-lodo}
 \small
 \begin{tabular}{lcccc}
@@ -266,8 +269,11 @@ primeiro, com as verificações baratas de contorno''
 métrica primária.} Na geração 2026, o teto da família FM atinge
 \emph{regret} médio 0,021 e mediano 0,000 (descritivo, sobre os 17
 conjuntos em que a família participa) --- nenhuma política
-aprendida ou fixa o supera, e a executável sempre-TabFM preserva a
-mediana zero. A escolha de \emph{família} pela métrica primária deixou de
+aprendida ou fixa supera esse teto, e a executável sempre-TabFM
+preserva a
+mediana zero (pela média, seu 0,080 fica acima até do 0,051 da
+árvore-LODO --- uma árvore que, ainda assim, falha como preditor,
+Seção~\ref{sec:resultado-negativo}). A escolha de \emph{família} pela métrica primária deixou de
 depender do conjunto de dados --- a escolha do \emph{modelo} dentro
 dela ainda depende (a interação modelo$\times$conjunto domina a
 variância de ranks no Capítulo~\ref{chap:benchmark}); a ressalva é
@@ -373,7 +379,8 @@ Leitura: menor é melhor; o eixo vai de $w{=}0$ (só latência) a
 $w{=}1$ (só acurácia) --- a Tabela~\ref{tab:weighted-regret} percorre
 o mesmo espectro na ordem inversa. O que olhar: a curva sempre-FM é a
 melhor à direita e a pior à esquerda, e cruza as demais entre
-$w{=}0{,}9$ e $w{=}0{,}8$.}
+$w{=}0{,}9$ e $w{=}0{,}8$ (painel da mediana; entre 0,8 e 0,7 no
+painel da média).}
 \label{fig:lodo-weighted}
 \end{figure}
 
@@ -385,9 +392,7 @@ tenha origem inspecionável.
 \centering
 \caption[Regret mediano por peso da acurácia]{Regret normalizado mediano das três políticas fixas em função do
 peso da acurácia $w$ (estudo com 14 modelos; \textbf{negrito} = melhor
-política da coluna). Fonte:
-\texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak weighted\_\allowbreak regret.\allowbreak csv} (medianas
-recomputadas do artefato).}
+política da coluna).}
 \label{tab:weighted-regret}
 \small
 \begin{tabular}{lccccccc}
@@ -441,7 +446,7 @@ $w{=}0{,}8$ pela mediana --- faz mais que enriquecer: ele explica
 \emph{por que a primeira pergunta do fluxograma é a latência}. Se a
 recomendação só se sustentasse com 99\% do peso em acurácia, a pergunta
 de latência seria um detalhe de borda; como ela vira com 10--20\% de
-peso na latência, a pergunta é o eixo da decisão. O fluxograma da
+peso na latência (pela mediana), a pergunta é o eixo da decisão. O fluxograma da
 próxima seção não é uma heurística decorativa em torno de uma política
 única --- é a codificação da fronteira que a
 Figura~\ref{fig:lodo-weighted} mede. Dito de outro modo: antes de E2,
@@ -451,7 +456,7 @@ E2, sabemos \emph{quanto} ela precisa importar para mudar a resposta ---
 e a resposta é: pouco.
 
 \emph{A recomendação ``FM primeiro'' inverte-se com 10--20\% de
-peso na latência.} Sob o score ponderado
+peso na latência, pela mediana do \emph{regret}.} Sob o score ponderado
 $S = w \cdot r_{\text{acc}} + (1-w) \cdot r_{\text{lat}}$, a política
 sempre-FM só é regret-ótima na mediana para $w \geq 0{,}9$; em
 $w{=}0{,}8$ já é superada por sempre-GBDT e sempre-DL, e para
@@ -464,14 +469,15 @@ regret-ótima apenas em $w \geq 0{,}9$); só a extensão da zona em que
 sempre-GBDT tem mediana zero desloca-se em $\pm 0{,}1$ ($w \leq 0{,}7$
 com o proxy do conjunto pequeno, $w \leq 0{,}5$ com o do grande),
 exatamente na direção do viés declarada no registro. A inversão da
-recomendação com 10--20\% de peso na latência não depende, portanto, do
+recomendação com 10--20\% de peso na latência (pela mediana) não
+depende, portanto, do
 conjunto em que a latência foi medida. Uma segunda dependência fica
 declarada: a faixa é medida na \textbf{normalização por postos} do
 desenho --- escolhida deliberadamente pela robustez às cinco ordens de
-magnitude que separam as latências --- e normalizações alternativas
-(logarítmica, linear) deslocam o ponto exato do cruzamento sem mudar a
-leitura qualitativa, que é a que o arcabouço usa: existe um peso
-minoritário de latência a partir do qual a recomendação vira.
+magnitude que separam as latências ---: normalizações alternativas
+(logarítmica, linear) poderiam deslocar o ponto do cruzamento;
+nenhum artefato versionado as mede, e o arcabouço se apoia apenas na
+leitura por postos estabelecida acima.
 
 \section{O arcabouço resultante: decisão por restrições}
 \label{sec:arcabouco-resultante}
@@ -486,16 +492,20 @@ sua forma final, com os 14 modelos do estudo completo.
 \centering
 \includegraphics[width=0.88\linewidth]{images/decision_flowchart_14_pt.pdf}
 \caption[Fluxograma de decisão]{Fluxograma de decisão, estudo com 14 modelos: cada
-losango é uma restrição verificável \emph{a priori}. Fonte: elaboração
-própria (\texttt{scripts/\allowbreak figures\_\allowbreak ai1\_\allowbreak display.\allowbreak py}).}
+losango é uma restrição verificável \emph{a priori}. O rótulo do
+losango 3 (``intrinsecamente interpretável'') lê-se no sentido do
+texto: explicações por atribuição aceitas na prática regulada, não
+interpretabilidade intrínseca estrita. Fonte: elaboração
+própria.}
 \label{fig:flowchart-14}
 \end{figure}
 
 A recomendação cabe em quatro perguntas, feitas nesta ordem antes de
 treinar qualquer modelo: a predição precisa sair em microssegundos por
 linha? o problema tem mais de 10 classes, ou mais linhas do que o
-\emph{foundation model} aceita como contexto? o domínio exige um
-modelo interpretável por construção? --- se alguma resposta for sim, a
+\emph{foundation model} aceita como contexto? o domínio exige
+modelos auditáveis, explicáveis por atribuição? --- se alguma
+resposta for sim, a
 família indicada é a que a restrição deixa de pé; se nenhuma for, o
 \emph{default} é o \emph{foundation model}, comparado com um GBDT
 ajustado antes da adoção, porque o seu pior caso medido é o último
@@ -509,19 +519,24 @@ as verifica:
     microssegundos, a família FM está excluída na forma nativa. O
     experimento E2 quantifica por que esta é a primeira pergunta: a
     recomendação inverte com apenas 10--20\% do peso na latência
-    (Seção~\ref{sec:regret-ponderado}). O
-    Capítulo~\ref{chap:destilacao} mede uma rota para dentro desse
+    (pela mediana; 20--30\% pela média;
+    Seção~\ref{sec:regret-ponderado}). O
+    Capítulo~\ref{chap:destilacao} mede uma rota em direção a esse
     orçamento --- destilar a distribuição preditiva do TabPFN em
     regressão --- com resultado positivo delimitado a esse recorte.
   \item \textbf{Limites arquiteturais.} Mais de 10 classes (limite do
     TabFM) ou estouro do limite de contexto são exclusões estruturais
     objetivas --- o caso \texttt{helena} (100 classes) no próprio
     benchmark.
-  \item \textbf{Interpretabilidade intrínseca exigida.} Quando a
-    regulação do domínio exige modelos intrinsecamente interpretáveis,
-    a recomendação são os GBDTs --- a única família com perfil
-    simultaneamente forte em latência e interpretabilidade na matriz da
-    Figura~\ref{fig:decision-matrix}.
+  \item \textbf{Explicações auditáveis exigidas.} Quando a
+    regulação do domínio exige modelos auditáveis, explicáveis por
+    atribuição,
+    a recomendação são os GBDTs --- a família cujas explicações por
+    atribuição são comumente aceitas na prática regulada, e a única
+    com perfil de latência simultaneamente forte na matriz da
+    Figura~\ref{fig:decision-matrix}; domínios que exigem
+    interpretabilidade intrínseca em sentido estrito devem olhar para
+    árvores rasas ou modelos aditivos, fora deste benchmark.
   \item \textbf{Nenhuma restrição ativa.} Aplica-se o \emph{default}
     regret-ótimo: \emph{foundation model}, com o TabPFN \citep{hollmann2025}
     como opção madura e o TabFM \citep{tabfm2026} como fronteira, com
@@ -529,10 +544,13 @@ as verifica:
     Capítulo~\ref{chap:benchmark}.
 \end{enumerate}
 
-A avaliação por \emph{regret} indica que essas quatro perguntas capturam o
+Os três estudos são consistentes com a leitura de que essas quatro
+perguntas capturam o
 essencial: as restrições são o \emph{conteúdo informativo real} da
 decisão, e o desempenho bruto deixou de discriminar dentro da família
-líder. O arcabouço resultante é deliberadamente modesto na forma --- um
+líder --- ainda que o fluxograma em si, como dito acima, seja a
+síntese dos três estudos, não uma política avaliada. O arcabouço
+resultante é deliberadamente modesto na forma --- um
 fluxograma, não um meta-modelo --- porque é essa a forma que os dados
 sustentam.
 
