@@ -836,9 +836,15 @@ near-total overcoverage), where distillation rescues it ($\to$4.91).
 
 \emph{Is heavy tail the failure moderator?} We re-ran teacher and students
 under $y' = \log(1+y)$ on the three datasets then diagnosed as
-price-scale failures plus two
+price-scale failures (one of them, \texttt{health\_insurance}, in
+fact has negative skew and 29.9\% zeros) plus two
 positive controls. The transform does \textbf{not} rescue the failures
-(\texttt{fifa} persists at $-1.69$). Absolute CRPS gaps do shrink to
+(\texttt{fifa} persists at $-1.69$), and the per-dataset picture, in
+the transformed space, is mixed: the other two failures rise
+marginally (\texttt{health} crosses zero, $-0.26 \to +0.04$) while
+the controls move in opposite directions
+(\texttt{kings} $+0.21 \to +0.04$; \texttt{miami}
+$+0.02 \to +0.15$). Absolute CRPS gaps do shrink to
 0.004--0.025 in log space --- but that is first of all a change of the
 metric's scale, and the honest comparison is dimensionless: in
 \emph{relative} teacher-over-control edge, the log collapses nothing
@@ -854,7 +860,9 @@ system, and does not remove the teacher's relative edge.
 Together these yield the paper's practical rule:
 
 \begin{quote}
-\textbf{Before distilling: (i) apply cheap target transforms; (ii) try a
+\textbf{Before distilling: (i) run cheap target transforms as a
+diagnostic (in the ablation, the directional effect is mixed and
+marginal --- not a rescue); (ii) try a
 strong native quantile student. Distill when a genuine teacher edge
 persists after both --- one OOF labeling pass, costing minutes, measures
 that edge directly.} Where no cheap teacher configuration reaches

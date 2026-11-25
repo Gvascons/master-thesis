@@ -227,7 +227,7 @@ the space (for example, \texttt{n\_estimators} close to the cap)
 signal where a wider space could help --- a limitation discussed in
 Chapter~\ref{chap:metodologia}. One reading note: identical winning
 configurations across different datasets of the same model (it
-happens with STab, MLP, and TabNet) are legitimate and expected ---
+happens with STab, MLP, TabNet, and TabKAN) are legitimate and expected ---
 the \texttt{TPESampler} with fixed seed 42 proposes the same candidate
 sequence per model, and when the same candidate wins on two datasets
 the parameters coincide; the raw JSONs confirm. Notation:

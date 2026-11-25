@@ -99,9 +99,10 @@ serving cost, and under which verifiable conditions.
    size), i.e., the teacher's in-context overconfidence transfers to the
    student.
 5. **A practical decision rule** distilled (pun intended) from two refuted
-   hypotheses: before distilling, apply cheap target transforms and try a
-   strong native quantile student; distill when a genuine teacher edge
-   survives both — verifiable with one inexpensive OOF pass.
+   hypotheses: before distilling, run cheap target transforms as a
+   diagnostic and try a strong native quantile student; distill when a
+   genuine teacher edge survives both — verifiable with one inexpensive
+   OOF pass (minutes to a few hours, by teacher latency).
 
 ## 2. Related Work
 
@@ -317,7 +318,9 @@ reproducible for free. <!-- results/distillation/ablation_logtarget.csv -->
 
 Together these yield the paper's practical rule:
 
-> **Before distilling: (i) apply cheap target transforms; (ii) try a strong
+> **Before distilling: (i) run cheap target transforms as a diagnostic (in
+> the ablation, the directional effect is mixed and marginal — not a
+> rescue); (ii) try a strong
 > native quantile student. Distill when a genuine teacher edge persists
 > after both — one OOF labeling pass, costing minutes, measures that edge
 > directly.** Where no cheap teacher configuration reaches the student's

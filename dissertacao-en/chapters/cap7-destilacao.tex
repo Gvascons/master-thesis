@@ -1315,13 +1315,21 @@ across regimes
 
 \textbf{Is the heavy tail the failure moderator?} No --- and the
 correct reading is modest. We re-ran teacher and students under
-$y' = \log(1+y)$ on the three defeat datasets with skewed targets
+$y' = \log(1+y)$ on the three defeat datasets with non-Gaussian
+targets
 --- \texttt{fifa} and \texttt{diamonds\_\allowbreak real}, on price
-scales, and \texttt{health\_\allowbreak insurance}, weekly hours
-with 29.9\% zeros (its own diagnosis in
+scales (positive skew), and \texttt{health\_\allowbreak insurance},
+weekly hours with \emph{negative} skewness ($-0.34$) and
+29.9\% zeros (its own diagnosis in
 Section~\ref{sec:destil-derrotas}) --- plus two positive controls.
 The transformation does \emph{not} rescue the failures
-(\texttt{fifa} persists at $-1.69$). The absolute CRPS differences
+(\texttt{fifa} persists at $-1.69$) --- and the per-dataset picture,
+with retention measured in the transformed space, is mixed:
+retention rises marginally on the other two failures
+(\texttt{diamonds} $-0.32 \to -0.03$; \texttt{health}
+$-0.26 \to +0.04$, crossing zero) and moves the controls in opposite
+directions (\texttt{kings} $+0.21 \to +0.04$; \texttt{miami}
+$+0.02 \to +0.15$). The absolute CRPS differences
 shrink to 0.004--0.025 in log space, but that is a change of the
 metric's unit; on the dimensionless comparison --- the teacher's
 \emph{relative} advantage over the control --- the transformation
@@ -1342,9 +1350,12 @@ From the two refutations, from E1 and from the frontier, the final
 decision rule --- the operational form of the answer to RQ3:
 
 \begin{quote}
-\textbf{Before distilling: (i)~apply cheap target transformations
+\textbf{Before distilling: (i)~run cheap target transformations as
+a diagnostic
 (a log on price-scale targets is free, changes the error regime,
-and how much it moves your dataset is measured in minutes);
+and how much it moves \emph{your} dataset is measured in minutes;
+in the ablation, the directional effect is mixed and marginal ---
+not a rescue);
 (ii)~test a strong native distributional student --- a default QRF
 costs seconds, and a quantile MLP covers the small, numeric
 datasets. Distill when a genuine teacher advantage persists after
@@ -1496,9 +1507,15 @@ measured here.
     two-sided reading ($p=0.012$) and the sequential correction
     ($p\approx0.019$), but the supplementary Wilcoxon (two-sided
     $0.090$) and the post-hoc Fisher (two-sided $0.087$) would not
-    reject. No correction is applied \emph{across} experiments;
-    under Holm on the confirmatory family, the primary conclusions
-    survive and the supplementary instruments do not.
+    reject. No correction is applied \emph{across} experiments, and
+    the design defines no family for one. Under Holm, at the 5\%
+    level, on the set of the three main sign tests (the headline,
+    with its sequential correction; E1; E3), all three stand
+    (adjusted $p \approx 0.019$; $0.0026$; $0.0006$). The
+    supplementary instruments, already borderline on their own
+    (one-sided Wilcoxon 0.045; Fisher 0.043), do not stand; and in a
+    family that included them, the headline's adjusted $p$ would be
+    0.057.
   \item \textbf{Group structure ignored by the i.i.d.\ split.} On
     datasets with groups (tracks by the same artist in
     \texttt{year\_\allowbreak prediction}, resales of the same

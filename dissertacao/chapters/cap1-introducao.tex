@@ -76,7 +76,11 @@ chegam a confirmar como separação estatística
 (Capítulo~\ref{chap:benchmark}). O preço, contudo, muda a natureza da
 decisão: o
 líder de acurácia custa cerca de \textbf{43 milissegundos por linha} para
-servir predições, contra \textbf{0,33 microssegundos} do XGBoost ---
+servir predições, contra \textbf{0,33 microssegundos} do XGBoost
+nativo (o aluno destilado do Capítulo~\ref{chap:destilacao}, também
+um XGBoost, serve a ${\sim}10^2$~\textmu s/linha --- três ordens de
+magnitude acima do nativo, por carregar 19 quantis --- e ainda
+2--3 ordens abaixo do professor) ---
 latências de serviço em lote amortizado, com cada modelo em seu
 dispositivo natural (quatro a cinco ordens de magnitude;
 aproximadamente 131~mil
@@ -96,8 +100,9 @@ preservação é a distribuição preditiva completa, com
 quantis e intervalos calibrados, permanecia sem resposta acadêmica até
 as verificações datadas deste estudo. A resposta encontrada é
 seletiva: a destilação \emph{pontual} falha de
-forma robusta, a destilação \emph{distribucional} funciona onde o
-professor tem vantagem genuína, e a fronteira entre as duas condições
+forma robusta, a destilação \emph{distribucional} transfere parte
+da vantagem (12--19\% na mediana) onde o
+professor a tem genuína, e a fronteira entre as duas condições
 é verificável antes de treinar o aluno, por uma única rotulagem OOF
 (de minutos a poucas horas, conforme o tamanho do \emph{pool} e a
 latência do professor; Capítulo~\ref{chap:destilacao}).
@@ -448,7 +453,7 @@ primeiro''; e a análise registrada de \emph{regret} multicritério
 ponderado), consolidando o fluxograma de quatro restrições que responde
 à QP2. O \textbf{Capítulo~\ref{chap:destilacao}} apresenta a contribuição
 de destilação distribucional sob desenho registrado em duas etapas: a refutação da
-destilação pontual, o sucesso da transferência de curvas de quantis, a
+destilação pontual, a transferência parcial de curvas de quantis, a
 fronteira de três estratégias de serviço, a ablação da rotulagem
 \emph{out-of-fold}, o experimento E1 contra \emph{baselines} clássicos e a
 regra de decisão final que responde à QP3. O

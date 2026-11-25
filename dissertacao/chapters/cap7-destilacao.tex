@@ -1349,13 +1349,22 @@ oferece é robustez entre regimes
 \textbf{A cauda pesada é o moderador de falha?} Não --- e a leitura
 correta é modesta.
 Re-executamos professor e alunos sob
-$y' = \log(1+y)$ nos três conjuntos de derrota com alvo assimétrico
+$y' = \log(1+y)$ nos três conjuntos de derrota com alvo fora do
+regime gaussiano
 --- \texttt{fifa} e \texttt{diamonds\_\allowbreak real}, em escala
-de preço, e \texttt{health\_\allowbreak insurance}, horas semanais
-com 29,9\% de zeros (diagnóstico próprio na
+de preço (assimetria positiva), e
+\texttt{health\_\allowbreak insurance}, horas semanais com
+assimetria \emph{negativa} ($-0{,}34$) e
+29,9\% de zeros (diagnóstico próprio na
 Seção~\ref{sec:destil-derrotas}) ---, mais
 dois controles positivos. A transformação \emph{não} resgata as
-falhas (\texttt{fifa} persiste em $-1{,}69$). As diferenças absolutas
+falhas (\texttt{fifa} persiste em $-1{,}69$) --- e o quadro por
+conjunto, com a retenção medida no espaço transformado, é misto: a
+retenção sobe marginalmente nas outras duas falhas
+(\texttt{diamonds} $-0{,}32 \to -0{,}03$; \texttt{health}
+$-0{,}26 \to +0{,}04$, cruzando o zero) e move os controles em
+direções opostas (\texttt{kings} $+0{,}21 \to +0{,}04$;
+\texttt{miami} $+0{,}02 \to +0{,}15$). As diferenças absolutas
 de CRPS encolhem para 0,004--0,025 em espaço logarítmico, mas isso é
 mudança de unidade da métrica; na comparação adimensional --- a
 vantagem \emph{relativa} do
@@ -1377,9 +1386,11 @@ Das duas refutações, do E1 e da fronteira, a regra de decisão final
 --- a forma operacional da resposta à QP3:
 
 \begin{quote}
-\textbf{Antes de destilar: (i)~aplique transformações baratas de alvo
-(um log em alvos de escala de preço é gratuito, muda o regime de erro
-e o quanto move o seu conjunto mede-se em minutos); (ii)~teste um aluno distribucional nativo forte
+\textbf{Antes de destilar: (i)~rode transformações baratas de alvo
+como diagnóstico (um log em alvos de escala de preço é gratuito,
+muda o regime de erro e o quanto move o \emph{seu} conjunto mede-se
+em minutos; na ablação, o efeito direcional é misto e marginal ---
+não é um resgate); (ii)~teste um aluno distribucional nativo forte
 --- uma QRF \emph{default} custa segundos, e um MLP-quantil cobre os
 conjuntos pequenos e numéricos. Destile quando uma vantagem genuína do
 professor persistir após ambos --- uma única rotulagem OOF, de custo de
@@ -1528,8 +1539,14 @@ alavanca emergente de serviço, também não medida aqui.
     ($p\approx0{,}019$), mas o Wilcoxon suplementar (bilateral
     $0{,}090$) e o Fisher pós-hoc (bilateral $0{,}087$) não
     rejeitariam. Nenhuma correção é aplicada \emph{entre}
-    experimentos; sob Holm na família confirmatória, as conclusões
-    primárias sobrevivem e os instrumentos suplementares não.
+    experimentos, e o desenho não define uma família para isso. Sob
+    Holm, ao nível de 5\%, no conjunto dos três testes de sinal
+    principais (a manchete, com correção sequencial; E1; E3), os
+    três se mantêm ($p$ ajustados $\approx 0{,}019$; $0{,}0026$;
+    $0{,}0006$). Os instrumentos suplementares, já limítrofes
+    isoladamente (Wilcoxon unilateral 0,045; Fisher 0,043), não se
+    mantêm; e numa família que os incluísse, o $p$ ajustado da
+    manchete seria 0,057.
   \item \textbf{Estrutura de grupo ignorada pelo split i.i.d.} Em
     conjuntos com grupos (faixas do mesmo artista no
     \texttt{year\_\allowbreak prediction}, revendas do mesmo imóvel no

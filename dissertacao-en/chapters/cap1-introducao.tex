@@ -59,7 +59,11 @@ underpowered with so few datasets per task, do not confirm as a
 statistical separation (Chapter~\ref{chap:benchmark}). The price,
 however, changes the nature of the decision: the accuracy leader costs
 about \textbf{43 milliseconds per row} to serve predictions, against
-\textbf{0.33 microseconds} for XGBoost --- amortized batch-serving
+\textbf{0.33 microseconds} for native XGBoost (the distilled student
+of Chapter~\ref{chap:destilacao}, also an XGBoost, serves at
+${\sim}10^2$~\textmu s/row --- three orders of magnitude above the
+native one, for carrying 19 quantiles --- and still 2--3 orders
+below the teacher) --- amortized batch-serving
 latencies, each model on its natural device (four to five orders of
 magnitude; roughly 131~thousand times on the reference dataset, with
 the ratio varying by dataset). The practical question becomes a
@@ -78,8 +82,9 @@ route for classification \citep{pocketfm2026}. What it transfers in
 full predictive distribution, with quantiles and calibrated
 intervals, had no academic answer as of the dated checks of this
 study. The answer found is selective: \emph{point}
-distillation fails robustly, \emph{distributional} distillation works
-where the teacher has a genuine advantage, and the boundary between
+distillation fails robustly, \emph{distributional} distillation
+transfers part of the advantage (12--19\% at the median) where the
+teacher genuinely has one, and the boundary between
 the two conditions can be checked before the student is trained, by
 a single OOF labeling pass (minutes to a few hours, depending on
 pool size and teacher latency;
@@ -427,7 +432,7 @@ weighted multi-criteria regret), consolidating the four-constraint
 flowchart that answers RQ2. \textbf{Chapter~\ref{chap:destilacao}}
 presents the distributional-distillation contribution under a
 registered two-stage design: the refutation of point distillation,
-the success of quantile-curve transfer, the frontier of three
+the partial transfer of quantile curves, the frontier of three
 serving strategies, the out-of-fold labeling ablation, experiment E1
 against classical baselines and the final decision rule that answers
 RQ3. \textbf{Chapter~\ref{chap:conclusao}} confronts each research

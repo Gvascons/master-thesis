@@ -96,8 +96,10 @@ control, and $2.5\times$ to $27\times$ below the teacher's cheapest
 competitive configuration in the two measured frontier cases
 (where no cheap teacher configuration reaches the student's latency
 tier). The
-verifiable conditions are three, and the out-of-fold labeling that
-measures them costs minutes: transform the target, test a strong
+verifiable conditions are three --- the first two cost seconds (QRF;
+up to ${\sim}40$~s on the largest dataset) to minutes (refit under
+log), and the third is the one that requires the out-of-fold
+labeling: transform the target, test a strong
 native distributional baseline, and distill only the advantage that
 remains to the teacher --- with OOF labeling itself as the student's
 calibration safeguard (0.5--5.1~p.p.\ of PICP80,
@@ -327,11 +329,14 @@ asked --- each item traces to the result that supports it.
     models (the \texttt{helena} case); context overflow is an
     objective restriction --- these are structural exclusions, not
     details (Section~\ref{sec:arcabouco-resultante}).
-  \item \textbf{In regression with uncertainty: transform before
+  \item \textbf{In regression with uncertainty: run the
+    transformation as a diagnostic before
     distilling.} On price-scale targets, a one-line logarithmic
     transformation is free and changes the error regime of every
-    system --- it does not eliminate the teacher's relative
-    advantage, but it is the first test to run, and it costs
+    system --- the effect measured in the ablation is directionally
+    mixed and marginal (not a rescue), and it does not eliminate
+    the teacher's relative
+    advantage; it is the first diagnostic to run, and it costs
     minutes (Section~\ref{sec:destil-regra}).
   \item \textbf{Test the QRF before distilling.} A default
     distributional native costs seconds of training, serves at
@@ -423,7 +428,8 @@ Inference latency; large-$n$ leadership depends on the dataset \\
 Rare class with expensive false negatives &
 FM at a fixed threshold --- \emph{or} re-optimize the GBDT's
 threshold; measure recall at equalized precision before switching &
-\texttt{amazon\_employee}: accuracies 0.943--0.949
+Measured on one dataset (\texttt{amazon\_employee}): accuracies
+0.943--0.949
 indistinguishable; minority recall 0.032 $\to$ 0.298 at threshold
 0.5 (Section~\ref{sec:cap5-ato5}). Counterweights: the
 rare-class-gain hypothesis was not confirmed; the dataset's best AUC
@@ -607,11 +613,15 @@ that of the normalization adopted in the registered design
 (Section~\ref{sec:regret-ponderado}).
 
 \textbf{Multiplicity across experiments.} No correction is applied
-\emph{across} experiments; under Holm correction on the
-confirmatory family, the primary conclusions survive and the
-supplementary instruments do not --- and RQ3's headline carries the
-sequential correction of its two-stage design ($p\approx0.019$;
-Section~\ref{sec:destil-desenho}).
+\emph{across} experiments, and the design defines no family for
+one. Under Holm, at the 5\% level, on the set of the three main
+sign tests (RQ3's headline, with the sequential correction of its
+two-stage design; E1; E3), all three stand (adjusted
+$p \approx 0.019$; $0.0026$; $0.0006$); the supplementary
+instruments, already borderline on their own, do not stand --- and
+in a family that included them, the headline's adjusted $p$ would
+be 0.057
+(Section~\ref{sec:destil-desenho}).
 
 \textbf{Undercoverage of the pure distilled student.} The
 pre-registered coverage clause (PICP80 within $\pm5$~p.p.\ of

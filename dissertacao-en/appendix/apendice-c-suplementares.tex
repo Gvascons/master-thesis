@@ -145,8 +145,10 @@ repair improves or ties the CRPS on 20 of 20 datasets in both arms;
 strict improvement is 20 of 20 in the \emph{hard} arm (one-sided
 sign test $p<10^{-5}$) and 18 of 20 in the \emph{soft} one
 ($p=0.0002$, one-sided --- the same directional convention of the
-whole work --- with two exact ties: \texttt{online\_news} and
-\texttt{pumadyn32nh}), and it brings PICP90 closer to nominal on 19
+whole work --- with two exact ties, \texttt{online\_news} and
+\texttt{pumadyn32nh}, counted as non-wins: a conservative
+treatment; excluding them, 18/18), and it brings PICP90 closer to
+nominal on 19
 of 20 and 14 of 20, respectively. The median effect, however, is
 small --- 0.7\% (\emph{hard}) and 0.3\% (\emph{soft}) of relative
 CRPS, with a tail up to 28.8\% on the datasets where crossing is
@@ -162,7 +164,8 @@ A pre-registered exploratory pilot (2026-10-14, executed on 2026-10-15;
 pilot $\neq$ result): if \emph{both} students receive per-quantile
 split-conformal calibration (CQR style, with 10\% of the pool
 reserved for calibration), does the distilled student's advantage
-survive? On 5 datasets (3 of positive retention, 2 upsets; 3 seeds),
+survive? On 5 datasets (3 of positive retention, 2 of negative
+retention; 3 seeds),
 conformalization fixes the coverage --- on the criterion of the
 distance to nominal decreasing --- on 5 of 5 datasets in the
 \emph{soft} arm and 3 of 5 in the \emph{hard} one (PICP90 from
@@ -177,7 +180,7 @@ distilled student's shape advantage survives in full
 (\texttt{cpu\_activity} 1.18 \emph{vs.} 1.29; \texttt{cps88wages}
 160.5 \emph{vs.} 161.0; \texttt{california} 0.108 \emph{vs.} 0.181
 --- with the erratum's binarized-target caveat; the pattern holds on
-the 4 remaining datasets), and the two upsets remain upsets.
+the 4 remaining datasets), and the two negative-retention datasets remain negative.
 Reading: conformalization buys \emph{calibration} and distillation
 buys \emph{shape} --- they are complementary interventions, not
 substitutes. A caveat declared before execution: in the \emph{soft}

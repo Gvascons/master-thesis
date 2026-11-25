@@ -115,8 +115,10 @@ pontual, e $2{,}5\times$ a $27\times$ abaixo da configuração
 competitiva mais barata do professor nos dois casos medidos da
 fronteira (onde nenhuma configuração barata do professor alcança o
 \emph{tier} de latência do aluno). As
-condições verificáveis são três, e a rotulagem \emph{out-of-fold} que
-as mede custa minutos: transformar o alvo, testar um nativo
+condições verificáveis são três --- as duas primeiras custam de
+segundos (QRF; até ${\sim}40$~s no maior conjunto) a minutos (refit
+sob log), e a terceira é a que exige a rotulagem \emph{out-of-fold}:
+transformar o alvo, testar um nativo
 distribucional forte e destilar somente a vantagem que sobrar ao
 professor --- com a própria rotulagem OOF como salvaguarda de
 calibração do aluno (0,5--5,1~p.p.\ de PICP80,
@@ -349,11 +351,14 @@ e~\ref{chap:destilacao}, na ordem em que as perguntas devem ser feitas
     \emph{foundation models} (o caso \texttt{helena}); estouro de
     contexto é restrição objetiva --- são exclusões estruturais, não
     detalhes (Seção~\ref{sec:arcabouco-resultante}).
-  \item \textbf{Em regressão com incerteza: transforme antes de
+  \item \textbf{Em regressão com incerteza: rode a transformação
+    como diagnóstico antes de
     destilar.} Em alvos de escala de preço, uma transformação
     logarítmica de uma linha é gratuita e muda o regime de erro de
-    todos os sistemas --- ela não elimina a vantagem relativa do
-    professor, mas é o primeiro teste a fazer, e custa minutos
+    todos os sistemas --- o efeito medido na ablação é direcional
+    misto e marginal (não é um resgate), e ela não elimina a
+    vantagem relativa do
+    professor; é o primeiro diagnóstico a rodar, e custa minutos
     (Seção~\ref{sec:destil-regra}).
   \item \textbf{Teste a QRF antes de destilar.} Um nativo distribucional
     \emph{default} custa segundos de treino, serve a microssegundos e,
@@ -443,7 +448,8 @@ Latência de inferência; a liderança com $n$ grande depende do conjunto \\
 Classe rara com falso negativo caro &
 FM a limiar fixo --- \emph{ou} re-otimizar o limiar do GBDT; medir
 recall a precisão igualada antes de trocar &
-\texttt{amazon\_employee}: acurácias 0,943--0,949 indistinguíveis;
+Medido em um conjunto (\texttt{amazon\_employee}): acurácias
+0,943--0,949 indistinguíveis;
 recall da minoritária 0,032 $\to$ 0,298 no limiar 0,5
 (Seção~\ref{sec:cap5-ato5}). Contrapesos: a hipótese de ganho
 concentrado na classe rara não se confirmou; o
@@ -628,11 +634,15 @@ citado é o da normalização adotada no desenho registrado
 (Seção~\ref{sec:regret-ponderado}).
 
 \textbf{Multiplicidade entre experimentos.} Nenhuma correção é
-aplicada \emph{entre} experimentos; sob correção de Holm na família
-confirmatória, as conclusões primárias sobrevivem e os instrumentos
-suplementares não --- e a manchete da QP3 carrega a correção
-sequencial do seu desenho em duas etapas ($p\approx0{,}019$;
-Seção~\ref{sec:destil-desenho}).
+aplicada \emph{entre} experimentos, e o desenho não define uma
+família para isso. Sob Holm, ao nível de 5\%, no conjunto dos três
+testes de sinal principais (a manchete da QP3, com a correção
+sequencial do seu desenho em duas etapas; E1; E3), os três se mantêm
+($p$ ajustados $\approx 0{,}019$; $0{,}0026$; $0{,}0006$); os
+instrumentos suplementares, já limítrofes isoladamente, não se
+mantêm --- e numa família que os incluísse, o $p$ ajustado da
+manchete seria 0,057
+(Seção~\ref{sec:destil-desenho}).
 
 \textbf{Subcobertura do aluno destilado puro.} A cláusula
 pré-registrada de cobertura (PICP80 a $\pm5$~p.p.\ do nominal) é
