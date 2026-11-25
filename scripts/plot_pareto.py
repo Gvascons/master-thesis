@@ -122,11 +122,16 @@ def main():
     axes[1, 0].set_ylabel(L["crps"], fontsize=10)
 
     if args.lang == "pt_diss":
+        import math
         from matplotlib.ticker import FuncFormatter, NullFormatter
         fmt = FuncFormatter(lambda v, _: f"{v:g}".replace(".", ","))
         for ax in axes.ravel():
             ax.yaxis.set_major_formatter(fmt)
             ax.xaxis.set_minor_formatter(NullFormatter())
+            # regra: todo eixo log com ao menos duas decadas rotuladas
+            lo, hi = ax.get_xlim()
+            if math.floor(math.log10(hi)) - math.ceil(math.log10(lo)) < 1:
+                ax.set_xlim(10 ** (math.floor(math.log10(hi)) - 1), hi)
     handles, labels = axes[0, 0].get_legend_handles_labels()
     legend_y = 1.0 if L["suptitle"] else 1.07
     fig.legend(handles, labels, loc="upper center", ncol=3, fontsize=9,

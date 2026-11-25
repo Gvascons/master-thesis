@@ -119,6 +119,15 @@ def main():
                 REPO / "results/figures/pareto_binary_en.pdf")
     else:
         axes[0].set_ylabel("Rank binário médio (menor é melhor; eixo invertido)")
+        import math
+        from matplotlib.ticker import FuncFormatter, NullFormatter
+        _fmt = FuncFormatter(lambda v, _: f"{v:g}".replace(".", ","))
+        for _ax in axes:
+            _ax.yaxis.set_major_formatter(_fmt)
+            _ax.xaxis.set_minor_formatter(NullFormatter())
+            _lo, _hi = _ax.get_xlim()
+            if math.floor(math.log10(_hi)) - math.ceil(math.log10(_lo)) < 1:
+                _ax.set_xlim(10 ** (math.floor(math.log10(_hi)) - 1), _hi)
         leg = ["na fronteira (grade de 14)", "fronteira, grade de 14",
                "fronteira, núcleo de 11 (ranks do recorte)"]
         outs = (REPO / "dissertacao/images/pareto_binary_pt.pdf",

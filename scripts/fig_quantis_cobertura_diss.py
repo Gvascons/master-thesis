@@ -106,6 +106,11 @@ def main():
     else:
         a2.set_xlabel("nível nominal $\\tau$")
         a2.set_ylabel("cobertura empírica $\\hat{P}(y \\leq q_\\tau)$")
+        from matplotlib.ticker import FuncFormatter
+        _fmt = FuncFormatter(lambda v, _: f"{v:g}".replace(".", ","))
+        for _ax in (a1, a2):
+            _ax.xaxis.set_major_formatter(_fmt)
+            _ax.yaxis.set_major_formatter(_fmt)
         a2.set_title("(b) A fração de alvos abaixo de cada quantil",
                      fontsize=11, loc="left")
     a2.set_xlim(0, 1)

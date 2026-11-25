@@ -67,11 +67,19 @@ def main():
             ax.set_yscale("log")
             yl = " (log)"
         nice = {"roc_auc": "AUC", "log_loss": "log-loss", "rmse": "RMSE"}
+        task_pt = {"binary": "bin\u00e1ria", "multiclass": "multiclasse",
+                   "regression": "regress\u00e3o"}
+        if not en:
+            task = task_pt.get(task, task)
         arrow = " ↑" if higher else " ↓"
         ax.set_title(f"{ds}\n({task}, {nice[col]}{arrow}{yl})", fontsize=11)
         ax.set_xlabel("training pool size" if en else "tamanho do pool de treino",
                       fontsize=10)
         ax.tick_params(labelsize=9)
+        if not en:
+            from matplotlib.ticker import FuncFormatter
+            _fmt = FuncFormatter(lambda v, _: f"{v:g}".replace(".", ","))
+            ax.yaxis.set_major_formatter(_fmt)
         ax.grid(alpha=0.3, which="both")
     ylab = "primary metric" if en else "métrica primária"
     axes[0].set_ylabel(ylab, fontsize=10)
