@@ -18,9 +18,9 @@ clássicos (Seção~\ref{sec:destil-e1}); E2 = \emph{regret} ponderado
 (Capítulo~\ref{chap:framework}); E6 = variante por amostragem (neste
 apêndice); A-GRID = ablação do estimador de CRPS em grade densa;
 A-SORT = reparo por ordenação (Seção~\ref{sec:app-abl-sort}); R-COND =
-retenção condicionada; R-TUNE = re-tuning dos alunos (piloto de 15/10
+retenção condicionada; R-TUNE = reajuste dos alunos (piloto de 15/10
 estendido aos 20 conjuntos em 17/11); SEEDS-10 =
-re-execução com 10 sementes (os quatro últimos nas limitações do
+reexecução com 10 sementes (os quatro últimos nas limitações do
 Capítulo~\ref{chap:destilacao}).
 
 \section{Ablações da destilação: tabelas desagregadas}
@@ -90,7 +90,7 @@ calibração, não na acurácia.
 
 A Tabela~\ref{tab:app-abl-log} desagrega a ablação da
 Seção~\ref{sec:destil-regra}: professor TabPFN e alunos XGBoost-quantil
-re-executados sob $y' = \log(1+y)$ nos três conjuntos então
+reexecutados sob $y' = \log(1+y)$ nos três conjuntos então
 diagnosticados como falha de escala de preço (o alvo do
 \texttt{health\_insurance} é, na verdade, horas trabalhadas por
 semana --- Capítulo~\ref{chap:destilacao}) e em
@@ -186,7 +186,7 @@ dois conjuntos restantes), e
 os dois conjuntos de retenção negativa permanecem negativos.
 Leitura: a conformalização compra
 \emph{calibração} e a destilação compra \emph{forma} --- são
-intervenções complementares, não substitutas. Caveat declarado antes
+intervenções complementares, não substitutas. Ressalva declarada antes
 da execução: no braço \emph{soft}, os rótulos OOF do professor foram
 gerados sobre o \emph{pool} completo, de modo que o \emph{split} de
 calibração participou (via contexto do professor) dos alvos de treino
@@ -228,7 +228,7 @@ se transfere é a distribuição. Registros:
 \texttt{docs/\allowbreak relatorio-\allowbreak ai2.\allowbreak md} (fases 1--2),
 Seção~\ref{sec:destil-ponto}.
 
-A varredura de tamanho de \emph{pool} que escopa essa refutação ---
+A varredura de tamanho de \emph{pool} que delimita o escopo dessa refutação ---
 e sustenta a reconciliação com os ganhos pontuais de
 \citet{jeong2026} via o moderador de poucos dados --- está na
 Tabela~\ref{tab:app-cap-sweep}: a vantagem pontual do destilado
@@ -321,11 +321,11 @@ Capítulo~\ref{chap:framework},
 afirmou-se que o ponto professor TabPFN com contexto de 50~mil linhas no
 \texttt{year\_\allowbreak prediction} era imensurável na GPU de 16~GB por OOM
 determinístico. \emph{O que aconteceu:} a reanálise dos registros de
-execução mostrou que a claim estava errada --- o culpado era a estimativa do
+execução mostrou que a alegação estava errada --- o culpado era a estimativa do
 modo automático de memória; com \texttt{memory\_\allowbreak saving\_\allowbreak mode} forçado,
 o ponto foi medido ($148{,}6$~ms/linha, $\sim$3,3$\times$ a latência
 do ponto de 25~mil, por um ganho de RMSE de apenas
-$8{,}661 \to 8{,}610$). A claim foi retratada conforme a política de
+$8{,}661 \to 8{,}610$). A alegação foi retratada conforme a política de
 correção, e a medição virou argumento adicional \emph{contra} o
 professor de contexto completo em GPUs de 16~GB. \emph{Por que está
 aqui:} retratações públicas fazem parte do contrato de conduta; o
@@ -421,15 +421,15 @@ inicial; memorando versionado em
 \texttt{docs/\allowbreak memo-\allowbreak novidade-\allowbreak destilacao.md}),
 04/10 (pré-entrega; registrou a colisão parcial de
 \citealp{jeong2026} e o relatório técnico do TabFM), 14--19/10
-(re-varreduras pós-errata), 05/11, 12/11, 17/11 e 23/11/2026 (última).
+(novas varreduras pós-errata), 05/11, 12/11, 17/11 e 23/11/2026 (última).
 As varreduras de escopo mais largo (todas as lacunas do estudo, não só
 a destilação) são as de 13--20/07, 04/10, 14/10, 19/10, 05/11 e
 12/11/2026, registradas no memorando e no histórico do repositório.
 Uma correção de reivindicação pertence a este registro: as checagens
 de julho de 2026 afirmavam que nenhum benchmark independente de KANs
-tabulares existia; a re-varredura de 04/10/2026 identificou
+tabulares existia; a nova varredura de 04/10/2026 identificou
 \citet{poeta2024} como anterior (junho de 2024), e a reivindicação
-foi reescopada em adendo datado para ``primeiro teste da família
+teve o escopo restringido em adendo datado para ``primeiro teste da família
 contra a grade completa de famílias em protocolo multicritério''.
 
 \textbf{Cronologia do desenho em duas etapas e correção sequencial.}
@@ -448,7 +448,7 @@ Desvios de execução registrados em adendos datados no documento de
 desenho: cap de 50 mil linhas no contexto do professor (espelhando o
 benchmark); predição em blocos por restrição de VRAM; encadeamento
 tolerante a falhas; hiperparâmetros herdados em lugar do Optuna por
-aluno (custo medido pelo re-ajuste dos 20, adendo de 12/11, executado
+aluno (custo medido pelo reajuste dos 20, adendo de 12/11, executado
 em 17/11); variante mista executada só em $\lambda{=}0{,}8$;
 \emph{transfer set} MUNGE não executado. As correções de identidade de
 conjuntos (\texttt{diamonds}/\texttt{kin8nm};

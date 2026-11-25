@@ -43,7 +43,7 @@ treinado nos rótulos reais em 4 de 20 conjuntos. Segundo, a forma da
 distribuição preditiva transfere-se em parte: o aluno treinado nas 19
 curvas de quantis do professor supera o seu controle em 16 de 20
 conjuntos, com ganho mediano de CRPS de 2,8\% (1,4\% quando os dois
-braços são re-ajustados), servindo na casa de cem microssegundos por
+braços são reajustados), servindo na casa de cem microssegundos por
 linha. Terceiro, esse ganho concentra-se nas caudas da distribuição
 --- exatamente onde operam as decisões de custo assimétrico. Quarto,
 ele não é universal, e as condições em que vale a pena cabem numa
@@ -159,7 +159,7 @@ distribucional e a
 fronteira de três estratégias permanecem, até a última busca
 (novembro de 2026; registro no Apêndice~\ref{app:suplementares}),
 sem trabalho acadêmico anterior --- um repositório público
-de setembro de 2026 destila o TabFM em XGBoost para classe e
+de setembro de 2026 destila o TabFM em XGBoost para classificação e
 regressão
 pontual, sem tocar o recorte distribucional.
 
@@ -237,8 +237,8 @@ controle quantílico e o aluno destilado mudam o alvo \emph{e a função
 de perda} (\emph{pinball} nativa no controle; erro quadrático
 multissaída sobre as curvas do professor no destilado), e os
 hiperparâmetros herdados foram buscados para erro quadrático --- uma
-assimetria de configuração cujo custo o re-ajuste dos dois braços
-mede adiante (Seção~\ref{sec:destil-retune}): com ambos re-ajustados, o
+assimetria de configuração cujo custo o reajuste dos dois braços
+mede adiante (Seção~\ref{sec:destil-retune}): com ambos reajustados, o
 sinal se mantém (16/20) e a magnitude cai de 2,8\% para 1,4\% de ganho
 mediano de CRPS --- a Seção~\ref{sec:destil-dist} apresenta as duas
 estimativas juntas. São
@@ -479,7 +479,7 @@ E1 (clássicos) & destilado vence o melhor entre QRF e NGBoost & sim
 (execução já iniciada) & confirmada (17/20) \\
 E3 (utilidade) & custo realizado menor em $\tau{=}0{,}90$ & registrada
 (antes de qualquer leitura) & confirmada (18/20) \\
-Re-tuning & hiperparâmetros herdados são piso da retenção &
+Reajuste & hiperparâmetros herdados são piso da retenção &
 sim (adendo de 12/11/2026) & refutada (9/20 por conjunto; mediana
 0,19$\to$0,12): sinal mantido, magnitude reduzida \\
 \bottomrule
@@ -495,7 +495,7 @@ reportar. Nos 20 conjuntos, o aluno pontual treinado nas médias do
 professor supera o seu controle de rótulos verdadeiros em apenas
 \textbf{4}; H1 é refutada já nos cinco conjuntos centrais. A objeção
 natural --- ``o professor não era forte o suficiente'' --- foi testada
-diretamente, replicando o experimento com o TabFM, cujo gap de âncora
+diretamente, replicando o experimento com o TabFM, cuja vantagem de referência
 (a vantagem de RMSE do professor sobre o controle compartilhado, o
 denominador da retenção) é quase $6\times$ o do TabPFN no
 \texttt{california\_\allowbreak housing}$^\dagger$: 0,028 contra
@@ -528,7 +528,7 @@ contexto completo, expansão por consultas sintéticas, aluno treinado
 só em predições do professor). Nossa varredura
 oferece uma hipótese de moderação para o contraste --- ganho residual
 restrito a \emph{pools} pequenos ---, e o nosso
-negativo é escopado com precisão: tamanhos realistas de dados
+resultado negativo tem escopo preciso: tamanhos realistas de dados
 (conjuntos de 3 mil a
 100 mil linhas), capacidade do aluno fixada pelo tuning do benchmark.
 As duas leituras são compatíveis; a reconciliação exata é proposta,
@@ -537,7 +537,7 @@ não demonstrada.
 \emph{A destilação pontual falha em escala de \emph{pool} realista
 com os dois professores testados.} O aluno pontual destilado supera o
 controle de rótulos verdadeiros em apenas 4 de 20 conjuntos; a
-replicação com um professor quase $6\times$ mais forte (gap de âncora
+replicação com um professor quase $6\times$ mais forte (vantagem de referência de
 0,028 vs.\ 0,005 de RMSE no \texttt{california\_\allowbreak housing}$^\dagger$) não altera o
 quadro, e a varredura de \emph{pool} mostra que o ganho residual é um
 fenômeno de poucos dados ($n \leq 800$ no \texttt{wine\_quality};
@@ -614,7 +614,7 @@ larga e uma por margem mínima ---, e por isso vem acompanhado da
 mediana e da análise por conjunto. A retenção mediana é $+0{,}19$: no
 conjunto típico, o aluno recupera cerca de um quinto da vantagem do
 professor, o que corresponde a um CRPS mediano 2,8\% menor que o do
-controle (1,4\% quando os dois braços são re-ajustados;
+controle (1,4\% quando os dois braços são reajustados;
 Seção~\ref{sec:destil-retune}). Dois instrumentos suplementares concordam com graus
 distintos de firmeza: o Wilcoxon unilateral dá $p=0{,}045$ (bilateral,
 0,090: não rejeitaria), e a análise bayesiana de postos sinalizados
@@ -633,11 +633,11 @@ braços, mas tem um custo: aqueles hiperparâmetros foram buscados para
 erro quadrático, que é a perda do aluno destilado e não a do controle
 (\emph{pinball}). O controle pode estar em desvantagem por
 configuração, não por falta de professor. Para medir isso, os dois
-braços foram re-ajustados separadamente (Optuna, 25 tentativas cada,
+braços foram reajustados separadamente (Optuna, 25 tentativas cada,
 validação dentro do \emph{pool}) nos 20 conjuntos. O placar não muda
 --- 16 de 20 ---, mas a magnitude cai: a retenção mediana vai de 0,19
 para 0,12, e o ganho mediano de CRPS sobre o controle, de 2,8\% para
-1,4\% (a retenção média re-ajustada é $-0{,}02$, puxada pelos
+1,4\% (a retenção média reajustada é $-0{,}02$, puxada pelos
 negativos). Cerca de metade do ganho de CRPS medido vinha, portanto,
 da configuração do controle. O número que este
 trabalho sustenta é um ganho mediano de CRPS de 1,4\%--2,8\% sobre o
@@ -646,11 +646,11 @@ o extremo inferior como
 estimativa conservadora. A retenção de um conjunto individual muda com
 o orçamento de ajuste (sobe ou se mantém em 9 de 20; cai em 11) e não
 deve ser citada isoladamente. Três fatos completam a leitura: o
-re-ajuste muda a composição do placar sem mudar a contagem
+reajuste muda a composição do placar sem mudar a contagem
 (\texttt{health\_\allowbreak insurance} entra,
-\texttt{miami\_\allowbreak housing} sai); destilação e re-ajuste
-\emph{compõem} --- o aluno destilado também melhora ao ser re-ajustado,
-em 17 de 20 conjuntos; e o braço destilado do re-ajuste carrega uma
+\texttt{miami\_\allowbreak housing} sai); destilação e reajuste
+\emph{compõem} --- o aluno destilado também melhora ao ser reajustado,
+em 17 de 20 conjuntos; e o braço destilado do reajuste carrega uma
 assimetria fraca que o \emph{favorece} (as linhas de validação do
 Optuna participaram, via contexto do professor, dos alvos OOF), de
 modo que a queda para 12\% não é artefato contra a destilação --- se
@@ -685,10 +685,10 @@ CRPS do aluno destilado sobre o controle, por conjunto, ordenado pelo
 ganho no desenho herdado (pontos cheios; IC95 por \emph{bootstrap}
 pareado das linhas do teste, B=10.000; verde = intervalo inteiramente
 positivo, cinza = contém o zero, vermelho = inteiramente negativo). Os
-círculos vazados dão o ganho pontual com os dois braços re-ajustados.
+círculos vazados dão o ganho pontual com os dois braços reajustados.
 O que olhar: 13 intervalos inteiramente positivos --- doze com folga
 e um, o \texttt{online\_news}, por margem mínima (limite inferior
-0,01\%) ---; o re-ajuste encolhe
+0,01\%) ---; o reajuste encolhe
 os maiores ganhos sem inverter o quadro. $^\dagger$alvo binarizado.}
 \label{fig:destil-forest}
 \end{figure}
@@ -700,7 +700,7 @@ os maiores ganhos sem inverter o quadro. $^\dagger$alvo binarizado.}
 \centering
 \caption[Robustez do veredito da destilação distribucional]{O mesmo
 veredito sob todas as variantes de desenho. ``Sem binarizado'' exclui
-o \texttt{california\_housing}$^\dagger$; ``re-ajustados'' re-otimiza
+o \texttt{california\_housing}$^\dagger$; ``reajustados'' reotimiza
 os hiperparâmetros dos dois braços; os dois últimos cenários ampliam a
 população com os quatro conjuntos elegíveis omitidos, medidos em cinco
 splits de dados --- o placar mostrado é o agregado pelo sinal da
@@ -715,8 +715,8 @@ Variante & Placar & Mediana ret. & Sinal (unilat.) & Wilcoxon (unilat.) \\
 \midrule
 Principal (herdado, 3 sementes) & 16/20 & 0,19 & 0,006 (0,019 seq.) & 0,045 \\
 Sem o binarizado & 15/19 & 0,17 & 0,010 & 0,067 \\
-Dois braços re-ajustados & 16/20 & 0,12 & 0,006 & 0,035 \\
-Re-ajustados, sem o binarizado & 15/19 & 0,10 & 0,010 & 0,048 \\
+Dois braços reajustados & 16/20 & 0,12 & 0,006 & 0,035 \\
+Reajustados, sem o binarizado & 15/19 & 0,10 & 0,010 & 0,048 \\
 Dez sementes de aluno & 16/20 & 0,19 & --- & --- \\
 Com os 4 elegíveis omitidos (5 splits) & 17/24 & --- & 0,032 & --- \\
 Sem os 2 sobrepostos ao núcleo (5 splits) & 16/22 & --- & 0,026 & --- \\
@@ -778,7 +778,7 @@ covariáveis no \emph{pool} (o conjunto original traz 1.179 linhas
 duplicadas), o controle \emph{pinball} memoriza os gêmeos e o aluno,
 treinado nas curvas suavizadas do professor, não --- nas linhas
 \emph{sem} gêmeo o destilado vence por $+3{,}0\%$ de CRPS, e no
-conjunto deduplicado ($n=5.318$, professor re-rotulado OOF) o
+conjunto deduplicado ($n=5.318$, professor rerrotulado OOF) o
 destilado vence nas três sementes, com ganho de $+0{,}85\%$ e
 retenção $+0{,}10$
 (\texttt{results/\allowbreak distillation/\allowbreak wine\_\allowbreak dedup.csv});
@@ -787,7 +787,7 @@ destilação, e permanece na tabela porque o conjunto original é o da
 população registrada. O \texttt{health\_\allowbreak insurance} tem por alvo
 \texttt{whrswk} --- horas trabalhadas por semana, com 29,9\% de zeros
 e assimetria \emph{negativa} ($-0{,}34$) --- e sua retenção vai de
-$-0{,}26$ (herdado) a $+0{,}65$ (re-ajustado): uma falha sensível à
+$-0{,}26$ (herdado) a $+0{,}65$ (reajustado): uma falha sensível à
 configuração, não um efeito de escala. Restam \texttt{fifa} e
 \texttt{diamonds\_\allowbreak real} como as falhas sem explicação
 testada, em alvos de escala de preço --- e, para elas, a
@@ -812,7 +812,7 @@ de a distância ao nominal diminuir --- em 5/5 conjuntos no braço
 destilado e 3/5 no controle, sem mover o CRPS.
 
 \emph{Em síntese: o CRPS do aluno destilado é, na mediana, 2,8\%
-menor que o do controle (1,4\% com os dois braços re-ajustados) ---
+menor que o do controle (1,4\% com os dois braços reajustados) ---
 recuperando de 12\% a 19\% da vantagem do professor. Por estimativa
 pontual, ele vence em 16 de 20 conjuntos; por intervalo de
 confiança, o placar é 12 vitórias claras, 1 vitória na margem, 3
@@ -953,7 +953,7 @@ devem ser evitados. A regressão, mostramos, se comporta de outro modo
 ablação de três regimes compara: OOF (contexto de 80\%, sem
 vazamento), \emph{in-sample} com o \emph{mesmo} contexto de 80\% (com
 vazamento, contexto idêntico) e \emph{in-sample} com contexto
-completo. O desenho desconfunde vazamento de tamanho de contexto ---
+completo. O desenho separa o efeito do vazamento do efeito do tamanho do contexto ---
 exatamente o que a comparação usual OOF vs.\ \emph{in-sample} não
 separa.
 
@@ -973,7 +973,7 @@ legível: o professor é superconfiante nas linhas que tem em contexto, e
 essa superconfiança --- invisível às métricas de acurácia ---
 transfere-se ao aluno como intervalos estreitos demais. Em regressão,
 a rotulagem OOF é uma salvaguarda de \emph{calibração}, não de
-acurácia --- um refinamento desconfundido do achado de classificação.
+acurácia --- um refinamento livre de confundimento do achado de classificação.
 
 A Figura~\ref{fig:destil-calibration} fecha o eixo da calibração com
 as curvas de confiabilidade dos sistemas distribucionais ---
@@ -1085,7 +1085,7 @@ interpretação registrados para \emph{ambos} os desfechos:
 Os critérios pré-fixados (\emph{gates}): se H-B1 confirmasse, a regra de decisão ganharia a nota ``um
 nativo clássico forte não substitui a destilação onde a vantagem do
 professor é grande''; se refutasse, \emph{todas} as alegações de vantagem
-do aluno destilado seriam reescopadas nos artigos e nesta dissertação,
+do aluno destilado teriam o escopo restringido nos artigos e nesta dissertação,
 com o resultado negativo reportado com a mesma proeminência. O
 protocolo é idêntico ao do restante do capítulo --- mesmos 20
 conjuntos, mesmas partições (\emph{hold-out} de 20\%, semente 42), 3 sementes, o
@@ -1244,7 +1244,7 @@ igual ao do controle \emph{hard} em \textbf{18 de 20} conjuntos
 (sinal unilateral $p{=}0{,}0002$; Wilcoxon suplementar $p{=}0{,}0001$)
 e menor ou igual ao do \emph{workaround} gaussiano em \textbf{17 de
 20} ($p{=}0{,}0013$). A contagem supera a do próprio CRPS agregado
-(16 de 20) --- o \emph{edge} de cauda é mais consistente entre
+(16 de 20) --- a vantagem de cauda é mais consistente entre
 conjuntos do que a média sobre todos os níveis --- e sobrevive com
 folga à exclusão do conjunto binarizado$^\dagger$ (17/19,
 $p{=}0{,}0004$; 16/19, $p{=}0{,}0022$).
@@ -1265,7 +1265,7 @@ análise em \texttt{decision\_\allowbreak utility\_\allowbreak analysis.\allowbr
 Três leituras aplicadas, com linhas reais do artefato de rotulagem OOF
 (o mesmo da Figura~\ref{fig:quantis-cobertura}), aterram o que a
 identidade entre a razão de custos e o nível~$\tau$ significa na
-prática. Três avisos de seleção, primeiro, porque ilustração não é
+prática. Antes, três avisos sobre a seleção, porque ilustração não é
 estatística: as curvas são saídas do \emph{professor} em rotulagem
 OOF (não do aluno destilado --- o aluno aprende exatamente estas
 curvas, com a retenção que a Tabela~\ref{tab:destil-retencao} mede);
@@ -1302,7 +1302,7 @@ enunciar.
 
 No \texttt{fps\_\allowbreak benchmark}, entre as 326 configurações com
 previsão pontual na faixa 107--109~FPS, os intervalos centrais de
-80\% vão de 1,1 a 8,7~FPS --- o par exibido aqui são as duas pontas
+80\% vão de 1,1 a 8,7~FPS --- as duas configurações citadas são as duas pontas
 dessa faixa, declaradamente: mesma média, e a garantia de
 desempenho mínimo (o quantil~0,10) distingue o que a média não vê
 (108 contra 103). No
@@ -1359,7 +1359,7 @@ oferece é robustez entre regimes
 
 \textbf{A cauda pesada é o moderador de falha?} Não --- e a leitura
 correta é modesta.
-Re-executamos professor e alunos sob
+Reexecutamos professor e alunos sob
 $y' = \log(1+y)$ nos três conjuntos de derrota com alvo fora do
 regime gaussiano
 --- \texttt{fifa} e \texttt{diamonds\_\allowbreak real}, em escala
@@ -1472,7 +1472,7 @@ vindo apenas do TabPFN-2.5) é que a informação \emph{pontual}
 satura a partir dos rótulos brutos --- um GBDT ajustado não precisa das
 opiniões do professor sobre a média --- enquanto a informação
 \emph{distribucional} (estrutura de quantis, largura calibrada) é
-portada pelo professor e transferível. Não a média: a \textbf{forma}. E
+carregada pelo professor e pode ser transferida. Não a média: a \textbf{forma}. E
 a forma é exatamente o componente que um aluno de rótulos pontuais não
 pode aprender do dado bruto na mesma medida, e o componente mais caro
 de servir em contexto. Vale explicitar, por isso, o que a contribuição
@@ -1566,7 +1566,7 @@ alavanca emergente de serviço, também não medida aqui.
     os sistemas igualmente; o denominador da retenção pode
     distorcer-se, sem afetar a direção das comparações pareadas.
   \item \textbf{Sementes.} O protocolo usa 3 sementes por aluno; a
-    re-execução com 10 sementes manteve 16/20 e mediana 0,191 (contra
+    reexecução com 10 sementes manteve 16/20 e mediana 0,191 (contra
     0,192), com deslocamento individual máximo de 0,013 --- a
     variância entre sementes é desprezível face à variância entre
     conjuntos.
@@ -1600,7 +1600,7 @@ acadêmico
 anterior, com o TabPFN-2.5 como único professor distribucional --- é
 positivo em 16 de 20 conjuntos (retenção mediana de
 12\% a 19\%: um ganho mediano de CRPS de 2,8\% que encolhe para
-1,4\% quando os dois braços são re-ajustados), a até três
+1,4\% quando os dois braços são reajustados), a até três
 ordens de magnitude menos latência conforme o conjunto ($7{,}4\times$
 a $880\times$ frente ao professor de contexto cheio, calculados das
 medições da fronteira, \texttt{pareto.csv}; frente à

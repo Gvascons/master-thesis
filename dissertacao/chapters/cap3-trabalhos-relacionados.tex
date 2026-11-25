@@ -146,7 +146,7 @@ oficial \citep{kong2026}, ainda sem revisão por pares --- que, entre outras
 coisas, confirma em fonte primária a cabeça de regressão escalar que
 havíamos verificado arquiteturalmente (fato que importa ao
 Capítulo~\ref{chap:destilacao}). O enquadramento que adotamos em
-toda a dissertação é o de \emph{replicação inter-laboratórios} do
+toda a dissertação é o de \emph{replicação interlaboratorial} do
 paradigma PFN/ICL --- Google vs.\ Prior Labs ---, não o de um segundo
 paradigma.
 
@@ -180,10 +180,10 @@ protocolo idêntico --- mesmas partições, mesmo pré-processamento, mesma
 política de subamostragem de contexto. A exigência não é burocrática: num
 campo em que os modelos recebem atualizações mensais e os resultados
 publicados misturam versões, uma comparação só é interpretável com
-versões pinadas e políticas espelhadas (no nosso caso, o mesmo teto de 50
+versões fixadas e políticas espelhadas (no nosso caso, o mesmo teto de 50
 mil linhas de contexto e a mesma exclusão estrutural do conjunto de 100
 classes para ambos os modelos). O Capítulo~\ref{chap:benchmark}
-fornece essa comparação, enquadrada como replicação inter-laboratórios do
+fornece essa comparação, enquadrada como replicação interlaboratorial do
 paradigma; e a avaliação distribucional dos \emph{professores} ---
 complementar aos benchmarks de densidade condicional citados --- reaparece
 no Capítulo~\ref{chap:destilacao} como insumo da destilação, eixo que
@@ -225,7 +225,7 @@ nosso próprio \emph{tuning} obtém ${\approx}0{,}77$ no mesmo conjunto ---
 A reivindicação deste estudo é, portanto, a de \emph{primeiro teste
 da família contra a grade completa de famílias em protocolo
 multicritério}: \citet{poeta2024} é anterior na comparação isolada,
-e a reivindicação foi escopada em função dele (o registro datado da
+e a reivindicação foi delimitada em função dele (o registro datado da
 correção está no Apêndice~\ref{app:suplementares}).
 
 O que permanecia aberto --- e seguia aberto, fora deste trabalho, até
@@ -307,7 +307,7 @@ destilar vs.\ comprimir contexto vs.\ reduzir ensemble --- nos mesmos
 conjuntos de \emph{hold-out}, sob o mesmo protocolo e com os mesmos eixos
 de custo. Essa fronteira cruzada é uma das contribuições do
 Capítulo~\ref{chap:destilacao}, que a executa e extrai dela dois achados
-próprios: a redução de ensemble é subestimada (um membro aproxima oito a
+próprios: a redução de ensemble é subestimada (um único membro aproxima o desempenho do \emph{ensemble} de oito com
 um sétimo da latência) e o último dobro de contexto é desproporcionalmente
 caro em GPUs de 16~GB.
 
@@ -420,7 +420,7 @@ protocolo de destilação avaliado por CRPS e cobertura
 o de setembro de 2026 que destila o TabFM em XGBoost fica no
 pontual\footnote{TabFMKD,
 \url{https://github.com/gegen07/TabFMKD} (último commit em
-14/09/2026; acesso em 23/11/2026): soft labels OOF para classe e
+14/09/2026; acesso em 23/11/2026): soft labels OOF para classificação e
 combinação convexa professor--rótulo para regressão pontual.}).
 
 Contemporâneo a este trabalho
@@ -572,7 +572,7 @@ duas das lacunas foram parcialmente erodidas durante a execução do projeto
 --- \citet{poeta2024} antecipou o teste independente de KANs em escopo
 estreito, e \citet{jeong2026} alcançou a regressão pontual pouco antes da
 nossa entrega --- e ambas as erosões estão registradas com data e
-reescopo explícito, em vez de silenciadas; o pilar distribucional e a
+redelimitação explícita do escopo, em vez de silenciadas; o pilar distribucional e a
 fronteira de estratégias permaneciam inéditos até a última busca
 registrada. Terceira, a
 tabela deixa visível que as três frentes empíricas da dissertação

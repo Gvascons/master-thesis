@@ -243,7 +243,7 @@ Três decisões de composição merecem justificativa explícita:
     modelos (MLP, FT-Transformer, SAINT, STab, TabKAN) usam implementações
     próprias --- os três últimos reimplementados dos artigos originais por
     ausência de pacote maduro; o KAN usa o \emph{backbone}
-    \emph{efficient-kan} (licença MIT) vendorizado com adaptações
+    \emph{efficient-kan} (licença MIT), copiado para o repositório com adaptações
     documentadas. Isso afeta a interpretação: um desempenho fraco de modelo
     reimplementado confunde a qualidade do método com a da implementação.
     Mitigamos o risco com verificações de sanidade contra resultados
@@ -324,7 +324,7 @@ reavaliação em 5
     mais próximo da metade do \emph{pool} (40--50\% na prática) para o
     \emph{pool} inteiro, a melhora relativa mediana é de 1{,}2\%
     (máximo: 5{,}1\%, RealMLP no \texttt{jannis}) --- mas ainda crescente
-    justamente para as redes famintas de amostra: ceder treino ao teste
+    justamente para as redes mais dependentes do volume de dados: ceder treino ao teste
     penalizaria seletivamente uma família, o que feriria a justiça da
     comparação. A proporção foi fixada antes de qualquer resultado e
     segue a convenção dominante da área; por ser idêntica para os 14
@@ -451,7 +451,7 @@ caem majoritariamente fora da faixa original $[-1, 1]$ proposta em
 A regra geral: a métrica primária de cada tarefa é \emph{threshold-free} e
 sensível à qualidade probabilística do modelo; as secundárias cobrem os
 ângulos que a primária não vê. As definições e o racional pedagógico ---
-matriz de confusão, o trade-off precisão--recall e a leitura da ROC-AUC
+matriz de confusão, o compromisso precisão--recall e a leitura da ROC-AUC
 como qualidade de ranqueamento --- estão na
 Seção~\ref{sec:fund-metricas-clf}; a Tabela~\ref{tab:metricas} resume o
 esquema adotado.
@@ -508,7 +508,7 @@ protagonistas da pergunta central (XGBoost, TabPFN e TabFM), as predições
 por instância do experimento de complementaridade permitem abrir a matriz
 de confusão completa no \emph{hold-out}, no limiar padrão de 0,5 e com a
 classe minoritária como classe de interesse --- sem otimização de corte,
-com portão de sanidade contra o agregado do benchmark. A tabela resultante
+com verificação de sanidade contra o agregado do benchmark. A tabela resultante
 está no Apêndice~\ref{app:tabelas} (Tabela~\ref{tab:app-operacionais}), o
 artefato em \texttt{secondary\_\allowbreak metrics\_\allowbreak holdout.csv}, e a leitura
 substantiva --- o que o desbalanceamento esconde da acurácia e o que a
@@ -637,12 +637,12 @@ completam o protocolo:
     diferenças são menores --- a distinção é repetida sempre que o eixo de
     latência fundamenta uma conclusão.
   \item \textbf{Curvas de aprendizado (QP1).} Seis modelos representativos
-    re-treinados em fatias crescentes da partição de desenvolvimento (de
+    retreinados em fatias crescentes da partição de desenvolvimento (de
     500 amostras ao total disponível; 3 sementes; 5 conjuntos), com os
     hiperparâmetros fixados nos valores selecionados para o conjunto
     completo e o mesmo \emph{hold-out} do benchmark --- isolando o efeito
-    do tamanho amostral a capacidade fixa. O re-uso de hiperparâmetros é
-    declarado como limitação: re-otimizar por tamanho deslocaria níveis
+    do tamanho amostral a capacidade fixa. O reúso de hiperparâmetros é
+    declarado como limitação: reotimizar por tamanho deslocaria níveis
     absolutos, não a direção dos cruzamentos.
   \item \textbf{Validação do arcabouço de decisão (LODO; QP2).} O
     recomendador de família por meta-características é avaliado por
@@ -721,7 +721,7 @@ atividades:
   \item \textbf{Erratas públicas e retificação sem reescrita.} O caso
     diamonds/kin8nm (Seção~\ref{sec:met-datasets}) seguiu esse rito: registro
     canônico da errata, commit de retificação preservando o histórico e
-    re-derivação de todos os números afetados; o episódio é discutido entre
+    rederivação de todos os números afetados; o episódio é discutido entre
     as limitações no Capítulo~\ref{chap:conclusao}.
 \end{itemize}
 
@@ -743,7 +743,7 @@ conhecidas e as decisões tomadas diante delas.
     Wilcoxon em regressão ($p \ge 0{,}0625$) e o caráter descritivo da
     multiclasse ($N=3$) já foram declarados. A mitigação é tripla: não
     afirmar vencedor único, sustentar \emph{equivalências} pela análise
-    bayesiana com ROPE e explicitar o limite sempre que ele morde. A escolha
+    bayesiana com ROPE e explicitar o limite sempre que ele restringe a conclusão. A escolha
     de desenho subjacente é deliberada: profundidade de protocolo
     (seleção separada da medição, \emph{hold-out} intocado) sobre largura de
     $N$.
@@ -826,8 +826,8 @@ conhecidas e as decisões tomadas diante delas.
     \citep{kong2026} ---, o que exclui por construção a
     contaminação direta por conjuntos do OpenML (verificação na fonte
     primária em 05/10/2026) --- diferentemente, como visto, do
-    \emph{checkpoint} padrão do classificador TabPFN. Permanece o risco mais fraco e não
-    endereçável: \emph{priors} desenhados por equipes que conhecem os
+    \emph{checkpoint} padrão do classificador TabPFN. Permanece o risco mais fraco, que o desenho não
+    consegue eliminar: \emph{priors} desenhados por equipes que conhecem os
     benchmarks públicos. Tratamos esse risco residual com três cuidados: ele é
     declarado aqui e retomado na interpretação dos resultados; as
     conclusões sobre \emph{foundation models} são enunciadas no nível de
@@ -866,7 +866,7 @@ conhecidas e as decisões tomadas diante delas.
     transferem para serviço \emph{online} de linha única nem para outro
     hardware; o que se transfere --- e é o que as conclusões usam --- são
     as ordens de grandeza entre famílias.
-  \item \textbf{Curvas de aprendizado com hiperparâmetros fixos.} O re-uso
+  \item \textbf{Curvas de aprendizado com hiperparâmetros fixos.} O reúso
     dos hiperparâmetros do conjunto completo em todas as fatias isola o
     efeito do tamanho a capacidade fixa, mas pode desfavorecer modelos cuja
     configuração ótima varia fortemente com $n$; a limitação é declarada

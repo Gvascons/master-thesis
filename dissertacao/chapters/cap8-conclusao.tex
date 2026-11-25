@@ -103,7 +103,7 @@ brutos: o aluno treinado nas médias do professor supera o controle em
 4 de 20 conjuntos com o TabPFN, e a réplica com o TabFM como
 professor, nos cinco conjuntos centrais, mantém o negativo. O
 treinado nas curvas de quantis retém, na mediana, 19\% do gap de CRPS
-com hiperparâmetros herdados (12\% com os dois braços re-ajustados)
+com hiperparâmetros herdados (12\% com os dois braços reajustados)
 --- um ganho mediano de CRPS de 2,8\% que encolhe para 1,4\% ---,
 com retenção positiva em 16 de 20 conjuntos (teste de sinal,
 $p\approx0{,}019$ com a correção sequencial do desenho em duas
@@ -153,12 +153,12 @@ positivos, conforme o contrato de conduta do estudo
     verificações
     datadas, a primeira comparação neutra
     TabPFN~$\times$~TabFM sob protocolo idêntico, enquadrada como
-    replicação inter-laboratórios do paradigma, com versões fixadas e
+    replicação interlaboratorial do paradigma, com versões fixadas e
     políticas espelhadas.
   \item \textbf{Análise de complementaridade por instância (evidência;
     Capítulo~\ref{chap:benchmark}, Seção~\ref{sec:cap5-ato5}).}
     Pré-registrada com critérios de falsificação datados e reprodução
-    exata dos modelos finais do benchmark (52/52 células em \emph{gate}
+    exata dos modelos finais do benchmark (52/52 células aprovadas na verificação
     de sanidade), estabelece que XGBoost e \emph{foundation models}
     concordam em ${\ge}93{,}6\%$ das instâncias (mediana), que a
     vantagem do FM é fortemente heterogênea entre conjuntos (McNemar
@@ -224,7 +224,7 @@ positivos, conforme o contrato de conduta do estudo
     Apêndice~\ref{app:suplementares}; um
     repositório público de setembro de 2026 --- referenciado na
     Seção~\ref{sec:rel-destilacao} --- destila o TabFM em XGBoost
-    para classe e regressão \emph{pontual}, sem tocar o recorte
+    para classificação e regressão \emph{pontual}, sem tocar o recorte
     distribucional --- a linhagem não tabular de destilação
     distribucional é citada como antecedente na
     Seção~\ref{sec:rel-destilacao}). A evidência: retenção mediana de
@@ -268,11 +268,11 @@ positivos, conforme o contrato de conduta do estudo
     engenharia: um membro do TabPFN $\approx$ oito a um sétimo da
     latência, e a última duplicação de contexto é desproporcionalmente
     cara em GPUs de 16~GB.
-  \item \textbf{Ablação desconfundida da rotulagem \emph{out-of-fold}
+  \item \textbf{Ablação sem confundimento da rotulagem \emph{out-of-fold}
     (evidência e regra; Capítulo~\ref{chap:destilacao}).} Em regressão, o
     vazamento do professor não degrada acurácia --- degrada
     \emph{calibração} (perda de 0,5 a 5,1~p.p.\ de PICP80 a contexto
-    idêntico): um refinamento desconfundido do achado de classificação
+    idêntico): um refinamento livre de confundimento do achado de classificação
     do Pocket~FM \citep{pocketfm2026}.
   \item \textbf{Confronto com nativos distribucionais clássicos --- E1
     (evidência; Capítulo~\ref{chap:destilacao}).} O aluno destilado vence o
@@ -322,7 +322,7 @@ positivos, conforme o contrato de conduta do estudo
 \section{Conselhos ao praticante}
 \label{sec:conc-conselhos}
 
-O destilado operacional dos Capítulos~\ref{chap:framework}
+A síntese operacional dos Capítulos~\ref{chap:framework}
 e~\ref{chap:destilacao}, na ordem em que as perguntas devem ser feitas
 --- cada item rastreia ao resultado que o sustenta.
 
@@ -448,7 +448,7 @@ Seção~\ref{sec:cap5-ato3}) &
 Latência de inferência; a liderança com $n$ grande depende do conjunto \\
 \addlinespace
 Classe rara com falso negativo caro &
-FM a limiar fixo --- \emph{ou} re-otimizar o limiar do GBDT; medir
+FM a limiar fixo --- \emph{ou} reotimizar o limiar do GBDT; medir
 recall a precisão igualada antes de trocar &
 Medido em um conjunto (\texttt{amazon\_employee}): acurácias
 0,943--0,949 indistinguíveis;
@@ -469,7 +469,7 @@ Aluno destilado (correção conformal da cobertura: piloto em 5
 conjuntos) &
 Retenção positiva em 16/20 ($p{=}0{,}006$ em estágio único;
 $0{,}019$ sequencial),
-mantida re-tunada, com ganho mediano de CRPS de 1,4--2,8\%; em
+mantida após o reajuste, com ganho mediano de CRPS de 1,4--2,8\%; em
 $\tau{=}0{,}90$, 18/20 ($p{=}0{,}0002$), ganho
 ${\sim}8\%$ nas caudas; combinação destilado$+$conformal não medida
 junta nos 20 (Seções~\ref{sec:destil-dist},
@@ -575,8 +575,8 @@ validade interna; a licença dos professores, em validade externa.
 
 \subsection{Validade interna}
 
-\textbf{Priors cientes de benchmarks --- o risco residual não
-endereçável.} O TabFM declara pré-treino exclusivamente sintético; o
+\textbf{Priors cientes de benchmarks --- o risco residual que não
+se pode eliminar.} O TabFM declara pré-treino exclusivamente sintético; o
 \emph{checkpoint} padrão do classificador TabPFN v2.5, porém, é
 afinado em 43 conjuntos reais que incluem o \texttt{higgs} deste
 benchmark --- e, por correspondência de nome não verificada linha a
@@ -601,12 +601,12 @@ ajuste específico, e a QRF recebe imputação por mediana (ajustada no
 interpretação autorizada é ``\emph{default} forte'', não ``clássico
 ajustado ao limite'' (Seção~\ref{sec:destil-e1}). Nos alunos de
 destilação, a capacidade é herdada do \emph{tuning} do benchmark, sem
-re-ajuste por alvo de destilação --- um controle deliberado, com a
+reajuste por alvo de destilação --- um controle deliberado, com a
 ressalva declarada de que entre os braços mudam o rótulo \emph{e} a
 perda; o custo da assimetria foi medido pelo
-re-ajuste registrado em adendo datado, antes da execução, nos 20
+reajuste registrado em adendo datado, antes da execução, nos 20
 conjuntos: o
-veredito agregado sobrevive ao controle re-ajustado (16 de 20, mediana
+veredito agregado sobrevive ao controle reajustado (16 de 20, mediana
 0,124 contra 0,192 herdada, queda declarada), restando a retenção por
 conjunto como dependente do orçamento de ajuste
 (Seção~\ref{sec:destil-retune}). As ressalvas de desenho
@@ -621,7 +621,7 @@ Capítulo~\ref{chap:destilacao}.
 \textbf{Erros de identidade de conjuntos.} Dois erros de rotulagem
 herdados da criação do projeto (\texttt{diamonds}/\texttt{kin8nm};
 ``superconduct''/\texttt{online\_news}) foram descobertos durante o
-estudo e corrigidos com re-derivação de todos os números afetados;
+estudo e corrigidos com rederivação de todos os números afetados;
 todo número desta dissertação é posterior às correções
 (Seção~\ref{sec:met-datasets}; registro no
 Apêndice~\ref{app:suplementares}). A ameaça residual é a que
@@ -802,7 +802,7 @@ Listam-se apenas direções com lastro direto na evidência dos capítulos
     teto ou artefato de protocolo.
   \item \textbf{Atualização viva do benchmark.} A infraestrutura
     resumível, com versões e sementes fixadas, está pronta para
-    re-execução periódica à medida que a geração 2027 chegar; a
+    reexecução periódica à medida que a geração 2027 chegar; a
     integração com um benchmark vivo mantido pela comunidade, ao estilo
     TabArena \citep{tabarena2025}, é o caminho para que a profundidade
     de protocolo deste estudo sobreviva à sua datação --- a principal

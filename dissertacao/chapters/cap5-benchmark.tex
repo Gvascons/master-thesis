@@ -474,7 +474,7 @@ no fundo da tabela (Figura~\ref{fig:cap5-heatmap}); a codificação
 \emph{one-hot} e o teto de 50 categorias por coluna
 (Capítulo~\ref{chap:metodologia}) são candidatos a explicação, não
 causas testadas. E o TabPFN combina, dentro do núcleo e considerando as três tarefas
-em conjunto, o melhor rank médio com o melhor pior rank entre os 17
+em conjunto, o melhor rank médio com o melhor rank no pior caso entre os 17
 conjuntos em que opera --- em nenhum deles cai ao fundo da tabela, um
 atributo que o rank médio sozinho não captura (em classificação
 isolada, o pior caso do XGBoost é igual ou melhor).
@@ -545,10 +545,10 @@ completa, com a métrica primária de cada modelo em cada um dos 18
 conjuntos, está no Apêndice~\ref{app:tabelas}. A
 Figura~\ref{fig:cap5-ranks} apresenta o retrato visual, em que os painéis
 de binária e regressão cobrem os 14 modelos e o painel multiclasse mostra
-os 12 modelos avaliados nos três conjuntos multiclasse, rankeados dentro
+os 12 modelos avaliados nos três conjuntos multiclasse, ranqueados dentro
 desse subconjunto --- e por isso não diretamente comparável aos ranks de
 14 modelos da tabela, em que os \emph{foundation models} (excluídos no
-\texttt{helena}) são rankeados.
+\texttt{helena}) são ranqueados.
 
 \begin{table}[htbp]
 \centering
@@ -574,9 +574,9 @@ TabKAN              & 11,4         & 13,3          & 11,8 \\
 \includegraphics[width=0.92\linewidth]{images/average_ranks.pdf}
 \caption[Ranks médios por tarefa na grade completa]{Ranks médios por tarefa na grade completa (painel multiclasse
 restrito aos 12 modelos avaliados nos três conjuntos; rótulos internos da
-figura em inglês). O painel de multiclasse re-ranqueia esses 12
+figura em inglês). O painel de multiclasse recalcula os ranks desses 12
 modelos, de modo que seus valores não coincidem com a
-Tabela~\ref{tab:cap5-ranks}, que rankeia os 14 (os \emph{foundation
+Tabela~\ref{tab:cap5-ranks}, que ranqueia os 14 (os \emph{foundation
 models} sobre seus dois conjuntos elegíveis).}
 \label{fig:cap5-ranks}
 \end{figure}
@@ -613,7 +613,7 @@ usual em crédito, dá no topo a mesma ordem que a ROC-AUC: TabFM
 (3,0), TabPFN (4,8) e XGBoost (5,0)
 (Tabela~\ref{tab:app-ks}).
 
-A consequência interpretativa é a re-escopagem do Ato~I: o empate fica
+A consequência interpretativa é a redelimitação do escopo do Ato~I: o empate fica
 corretamente lido como \emph{retrato da geração anterior}. Quem
 ultrapassou os GBDTs não foi um modelo treinado na tarefa, e sim um
 modelo pré-treinado usado sem ajuste --- a associação com o pré-treino
@@ -731,9 +731,9 @@ execução, com hipóteses e critérios de falsificação datados
 complementaridade.\allowbreak md}, 22/10/2026; adendo de execução de
 23/10/2026), e a geração das predições reconstruiu os modelos finais sob
 o protocolo exato do benchmark --- mesmos hiperparâmetros escolhidos,
-mesmo \emph{split}, mesma semente --- com um \emph{gate} de sanidade
+mesmo \emph{split}, mesma semente --- com uma verificação de sanidade
 exigindo $|\Delta| \le 10^{-3}$ entre a métrica primária recomputada e a
-registrada: as 52 células do portão passaram (as 51 dos 17 conjuntos
+registrada: as 52 células da verificação passaram (as 51 dos 17 conjuntos
 em que os três coexistem, mais a do XGBoost no \texttt{helena}, onde
 os \emph{foundation models} são excluídos), 42 delas com
 $\Delta = 0$ exato; as
@@ -883,7 +883,7 @@ duas camadas em vez de escolher pela aplicação.
 Na regressão, a leitura por instância é descritiva e aponta na mesma
 direção dupla: o erro absoluto do \emph{foundation model} é menor que o
 do XGBoost em mais da metade das instâncias em 9 dos 10 pares, mas os
-erros dos dois são co-rankeados (Spearman de 0{,}33 a 0{,}95
+erros dos dois têm postos correlacionados (Spearman de 0{,}33 a 0{,}95
 por conjunto; mediana 0{,}83) --- os dois modelos acham difíceis \emph{as mesmas}
 instâncias, e a vantagem do FM é um encolhimento quase uniforme do
 erro, não a resolução de uma classe distinta de casos.

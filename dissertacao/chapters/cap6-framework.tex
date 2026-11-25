@@ -25,7 +25,7 @@
 \label{chap:framework}
 
 Este capítulo tem como objetivo submeter o arcabouço de decisão,
-até aqui descritivo, a avaliação por três estudos sobre os próprios
+até aqui descritivo, à avaliação por três estudos sobre os próprios
 conjuntos do benchmark (18; 17 onde a família FM participa): um resultado negativo, em que o
 roteamento por meta-características não generaliza sob validação
 \emph{leave-one-dataset-out}; um resultado positivo, em que a política
@@ -124,7 +124,7 @@ algoritmo vencedor a partir de meta-características do conjunto de dados ---
 tamanho, dimensionalidade, desbalanceamento, fração de atributos
 categóricos. Se funcionasse, o arcabouço de decisão seria um modelo
 preditivo, não um fluxograma. Testamos essa promessa com o protocolo
-honesto disponível para $N{=}18$ conjuntos: validação
+adequado a $N{=}18$ conjuntos: validação
 \emph{leave-one-dataset-out} (LODO), em que uma árvore de decisão de
 profundidade 2 --- o mesmo modelo ilustrativo da
 Figura~\ref{fig:arvore-exemplo}, no
@@ -141,7 +141,7 @@ das duas configurações o roteador aprendido supera a regra trivial
 atribuição é direta: com $N{=}18$ conjuntos, cada rodada do LODO
 treina com 17 exemplos --- uma amostra em que qualquer partição por
 meta-características é dominada pelo ruído das reversões individuais, e em
-que o preço de errar uma folha é alto. O resumo honesto é este:
+que o preço de errar uma folha é alto. Em suma:
 aprender o roteamento por meta-características não é viável sob LODO com essa
 classe de modelo nesta escala de $N$ --- e afirmar isso sob um protocolo
 explícito protege o arcabouço da crítica de \emph{overclaiming}
@@ -346,7 +346,7 @@ a melhor política fixa em nenhum $w$, e colapsa na política sempre-FM
 nos pesos altos
 (\texttt{results/\allowbreak aggregated/\allowbreak
 lodo\_\allowbreak weighted\_\allowbreak regret.\allowbreak csv}).}
-Os $N$s espelham os da Tabela~\ref{tab:regret-lodo}: 18 conjuntos para
+Os valores de $N$ espelham os da Tabela~\ref{tab:regret-lodo}: 18 conjuntos para
 as políticas sempre-GBDT e sempre-DL, 17 para sempre-FM
 (\texttt{helena} excluída por limite arquitetural). A hipótese
 registrada H-W1 afirma: existe $w^{*} < 1$ a partir do qual
@@ -446,7 +446,7 @@ coincidem em 0,000.}
 
 A interpretação pré-fixada no registro do experimento aplica-se
 diretamente: qualquer que fosse $w^{*}$, o resultado enriqueceria o
-arcabouço ao quantificar o \emph{trade-off} que ele já codificava
+arcabouço ao quantificar o compromisso que ele já codificava
 qualitativamente. O valor encontrado --- cruzamento entre $w{=}0{,}9$ e
 $w{=}0{,}8$ pela mediana --- faz mais que enriquecer: ele explica
 \emph{por que a primeira pergunta do fluxograma é a latência}. Se a
@@ -468,7 +468,7 @@ sempre-FM só é regret-ótima na mediana para $w \geq 0{,}9$ na grade
 de 0,1 do estudo (0,85 na grade fina de 0,05 do adendo); em
 $w{=}0{,}8$ já é superada por sempre-GBDT e sempre-DL, e para
 $w \leq 0{,}6$ ``sempre-GBDT'' tem \emph{regret} mediano zero. A ressalva
-do proxy acompanha o achado --- e foi testada: re-executando a varredura
+do proxy acompanha o achado --- e foi testada: reexecutando a varredura
 com os \emph{rankings} de latência medidos no \texttt{credit\_g} (mil
 amostras) e no \texttt{cardiovascular\_\allowbreak disease} (70~mil) em lugar do
 \texttt{adult}, o cruzamento é idêntico nos três casos (sempre-FM
@@ -492,8 +492,8 @@ e 35--40\%, contra 20--25\%
 (\texttt{results/\allowbreak aggregated/\allowbreak
 lodo\_\allowbreak weighted\_\allowbreak regret\_\allowbreak
 norms.csv}; análise pós-hoc, adendo de 24/11/2026 em
-\texttt{docs/\allowbreak adendo-e2-normalizacoes.md}). A leitura
-que o arcabouço usa mantém-se nas três --- um peso minoritário de
+\texttt{docs/\allowbreak adendo-e2-normalizacoes.md}). A conclusão
+em que o arcabouço se apoia mantém-se nas três normalizações --- um peso minoritário de
 latência basta para inverter a recomendação ---, e a normalização
 por postos, adotada no desenho, é a que inverte mais cedo.
 
@@ -564,7 +564,7 @@ as verifica:
 Os três estudos são consistentes com a leitura de que essas quatro
 perguntas capturam o
 essencial: as restrições são o \emph{conteúdo informativo real} da
-decisão, e o desempenho bruto deixou de discriminar dentro da família
+decisão, e o desempenho bruto já não separa os modelos da família
 líder --- ainda que o fluxograma em si, como dito acima, seja a
 síntese dos três estudos, não uma política avaliada. O arcabouço
 resultante é deliberadamente modesto na forma --- um
@@ -591,8 +591,8 @@ tarefa interna consistente (todos os 14 modelos competem no mesmo alvo,
 e os \emph{ranks} usados pelos scores são internos a cada conjunto), e
 o \texttt{online\_news} só teve o rótulo corrigido. Quanto ao tamanho
 da amostra de conjuntos, $N{=}18$ impede validação
-estatística fina do próprio arcabouço; o LODO é a ferramenta honesta
-possível nessa escala, e é exatamente por isso que o resultado negativo
+estatística fina do próprio arcabouço; o LODO é a ferramenta adequada
+nessa escala, e é exatamente por isso que o resultado negativo
 da Seção~\ref{sec:resultado-negativo} é formulado como ``não aprendível
 sob LODO com esta classe de modelo'', e não como impossibilidade geral.
 
@@ -604,7 +604,7 @@ duas simplificações próprias: o score pondera apenas dois critérios
 incluir custo de treino, robustez e interpretabilidade; e a latência
 entra por um proxy medido em uma única máquina declarada. A sensibilidade
 ao conjunto de medição, porém, deixou de ser incógnita: a varredura
-re-executada com os \emph{proxies} dos extremos de tamanho do benchmark
+reexecutada com os \emph{proxies} dos extremos de tamanho do benchmark
 produz o mesmo cruzamento (Seção~\ref{sec:e2-resultados}), restando como
 limitação apenas a máquina única e os dois critérios.
 
