@@ -44,7 +44,8 @@ Distributional Regression and the Distill/Compress/Shrink Pareto Frontier}}
 \begin{abstract}
 Tabular foundation models now lead predictive accuracy: in our companion
 benchmark of 14 models across 18 OpenML datasets, TabFM (Google, 2026) ranks
-first in binary classification, multiclass, and regression, with TabPFN v2.5
+first in binary classification, multiclass (over its two eligible
+datasets), and regression, with TabPFN v2.5
 a consistent second. This leadership carries an extreme cost: in-context
 inference runs at 7.4--43\,ms/row --- four to five orders of magnitude slower
 than gradient-boosted trees (0.33\,\us/row). Prior work distills tabular
@@ -82,8 +83,9 @@ a single-member teacher already matches student latency and ensemble
 shrinking closes the case;
 (3) out-of-fold (OOF) labeling matters for the student's
 \textbf{calibration}, not its accuracy --- a deconfounded refinement of prior classification findings;
-and (4) failures are diagnosable, yielding a practical decision rule: try
-target transforms and a strong native student first, and distill when a
+and (4) failures are diagnosable, yielding a practical decision rule: run
+target transforms as a diagnostic and a strong native student first,
+and distill when a
 genuine teacher edge persists --- cheaply verifiable via OOF labeling.
 Hypotheses and gates were registered in advance --- the confirmatory
 sign test and the extension's eligibility rule were fixed at an interim
@@ -107,7 +109,8 @@ preprocessing, declared per-family tuning budgets (100 Optuna
 trials for GBDTs, 25 for deep models; asymmetric by design);
 companion report
 \citep{companion2026}), the zero-shot TabFM ranks first on all three task
-types and is the single best model on 13 of 18 datasets (operating
+types (in multiclass, over its two eligible datasets) and is the
+single best model on 13 of 18 datasets (operating
 on 17); TabPFN-2.5
 \citep{hollmann2025,priorlabs2025} is the consistent runner-up.
 % notebooks/TABELA_RESULTADOS.md; results/aggregated/test_results.csv
@@ -191,9 +194,11 @@ answer RQ1, \S\ref{sec:frontier} RQ2, and
     or CRPS --- they erode interval \emph{coverage} ($-0.5$ to $-5.1$~p.p.\
     at fixed context size), i.e., the teacher's in-context overconfidence
     transfers to the student.
-  \item \textbf{A practical decision rule} derived from two refuted
-    hypotheses: before distilling, apply cheap target
-    transforms and try a strong native quantile student; distill when a
+  \item \textbf{A practical decision rule} condensing four results
+    --- the refuted point and heavy-tail hypotheses, E1's upsets and
+    the serving frontier: before distilling, run cheap target
+    transforms as a diagnostic and try a strong native quantile
+    student; distill when a
     genuine teacher edge survives both --- verifiable with one inexpensive
     OOF pass.
 \end{enumerate}
@@ -493,8 +498,9 @@ california's two soft-target cells beat the hard-label control at all, with
 best within-pipeline retention 0.11 (california/mixed); the remaining eight
 cells are at or below the control. A pool-size sweep (caps 800/2k/8k) shows
 a genuine small-data gain on \texttt{wine\_quality} ($\Delta = +0.026$ at
-$n{=}800$) that vanishes by $n{=}2{,}000$ and does not replicate on
-\texttt{california\_\allowbreak housing}; we report it as an observation with a
+$n{=}800$) that vanishes by $n{=}2{,}000$ and on
+\texttt{california\_\allowbreak housing} leaves only a marginal
+$+0.005$ residue at $n{=}2{,}000$, gone by 8{,}000; we report it as an observation with a
 dataset-dependent moderator, not a general effect. Conclusion: at realistic
 pool sizes, a tuned GBDT extracts as much point accuracy from the raw
 labels as from the teacher's opinions of them. Contemporaneous work reports positive
@@ -615,11 +621,15 @@ Calibration accompanies the transfer, though the pre-registered
 coverage clause is not met in absolute terms: PICP80 falls within
 $\pm 5$~p.p.\ of nominal on only 10/20 datasets (2/5 core), so the
 calibration gain is comparative. Reliability curves
-(Fig.~\ref{fig:calibration}) show the distilled student closest to the
-diagonal on both panels; on \texttt{california\_\allowbreak housing} --- the
+(Fig.~\ref{fig:calibration}) show the distilled student closest to
+the
+diagonal (mean diagonal distance) on both panels; on
+\texttt{cpu\_activity} the three systems are well calibrated and
+the student remains competitive; on \texttt{california\_\allowbreak housing} --- the
 binarized-target erratum dataset, so the calibration in question is of
-a Bernoulli --- it is better
-calibrated than the hard control \emph{and} than its own teacher, whose
+a Bernoulli --- it is closer to the diagonal
+than the hard control \emph{and} than its own teacher (though by
+central-interval coverage it under-covers: PICP80 0.596), whose
 per-level quantile calibration is imperfect (S-shaped). Curve transfer plus
 sorting acts as a calibration regularizer, not a mere copy. A dedicated
 ablation isolates the repair: quantile crossing affects a median 96\% of
@@ -698,13 +708,23 @@ alone, and the distilled one is CRPS-optimal among them: 0.109 at
 0.094 (california), and 4.43 at 169\,\us/row where the cheapest teacher
 configuration that beats it costs 4{,}576\,\us/row --- 27$\times$ the
 latency (year). On \texttt{kin8nm}, the third dataset, the picture
-inverts --- instructively: the teacher's edge is small ($+0.030$ CRPS)
+inverts --- instructively: the teacher's \emph{absolute} edge is
+small ($+0.030$ CRPS; its relative edge, 44\%, is among the largest)
 and a single-member TabPFN delivers CRPS 0.040 at 150\,\us/row,
 essentially student latency, so ensemble reduction rather than
-distillation is the right lever there --- the frontier-level counterpart
-of \S\ref{sec:rule}'s decision rule. The TabFM anchor holds the
+distillation is the right lever there --- a latency case, not a
+small-edge case in the decision rule's relative metric
+(\S\ref{sec:rule}). The TabFM anchor holds the
 accuracy extreme at 4{,}905--394{,}301\,\us/row across the three
-datasets.
+datasets. Against the registered H3 (a ${\lesssim}100$\,\us/row
+band where the student Pareto-dominates the subsampled teacher), the
+verdict is \emph{not confirmed as registered}: strict dominance
+occurs only on \texttt{year\_\allowbreak prediction}, at
+169\,\us/row (above the band); within the band the student is
+merely non-dominated --- no teacher configuration operates below
+245\,\us/row --- and only on the binarized-target
+\texttt{california\_\allowbreak housing}; refuted on
+\texttt{kin8nm}.
 
 Two side-findings have independent value. Reducing the TabPFN ensemble from
 8 to 1 member \emph{improved} RMSE on \texttt{california\_\allowbreak housing} (0.2521
@@ -821,7 +841,7 @@ asymmetric-cost decisions live --- and that is where the distilled
 student delivers it, at hundred-microsecond-per-row latency
 (\texttt{results/\allowbreak distillation/\allowbreak decision\_\allowbreak utility.\allowbreak csv}).
 
-\subsection{When to distill: two refuted hypotheses become a decision rule}
+\subsection{When to distill: four results become a decision rule}
 \label{sec:rule}
 
 \emph{Does the student family matter?} Greatly. Under the inherited
@@ -865,15 +885,16 @@ Together these yield the paper's practical rule:
 diagnostic (in the ablation, the directional effect is mixed and
 marginal --- not a rescue); (ii) try a
 strong native quantile student. Distill when a genuine teacher edge
-persists after both --- one OOF labeling pass, costing minutes, measures
+persists after both --- one OOF labeling pass, minutes to a few
+hours depending on pool size and teacher latency, measures
 that edge directly.} Where no cheap teacher configuration reaches
 the student's latency tier (the two measured frontier cases),
 distillation is the teacher-derived strategy
 that carries part of the edge below the teacher's cheapest
 competitive
 configuration (\S\ref{sec:frontier}; a strong native such as the
-QRF can occupy the same latency regime, and on one dataset
-outperformed it); where a single teacher member already runs at the
+QRF occupies the same latency regime and beats the distilled student
+on 3 of 20 datasets); where a single teacher member already runs at the
 student's latency, ensemble
 reduction alone may suffice.
 \end{quote}
@@ -981,10 +1002,11 @@ headline survives a two-sided reading (sign test $p=0.012$), while the
 supplementary Wilcoxon (two-sided $p=0.090$) and the post-hoc Fisher
 (two-sided $p=0.087$) would not reject --- consistent with their
 declared supplementary and post-hoc roles. No multiplicity correction
-is applied across experiments; under a Holm correction over the
-confirmatory family, the primary conclusions (Friedman, decision
-utility, E1, headline sign test) survive and the supplementary
-instruments do not. Random i.i.d.\ splits ignore group structure in a
+is applied across experiments; under Holm at the 5\% level over the
+three main sign tests (the headline, with its sequential correction;
+E1; E3), all three stand (adjusted $p \approx 0.019$; $0.0026$;
+$0.0006$); the supplementary instruments do not, and in a family
+including them the headline's adjusted $p$ would be 0.057. Random i.i.d.\ splits ignore group structure in a
 few datasets (artist-level structure in \texttt{year\_\allowbreak prediction},
 repeated sales in \texttt{kings\_county}): absolute metrics inflate
 for all systems alike, and the teacher--control gap in the retention
@@ -1014,10 +1036,11 @@ use is licensed, and training, fine-tuning or distilling other models
 \emph{for commercial use} is explicitly outside the Non-Commercial
 Purpose definition. Third, and most specific, §2(d) forbids using
 outputs to ``train, fine-tune, or distill a model that is competitive
-with the TABPFN-2.5 Model''; our student retains 12--19\% of the
-teacher's distributional edge and does not compete with it on quality
---- its niche is latency --- but the licensor has the final word on
-``competitive''. The cheap-serving
+with the TABPFN-2.5 Model''; at the median our student retains
+12--19\% of the
+teacher's distributional edge; on one dataset (pumadyn32nh) a
+born-again student matches the teacher; the qualification of
+``competitive'' rests with the licensor. The cheap-serving
 argument of this paper therefore holds for research and internal
 evaluation; commercial deployment of the distilled student requires
 the vendor's enterprise license (or a permissively licensed teacher).

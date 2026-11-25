@@ -1,5 +1,13 @@
 # Distilling Tabular Foundation Models Beyond Classification: Distributional Regression and the Distill/Compress/Cache Pareto Frontier
 
+> **NOTA (25/11/2026):** rascunho histórico, superado por
+> `latex/ai2/main.tex` em 25/11/2026; não mantido --- contém
+> afirmações e valores anteriores às correções (p.~ex., "P(ret>0) =
+> 0.70", que é E[θ], não a probabilidade posterior de 0,96; "median
+> 19%"; "microsecond latency"; a regra derivada de "two refuted
+> hypotheses"). As edições parciais de 25/11 (F1) ficam registradas,
+> mas o corpo não é mais atualizado.
+
 > **ADENDO (19/10/2026):** a auditoria de identidade dos datasets encontrou que o rótulo "superconduct" sempre designou o OnlineNewsPopularity (renomeado `online_news`) e que o `california_housing` é a variante de alvo binarizado. Menções abaixo usam os rótulos da época. Registro canônico: `docs/errata-datasets-core-regressao.md`.
 
 
