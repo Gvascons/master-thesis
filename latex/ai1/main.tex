@@ -66,7 +66,7 @@ on all three task types (2.7 binary; 1.0 multiclass, over its two eligible
 datasets; 1.2 regression) and is the single best model on 13 of 18
 (operating on 17)
 datasets --- a lead consistent across datasets that the low-powered
-tests do not confirm as a statistical separation --- at an inference-latency cost four to five orders of magnitude
+tests do not confirm as a statistical separation --- at an inference-latency cost about five orders of magnitude
 above GBDTs (43,262 vs.\ 0.33~\us/row on \texttt{adult}). Two
 complementary results: the first independent test of the
 Kolmogorov--Arnold family against the full GBDT/DL/foundation-model slate
@@ -667,7 +667,8 @@ model$\times$dataset interaction dominates rank variance; in 2026, a
 pre-trained model shifted the top --- a consistent lead, not a
 confirmed statistical separation --- and
 inverted the cost axis: the best model in accuracy is the worst in
-latency, by 4--5 orders of magnitude on the reference dataset. The multi-criteria framework emerges
+latency, by about five orders of magnitude (131{,}000$\times$) on
+the reference dataset. The multi-criteria framework emerges
 from the LODO assessment with a clearer role --- not predicting the winner
 (infeasible), but encoding the constraints that actually decide --- and
 the policy ``FM first, deviate on constraints'' has median regret zero.
