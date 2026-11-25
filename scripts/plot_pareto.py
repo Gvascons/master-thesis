@@ -36,6 +36,19 @@ LABELS = {
                      "a fronteira acur\u00e1cia \u00d7 lat\u00eancia (hold-out do benchmark)"),
         "suffix": "",
     },
+    "pt_diss": {
+        "teacher_ctx": "TabPFN (contexto reduzido)",
+        "teacher_ens": "TabPFN (ensemble reduzido)",
+        "student_quant_soft": "Aluno-quantil DESTILADO",
+        "student_point_hard": "Aluno ponto (controle)",
+        "student_quant_hard": "Aluno-quantil (controle)",
+        "tabfm_full": "TabFM (contexto cheio)",
+        "annot": "destilado",
+        "xlabel": "lat\u00eancia de infer\u00eancia (\u00b5s/linha, log)",
+        "rmse": "RMSE \u2193", "crps": "CRPS \u2193 (sistemas distribucionais)",
+        "suptitle": None,  # a legenda LaTeX carrega o titulo
+        "suffix": "_pt",
+    },
     "en": {
         "teacher_ctx": "TabPFN (reduced context)",
         "teacher_ens": "TabPFN (reduced ensemble)",
@@ -87,7 +100,7 @@ def facet(ax, sub, metric, L):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--lang", default="pt", choices=["pt", "en"])
+    ap.add_argument("--lang", default="pt", choices=["pt", "en", "pt_diss"])
     args = ap.parse_args()
     L = LABELS[args.lang]
     df = pd.read_csv(CSV)
@@ -108,6 +121,12 @@ def main():
     axes[0, 0].set_ylabel(L["rmse"], fontsize=10)
     axes[1, 0].set_ylabel(L["crps"], fontsize=10)
 
+    if args.lang == "pt_diss":
+        from matplotlib.ticker import FuncFormatter, NullFormatter
+        fmt = FuncFormatter(lambda v, _: f"{v:g}".replace(".", ","))
+        for ax in axes.ravel():
+            ax.yaxis.set_major_formatter(fmt)
+            ax.xaxis.set_minor_formatter(NullFormatter())
     handles, labels = axes[0, 0].get_legend_handles_labels()
     legend_y = 1.0 if L["suptitle"] else 1.07
     fig.legend(handles, labels, loc="upper center", ncol=3, fontsize=9,

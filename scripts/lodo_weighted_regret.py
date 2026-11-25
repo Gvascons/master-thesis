@@ -85,23 +85,39 @@ def main():
               "Always-FM": "#008300", "Tree (LODO)": "#e87ba4"}
     MARKERS = {"Always-GBDT": "o", "Always-DL": "s", "Always-FM": "^",
                "Tree (LODO)": "D"}
+    import sys
+    PT = len(sys.argv) > 1 and sys.argv[1] == "pt"
+    STAT_PT = {"median": "mediano", "mean": "m\u00e9dio"}
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.4), sharex=True)
     for ax, stat in zip(axes, ("median", "mean")):
         for pol in list(POLICIES) + ["Tree (LODO)"]:
             a = agg[agg.policy == pol].sort_values("w_acc")
+            lbl = pol if not PT else {"Always-GBDT": "Sempre-GBDT",
+                                      "Always-DL": "Sempre-DL",
+                                      "Always-FM": "Sempre-FM",
+                                      "Tree (LODO)": "\u00c1rvore (LODO)"}[pol]
             ax.plot(a.w_acc, a[stat], "-", color=COLORS[pol], lw=2,
-                    marker=MARKERS[pol], ms=6, label=pol,
+                    marker=MARKERS[pol], ms=6, label=lbl,
                     markeredgecolor="white", markeredgewidth=0.8)
-        ax.set_xlabel("accuracy weight $w$  (1$-$$w$ on latency)")
-        ax.set_ylabel(f"{stat} normalized regret (14 models)")
+        if PT:
+            ax.set_xlabel("peso da acur\u00e1cia $w$  (1$-$$w$ na lat\u00eancia)")
+            ax.set_ylabel(f"regret normalizado {STAT_PT[stat]} (14 modelos)")
+            from matplotlib.ticker import FuncFormatter
+            fmt = FuncFormatter(lambda v, _: f"{v:g}".replace(".", ","))
+            ax.xaxis.set_major_formatter(fmt)
+            ax.yaxis.set_major_formatter(fmt)
+        else:
+            ax.set_xlabel("accuracy weight $w$  (1$-$$w$ on latency)")
+            ax.set_ylabel(f"{stat} normalized regret (14 models)")
         ax.grid(alpha=0.25, lw=0.5)
         ax.set_xlim(0, 1)
     axes[0].legend(fontsize=9, frameon=False)
     plt.tight_layout()
+    suffix = "_pt" if PT else ""
     for ext in ("png", "pdf"):
-        fig.savefig(REPO / f"results/figures/lodo_weighted_regret.{ext}",
+        fig.savefig(REPO / f"results/figures/lodo_weighted_regret{suffix}.{ext}",
                     dpi=150, bbox_inches="tight")
-    print(f"\nsalvos: {out.name} + figura lodo_weighted_regret.png|pdf")
+    print(f"\nsalvos: {out.name} + figura lodo_weighted_regret{suffix}.png|pdf")
 
 
 if __name__ == "__main__":

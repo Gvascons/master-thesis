@@ -47,6 +47,13 @@ LABELS = {
                         "pr\u00f3ximo da diagonal \u2014 mas no california promete 80% "
                         "e cobre 60% (PICP80 0,596); o passo conformal corrige"),
            "suffix": ""},
+    "pt_diss": {"teacher": "TabPFN (professor)",
+           "distilled": "Aluno-quantil destilado",
+           "control": "Aluno-quantil (controle)",
+           "xlabel": "quantil nominal \u03c4",
+           "ylabel": "cobertura emp\u00edrica P(y \u2264 q_\u03c4)",
+           "suptitle": None,  # a legenda LaTeX carrega o titulo
+           "suffix": "_pt"},
     "en": {"teacher": "TabPFN (teacher)",
            "distilled": "Distilled quantile student",
            "control": "Quantile student (control)",
@@ -69,7 +76,7 @@ def coverage_curve(Q, y):
 def main():
     import argparse
     ap = argparse.ArgumentParser()
-    ap.add_argument("--lang", default="pt", choices=["pt", "en"])
+    ap.add_argument("--lang", default="pt", choices=["pt", "en", "pt_diss"])
     args = ap.parse_args()
     L = LABELS[args.lang]
     exp_cfg = load_experiment_config()
@@ -116,6 +123,13 @@ def main():
         ax.tick_params(labelsize=8)
     np.atleast_1d(axes)[0].set_ylabel(L["ylabel"], fontsize=10)
     np.atleast_1d(axes)[0].legend(fontsize=9, frameon=False, loc="upper left")
+    if args.lang == "pt_diss":
+        from matplotlib.ticker import FuncFormatter
+        fmt = FuncFormatter(lambda v, _: f"{v:g}".replace(".", ","))
+        import numpy as _np
+        for ax in _np.atleast_1d(axes).ravel():
+            ax.yaxis.set_major_formatter(fmt)
+            ax.xaxis.set_major_formatter(fmt)
     if L["suptitle"]:
         fig.suptitle(L["suptitle"], fontsize=12)
     plt.tight_layout()
