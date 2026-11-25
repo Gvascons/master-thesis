@@ -338,7 +338,7 @@ is approximately stable across datasets for GBDTs and deep-learning
 models; for foundation models, however, it grows with the context
 size, so the proxy is conservative in the FMs' favor on small
 datasets and against them on large ones. The caveat was later closed
-with measurements at the benchmark's two size extremes; the test is
+with measurements on a small and a large dataset of the benchmark; the test is
 at the end of Section~\ref{sec:e2-resultados}.
 
 \subsection{Results: the crossover}
@@ -582,7 +582,7 @@ practice, may include training cost, robustness, and
 interpretability; and latency enters through a proxy measured on a
 single declared machine. The sensitivity to the measurement dataset,
 however, is no longer an unknown: the sweep re-run with the proxies
-from the benchmark's size extremes produces the same crossover
+from a small and a large dataset of the benchmark produces the same crossover
 (Section~\ref{sec:e2-resultados}), leaving as limitations only the
 single machine and the two criteria.
 

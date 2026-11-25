@@ -362,7 +362,7 @@ aproximadamente estável entre conjuntos para GBDTs e modelos de deep
 learning; para \emph{foundation models}, porém, ela cresce com o tamanho do
 contexto, de modo que o proxy é conservador a favor dos FMs em
 conjuntos pequenos e contra eles em conjuntos grandes. A ressalva
-foi depois fechada com medição nos dois extremos de tamanho do
+foi depois fechada com medição em um conjunto pequeno e um grande do
 benchmark; o teste está no fim da Seção~\ref{sec:e2-resultados}.
 
 \subsection{Resultados: o cruzamento}
@@ -604,7 +604,7 @@ duas simplificações próprias: o score pondera apenas dois critérios
 incluir custo de treino, robustez e interpretabilidade; e a latência
 entra por um proxy medido em uma única máquina declarada. A sensibilidade
 ao conjunto de medição, porém, deixou de ser incógnita: a varredura
-reexecutada com os \emph{proxies} dos extremos de tamanho do benchmark
+reexecutada com os \emph{proxies} de um conjunto pequeno e um grande do benchmark
 produz o mesmo cruzamento (Seção~\ref{sec:e2-resultados}), restando como
 limitação apenas a máquina única e os dois critérios.
 

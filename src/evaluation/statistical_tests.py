@@ -262,6 +262,7 @@ def plot_cd_diagram(
     title: str = "Critical Difference Diagram",
     higher_is_better: bool = True,
     save_path: str | None = None,
+    decimal_comma: bool = False,
 ):
     """Plot a critical difference diagram.
 
@@ -296,7 +297,8 @@ def plot_cd_diagram(
     # Draw CD indicator
     cd_x = (min_rank + max_rank) / 2
     ax.hlines(n_models + 0.8, cd_x - cd / 2, cd_x + cd / 2, colors="red", linewidth=2)
-    ax.text(cd_x, n_models + 0.9, f"CD = {cd:.2f}", ha="center", va="bottom",
+    _num = (lambda v: f"{v:.2f}".replace(".", ",")) if decimal_comma else (lambda v: f"{v:.2f}")
+    ax.text(cd_x, n_models + 0.9, f"CD = {_num(cd)}", ha="center", va="bottom",
             fontsize=9, color="red")
 
     # Draw model labels and ranks
@@ -306,7 +308,7 @@ def plot_cd_diagram(
         side = "left" if rank <= (min_rank + max_rank) / 2 else "right"
         offset = -0.15 if side == "left" else 0.15
         ha = "right" if side == "left" else "left"
-        ax.text(rank + offset, y, f"{model} ({rank:.2f})", ha=ha, va="center", fontsize=10)
+        ax.text(rank + offset, y, f"{model} ({_num(rank)})", ha=ha, va="center", fontsize=10)
         ax.hlines(y, rank, rank, colors="gray", linewidth=0.5, linestyles="--")
 
     # Draw group bars (models not significantly different)

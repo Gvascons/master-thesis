@@ -443,6 +443,10 @@ dominates the compressed teacher & yes & band met at 99~\us{}
 \texttt{kin8nm} \\
 Sign test & confirmatory instrument of the 16/20 & no (fixed at the
 interim reading) & $p\approx0.019$ sequential \\
+Heavy tail (log) & redoing teacher and students with
+$y'{=}\log(1{+}y)$ recovers retention on the price-scale failures &
+yes (cell registered before the ablation) & refuted (\texttt{fifa}
+stays at $-1.69$; the successes shrink; Appendix~C) \\
 E1 (classical) & distilled beats the best of QRF and NGBoost & yes
 (execution already started) & confirmed (17/20) \\
 E3 (utility) & lower realized cost at $\tau{=}0.90$ & registered
@@ -760,7 +764,7 @@ failure, not a scale effect. That leaves \texttt{fifa} and
 \texttt{diamonds\_\allowbreak real} as the failures without a tested
 explanation, on price-scale targets --- and, for them,
 Section~\ref{sec:destil-regra} shows that the heavy-tail hypothesis
-is not confirmed.
+is refuted.
 
 \subsection{Coverage: the clause of H2 that is not met}
 \label{sec:destil-cobertura}
@@ -1301,8 +1305,8 @@ paid. Source:
 \label{sec:destil-regra}
 
 The rule condenses four results of the chapter --- the refutation
-of point distillation (H1), the heavy-tail hypothesis not confirmed
-(the log ablation, in this section), E1's upsets (on 3 of 20
+of point distillation (H1), the refutation of the heavy-tail
+hypothesis (the log ablation, in this section), E1's upsets (on 3 of 20
 datasets, a native QRF beats the distilled student), and the serving
 frontier (H3) --- and this section tests the two questions that
 close it:
@@ -1359,8 +1363,8 @@ teacher and students operate, and it does not eliminate the
 teacher's relative advantage
 (\texttt{results/\allowbreak distillation/\allowbreak ablation\_\allowbreak logtarget.\allowbreak csv}).
 
-From four results --- the point refutation, the heavy-tail
-hypothesis not confirmed, E1's upsets, and the serving frontier ---
+From four results --- the refutations of the point and of the
+heavy tail, E1's upsets, and the serving frontier ---
 comes the final
 decision rule, the operational form of the answer to RQ3:
 
@@ -1585,7 +1589,7 @@ chosen per dataset).
 % source: results/distillation/pareto.csv
 The three-strategy frontier locates when each lever wins, the OOF
 ablation shows that the right safeguard protects calibration, and
-the negative results --- point refuted, heavy tail not confirmed,
+the negative results --- point and heavy tail refuted,
 partial redundancy with classicals --- convert into a decision rule
 whose precondition can be checked before the student is trained.
 It is the

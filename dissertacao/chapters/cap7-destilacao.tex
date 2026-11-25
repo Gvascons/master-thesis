@@ -475,6 +475,10 @@ professor comprimido & sim & faixa atendida a 99~\us{}
 \texttt{kin8nm} \\
 Teste de sinal & instrumento confirmatório do 16/20 & não
 (fixado na leitura interina) & $p\approx0{,}019$ sequencial \\
+Cauda pesada (log) & refazer professor e alunos com
+$y'{=}\log(1{+}y)$ recupera a retenção nas falhas de escala de preço
+& sim (célula registrada antes da ablação) & refutada (\texttt{fifa}
+segue em $-1{,}69$; os êxitos encolhem; Apêndice~C) \\
 E1 (clássicos) & destilado vence o melhor entre QRF e NGBoost & sim
 (execução já iniciada) & confirmada (17/20) \\
 E3 (utilidade) & custo realizado menor em $\tau{=}0{,}90$ & registrada
@@ -778,7 +782,7 @@ covariáveis no \emph{pool} (o conjunto original traz 1.179 linhas
 duplicadas), o controle \emph{pinball} memoriza os gêmeos e o aluno,
 treinado nas curvas suavizadas do professor, não --- nas linhas
 \emph{sem} gêmeo o destilado vence por $+3{,}0\%$ de CRPS, e no
-conjunto deduplicado ($n=5.318$, professor rerrotulado OOF) o
+conjunto deduplicado ($n=5.318$, professor rotulado de novo OOF) o
 destilado vence nas três sementes, com ganho de $+0{,}85\%$ e
 retenção $+0{,}10$
 (\texttt{results/\allowbreak distillation/\allowbreak wine\_\allowbreak dedup.csv});
@@ -792,7 +796,7 @@ configuração, não um efeito de escala. Restam \texttt{fifa} e
 \texttt{diamonds\_\allowbreak real} como as falhas sem explicação
 testada, em alvos de escala de preço --- e, para elas, a
 Seção~\ref{sec:destil-regra} mostra que a hipótese da cauda pesada
-não se confirma.
+é refutada.
 
 \subsection{Cobertura: a cláusula de H2 que não é cumprida}
 \label{sec:destil-cobertura}
@@ -1333,7 +1337,7 @@ para dizer isso antes de qualquer custo ser pago.
 \label{sec:destil-regra}
 
 A regra condensa quatro resultados do capítulo --- a refutação da
-destilação pontual (H1), a hipótese da cauda pesada não confirmada
+destilação pontual (H1), a refutação da hipótese da cauda pesada
 (ablação do log, nesta seção), os reveses do E1 (em 3 de 20
 conjuntos, uma QRF nativa vence o destilado) e a fronteira de
 serviço (H3) ---, e esta seção testa as duas perguntas que a fecham:
@@ -1393,8 +1397,8 @@ em que professor e alunos operam, e não elimina a vantagem relativa
 do professor
 (\texttt{results/\allowbreak distillation/\allowbreak ablation\_\allowbreak logtarget.\allowbreak csv}).
 
-Dos quatro resultados --- a refutação pontual, a cauda pesada não
-confirmada, os reveses do E1 e a fronteira de serviço --- resulta a
+Dos quatro resultados --- as refutações do ponto e da cauda
+pesada, os reveses do E1 e a fronteira de serviço --- resulta a
 regra de decisão final, a forma operacional da resposta à QP3:
 
 \begin{quote}
@@ -1614,7 +1618,7 @@ escolhida por conjunto).
 A fronteira de três
 estratégias localiza quando cada alavanca vence, a ablação OOF mostra
 que a salvaguarda certa protege calibração, e os resultados negativos
---- ponto refutado, cauda pesada não confirmada, redundância parcial
+--- ponto e cauda pesada refutados, redundância parcial
 com clássicos --- convertem-se numa
 regra de decisão cuja pré-condição se verifica antes de treinar o
 aluno. É a

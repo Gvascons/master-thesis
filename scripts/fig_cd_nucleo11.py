@@ -1,6 +1,8 @@
-"""Gera o diagrama de distância crítica do NÚCLEO de 11 modelos para o
-Ato I do cap. 5 (a figura da grade de 14 fica no Ato IV). Ranks
-recomputados no recorte; nomes de exibição em português/como no texto.
+"""Gera os diagramas de distância crítica da dissertação PT com
+vírgula decimal: o NÚCLEO de 11 modelos (Ato I do cap. 5) e a grade
+completa de 14 (Ato IV, cd_diagram_binary_pt.pdf — a variante com
+ponto decimal do AI-1/EN é a de figures_ai1_display.py e não é
+tocada aqui). Ranks recomputados no recorte; nomes como no texto.
 
 Fonte: results/aggregated/test_results.csv
 Saída: dissertacao/images/cd_diagram_binary_11.pdf (+ results/figures/)
@@ -32,10 +34,18 @@ def main():
     data = create_cd_diagram_data(scores, True)
     print("CD (k=11, N=10):", round(data["cd"], 2))
     print({k: round(v, 2) for k, v in sorted(data["average_ranks"].items(), key=lambda x: x[1])})
-    plot_cd_diagram(scores, title="", higher_is_better=True,
+    plot_cd_diagram(scores, title="", higher_is_better=True, decimal_comma=True,
                     save_path=str(REPO / "dissertacao/images/cd_diagram_binary_11.pdf"))
-    plot_cd_diagram(scores, title="", higher_is_better=True,
+    plot_cd_diagram(scores, title="", higher_is_better=True, decimal_comma=True,
                     save_path=str(REPO / "results/figures/cd_diagram_binary_11.pdf"))
+    # grade completa de 14 (Ato IV), virgula decimal, saida _pt
+    full = piv.rename(columns={**DISPLAY, "kan": "KAN", "tabkan": "TabKAN", "tabfm": "TabFM"})
+    data14 = create_cd_diagram_data(full, True)
+    print("CD (k=14, N=10):", round(data14["cd"], 2))
+    plot_cd_diagram(full, title="", higher_is_better=True, decimal_comma=True,
+                    save_path=str(REPO / "dissertacao/images/cd_diagram_binary_pt.pdf"))
+    plot_cd_diagram(full, title="", higher_is_better=True, decimal_comma=True,
+                    save_path=str(REPO / "results/figures/cd_diagram_binary_pt.pdf"))
 
 if __name__ == "__main__":
     main()
