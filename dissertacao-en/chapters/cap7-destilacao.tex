@@ -1300,10 +1300,14 @@ paid. Source:
 \section{When to distill: the decision rule}
 \label{sec:destil-regra}
 
-The conditions of value for distillation come out of two tested
-questions --- does the student's family matter? does the heavy tail
-explain the failures? --- whose answers (yes to the first; no to
-the second) close the practical rule.
+The rule condenses four results of the chapter --- the refutation
+of point distillation (H1), the heavy-tail hypothesis not confirmed
+(the log ablation, in this section), E1's upsets (on 3 of 20
+datasets, a native QRF beats the distilled student), and the serving
+frontier (H3) --- and this section tests the two questions that
+close it:
+does the student's family matter? does the heavy tail
+explain the failures? (yes to the first; no to the second).
 
 \textbf{Does the student's family matter?} Yes. XGBoost's pinball
 objective, under this design's inherited hyperparameters, leaves
@@ -1355,8 +1359,10 @@ teacher and students operate, and it does not eliminate the
 teacher's relative advantage
 (\texttt{results/\allowbreak distillation/\allowbreak ablation\_\allowbreak logtarget.\allowbreak csv}).
 
-From the two refutations, from E1 and from the frontier, the final
-decision rule --- the operational form of the answer to RQ3:
+From four results --- the point refutation, the heavy-tail
+hypothesis not confirmed, E1's upsets, and the serving frontier ---
+comes the final
+decision rule, the operational form of the answer to RQ3:
 
 \begin{quote}
 \textbf{Before distilling: (i)~run cheap target transformations as
