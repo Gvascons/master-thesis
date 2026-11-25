@@ -65,6 +65,28 @@ Distributional Distillation}
 % \includeonly{chapters/cap7-destilacao}
 
 \usepackage{array}
+% Cabeçalho corrente (lote 25/11): título curto já na página de abertura
+% da seção — \hdrshort{...} antes de \section{...} declara o mark curto
+% que o \sectionmark automático do \section usará uma única vez.
+\makeatletter
+\gdef\hdr@short{}
+\newcommand{\hdrshort}[1]{\gdef\hdr@short{#1}}
+\renewcommand{\sectionmark}[1]{%
+  \ifx\hdr@short\@empty
+    \markright{\MakeUppercase{\thesection.\ #1}}%
+  \else
+    \markright{\MakeUppercase{\thesection.\ \hdr@short}}\gdef\hdr@short{}%
+  \fi}
+\makeatother
+% Correção (lote 25/11): o estilo plain da classe usa \fancyhead sem
+% seletor e desenha o número da página 3x sobreposto (L, C e R, todos
+% com \hfill) nas aberturas de capítulo; aqui, uma única vez, à direita.
+\fancypagestyle{plain}{%
+  \fancyhead{}\fancyfoot{}%
+  \fancyhead[R]{\rule{0cm}{4mm}\thepage}%
+  \renewcommand{\headrulewidth}{0pt}}
+% URLs: não quebrar logo após o ':' (evita "https:" órfão na bibliografia)
+\expandafter\def\expandafter\UrlNoBreaks\expandafter{\UrlNoBreaks\do\:}
 \usepackage{pdflscape}
 % Diagramação (lote 25/11): floats podem dividir página com texto
 \renewcommand{\topfraction}{0.9}

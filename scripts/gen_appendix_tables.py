@@ -87,7 +87,7 @@ def build_table(df: pd.DataFrame, task: str, metric: str,
     lines = []
     lines.append(r"\begin{table}[htbp]")
     lines.append(r"\centering")
-    lines.append(r"\small")
+    lines.append(r"\footnotesize")
     lines.append(r"\setlength{\tabcolsep}{3pt}")
     lines.append(
         r"\caption[" + TASK_TITLES[label].split(" --- ")[0]
@@ -193,7 +193,7 @@ def build_ks_table(df: pd.DataFrame) -> str:
     de crédito, mas só o rank médio estava impresso."""
     sub = df[df["task_type"] == "binary"]
     pivot = sub.pivot(index="dataset", columns="model", values="ks")
-    lines = [r"\begin{table}[htbp]", r"\centering", r"\small",
+    lines = [r"\begin{table}[htbp]", r"\centering", r"\footnotesize",
              r"\setlength{\tabcolsep}{3pt}",
              r"\caption[Estatística KS por conjunto --- binária]{Estatística "
              r"de Kolmogorov--Smirnov (KS; maior é melhor) por modelo em "
