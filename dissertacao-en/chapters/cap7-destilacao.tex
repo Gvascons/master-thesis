@@ -23,7 +23,7 @@ beats its control on 16 of 20 datasets, with a median CRPS gain of
 microseconds per row. Third, that gain concentrates in the tails of
 the distribution --- exactly where asymmetric-cost decisions operate.
 Fourth, it is not universal, and the conditions under which it pays
-off fit in a rule that can be checked before the student is trained,
+off fit into a rule that can be checked before the student is trained,
 by a single OOF labeling pass (minutes to a few hours, depending on
 pool size and teacher latency).
 Section~\ref{sec:destil-metodo} describes the method; the following
@@ -146,7 +146,7 @@ to reproduce the teacher's outputs instead of the observed labels.
 The \textbf{control} is the same XGBoost, with the same
 hyperparameters, trained the usual way, on the observed labels. The
 comparison that matters is always distilled student against control:
-the two serve at the same order of magnitude of cost (within a
+their serving costs are of the same order of magnitude (within a
 factor of ${\sim}2$ in the measured pairs), and the difference
 between them is what the teacher added. The comparison against the teacher says how
 much was left on the way.
@@ -283,8 +283,8 @@ advantage over its own true-label control, negative values mean
 distillation hurt, and values above 1 mean the student ended up
 better than the teacher itself --- what the networks literature
 calls a \emph{born-again} student \citep{furlanello2018}. An example
-with real numbers from Table~\ref{tab:destil-retencao} fixes the
-reading. On \texttt{cpu\_activity}, the control has CRPS 1.2943, the
+with real numbers from Table~\ref{tab:destil-retencao} illustrates the
+definition. On \texttt{cpu\_activity}, the control has CRPS 1.2943, the
 teacher 1.0610, and the distilled student 1.1777: the teacher's
 advantage is $1.2943-1.0610=0.2333$, the student gained
 $1.2943-1.1777=0.1166$ (the $+0.117$ quoted later is this number
@@ -724,7 +724,7 @@ ratio and oscillates when the teacher's absolute advantage is small: the
 below 0.001 CRPS (\texttt{online\_news}, at a 1.3\% relative
 advantage, is analogous) --- which is why
 the table carries the relative gain with its interval next to the
-ratio. Second, the ``big success'' label demands relative reading:
+ratio. Second, the ``big success'' label must be read in relative terms:
 the absolute improvement of $+0.160$ on \texttt{cps88wages} operates
 on a CRPS of ${\sim}160$ --- a $0.1\%$ gain, indistinguishable from
 zero in the bootstrap; the absolute successes that resist are
@@ -929,13 +929,13 @@ the four (on \texttt{kin8nm} by 0.0006, a tie at the rounding of
 Table~\ref{tab:app-abl-oof}; on \texttt{california}$^\dagger$ the
 CRPS worsens)
 --- and context size contributes little (though, on
-\texttt{wine\_quality}, it costs 5.9~p.p.\ of additional coverage).
+\texttt{wine\_quality}, it removes a further 5.9~p.p.\ of coverage).
 The damage concentrates on \textbf{interval coverage}: at identical
 context, in-sample-labeled students lose 0.5 to 5.1~p.p.\ of PICP80
 on all four datasets --- artifact
 \texttt{ablation\_\allowbreak insample.\allowbreak csv} in
-\texttt{results/\allowbreak distillation/}. The mechanics is
-legible: the teacher is overconfident on the rows it has in context,
+\texttt{results/\allowbreak distillation/}. The mechanism is
+clear: the teacher is overconfident on the rows it has in context,
 and that overconfidence --- invisible to accuracy metrics ---
 transfers to the student as too-narrow intervals. In regression, OOF
 labeling is a \emph{calibration} safeguard, not an accuracy one ---
@@ -1046,7 +1046,7 @@ registered for \emph{both} outcomes:
     accuracy, not in cost.
 \end{itemize}
 
-The pre-fixed criteria (gates): if H-B1 were confirmed, the decision
+The criteria fixed in advance (gates): if H-B1 were confirmed, the decision
 rule would gain the note ``a strong classical native does not
 replace distillation where the teacher's advantage is large''; if
 refuted, \emph{all} the distilled student's advantage claims would
@@ -1099,7 +1099,7 @@ the frontier reading of Section~\ref{sec:destil-fronteira} remains
 intact.
 \end{sloppypar}
 
-The pre-fixed criterion demands reading the three upsets one by one,
+The criterion fixed in advance requires examining the three upsets one by one,
 and Table~\ref{tab:destil-e1-reveses} lays them out in full.
 
 \begin{table}[htb]
@@ -1157,7 +1157,7 @@ rule --- test the cheap alternatives first --- and by the axis no
 alternative covers: latency at about a hundred microseconds per row
 \emph{with} transferred distributional shape.
 
-The interpretive balance follows the pre-fixed criterion: the
+The interpretive balance follows the criterion fixed in advance: the
 distillation advantage \textbf{is not redundant} with strong native
 distributional baselines in default configuration --- with the
 caveat that, against the \emph{best} of four teacher-free
@@ -1252,7 +1252,7 @@ realized; the twin is the counterexample the mean hides).
 On the whole portfolio, with the \emph{same} cutoff of 500 on both
 sides, 86.6\% of the rows the mean approves (12{,}247 of 14{,}141)
 have a 0.10 quantile below the cutoff --- and the fraction depends
-on the cutoff, which is why the grid goes declared: 48\% at 300,
+on the cutoff, which is why the full grid is reported: 48\% at 300,
 74\% at 400, 95\% at 600, and 100\% from 700 dollars on. What the
 rule buys is also stated from both sides: it is \emph{conservative}
 --- it declines a lot, and the declined block realizes below 500 in
@@ -1266,8 +1266,8 @@ volume --- a trade the single point does not even allow stating.
 
 On \texttt{fps\_\allowbreak benchmark}, among the 326 configurations
 with a point prediction in the 107--109~FPS band, the central 80\%
-intervals range from 1.1 to 8.7~FPS --- the pair displayed here are
-the two ends of that band, declaredly: same mean, and the
+intervals range from 1.1 to 8.7~FPS --- the two configurations cited here are,
+as declared, the two ends of that band: same mean, and the
 minimum-performance guarantee (the 0.10 quantile) distinguishes what
 the mean does not see (108 against 103). On
 \texttt{video\_\allowbreak transcoding}, provisioning the reserve by
@@ -1314,7 +1314,7 @@ objective, under this design's inherited hyperparameters, leaves
 measurable room on several datasets ---
 Section~\ref{sec:destil-e1-resultados} quantifies it: some
 teacher-free alternative beats it on 9 of 20 --- and distillation
-fills part of that room consistently; that is, in part, the room it
+consistently fills part of that room; in part, that is the niche it
 occupies. A true-label quantile-MLP student, by contrast, matches
 the distilled XGBoost \emph{with no teacher at all} on small,
 numeric datasets (CRPS 0.110 against 0.109 on
@@ -1386,7 +1386,7 @@ configuration (a strong native such as the QRF occupies the same
 latency regime and beats the distilled student on 3 of 20
 datasets); where a single
 teacher member already runs at the student's latency, ensemble
-shrinking may close the case.}
+shrinking may settle the matter.}
 \end{quote}
 
 A declared descriptive analysis supports the rule's gate:

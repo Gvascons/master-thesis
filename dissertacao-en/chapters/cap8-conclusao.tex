@@ -14,7 +14,7 @@ the study as a whole, and points to future work.
 
 This dissertation started from the question that organized a decade
 of literature on tabular data (``do trees still win?'') and ended
-answering a different one, because the evidence collected showed that
+up answering a different one, because the evidence collected showed that
 the original had expired. The three research questions stated in
 Chapter~\ref{chap:introducao} receive here their direct answers, each
 with the evidence of the chapter that answered it.
@@ -22,7 +22,7 @@ with the evidence of the chapter that answered it.
 \textbf{RQ1} --- \emph{does the accuracy tie among the families of
 tabular models survive a rigorous protocol and the arrival of the
 2026 generation of foundation models?}
-Chapter~\ref{chap:benchmark} answers in two beats. Within the
+Chapter~\ref{chap:benchmark} answers in two parts. Within the
 pre-2026 generation, yes: the top is practical equivalence gauged
 under the declared criteria (8/10 equivalent under a ROPE of
 $\pm0.01$ on the lenient $E[\theta]>0.5$ criterion, and 3/10 --- the
@@ -45,8 +45,8 @@ equivalence --- and comes at the price of four to five orders of
 magnitude in serving latency (43{,}262 against XGBoost's
 0.33~\us/row under the standardized protocol). The instance layer (Section~\ref{sec:cap5-ato5}) further
 says \emph{where} the shift lives: XGBoost and the foundation models
-agree on ${\ge}93.6\%$ of instances (median), the disputed fringe is
-converted in a strongly heterogeneous way across datasets, and the
+agree on ${\ge}93.6\%$ of instances (median), the conversion of the
+disputed fringe varies strongly across datasets, and the
 easy explanations (low margin, minority class, little data) were not
 confirmed under the pre-registered criteria.
 
@@ -263,7 +263,7 @@ same status as positive ones, per the study's conduct contract
     flagged, the
     default QRF beats even the teacher. The negative complement has
     value of its own: the ``test a strong native first'' step of
-    the decision rule stopped being rhetorical.
+    the decision rule is no longer rhetorical.
   \item \textbf{Architectural negative of TabFM as a distributional
     teacher (negative evidence; Chapter~\ref{chap:destilacao}).}
     TabFM's regression head is point-valued --- an architectural
@@ -301,7 +301,7 @@ same status as positive ones, per the study's conduct contract
 \section{Advice to the practitioner}
 \label{sec:conc-conselhos}
 
-The operational distillate of Chapters~\ref{chap:framework}
+The operational summary of Chapters~\ref{chap:framework}
 and~\ref{chap:destilacao}, in the order the questions should be
 asked --- each item traces to the result that supports it.
 
@@ -363,7 +363,7 @@ asked --- each item traces to the result that supports it.
     ensemble.} A single TabPFN member approximated the eight at a
     seventh of the latency --- sometimes at no accuracy cost ---
     and, when a single teacher member already reaches the student's
-    latency tier, that lever closes the case without any
+    latency tier, that lever settles the matter without any
     distillation (Section~\ref{sec:destil-fronteira}).
   \item \textbf{On 16~GB GPUs, distrust the last context
     doubling.} The final doubling, from 25{,}000 to 50{,}000 rows,
@@ -547,7 +547,7 @@ labeling --- before deciding.
 Each chapter declared its local limitations; this section
 consolidates those of the study as a whole, organized by the three
 canonical validity types (Section~\ref{sec:met-limitacoes}). Two
-transversal limitations enter the taxonomy with their own
+cross-cutting limitations enter the taxonomy with their own
 prominence: multiplicity and the pure distilled student's
 undercoverage, below, under internal validity; the teachers'
 licenses, under external validity.

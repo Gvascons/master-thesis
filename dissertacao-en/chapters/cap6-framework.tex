@@ -82,7 +82,7 @@ scenario.
 It is worth separating from the start what each study tests. The
 out-of-sample test (LODO) applies to what is \emph{learned}: the
 tree is trained on 17 datasets and evaluated on the eighteenth, and
-it is that test it fails. The fixed policies learn nothing; their
+that is the test it fails. The fixed policies learn nothing; their
 regret describes what would have happened on the benchmark's 18
 datasets, and the choice of ``always-FM'' as the best of them is
 made on the same datasets on which it is measured. The flowchart of
@@ -430,8 +430,8 @@ $w{=}0.8$ by the median --- does more than enrich: it explains
 recommendation only held with 99\% of the weight on accuracy, the
 latency question would be an edge detail; since it flips with
 10--20\% of the weight on latency (by the median), the question is
-the axis of the decision. The flowchart of the next section is not a decorative
-heuristic around a single policy --- it is the encoding of the
+the pivot of the decision. The flowchart of the next section is not a decorative
+heuristic wrapped around a single policy --- it is the encoding of the
 frontier that Figure~\ref{fig:lodo-weighted} measures. Put another
 way: before E2, we knew latency \emph{mattered} (the matrix of
 Figure~\ref{fig:decision-matrix} already showed it in stars); after

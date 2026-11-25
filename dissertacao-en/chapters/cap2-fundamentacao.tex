@@ -18,7 +18,7 @@ consulting the sources.
 \section{Tabular data and supervised learning}
 \label{sec:fund-tabular}
 
-Let us start with the object. A \emph{tabular dataset} is a table in
+We begin with the object of study. A \emph{tabular dataset} is a table in
 which each row is an observation and each column an attribute --- the
 format of a bank statement, a medical record, or a customer registry.
 Table~\ref{tab:adult-exemplo} illustrates the format with rows in the
@@ -700,7 +700,7 @@ compression a modern exact treatment. In the reverse direction,
 in search of interpretability, and the distillation of networks into
 networks of equal capacity (\emph{born-again networks}) revealed
 that even self-imitation can improve the student
-\citep{furlanello2018}. The transversal lesson: distillation is
+\citep{furlanello2018}. The general lesson: distillation is
 agnostic to the teacher--student pair; what is transferred is the
 learned \emph{function}, exposed through the outputs. And the target
 of the transfer need not be a point: distilling the teacher's
@@ -982,7 +982,7 @@ follows the canonical framework of the field
 \emph{commensurable} across datasets: an AUC of $0.95$ on an easy
 dataset and one of $0.75$ on a hard one are not on the same scale,
 and means or variances across datasets mix apples and oranges ---
-besides which normality, ANOVA's assumption, has no reason to hold.
+and, moreover, ANOVA's normality assumption has no reason to hold.
 The solution of \citet{demsar2006} is to work with \emph{ranks}: on
 each dataset, the $k$ models are ordered from best ($1$) to worst
 ($k$); ranks, unlike metrics, are comparable across datasets by
@@ -1084,7 +1084,7 @@ retentions of Chapter~\ref{chap:destilacao}.
 \subsection{The Bayesian test with a region of practical equivalence}
 
 The frequentist framework has an uncomfortable asymmetry: it can
-reject equality, but it cannot \emph{affirm} it ---
+reject equality, but it cannot \emph{establish} it ---
 non-rejection is not evidence of equivalence, especially with small
 $N$ and little power. \citet{benavoli2017} offer the Bayesian
 complement. One fixes \emph{a priori}, by domain judgment, a

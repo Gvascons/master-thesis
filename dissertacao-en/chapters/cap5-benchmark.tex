@@ -8,7 +8,7 @@ models on the 18 OpenML datasets, executed under the single protocol
 of Chapter~\ref{chap:metodologia} --- it is the chapter that answers
 RQ1 (\emph{does the accuracy tie among the families survive a
 rigorous protocol and the arrival of the 2026 generation of
-foundation models?}). The reading has two movements: in the core of
+foundation models?}). The results fall into two parts: in the core of
 11 models predating the 2026 extension, the top of the accuracy
 ranking is a statistical tie gauged by practical equivalence and the
 model$\times$dataset interaction (together with noise) dominates the
@@ -199,7 +199,7 @@ does not separate the leading pack and the Bayesian instrument
 declares practical equivalence --- the maxim ``boosting always wins''
 finds, in this generation, no accuracy margin to support it.
 
-An honest delimitation before proceeding: the tie is established in
+A scope note before proceeding: the tie is established in
 binary classification, the only task with enough $N$ ($N{=}10$) for
 the instruments to operate with useful power. In regression, $N{=}5$
 imposes a combinatorial floor on the paired Wilcoxon p-value (0.0625
@@ -308,7 +308,7 @@ Section~\ref{sec:met-protocolo}), the GBDTs pay from 104~s (LightGBM)
 to 646~s (CatBoost) for the full search cycle; MLP-style DL pays from
 1{,}117~s (MLP) to 2{,}242~s (TabM); and heavy attention reaches
 9{,}831~s (SAINT) and 14{,}622~s (STab) --- two orders of magnitude
-above the cheapest GBDTs to, as seen in Act~I, not leave the tie (the
+above the cheapest GBDTs, yet, as seen in Act~I, without leaving the tie (the
 consolidated cost table is in Appendix~\ref{app:tabelas}). The
 foundation models pay zero. This axis rarely appears in the
 literature's benchmarks, but it is what the practitioner pays at
@@ -639,7 +639,7 @@ lead rests on consistency across datasets and on effect sizes.}
 \label{fig:cap5-cd14}
 \end{figure}
 
-The counterweight is head-on, and it is the chapter's central
+The counterweight is direct, and it is the chapter's central
 finding: the accuracy leader is the grid's worst model in serving
 latency --- 43{,}262~\us/row under the standard protocol,
 $131{,}097\times$ XGBoost, and more in larger contexts, reaching
@@ -714,8 +714,8 @@ datasets where the three coexist. The design was pre-registered
 \emph{before} execution, with dated hypotheses and falsification
 criteria
 (\texttt{docs/\allowbreak desenho-\allowbreak analise-\allowbreak complementaridade.\allowbreak md},
-2026-10-22; execution addendum of 2026-10-23), and the generation of
-the predictions rebuilt the final models under the benchmark's exact
+2026-10-22; execution addendum of 2026-10-23), and generating
+the predictions required refitting the final models under the benchmark's exact
 protocol --- same chosen hyperparameters, same split, same seed ---
 with a sanity gate requiring $|\Delta| \le 10^{-3}$ between the
 recomputed primary metric and the recorded one: all 52 cells of the
@@ -831,7 +831,7 @@ with the minority class as the class of interest
 Table~\ref{tab:app-operacionais} of Appendix~\ref{app:tabelas};
 artifact
 \texttt{secondary\_\allowbreak metrics\_\allowbreak holdout.csv}).
-The translation is instructive twice over. On
+This translation is instructive in two ways. On
 \texttt{amazon\_\allowbreak employee}
 (Figure~\ref{fig:cap5-operacionais}a), the accuracies are nearly
 indistinguishable (0.943 to 0.949), but the minority-class recall
