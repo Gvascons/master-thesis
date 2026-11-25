@@ -38,6 +38,7 @@ def main():
     auc = roc_auc_score(y, p)
     fpr, tpr, thr = roc_curve(y, p)
 
+    plt.rcParams.update({"font.size": 12, "pdf.fonttype": 42})
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(11.0, 4.6))
 
     # ---- painel (a): ROC ---------------------------------------------------
@@ -49,17 +50,17 @@ def main():
         a1.plot(fpr[i], tpr[i], "o", ms=7, color=INK, zorder=5)
         a1.annotate(num(f"{'threshold' if en else 'limiar'} {t_mark:.2f}"),
                     (fpr[i], tpr[i]), textcoords="offset points",
-                    xytext=(10, -4), fontsize=9, color=INK)
+                    xytext=(10, -4), fontsize=12, color=INK)
         print(f"limiar {t_mark:.2f}: FPR={fpr[i]:.3f} TPR(recall)={tpr[i]:.3f}")
     a1.text(0.55, 0.28, num(f"AUC = {auc:.3f}"),
-            fontsize=12, color=TEAL, fontweight="bold")
+            fontsize=14, color=TEAL, fontweight="bold")
     a1.text(0.45, 0.38, "chance (AUC = 0.5)" if en else "acaso (AUC = 0,5)",
-            fontsize=9, color="#999", rotation=38, rotation_mode="anchor")
+            fontsize=12, color="#999", rotation=38, rotation_mode="anchor")
     if en:
         a1.set_xlabel("false positive rate (1 $-$ specificity)")
         a1.set_ylabel("true positive rate (recall)")
         a1.set_title("(a) ROC curve — XGBoost on the adult hold-out",
-                     fontsize=11, loc="left")
+                     fontsize=13, loc="left")
     else:
         a1.set_xlabel("taxa de falsos positivos (1 $-$ especificidade)")
         from matplotlib.ticker import FuncFormatter
@@ -70,7 +71,7 @@ def main():
 
         a1.set_ylabel("taxa de verdadeiros positivos (recall)")
         a1.set_title("(a) Curva ROC — XGBoost no hold-out do adult",
-                     fontsize=11, loc="left")
+                     fontsize=13, loc="left")
 
     # ---- painel (b): precisão/recall vs limiar -----------------------------
     ts = np.linspace(0.02, 0.98, 97)
@@ -83,20 +84,21 @@ def main():
     a2.axvline(0.5, color="#555", lw=1, ls=":")
     a2.text(0.51, 0.04,
             "default threshold 0.5" if en else "limiar padrão 0,5",
-            fontsize=9, color="#555")
+            fontsize=12, color="#555")
     i05 = int(np.argmin(np.abs(ts - 0.5)))
     print(f"t=0,5: precisão={prec[i05]:.3f} recall={rec[i05]:.3f}")
     if en:
         a2.set_xlabel("decision threshold on $\\hat p(\\text{income} > 50K)$")
         a2.set_ylabel("metric value")
         a2.set_title("(b) The trade-off the threshold governs",
-                     fontsize=11, loc="left")
+                     fontsize=13, loc="left")
     else:
         a2.set_xlabel("limiar de decisão sobre $\\hat p(\\text{renda} > 50K)$")
         a2.set_ylabel("valor da métrica")
-        a2.set_title("(b) O trade-off que o limiar governa", fontsize=11, loc="left")
+        a2.set_title("(b) O trade-off que o limiar governa", fontsize=13, loc="left")
     a2.set_ylim(0, 1.02)
-    a2.legend(loc="center left", fontsize=9, frameon=False)
+    a2.legend(loc="upper center", fontsize=12, frameon=True,
+              framealpha=0.95, edgecolor="#ccc")
 
     for ax in (a1, a2):
         for s in ("top", "right"):

@@ -63,6 +63,7 @@ def main():
     treino = t.groupby("model")["train_time_s"].median()
     lat = pd.read_csv(REPO / "results/latency/latency_adult.csv").set_index("model")["us_per_row"]
 
+    plt.rcParams.update({"font.size": 14, "pdf.fonttype": 42})
     fig, axes = plt.subplots(1, 2, figsize=(12.5, 5.6), sharey=True)
     if en:
         paineis = [
@@ -98,17 +99,17 @@ def main():
                        marker="*" if na_f else "o",
                        s=230 if na_f else 70, zorder=3,
                        edgecolors="white", linewidths=0.7)
-            OFF = {"saint": (5, -11), "ft_transformer": (5, 6),
-                   "catboost": (5, -10), "lightgbm": (-8, -11),
-                   "tabm": (5, 5)}
-            HA = {"lightgbm": "right"}
-            ax.annotate(DISPLAY[m], (r.custo, r.rank14), fontsize=8,
+            OFF = {"saint": (5, -14), "ft_transformer": (5, 7),
+                   "catboost": (5, -13), "lightgbm": (-8, -14),
+                   "tabm": (5, 6), "tabfm": (-8, 5)}
+            HA = {"lightgbm": "right", "tabfm": "right"}
+            ax.annotate(DISPLAY[m], (r.custo, r.rank14), fontsize=13,
                         textcoords="offset points",
                         ha=HA.get(m, "left"),
                         xytext=OFF.get(m, (5, 4)))
         ax.set_xscale("log")
         ax.set_xlabel(xlabel)
-        ax.set_title(titulo, fontsize=10)
+        ax.set_title(titulo, fontsize=15)
         ax.grid(alpha=0.3, which="both")
     axes[0].invert_yaxis()
     if en:
@@ -139,7 +140,7 @@ def main():
         Line2D([], [], ls="-", color="#424242", label=leg[1]),
         Line2D([], [], ls="--", color="#9e9e9e", label=leg[2]),
     ]
-    axes[0].legend(handles=handles, fontsize=7.5, frameon=False,
+    axes[0].legend(handles=handles, fontsize=12.5, frameon=False,
                    loc="lower left")
     plt.tight_layout()
     for out in outs:

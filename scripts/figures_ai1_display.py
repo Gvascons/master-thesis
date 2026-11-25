@@ -60,6 +60,51 @@ def fig_cd(test_df):
     plt.close(fig)
 
 
+def fig_average_ranks_diss(test_df, lang):
+    """Variante da DISSERTACAO (lote de diagramacao 25/11): mesmos
+    valores e mesma ordem de barras da fig_average_ranks, paineis
+    EMPILHADOS (3x1), figsize (7, 9), fontes 8.5pt (escala ~0.84 na
+    pagina -> ~7.2pt impressos), fonttype 42; PT com virgula decimal.
+    Nao substitui a average_ranks do AI-1."""
+    import matplotlib
+    matplotlib.rcParams["pdf.fonttype"] = 42
+    L = {"pt": {"xlabel": "rank médio (menor = melhor)",
+                "titles": {"binary": "Binária (AUC-ROC)",
+                           "multiclass": "Multiclasse (log-loss)",
+                           "regression": "Regressão (RMSE)"},
+                "fmt": lambda v: f"{v:.2f}".replace(".", ",")},
+         "en": {"xlabel": "average rank (lower = better)",
+                "titles": {"binary": "Binary (AUC-ROC)",
+                           "multiclass": "Multiclass (log-loss)",
+                           "regression": "Regression (RMSE)"},
+                "fmt": lambda v: f"{v:.2f}"}}[lang]
+    fig, axes = plt.subplots(3, 1, figsize=(7, 9))
+    for ax, (task, metric, higher) in zip(axes, TASKS):
+        sub = test_df[test_df.task_type == task]
+        pivot = (sub.pivot(index="dataset", columns="model", values=metric)
+                 .dropna(axis=1))
+        ranks = pivot.rank(axis=1, ascending=not higher)
+        avg = ranks.mean(axis=0).sort_values()
+        avg.index = [DISPLAY.get(m, m) for m in avg.index]
+        colors = plt.cm.RdYlGn_r(np.linspace(0.1, 0.9, len(avg)))
+        bars = ax.barh(avg.index, avg.values, color=colors)
+        ax.set_xlabel(L["xlabel"], fontsize=8.5)
+        ax.set_title(L["titles"][task], fontsize=9.5, loc="left")
+        ax.tick_params(labelsize=8.5)
+        ax.invert_yaxis()
+        for bar, val in zip(bars, avg.values):
+            ax.text(val + 0.07, bar.get_y() + bar.get_height() / 2,
+                    L["fmt"](val), va="center", fontsize=8.5)
+        ax.set_xlim(0, max(avg.values) * 1.12)
+    plt.tight_layout()
+    out = (REPO / ("dissertacao/images/average_ranks_diss_pt.pdf" if lang == "pt"
+                   else "dissertacao-en/images/average_ranks_diss_en.pdf"))
+    fig.savefig(out, bbox_inches="tight")
+    fig.savefig(FIGDIR / out.name, bbox_inches="tight")
+    print("salva:", out.name)
+    plt.close(fig)
+
+
 def fig_average_ranks(test_df):
     fig, axes = plt.subplots(1, 3, figsize=(18, 6))
     for ax, (task, metric, higher) in zip(axes, TASKS):
@@ -209,15 +254,16 @@ def fig_flowchart14_pt():
     ax.axis("off")
 
     def box(x, y, t, c="#eef"):
-        ax.annotate(t, (x, y), ha="center", va="center", fontsize=10,
+        ax.annotate(t, (x, y), ha="center", va="center", fontsize=13,
                     bbox=dict(boxstyle="round,pad=0.5", fc=c, ec="#333"))
 
     def arrow(x1, y1, x2, y2, lbl=""):
         ax.annotate("", (x2, y2), (x1, y1),
                     arrowprops=dict(arrowstyle="->", color="#333"))
         if lbl:
-            ax.text((x1 + x2) / 2 + 0.015, (y1 + y2) / 2, lbl, fontsize=9,
-                    color="#a00", ha="left")
+            ax.text((x1 + x2) / 2 + 0.015, (y1 + y2) / 2, lbl, fontsize=13,
+                    color="#a00", ha="left",
+                    bbox=dict(fc="white", ec="none", pad=1.2))
 
     box(0.5, 0.96, "Problema tabular supervisionado")
     box(0.5, 0.82, "1. Or\u00e7amento de lat\u00eancia de servi\u00e7o cr\u00edtico?\n"
@@ -257,15 +303,16 @@ def fig_flowchart14(ref="AI-2", out="decision_flowchart_14"):
     ax.axis("off")
 
     def box(x, y, t, c="#eef"):
-        ax.annotate(t, (x, y), ha="center", va="center", fontsize=10,
+        ax.annotate(t, (x, y), ha="center", va="center", fontsize=13,
                     bbox=dict(boxstyle="round,pad=0.5", fc=c, ec="#333"))
 
     def arrow(x1, y1, x2, y2, lbl=""):
         ax.annotate("", (x2, y2), (x1, y1),
                     arrowprops=dict(arrowstyle="->", color="#333"))
         if lbl:
-            ax.text((x1 + x2) / 2 + 0.015, (y1 + y2) / 2, lbl, fontsize=9,
-                    color="#a00", ha="left")
+            ax.text((x1 + x2) / 2 + 0.015, (y1 + y2) / 2, lbl, fontsize=13,
+                    color="#a00", ha="left",
+                    bbox=dict(fc="white", ec="none", pad=1.2))
 
     box(0.5, 0.96, "Tabular supervised problem")
     box(0.5, 0.82, "1. Serving-latency budget critical?\n"

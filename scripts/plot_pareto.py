@@ -92,10 +92,10 @@ def facet(ax, sub, metric, L):
             for _, r in s.iterrows():
                 ax.annotate(L["annot"], (r.us_per_row, r[metric]),
                             textcoords="offset points", xytext=(8, -12),
-                            fontsize=8, color=color, fontweight="bold")
+                            fontsize=14, color=color, fontweight="bold")
     ax.set_xscale("log")
     ax.grid(alpha=0.25, which="both", lw=0.5)
-    ax.tick_params(labelsize=8)
+    ax.tick_params(labelsize=15)
 
 
 def main():
@@ -108,6 +108,7 @@ def main():
     datasets = [d for d in ("california_housing", "kin8nm", "year_prediction")
                 if d in set(df.dataset)]
     n = len(datasets)
+    plt.rcParams["pdf.fonttype"] = 42
     fig, axes = plt.subplots(2, n, figsize=(4.6 * n, 7.4))
     if n == 1:
         axes = axes.reshape(2, 1)
@@ -115,18 +116,19 @@ def main():
     for j, ds in enumerate(datasets):
         sub = df[df.dataset == ds]
         facet(axes[0, j], sub, "rmse", L)
-        axes[0, j].set_title(ds, fontsize=11)
+        axes[0, j].set_title(ds, fontsize=16)
         facet(axes[1, j], sub, "crps", L)
-        axes[1, j].set_xlabel(L["xlabel"], fontsize=9)
-    axes[0, 0].set_ylabel(L["rmse"], fontsize=10)
-    axes[1, 0].set_ylabel(L["crps"], fontsize=10)
+        axes[1, j].set_xlabel(L["xlabel"], fontsize=15)
+    axes[0, 0].set_ylabel(L["rmse"], fontsize=15)
+    axes[1, 0].set_ylabel(L["crps"], fontsize=15)
 
-    if args.lang == "pt_diss":
+    if args.lang in ("pt_diss", "en"):
         import math
         from matplotlib.ticker import FuncFormatter, NullFormatter
         fmt = FuncFormatter(lambda v, _: f"{v:g}".replace(".", ","))
         for ax in axes.ravel():
-            ax.yaxis.set_major_formatter(fmt)
+            if args.lang == "pt_diss":
+                ax.yaxis.set_major_formatter(fmt)
             ax.xaxis.set_minor_formatter(NullFormatter())
             # regra: todo eixo log com ao menos duas decadas rotuladas
             lo, hi = ax.get_xlim()
@@ -134,7 +136,7 @@ def main():
                 ax.set_xlim(10 ** (math.floor(math.log10(hi)) - 1), hi)
     handles, labels = axes[0, 0].get_legend_handles_labels()
     legend_y = 1.0 if L["suptitle"] else 1.07
-    fig.legend(handles, labels, loc="upper center", ncol=3, fontsize=9,
+    fig.legend(handles, labels, loc="upper center", ncol=3, fontsize=15,
                frameon=False, bbox_to_anchor=(0.5, legend_y))
     if L["suptitle"]:
         fig.suptitle(L["suptitle"], fontsize=12, y=1.05)

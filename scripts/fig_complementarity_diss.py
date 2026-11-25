@@ -18,6 +18,7 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+plt.rcParams.update({"font.size": 13, "pdf.fonttype": 42})
 import numpy as np
 import pandas as pd
 from matplotlib.lines import Line2D
@@ -50,22 +51,22 @@ def main():
             if pd.notna(p) and p < 0.01:
                 a1.text(v + (1.5 if v >= 0 else -1.5), yy, "*",
                         va="center_baseline", ha="left" if v >= 0 else "right",
-                        fontsize=11, color="#333")
+                        fontsize=15, color="#333")
     a1.axvline(0, color="#555", lw=1)
     a1.set_yticks(ypos)
     a1.set_yticklabels([d.replace("_", "\\_") if False else d for d in order],
-                       fontsize=9)
+                       fontsize=13)
     if en:
         a1.set_xlabel("net FM wins per 1,000 instances\n"
                       "($\\leftarrow$ XGBoost better $\\;|\\;$ FM better $\\rightarrow$)")
         a1.set_title("(a) Where each FM beats XGBoost (classification)",
-                     fontsize=11, loc="left")
+                     fontsize=13, loc="left")
     else:
         a1.set_xlabel("vitórias líquidas do FM por 1.000 instâncias\n"
                       "($\\leftarrow$ XGBoost melhor $\\;|\\;$ FM melhor $\\rightarrow$)")
         a1.set_title("(a) Onde cada FM ganha do XGBoost (classificação)",
-                     fontsize=11, loc="left")
-    a1.legend(loc="lower right", fontsize=9, frameon=False)
+                     fontsize=13, loc="left")
+    a1.legend(loc="lower right", fontsize=13, frameon=False)
     a1.grid(axis="x", alpha=0.25, lw=0.6)
     a1.set_axisbelow(True)
 
@@ -83,14 +84,14 @@ def main():
     a2.set_xticks(sorted(marg.quintil_margem.unique()))
     if en:
         a2.set_xticklabels(["Q1\nuncertain", "Q2", "Q3", "Q4", "Q5\nconfident"],
-                           fontsize=9)
+                           fontsize=13)
         a2.set_xlabel("XGBoost margin quintile ($|\\hat p - 0.5|$)")
         a2.set_ylabel("net FM wins per 1,000 instances")
         a2.set_title("(b) Gain by XGBoost margin (10 binary datasets)",
-                     fontsize=11, loc="left")
+                     fontsize=13, loc="left")
     else:
         a2.set_xticklabels(["Q1\nincerto", "Q2", "Q3", "Q4", "Q5\nconfiante"],
-                           fontsize=9)
+                           fontsize=13)
         a2.set_xlabel("quintil de margem do XGBoost ($|\\hat p - 0{,}5|$)")
         from matplotlib.ticker import FuncFormatter
         _fmt = FuncFormatter(lambda v, _: f"{v:g}".replace(".", ","))
@@ -99,8 +100,8 @@ def main():
 
         a2.set_ylabel("vitórias líquidas do FM por 1.000 instâncias")
         a2.set_title("(b) Ganho por margem do XGBoost (10 binárias)",
-                     fontsize=11, loc="left")
-    a2.legend(loc="upper right", fontsize=9, frameon=False)
+                     fontsize=13, loc="left")
+    a2.legend(loc="upper right", fontsize=13, frameon=False)
     a2.grid(axis="y", alpha=0.25, lw=0.6)
     a2.set_axisbelow(True)
 

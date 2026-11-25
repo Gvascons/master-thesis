@@ -263,6 +263,7 @@ def plot_cd_diagram(
     higher_is_better: bool = True,
     save_path: str | None = None,
     decimal_comma: bool = False,
+    font_scale: float = 1.0,
 ):
     """Plot a critical difference diagram.
 
@@ -279,6 +280,9 @@ def plot_cd_diagram(
     n_models = len(avg_ranks)
     sorted_items = sorted(avg_ranks.items(), key=lambda x: x[1])
 
+    fs = font_scale
+    import matplotlib
+    matplotlib.rcParams["pdf.fonttype"] = 42
     fig, ax = plt.subplots(1, 1, figsize=(10, max(3, n_models * 0.4)))
 
     # Draw axis
@@ -292,14 +296,14 @@ def plot_cd_diagram(
     ax.hlines(n_models + 0.2, min_rank, max_rank, colors="black", linewidth=1)
     for r in range(min_rank, max_rank + 1):
         ax.vlines(r, n_models + 0.1, n_models + 0.3, colors="black", linewidth=1)
-        ax.text(r, n_models + 0.4, str(r), ha="center", va="bottom", fontsize=9)
+        ax.text(r, n_models + 0.4, str(r), ha="center", va="bottom", fontsize=9 * fs)
 
     # Draw CD indicator
     cd_x = (min_rank + max_rank) / 2
     ax.hlines(n_models + 0.8, cd_x - cd / 2, cd_x + cd / 2, colors="red", linewidth=2)
     _num = (lambda v: f"{v:.2f}".replace(".", ",")) if decimal_comma else (lambda v: f"{v:.2f}")
     ax.text(cd_x, n_models + 0.9, f"CD = {_num(cd)}", ha="center", va="bottom",
-            fontsize=9, color="red")
+            fontsize=9 * fs, color="red")
 
     # Draw model labels and ranks
     for i, (model, rank) in enumerate(sorted_items):
@@ -308,7 +312,7 @@ def plot_cd_diagram(
         side = "left" if rank <= (min_rank + max_rank) / 2 else "right"
         offset = -0.15 if side == "left" else 0.15
         ha = "right" if side == "left" else "left"
-        ax.text(rank + offset, y, f"{model} ({_num(rank)})", ha=ha, va="center", fontsize=10)
+        ax.text(rank + offset, y, f"{model} ({_num(rank)})", ha=ha, va="center", fontsize=10 * fs)
         ax.hlines(y, rank, rank, colors="gray", linewidth=0.5, linestyles="--")
 
     # Draw group bars (models not significantly different)

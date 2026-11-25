@@ -20,6 +20,7 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+plt.rcParams.update({"font.size": 13, "pdf.fonttype": 42})
 import numpy as np
 import pandas as pd
 
@@ -57,21 +58,21 @@ def main():
                       color=CMAP[m], label=NAME[m])
         for b, v in zip(bars, vals):
             a1.text(b.get_x() + b.get_width() / 2, v + 0.015, fmt(v),
-                    ha="center", va="bottom", fontsize=8.5, color="#333")
+                    ha="center", va="bottom", fontsize=12.5, color="#333")
         print(f"amazon {m}: acc={vals[0]:.3f} recall_min={vals[1]:.3f}")
     a1.set_xticks(xs)
     if EN:
         a1.set_xticklabels(["accuracy", "minority-class\nrecall"])
         a1.set_ylabel("metric value (threshold 0.5)")
         a1.set_title("(a) amazon_employee (minority: 5.8%)",
-                     fontsize=11, loc="left")
+                     fontsize=13, loc="left")
     else:
         a1.set_xticklabels(["acurácia", "recall da classe\nminoritária"])
         a1.set_ylabel("valor da métrica (limiar 0,5)")
         a1.set_title("(a) amazon_employee (minoritária: 5,8%)",
-                     fontsize=11, loc="left")
+                     fontsize=13, loc="left")
     a1.set_ylim(0, 1.06)
-    a1.legend(loc="upper right", fontsize=9, frameon=False)
+    a1.legend(loc="upper right", fontsize=13, frameon=False)
 
     # ---- painel (b): recall da minoritária nas 10 binárias -----------------
     order = (bi.reset_index().groupby("dataset").minority_frac.first()
@@ -101,12 +102,12 @@ def main():
     ylabs = [f"{labels[d]} ({frac[d] * 100:.1f}%)" for d in order]
     if not EN:
         ylabs = [s.replace(".", ",") for s in ylabs]
-    a2.set_yticklabels(ylabs, fontsize=9)
+    a2.set_yticklabels(ylabs, fontsize=13)
     a2.set_xlim(0, 1.0)
     if EN:
         a2.set_xlabel("minority-class recall (threshold 0.5)")
         a2.set_title("(b) The 10 binary datasets, most to least imbalanced",
-                     fontsize=11, loc="left")
+                     fontsize=13, loc="left")
     else:
         a2.set_xlabel("recall da classe minoritária (limiar 0,5)")
         from matplotlib.ticker import FuncFormatter
@@ -115,8 +116,8 @@ def main():
         a2.xaxis.set_major_formatter(_fmt)   # recall 0-1
 
         a2.set_title("(b) As 10 binárias, da mais à menos desbalanceada",
-                     fontsize=11, loc="left")
-    a2.legend(loc="upper right", fontsize=9, frameon=False)
+                     fontsize=13, loc="left")
+    a2.legend(loc="upper right", fontsize=13, frameon=False)
 
     for ax in (a1, a2):
         for s in ("top", "right"):

@@ -42,11 +42,13 @@ def main():
     lat = pd.read_csv(REPO / "results/latency/latency_adult.csv")
     lat = lat.sort_values("us_per_row")
     lat["model"] = lat["model"].map(lambda m: DISPLAY.get(m, m))
+    plt.rcParams.update({"font.size": 13, "pdf.fonttype": 42})
     fig, ax = plt.subplots(figsize=(10, 6))
     colors = lat["family"].map({"gbdt": "#2196F3", "deep_learning": "#FF9800",
                                 "foundation_model": "#4CAF50"}).fillna("grey")
     ax.barh(lat["model"], lat["us_per_row"], color=colors)
     ax.set_xscale("log")
+    ax.set_xlim(right=lat["us_per_row"].max() * 6)  # folga p/ o rotulo da maior barra
     if EN:
         ax.set_xlabel("Inference latency (µs/row, log scale)")
         ax.set_title("Inference latency on the adult dataset (lower is better)")
@@ -56,12 +58,12 @@ def main():
         ax.set_title("Latência de inferência no conjunto adult (menor é melhor)")
         dl_label = "Aprendizado profundo"
     for y, v in enumerate(lat["us_per_row"]):
-        ax.text(v, y, f" {ptnum(v)}", va="center", fontsize=8)
+        ax.text(v, y, f" {ptnum(v)}", va="center", fontsize=12)
     from matplotlib.patches import Patch
     ax.legend(handles=[Patch(color="#2196F3", label="GBDT"),
                        Patch(color="#FF9800", label=dl_label),
                        Patch(color="#4CAF50", label="Foundation model")],
-              loc="lower right", fontsize=9)
+              loc="lower right", fontsize=12)
     plt.tight_layout()
     if EN:
         outs = (REPO / "dissertacao-en/images/inference_time_en.pdf",

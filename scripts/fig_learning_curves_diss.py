@@ -29,6 +29,11 @@ DISPLAY = {"xgboost": "XGBoost", "catboost": "CatBoost", "tabm": "TabM",
 CMAP = {"xgboost": "#c1121f", "catboost": "#e8590c", "tabm": "#1d4e89",
         "realmlp": "#4895ef", "ft_transformer": "#3a0ca3",
         "tabpfn": "#2a9d8f"}
+# estilo/marcador por modelo: desambigua os pares de cor proxima
+# (XGBoost x CatBoost; TabM x FT-Transformer) sem mudar as cores
+STYLE = {"xgboost": ("-", "o"), "catboost": ("--", "s"),
+         "tabm": ("-", "o"), "ft_transformer": ("--", "^"),
+         "realmlp": ("-", "v"), "tabpfn": ("-", "D")}
 PRIMARY = {"binary": ("roc_auc", True), "multiclass": ("log_loss", False),
            "regression": ("rmse", False)}
 
@@ -47,6 +52,7 @@ def main():
     datasets = [x for x in ("give_me_some_credit", "higgs", "adult",
                             "jannis", "year_prediction")
                 if x in df.dataset.unique()]
+    plt.rcParams["pdf.fonttype"] = 42
     fig, axes = plt.subplots(2, 3, figsize=(11.5, 7.2))
     axes = axes.ravel()
     for ax, ds in zip(axes, datasets):
@@ -56,7 +62,9 @@ def main():
         a = agg(sub)
         for mdl in sub.model.unique():
             m = a[a.model == mdl].sort_values("train_size")
-            ax.plot(m.train_size, m["mean"], "-o", ms=3.5, lw=2.0,
+            ls, mk = STYLE.get(mdl, ("-", "o"))
+            ax.plot(m.train_size, m["mean"], linestyle=ls, marker=mk,
+                    ms=4.5, lw=2.0,
                     color=CMAP.get(mdl, "gray"))
             ax.fill_between(m.train_size, m["mean"] - m["std"],
                             m["mean"] + m["std"],
@@ -72,24 +80,27 @@ def main():
         if not en:
             task = task_pt.get(task, task)
         arrow = " ↑" if higher else " ↓"
-        ax.set_title(f"{ds}\n({task}, {nice[col]}{arrow}{yl})", fontsize=11)
+        ax.set_title(f"{ds}\n({task}, {nice[col]}{arrow}{yl})", fontsize=13)
         ax.set_xlabel("training pool size" if en else "tamanho do pool de treino",
-                      fontsize=10)
-        ax.tick_params(labelsize=9)
+                      fontsize=12)
+        ax.tick_params(labelsize=12)
+        ax.tick_params(which="minor", labelsize=12)
         if not en:
             from matplotlib.ticker import FuncFormatter
             _fmt = FuncFormatter(lambda v, _: f"{v:g}".replace(".", ","))
             ax.yaxis.set_major_formatter(_fmt)
         ax.grid(alpha=0.3, which="both")
     ylab = "primary metric" if en else "métrica primária"
-    axes[0].set_ylabel(ylab, fontsize=10)
-    axes[3].set_ylabel(ylab, fontsize=10)
+    axes[0].set_ylabel(ylab, fontsize=12)
+    axes[3].set_ylabel(ylab, fontsize=12)
     # última célula vira painel de legenda
     axes[5].axis("off")
-    handles = [Line2D([0], [0], color=c, lw=2.2, marker="o", ms=5)
-               for c in CMAP.values()]
+    handles = [Line2D([0], [0], color=CMAP[m], lw=2.2,
+                      linestyle=STYLE.get(m, ("-", "o"))[0],
+                      marker=STYLE.get(m, ("-", "o"))[1], ms=6)
+               for m in CMAP]
     axes[5].legend(handles, [DISPLAY[m] for m in CMAP], loc="center",
-                   fontsize=12, frameon=False,
+                   fontsize=13, frameon=False,
                    title="Models" if en else "Modelos",
                    title_fontsize=12)
     plt.tight_layout()
