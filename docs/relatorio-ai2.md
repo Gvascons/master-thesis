@@ -241,3 +241,11 @@ california de alvo binarizado); destilação pontual refutada (4/20); E1
 17/20 (p=0,0013); artefatos canônicos: `paper_retention.csv`,
 `paper_stats.csv`, `baselines_analysis.csv`. Este adendo existe para que
 nenhum leitor tome o interim N=15 como resultado final.
+
+**Retificação (25/11/2026).** A Fase 6a cita "diamonds_real −0,05"; o
+valor no artefato `results/distillation/ablation_logtarget.csv`
+(commitado em 20/07, 435fff4, inalterado desde então), pela convenção
+de retenção da dissertação (médias das 3 sementes; CRPS no espaço
+log), é **−0,03** (−0,026). O −0,05 não é reproduzido do artefato por
+nenhuma convenção testada (CRPS por semente: −0,021 a −0,033; RMSE:
+−0,025). O veredito da hipótese (refutada) não se altera.
