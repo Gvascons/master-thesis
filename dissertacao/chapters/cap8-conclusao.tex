@@ -622,8 +622,8 @@ configurações versionadas, números rastreáveis a artefatos).
 
 \textbf{Dependência da normalização no E2.} A faixa de inversão
 (10--20\% por postos) move-se para 20--35\% sob normalizações
-min--max (logarítmica, linear) --- a direção é a mesma, o número
-citado é o da normalização pré-registrada
+min--max (logarítmica, linear) --- a direção é a mesma, e o número
+citado é o da normalização adotada no desenho registrado
 (Seção~\ref{sec:regret-ponderado}).
 
 \textbf{Multiplicidade entre experimentos.} Nenhuma correção é
@@ -672,7 +672,10 @@ um trabalho futuro (Seção~\ref{sec:conc-futuros}).
 \textbf{Regime delimitado.} Dezoito conjuntos OpenML (mais os quinze da
 extensão CTR23 na destilação), teto de 100~mil amostras e uma única GPU
 de 16~GB delimitam o regime estudado a dados tabulares de pequeno e
-médio porte em hardware de porte comum. Quatro conjuntos elegíveis
+médio porte em hardware de porte comum. O TabICLv2, anterior ao
+fechamento do elenco, não foi considerado na ampliação que o fechou
+--- uma limitação do elenco, não efeito de datação
+(Seção~\ref{sec:rel-benchmarks}). Quatro conjuntos elegíveis
 da CTR23 ficaram fora da população de destilação; a sensibilidade
 com eles, medida em cinco splits de dados, mantém o veredito (17/24,
 $p=0{,}032$; recorte conservador 16/22, $p=0{,}026$;

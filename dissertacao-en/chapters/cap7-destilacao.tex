@@ -1080,8 +1080,10 @@ between 4.1 and 31.9~\us/row (QRF 4.1--21.4; NGBoost 12.2--31.9)
 below the teachers, depending on the teacher and the context. The
 classicals
 compete with the distilled student in accuracy and are even cheaper
-than it is ($5$--$25\times$, against the distilled student's
-99--169~\us/row); what they do not reach is the distilled student's
+than it is (per-dataset medians: QRF 4.1--21.4~\us/row, NGBoost
+12.2--31.9, against the distilled student's
+99--169 on the frontier datasets); what they do not reach is the
+distilled student's
 CRPS on most datasets (17 of 20), and
 the frontier reading of Section~\ref{sec:destil-fronteira} remains
 intact.
@@ -1457,11 +1459,14 @@ measured here.
 
 \begin{itemize}
   \item \textbf{Heterogeneous, budget-dependent magnitude.}
-    Retention varies from $-1.3$ to $+1.1$ across datasets, the
-    Bayesian posterior leaves ${\sim}25\%$ of mass on negative
-    median retention (a different quantity from the 0.96 probability
-    on $\theta$, the pair proportion of the signed-rank analysis),
-    and Section~\ref{sec:destil-retune} shows that half
+    Retention varies from $-1.3$ to $+1.1$ across datasets; the
+    Bayesian signed-rank analysis leaves ${\sim}25\%$ of
+    \emph{expected} posterior mass on the negative-retention region
+    ($E[\theta_{\text{neg}}]=0.25$) --- which does not contradict
+    the 0.96 probability of Section~\ref{sec:destil-dist}, the
+    probability that the \emph{positive} region is the posterior's
+    most probable component; and
+    Section~\ref{sec:destil-retune} shows that half
     of the main design's magnitude came from the control's
     configuration. What is delivered is the decision rule of
     Section~\ref{sec:destil-regra}, not a universal claim.
