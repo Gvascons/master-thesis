@@ -116,7 +116,8 @@ the RMSE on a $\{0,1\}$ target is the square root of the Brier score,
 and the internal ranks remain valid --- but the dataset is degenerate
 for distributional readings, and every result involving it in
 Chapter~\ref{chap:destilacao} carries a sensitivity analysis with it
-excluded. ($\ddagger$)~\texttt{online\_news} is the
+excluded --- except the check of TabFM's spread as a teacher,
+measured only on it. ($\ddagger$)~\texttt{online\_news} is the
 OnlineNewsPopularity dataset (target = logarithm of the number of
 shares; a legitimate continuous regression).
 
@@ -203,7 +204,8 @@ the provenance of each implementation.
 \centering
 \caption[The 14 models of the benchmark, by family]{The 14 models of
 the benchmark, by family, with the provenance of each implementation
-(``own'' indicates a reimplementation from the original paper).}
+(``own'' indicates an implementation in the repository; SAINT, STab
+and TabKAN are reimplementations from the original papers).}
 \label{tab:modelos}
 \footnotesize
 \setlength{\tabcolsep}{3pt}
@@ -280,8 +282,8 @@ Both foundation models have declared architectural limits, from which
 the experimental matrix's only gap follows: the \texttt{helena}
 dataset (100 classes) exceeds both models' class limit. The two cells
 TabPFN$\times$\texttt{helena} and TabFM$\times$\texttt{helena} are
-therefore \emph{structural exclusions} --- architectural
-impossibilities, not execution failures --- and the final matrix has
+therefore \emph{structural exclusions} --- native architectural
+limits, not execution failures --- and the final matrix has
 250 of the 252 possible cells. The statistical policy for those cells
 is defined in Section~\ref{sec:met-estatistica}.
 
@@ -370,7 +372,7 @@ external folds with the hyperparameters fixed.}
     about 4$\times$ a GBDT trial, and assumed that 25 TPE trials
     would suffice for most of the landscape ---
     our own budget premise, assessed \emph{a posteriori} through the
-    winning configurations and the across-seed stability of
+    winning configurations of
     Appendix~\ref{app:hp-escolhidos}, not a claim from the
     literature. The realized measurements showed a larger disparity
     than the premise (the median cost per deep-learning trial was more
@@ -378,8 +380,9 @@ external folds with the hyperparameters fixed.}
     by the ratio of medians --- and the total search time
     1.1--140$\times$ above, depending on the model pair --- a range
     computed over per-model medians, excluding \texttt{adult}); the
-    residual bias favors deep learning in search time --- which,
-    even so, does not win --- and the correct reading is
+    residual bias favors deep learning in search time ---
+    deep learning, which nonetheless does not win --- and the
+    correct reading is
     ``asymmetric budgets by design, imperfect parity measured and
     disclosed'', not equalization. One exception is declared: on
     \texttt{adult}, the 7 legacy deep-learning models were tuned

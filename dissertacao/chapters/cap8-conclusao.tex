@@ -73,7 +73,7 @@ restrições, não um roteador aprendido. Sob
 meta-características acerta menos que a regra trivial de classe
 majoritária (0,11 contra 0,44 com 11 modelos; 0,72 contra 0,78 com
 14), embora as reversões condicionais que ele deveria explorar sejam
-reais --- o aprendizado profundo recente toma o topo
+reais --- o aprendizado profundo recente toma o topo não-FM da
 multiclasse (descritivo, $N{=}3$), os GBDTs ganham vantagem sob
 desbalanceamento severo, o TabPFN domina o regime de poucos dados
 ($n \leq 4.000$; e a subamostragem intra-conjunto mostra que a
@@ -116,9 +116,9 @@ competitiva mais barata do professor nos dois casos medidos da
 fronteira (onde nenhuma configuração barata do professor alcança o
 \emph{tier} de latência do aluno). As
 condições verificáveis são três --- as duas primeiras custam de
-segundos (QRF; até ${\sim}40$~s no maior conjunto) a minutos (refit
-sob log), e a terceira é a que exige a rotulagem \emph{out-of-fold}:
-transformar o alvo, testar um nativo
+minutos (refit sob log) a segundos (QRF; até ${\sim}40$~s no maior
+conjunto), e a terceira é a que exige a rotulagem \emph{out-of-fold}:
+rodar a transformação de alvo como diagnóstico, testar um nativo
 distribucional forte e destilar somente a vantagem que sobrar ao
 professor --- com a própria rotulagem OOF como salvaguarda de
 calibração do aluno (0,5--5,1~p.p.\ de PICP80,
@@ -204,7 +204,7 @@ positivos, conforme o contrato de conduta do estudo
     arcabouço final é um fluxograma de quatro restrições verificáveis
     \emph{a priori} --- a forma que os dados sustentam.
   \item \textbf{Regret multicritério ponderado --- E2 (evidência;
-    Capítulo~\ref{chap:framework}).} O
+    Capítulo~\ref{chap:framework}).} A
     análise registrada que localiza o ponto de inversão da
     recomendação: ``FM primeiro'' só é ótima na mediana para
     $w \geq 0{,}9$ de peso na acurácia; com $w \leq 0{,}6$,
@@ -232,8 +232,8 @@ positivos, conforme o contrato de conduta do estudo
     positiva em 16 de 20 conjuntos ($p=0{,}006$ em estágio único,
     $p\approx0{,}019$ sob
     a correção sequencial; probabilidade posterior
-    bayesiana de 0,96 em retenção positiva, com massa posterior
-    esperada 0,70), incluindo um aluno
+    bayesiana de 0,96 de a região positiva ser a mais provável, com
+    massa posterior esperada nela de 0,70), incluindo um aluno
     \emph{born-again} (que iguala o próprio professor, a menos de
     $10^{-4}$ de CRPS), servindo na
     casa de cem microssegundos por linha.
@@ -289,8 +289,8 @@ positivos, conforme o contrato de conduta do estudo
     distribucional (evidência negativa;
     Capítulo~\ref{chap:destilacao}).} A cabeça de regressão do TabFM é
     pontual --- verificação arquitetural de julho de 2026, confirmada
-    pelo relatório técnico oficial \citep{kong2026} --- e a dispersão de
-    no único conjunto em que foi medida (o
+    pelo relatório técnico oficial \citep{kong2026} --- e, no único
+    conjunto em que foi medida (o
     \texttt{california\_housing}$^\dagger$ de alvo binarizado), a
     dispersão do seu \emph{ensemble} não funciona como distribuição
     preditiva (CRPS 0,524 contra 0,069 do TabPFN; cobertura de 16,3\%
@@ -303,10 +303,13 @@ positivos, conforme o contrato de conduta do estudo
     capítulo --- a refutação da destilação pontual, a refutação da
     hipótese da cauda pesada, os reveses do E1 (em 3 de 20
     conjuntos, uma QRF nativa vence o destilado) e a fronteira de
-    serviço: transformar o alvo, testar
-    um nativo forte, e destilar somente a vantagem genuína que
-    sobreviver --- pré-condição mensurável por uma rotulagem OOF de
-    minutos. É a forma operacional da resposta à QP3.
+    serviço: rodar a transformação do alvo como diagnóstico, testar
+    um nativo forte e destilar somente a vantagem genuína que
+    sobreviver --- pré-condição mensurável por uma única rotulagem
+    OOF, de minutos a poucas horas conforme o \emph{pool} e o
+    professor (o \emph{gate} foi verificado na versão oráculo; a
+    versão OOF não foi avaliada). É a forma operacional da resposta à
+    QP3.
   \end{enumerate}
   \item \textbf{Infraestrutura e conduta reutilizáveis (transversal;
     Capítulos~\ref{chap:metodologia} a~\ref{chap:destilacao}).} Um
@@ -339,9 +342,11 @@ e~\ref{chap:destilacao}, na ordem em que as perguntas devem ser feitas
   \item \textbf{Se latência de microssegundos importa, GBDT.} Com 40\%
     ou mais do peso da utilidade na latência, ``sempre-GBDT'' tem \emph{regret}
     mediano zero; a recomendação ``FM primeiro'' já se inverte com
-    10--20\% de peso na latência, pela mediana do \emph{regret} e na
-    normalização por postos do desenho (20--35\% nas normalizações
-    min--max alternativas; E2 e adendo,
+    10--20\% de peso na latência na grade de 0,1, pela mediana do
+    \emph{regret} e na
+    normalização por postos do desenho (15--20\% na grade fina de
+    0,05; 20--35\% nas normalizações
+    min--max alternativas, na grade fina; E2 e adendo,
     Seção~\ref{sec:regret-ponderado}).
   \item \textbf{Se nenhuma restrição está ativa, \emph{foundation model}
     primeiro.} Regret mediano 0,000 na geração 2026
@@ -371,9 +376,11 @@ e~\ref{chap:destilacao}, na ordem em que as perguntas devem ser feitas
     pequenos e numéricos (Seção~\ref{sec:destil-regra}).
   \item \textbf{Destile quando a vantagem sobreviver às
     transformações e a um nativo forte --- e meça-a antes.} Uma única
-    rotulagem OOF, de custo de minutos, mede diretamente a vantagem
-    genuína do professor; destile somente se ela persistir
-    (Seção~\ref{sec:destil-regra}). Não destile a média: em
+    rotulagem OOF, de custo de minutos a poucas horas conforme o
+    \emph{pool} e o professor, mede diretamente a vantagem
+    genuína do professor; destile somente se ela persistir (o limiar
+    do \emph{gate} foi derivado na amostra, na versão oráculo;
+    Seção~\ref{sec:destil-regra}). Não destile a média: em
     tamanhos realistas de \emph{pool}, não há o que transferir no
     eixo pontual
     (Seção~\ref{sec:destil-ponto}).
@@ -522,16 +529,17 @@ aluno, embora GBDT, aprende rótulos de um professor opaco) \\
 \addlinespace
 Limite arquitetural ($>$10 classes; contexto estourado) &
 GBDT ou DL recente conforme a tarefa &
-\texttt{helena} (100 classes) exclui os dois FMs; topo multiclasse
-descritivo: STab/TabM 3,67 vs.\ XGBoost 6,0, $N{=}3$
+\texttt{helena} (100 classes) exclui os dois FMs; melhor não-FM na multiclasse
+(descritivo): STab/TabM 3,67 vs.\ XGBoost 6,0, $N{=}3$
 (Seções~\ref{sec:cap5-ato3}, \ref{sec:arcabouco-resultante}) &
 Nada: a exclusão é estrutural, não preferência \\
 \addlinespace
-Vantagem relativa do professor pequena (\emph{gate} OOF), ou
-professor de um membro já no \emph{tier} do aluno; alvo de preço;
+Vantagem relativa do professor pequena (\emph{gate} verificado na
+versão oráculo; a versão OOF não foi avaliada), ou
+professor de um membro já no \emph{tier} do aluno;
 nativo forte disponível &
-\emph{Não} destilar: QRF primeiro, $\log(1{+}y)$, redução de
-\emph{ensemble} &
+\emph{Não} destilar: QRF primeiro, redução de
+\emph{ensemble} (o $\log(1{+}y)$ roda antes, como diagnóstico) &
 E1: QRF vence o destilado em 3 de 20 (no \texttt{wine\_quality},
 até o professor); \texttt{kin8nm}: 1 membro à latência do aluno (um
 caso de latência); o log
@@ -630,7 +638,8 @@ descobertos; a mitigação é estrutural (\emph{hashes} de dados,
 configurações versionadas, números rastreáveis a artefatos).
 
 \textbf{Dependência da normalização no E2.} A faixa de inversão
-(10--20\% por postos) move-se para 20--35\% sob normalizações
+(10--20\% por postos na grade de 0,1; 15--20\% na grade fina de
+0,05) move-se para 20--35\% sob normalizações
 min--max (logarítmica, linear) --- a direção é a mesma, e o número
 citado é o da normalização adotada no desenho registrado
 (Seção~\ref{sec:regret-ponderado}).
@@ -644,7 +653,7 @@ sequencial do seu desenho em duas etapas; E1; E3), os três se mantêm
 instrumentos suplementares, já limítrofes isoladamente, não se
 mantêm --- e numa família que os incluísse, o $p$ ajustado da
 manchete seria 0,057
-(Seção~\ref{sec:destil-desenho}).
+(Seção~\ref{sec:destil-limitacoes}).
 
 \textbf{Subcobertura do aluno destilado puro.} A cláusula
 pré-registrada de cobertura (PICP80 a $\pm5$~p.p.\ do nominal) é
@@ -729,7 +738,7 @@ Apêndice~\ref{app:suplementares}).
 nas análises (inclusive no score ponderado do E2) pela medição
 padronizada em um único regime (lote amortizado, cada modelo em seu
 dispositivo natural), com o \texttt{adult} como referência. A direção do
-viés foi declarada no pré-registro e a sua magnitude foi depois medida
+viés foi declarada no registro do E2 e a sua magnitude foi depois medida
 em um conjunto pequeno e um grande do benchmark: os \emph{rankings} entre os 14
 modelos são estáveis entre conjuntos (Spearman 0{,}78--0{,}95) e o
 cruzamento do E2 é idêntico sob os três \emph{proxies}
@@ -738,7 +747,7 @@ permanece não medido é a sensibilidade ao hardware: todos os números vêm
 de uma única máquina declarada.
 
 \textbf{O estimador de CRPS em grade.} A grade de 19 quantis
-sobre-estima o CRPS exato em ${\sim}$4--5\% quase constantes, validado
+superestima o CRPS exato em ${\sim}$4--5\% quase constantes, validado
 contra a forma fechada gaussiana: comparações internas e razões de
 retenção ficam preservadas, mas os valores absolutos de CRPS desta
 dissertação não devem ser comparados aos de outros trabalhos

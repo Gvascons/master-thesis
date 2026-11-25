@@ -41,7 +41,7 @@ consistent runner-up). That lead is supported by the consistency
 across datasets and the paired effect sizes --- not by the
 underpowered frequentist post-hoc nor by the Bayesian instrument,
 which does not separate TabFM from XGBoost and CatBoost in practical
-equivalence --- and comes at the price of four to five orders of
+equivalence --- and comes at the price of about five orders of
 magnitude in serving latency (43{,}262 against XGBoost's
 0.33~\us/row under the standardized protocol). The instance layer (Section~\ref{sec:cap5-ato5}) further
 says \emph{where} the shift lives: XGBoost and the foundation models
@@ -58,7 +58,7 @@ not a learned router. Under leave-one-dataset-out with 18 datasets,
 the meta-feature router scores below the trivial majority-class rule
 (0.11 against 0.44 with 11 models; 0.72 against 0.78 with 14), even
 though the conditional reversals it should exploit are real ---
-recent deep learning takes the multiclass top (descriptive, $N{=}3$),
+recent deep learning takes the non-FM multiclass top (descriptive, $N{=}3$),
 the GBDTs gain advantage under severe imbalance, TabPFN dominates the
 low-data regime ($n \leq 4{,}000$; and the within-dataset subsampling
 shows that the foundation models' advantage is not confined to small
@@ -96,10 +96,12 @@ control, and $2.5\times$ to $27\times$ below the teacher's cheapest
 competitive configuration in the two measured frontier cases
 (where no cheap teacher configuration reaches the student's latency
 tier). The
-verifiable conditions are three --- the first two cost seconds (QRF;
-up to ${\sim}40$~s on the largest dataset) to minutes (refit under
-log), and the third is the one that requires the out-of-fold
-labeling: transform the target, test a strong
+verifiable conditions are three --- the first two cost minutes
+(refit under log) and seconds (QRF;
+up to ${\sim}40$~s on the largest dataset), and the third is the
+one that requires the out-of-fold
+labeling: run the target transformation as a diagnostic, test a
+strong
 native distributional baseline, and distill only the advantage that
 remains to the teacher --- with OOF labeling itself as the student's
 calibration safeguard (0.5--5.1~p.p.\ of PICP80,
@@ -151,7 +153,7 @@ same status as positive ones, per the study's conduct contract
   \item \textbf{Unfavorable result under a uniform protocol
     (negative evidence; Chapter~\ref{chap:benchmark}).} In the
     family's first confrontation with the full
-    GBDT/DL/foundation-model grid under a multi-criteria protocol
+    GBDT/DL/\allowbreak foundation-model grid under a multi-criteria protocol
     --- as far as the dated checks reach --- KAN and TabKAN finish
     in the bottom third on all three tasks (ranks 11.0/12.0/9.8 and
     11.4/13.3/11.8), in line with the cost-parity critique
@@ -211,8 +213,8 @@ same status as positive ones, per the study's conduct contract
     retention of 12\% to 19\% of the CRPS gap, depending on how the
     arms are tuned, positive on 16 of 20 datasets ($p=0.006$ single-stage,
     $p\approx0.019$ under the sequential correction; Bayesian
-    posterior probability of 0.96 on positive retention, with
-    expected posterior mass 0.70), including a \emph{born-again}
+    posterior probability of 0.96 that the positive region is the
+    most probable one, with expected posterior mass on it of 0.70), including a \emph{born-again}
     student (which matches its own teacher to within $10^{-4}$ of
     CRPS), serving at about a hundred microseconds per row.
   \item \textbf{Refutation of point distillation at realistic pool
@@ -281,10 +283,13 @@ same status as positive ones, per the study's conduct contract
     the chapter --- the refutation of point distillation, the
     refutation of the heavy-tail hypothesis, E1's upsets (on 3 of 20
     datasets a native QRF beats the distilled student), and the
-    serving frontier: transform the target, test a strong native,
+    serving frontier: run the target transformation as a
+    diagnostic, test a strong native,
     and
     distill only the genuine advantage that survives --- a
-    precondition measurable by a minutes-long OOF labeling. It is
+    precondition measurable by a single OOF labeling, minutes to a
+    few hours depending on pool and teacher (the gate was verified
+    in its oracle version; the OOF version was not evaluated). It is
     the operational form of the answer to RQ3.
   \end{enumerate}
   \item \textbf{Reusable infrastructure and conduct (cross-cutting;
@@ -317,8 +322,10 @@ asked --- each item traces to the result that supports it.
   \item \textbf{If microsecond latency matters, GBDT.} With 40\% or
     more of the utility weight on latency, ``always-GBDT'' has a
     zero median regret; the ``FM first'' recommendation already
-    flips with 10--20\% of the weight on latency, by median regret
-    and under the design's rank normalization (20--35\% under the
+    flips with 10--20\% of the weight on latency on the 0.1 grid,
+    by median regret
+    and under the design's rank normalization (15--20\% on the fine
+    0.05 grid; 20--35\% under the
     alternative min--max normalizations; E2 and addendum,
     Section~\ref{sec:regret-ponderado}).
   \item \textbf{If no constraint is active, foundation model
@@ -350,9 +357,11 @@ asked --- each item traces to the result that supports it.
     numeric datasets (Section~\ref{sec:destil-regra}).
   \item \textbf{Distill when the advantage survives the
     transformations and a strong native --- and measure it first.}
-    A single OOF labeling, at a cost of minutes, directly measures
+    A single OOF labeling, at a cost of minutes to a few hours
+    depending on pool and teacher, directly measures
     the teacher's genuine advantage; distill only if it persists
-    (Section~\ref{sec:destil-regra}). Do not distill the mean: at
+    (the gate's threshold was derived in-sample, in its oracle
+    version; Section~\ref{sec:destil-regra}). Do not distill the mean: at
     realistic pool sizes, there is nothing to transfer on the point axis
     (Section~\ref{sec:destil-ponto}).
   \item \textbf{Always label out-of-fold.} The cost is modest, and
@@ -500,16 +509,17 @@ student, though a GBDT, learns labels from an opaque teacher) \\
 Architectural limit ($>$10 classes; context overflow) &
 GBDT or recent DL depending on the task &
 \texttt{helena} (100 classes) excludes both FMs; descriptive
-multiclass top: STab/TabM 3.67 vs.\ XGBoost 6.0, $N{=}3$
+best non-FM in multiclass: STab/TabM 3.67 vs.\ XGBoost 6.0, $N{=}3$
 (Sections~\ref{sec:cap5-ato3}, \ref{sec:arcabouco-resultante}) &
 Nothing: the exclusion is structural, not a preference \\
 \addlinespace
-Small relative teacher advantage (OOF gate), or a single-member
-teacher already at the student's tier; price-scale target; strong
+Small relative teacher advantage (gate verified in its oracle
+version; the OOF version was not evaluated), or a single-member
+teacher already at the student's tier; strong
 native
 available &
-Do \emph{not} distill: QRF first, $\log(1{+}y)$, ensemble
-shrinking &
+Do \emph{not} distill: QRF first, ensemble
+shrinking (the $\log(1{+}y)$ runs before, as a diagnostic) &
 E1: the QRF beats the distilled student on 3 of 20 (on
 \texttt{wine\_quality}, even the teacher); \texttt{kin8nm}: 1
 member at the student's latency (a latency case); the log changes
@@ -610,7 +620,8 @@ yet discovered; the mitigation is structural (data hashes,
 versioned configurations, numbers traceable to artifacts).
 
 \textbf{Normalization dependence in E2.} The flip band (10--20\% by
-ranks) moves to 20--35\% under min--max normalizations (logarithmic,
+ranks on the 0.1 grid; 15--20\% on the fine 0.05 grid) moves to
+20--35\% under min--max normalizations (logarithmic,
 linear) --- the direction is the same, and the quoted number is
 that of the normalization adopted in the registered design
 (Section~\ref{sec:regret-ponderado}).
@@ -624,7 +635,7 @@ $p \approx 0.019$; $0.0026$; $0.0006$); the supplementary
 instruments, already borderline on their own, do not stand --- and
 in a family that included them, the headline's adjusted $p$ would
 be 0.057
-(Section~\ref{sec:destil-desenho}).
+(Section~\ref{sec:destil-limitacoes}).
 
 \textbf{Undercoverage of the pure distilled student.} The
 pre-registered coverage clause (PICP80 within $\pm5$~p.p.\ of
@@ -711,7 +722,7 @@ Appendix~\ref{app:suplementares}).
 analyses (including E2's weighted score) through the standardized
 measurement in a single regime (amortized batch, each model on its
 natural device), with \texttt{adult} as the reference. The bias
-direction was declared in the registration and its magnitude was
+direction was declared in E2's record and its magnitude was
 later measured on a small and a large dataset of the benchmark: the rankings among
 the 14 models are stable across datasets (Spearman 0.78--0.95) and
 E2's crossover is identical under the three proxies

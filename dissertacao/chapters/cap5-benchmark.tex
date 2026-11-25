@@ -35,7 +35,7 @@ migra para custo, latência, robustez e estrutura da tarefa; a geração
 2026 desloca o topo --- o TabFM, \emph{zero-shot}, lidera o rank
 médio nas
 três tarefas (na multiclasse, sobre os dois conjuntos em que opera),
-ao custo de quatro a cinco ordens de magnitude em latência
+ao custo de cerca de cinco ordens de magnitude em latência
 de inferência no conjunto de referência --- liderança consistente
 entre conjuntos, que os testes
 de baixo poder não confirmam como separação estatística. Além disso,
@@ -84,8 +84,9 @@ incorporados na extensão: o \emph{foundation model} TabFM
 \citep{tabfm2026,kong2026} e as duas redes de Kolmogorov--Arnold (KAN
 \citep{kan2024} e TabKAN \citep{tabkan2025}). O recorte é definido pela ordem de entrada dos modelos no estudo, não
 pelo ano de publicação: o TabPFN, um \emph{foundation model}, pertence
-ao núcleo. Os Atos~I a III leem o
-núcleo de 11 --- é sobre ele que a máxima ``\emph{boosting} sempre
+ao núcleo. Os Atos~I a III centram-se no
+núcleo de 11 (as figuras que usam a grade completa o declaram) ---
+é sobre ele que a máxima ``\emph{boosting} sempre
 vence'', formulada na literatura \citep{grinsztajn2022} e que
 \citet{mcelfresh2023} já matizavam ao concluir que a escolha do
 conjunto importa mais que a do modelo, é aqui testada --- e é sobre
@@ -376,7 +377,8 @@ cruzamento desempenho $\times$ custo. Sobre rank médio $\times$ custo
 --- sendo o rank o instrumento primário de comparação do estudo --- o
 núcleo de 11 modelos resolve-se em uma fronteira de Pareto de
 \{TabPFN, XGBoost, LightGBM\} no eixo de custo de treino (medianas
-sobre os 18 conjuntos, Tabela~\ref{tab:app-custos}: LightGBM 0,66~s,
+sobre os 18 conjuntos --- 17 para o TabPFN ---,
+Tabela~\ref{tab:app-custos}: LightGBM 0,66~s,
 XGBoost 0,69~s, TabPFN 1,35~s), que se estreita
 para \{XGBoost, TabPFN\} no eixo de latência. Sobre AUC média em vez
 de rank, as fronteiras mudam de composição: a de treino ganha o
@@ -573,8 +575,8 @@ TabKAN              & 11,4         & 13,3          & 11,8 \\
 \centering
 \includegraphics[width=0.92\linewidth]{images/average_ranks.pdf}
 \caption[Ranks médios por tarefa na grade completa]{Ranks médios por tarefa na grade completa (painel multiclasse
-restrito aos 12 modelos avaliados nos três conjuntos; rótulos internos da
-figura em inglês). O painel de multiclasse recalcula os ranks desses 12
+restrito aos 12 modelos avaliados nos três conjuntos; rótulos
+internos e separador decimal da figura em inglês). O painel de multiclasse recalcula os ranks desses 12
 modelos, de modo que seus valores não coincidem com a
 Tabela~\ref{tab:cap5-ranks}, que ranqueia os 14 (os \emph{foundation
 models} sobre seus dois conjuntos elegíveis).}
@@ -670,7 +672,7 @@ model cabe no caso de uso?}''.
 nas três tarefas (na multiclasse, sobre 2 conjuntos) e é o melhor
 modelo em 13 dos 18 conjuntos, zero-shot
 --- liderança consistente, que os testes de baixo poder não confirmam
-como separação estatística --- ao preço de quatro a cinco ordens de
+como separação estatística --- ao preço de cerca de cinco ordens de
 magnitude em latência de
 \emph{serving} no conjunto de referência (43.262 vs.\
 0,33~\us/linha).} O empate não tornou o
@@ -678,7 +680,8 @@ arcabouço multicritério obsoleto; o deslocamento o
 tornou mais necessário --- e apontou seu único obstáculo.
 
 No mesmo movimento da extensão, o benchmark produz o teste independente
-da família Kolmogorov--Arnold --- e o resultado é o negativo de valor.
+da família Kolmogorov--Arnold --- e o resultado é um negativo
+valioso.
 KAN (ranks 11,0/12,0/9,8 em binária/multiclasse/regressão) e TabKAN
 (11,4/13,3/11,8) ocupam o último terço nas três tarefas, com o TabKAN
 atrás até do TabNet em multiclasse e regressão. Surpreendente à luz das
@@ -716,7 +719,8 @@ conforme o contrato de conduta do estudo
 (Capítulo~\ref{chap:metodologia}): um benchmark neutro existe
 precisamente para que resultados assim venham a público.
 
-\section{Ato V --- por dentro do placar: complementaridade por instância}
+{\makeatletter\def\sectionmark#1{}\makeatother
+\section{Ato V --- por dentro do placar: complementaridade por instância}}
 \sectionmark{Ato V --- complementaridade por instância}
 \label{sec:cap5-ato5}
 
@@ -760,7 +764,7 @@ que na majoritária, na maioria das binárias (mesmo teste). \textbf{H-C4}
 (eco das curvas de aprendizado): a vantagem do FM \emph{decresce} com o
 tamanho do \emph{pool} de treino --- como sugeriria o prior de pré-treino
 com contexto limitado --- isto é, Spearman negativo entre tamanho e
-vantagem nas 17 células. A interpretação foi comprometida de antemão no
+vantagem nas 17 células. A interpretação foi fixada de antemão no
 pré-registro: confirmar H-C1 com H-C2/H-C3 sustentaria ``o FM adiciona
 informação nas regiões de incerteza e minoria''; refutá-las deslocaria a
 explicação para outro lugar.
@@ -819,7 +823,7 @@ extremo segue eloquente --- no \texttt{amazon\_\allowbreak employee},
 $+266$ por 1.000 instâncias minoritárias, contra $-10$ na majoritária
 --- mas não generaliza para a população. E H-C4 (a vantagem decresce
 com o tamanho do \emph{pool}, como sugeriria o pré-treino em tabelas
-de até 16\,384 linhas --- embora a inferência aceite contextos de até
+de até 16.384 linhas --- embora a inferência aceite contextos de até
 50 mil (Seção~\ref{sec:fund-fm})) não se
 confirma, com sinal descritivo \emph{contrário} no agregado: a
 correlação de Spearman entre

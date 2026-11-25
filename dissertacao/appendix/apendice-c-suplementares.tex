@@ -20,8 +20,9 @@ apêndice); A-GRID = ablação do estimador de CRPS em grade densa;
 A-SORT = reparo por ordenação (Seção~\ref{sec:app-abl-sort}); R-COND =
 retenção condicionada; R-TUNE = reajuste dos alunos (piloto de 15/10
 estendido aos 20 conjuntos em 17/11); SEEDS-10 =
-reexecução com 10 sementes (os quatro últimos nas limitações do
-Capítulo~\ref{chap:destilacao}).
+reexecução com 10 sementes (A-GRID e SEEDS-10 nas limitações do
+Capítulo~\ref{chap:destilacao}; R-COND na Seção~\ref{sec:destil-regra};
+R-TUNE na Seção~\ref{sec:destil-retune}).
 
 \section{Ablações da destilação: tabelas desagregadas}
 \label{sec:suple-ablacoes}
@@ -173,7 +174,7 @@ distância ao nominal diminuir --- em 5 de 5 conjuntos no braço
 \emph{soft} e 3 de 5 no \emph{hard} (PICP90 de 0,77--0,93 para
 0,89--0,95 no \emph{hard} e de 0,71--0,89 para 0,88--0,91 no
 \emph{soft}; as exceções são o california-\emph{hard}, que já
-sobre-cobria e cuja cobertura ela afasta do nominal, com distância de
+sobrecobria e cuja cobertura ela afasta do nominal, com distância de
 PICP80 de $8{,}06$ para $9{,}63$~p.p., e o cps88wages-\emph{hard},
 já a menos de 1~p.p.\ do nominal, que se move menos de
 1~p.p.), mas deixa o CRPS essencialmente
@@ -315,7 +316,7 @@ Capítulo~\ref{chap:framework},
 \texttt{results/\allowbreak aggregated/\allowbreak lodo\_\allowbreak validation.\allowbreak csv} e
 \texttt{lodo\_\allowbreak validation\_\allowbreak 14.\allowbreak csv}, \texttt{scripts/\allowbreak lodo\_\allowbreak validation.\allowbreak py}.
 
-\subsection{A alegação retratada do OOM ``determinístico'' no
+\subsection[Alegação retratada do OOM no year\_prediction]{A alegação retratada do OOM ``determinístico'' no
 \texttt{year\_\allowbreak prediction}}
 \emph{O que era:} durante a medição da fronteira de Pareto,
 afirmou-se que o ponto professor TabPFN com contexto de 50~mil linhas no
@@ -460,7 +461,7 @@ ponta com resultados idênticos.
 
 \textbf{Licenças dos professores (texto das cláusulas).} TabPFN-2.5
 (TABPFN-2.5 Non-Commercial License v1.1, verificada na fonte em
-23/11/2026): (i) saídas não são derivados --- ``\emph{Outputs are not
+23/11/2026): (i) as saídas não são obras derivadas --- ``\emph{Outputs are not
 considered Derivatives under this License}'' (\S1); (ii) o uso
 licenciado é o não comercial, e treinar, afinar ou destilar outros
 modelos \emph{para uso comercial} está explicitamente fora da
@@ -471,7 +472,7 @@ deste estudo retém 12--19\% da vantagem distribucional do professor;
 num conjunto (\texttt{pumadyn32nh}), um aluno \emph{born-again} o
 iguala; a qualificação de ``competitivo'' cabe ao
 licenciante. TabFM (TabFM Non-Commercial License v1.0, verificada em
-23/11/2026): não comercial, saídas não são derivados, sem cláusula de
+23/11/2026): não comercial, saídas não são obras derivadas, sem cláusula de
 modelo competitivo.
 
 \textbf{Conjuntos elegíveis omitidos da população de destilação.} A

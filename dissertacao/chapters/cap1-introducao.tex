@@ -55,14 +55,16 @@ para convertê-la em escolha.
 
 Esta dissertação produz as duas coisas. O retrato que emerge contraria
 a máxima em dois pontos. Primeiro, na
-geração de modelos anterior a 2026, o topo da acurácia é um \emph{empate
+núcleo de 11 modelos anteriores à extensão de 2026, o topo da
+acurácia na classificação binária é um \emph{empate
 estatístico}: sob região de equivalência prática de um ponto percentual de
 AUC, 8 dos 10 modelos não-líderes são praticamente equivalentes ao
 líder --- ele próprio já um \emph{foundation model}, o TabPFN, com rank
-médio 3,2 --- no critério brando (3 dos 10, os GBDTs, no corte estrito de
+médio 3,2 --- no critério brando (3 dos 10, os GBDTs ---
+\emph{gradient-boosted decision trees} ---, no corte estrito de
 0,95), e a variância de desempenho é dominada pela interação
-modelo$\times$conjunto somada ao ruído (o vencedor depende do
-conjunto, não da
+modelo$\times$conjunto somada ao ruído (o vencedor depende mais do
+conjunto que da
 família); ``\emph{boosting} sempre vence'' não encontra margem de
 acurácia que a sustente (Capítulo~\ref{chap:benchmark}). Segundo, a
 geração 2026 desloca o topo em direção inesperada: quem passou à
@@ -84,7 +86,7 @@ s/linha nos conjuntos da fronteira --- centenas de vezes acima do
 nativo e de $7\times$ a $880\times$ abaixo do professor, conforme o
 conjunto) ---
 latências de serviço em lote amortizado, com cada modelo em seu
-dispositivo natural (quatro a cinco ordens de magnitude;
+dispositivo natural (cerca de cinco ordens de magnitude;
 aproximadamente 131~mil
 vezes no conjunto de referência, com a razão variando por conjunto). A
 pergunta prática passa a ser outra: a latência do líder cabe no caso de
@@ -97,17 +99,20 @@ podem, em princípio, ser transferidos: a destilação de conhecimento
 \citep{hinton2015} treina, nas saídas do professor caro, um aluno que
 serve na casa de cem microssegundos por linha. Para \emph{foundation models} tabulares, a literatura
 estabeleceu essa rota em classificação \citep{pocketfm2026}. O que ela
-transfere em \emph{regressão}, em particular quando o alvo da
+transfere em \emph{regressão} quando o alvo da
 preservação é a distribuição preditiva completa, com
 quantis e intervalos calibrados, permanecia sem resposta acadêmica até
-as verificações datadas deste estudo. A resposta encontrada é
+as verificações datadas deste estudo (a regressão \emph{pontual} foi
+coberta por trabalho contemporâneo; Capítulo~\ref{chap:related}). A resposta encontrada é
 seletiva: a destilação \emph{pontual} falha de
 forma robusta, a destilação \emph{distribucional} transfere parte
 da vantagem (12--19\% na mediana) onde o
 professor a tem genuína, e a fronteira entre as duas condições
-é verificável antes de treinar o aluno, por uma única rotulagem OOF
+é mensurável antes de treinar o aluno, por uma única rotulagem OOF
+(\emph{out-of-fold})
 (de minutos a poucas horas, conforme o tamanho do \emph{pool} e a
-latência do professor; Capítulo~\ref{chap:destilacao}).
+latência do professor; o limiar do \emph{gate} foi derivado na
+amostra, na versão oráculo; Capítulo~\ref{chap:destilacao}).
 
 \section{Problema de pesquisa}
 \label{sec:intro-problema}
@@ -293,7 +298,7 @@ o recorte e a evidência que faltavam. Em ordem de apresentação:
     melhor modelo em 13 de 18 conjuntos, \emph{zero-shot}, sem
     confirmação como separação estatística pelos testes de baixo poder,
     ao preço de
-    quatro a cinco ordens de magnitude em latência no conjunto de
+    cerca de cinco ordens de magnitude em latência no conjunto de
     referência). Inclui a primeira
     comparação neutra TabPFN~$\times$~TabFM sob protocolo idêntico, até
     onde alcançam as verificações datadas (Capítulo~\ref{chap:benchmark}).
@@ -326,7 +331,9 @@ o recorte e a evidência que faltavam. Em ordem de apresentação:
     (Capítulo~\ref{chap:framework}).
   \item \textbf{A destilação distribucional de foundation models
     tabulares.} Em 20 conjuntos de regressão, sob hipóteses
-    registradas antes dos experimentos
+    e critérios registrados --- H1--H3 antes dos experimentos; o
+    instrumento confirmatório e as análises E1--E3 nas datas da
+    Tabela~7.1 ---
     (Capítulo~\ref{chap:destilacao}), mostra-se que: (a) a destilação
     \emph{pontual} não funciona --- o aluno treinado nas médias do
     professor supera o controle em 4 de 20 conjuntos com o TabPFN, e

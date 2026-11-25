@@ -71,7 +71,7 @@ e~\ref{sec:fund-dl} desenvolvem os dois lados dessa disputa.
 Formalizemos o mínimo necessário do problema da aprendizagem
 supervisionada. Dado um conjunto de treino
 $D = \{(\mathbf{x}_i, y_i)\}_{i=1}^{n}$ de pares observação--alvo,
-assumidos amostras independentes de uma distribuição desconhecida, o
+supostos amostras independentes de uma distribuição desconhecida, o
 objetivo é aprender uma função $f$ que prediga bem o alvo de observações
 \emph{novas} --- isto é, que minimize o erro esperado sob a distribuição
 geradora, não o erro no próprio conjunto de treino. A distinção é o coração
@@ -594,7 +594,7 @@ assimetria de cabeças de saída, e não qualquer diferença de acurácia média
 do Capítulo~\ref{chap:destilacao}. Registre-se ainda que ambos os modelos carregam limites
 arquiteturais herdados do pré-treinamento --- o TabFM, por exemplo, admite
 no máximo 10 classes em classificação, foi pré-treinado com contextos de
-até 16\,384 linhas (tabelas maiores dependem de generalização de
+até 16.384 linhas (tabelas maiores dependem de generalização de
 comprimento ou subamostragem, como declara o próprio relatório), e até a
 escrita desta dissertação
 está documentado em relatório técnico, sem artigo revisado por pares
@@ -748,7 +748,7 @@ minimizador da perda \emph{pinball} de nível $\tau$ é o quantil $\tau$ ---
 que faz dela o instrumento canônico da regressão de quantis; com
 $\tau = 0{,}5$, ela se reduz (a um fator) ao erro absoluto, cujo minimizador
 é a mediana. Treinar um modelo numa \emph{grade} de níveis
-$\tau \in \{0{,}05, \ldots, 0{,}95\}$ produz uma curva de quantis ---
+$\tau \in \{0{,}05;\, \ldots;\, 0{,}95\}$ produz uma curva de quantis ---
 uma discretização da distribuição preditiva inteira.
 
 \begin{figure}[htb]
@@ -909,7 +909,8 @@ O \emph{NGBoost} segue a rota paramétrica: um \emph{gradient boosting} cujas
 saídas são os \emph{parâmetros} de uma distribuição (por exemplo, média e
 variância de uma gaussiana), treinado por gradientes naturais sobre uma
 regra de pontuação própria \citep{duan2020}. A rota paramétrica tem
-ainda a família LSS --- \emph{XGBoostLSS} e afins \citep{marz2019} ---,
+ainda a família LSS (\emph{location, scale and shape}) ---
+\emph{XGBoostLSS} e afins \citep{marz2019} ---,
 que leva o mesmo \emph{boosting} a modelar todos os parâmetros da
 distribuição; o NGBoost a representa neste trabalho por ser o expoente
 treinado por regra de pontuação própria. QRF representa a via não-paramétrica; NGBoost, a
@@ -1103,8 +1104,10 @@ correlação de postos de Spearman mede se duas ordenações concordam
 relação linear; é usada sempre que se pergunta se um \emph{ranking} é
 estável ou se uma grandeza cresce com outra.
 
+{\makeatletter\def\sectionmark#1{}\makeatother
 \section{Escolher um modelo: seleção de algoritmos, \emph{regret} e
-dominância}
+dominância}}
+\sectionmark{Escolher um modelo}
 \label{sec:fund-selecao}
 
 Os instrumentos anteriores comparam modelos. Resta o vocabulário para

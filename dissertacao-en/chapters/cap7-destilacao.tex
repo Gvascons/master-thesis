@@ -215,7 +215,8 @@ asymmetry whose cost the re-tuning of both arms measures later
 (Section~\ref{sec:destil-retune}): with both re-tuned, the sign
 holds (16/20) and the magnitude drops from 2.8\% to 1.4\% median
 CRPS gain --- Section~\ref{sec:destil-dist} presents the two
-estimates together. There are three families:
+estimates together. There are three variants, in two student
+families:
 
 \begin{itemize}
   \item \textbf{XGBoost point} \citep{chen2016}: trained on the true
@@ -438,21 +439,25 @@ H2 (distribution) & distilled beats the control in CRPS, with
 coverage within $\pm$5~p.p. & yes & not confirmed as a conjunction:
 CRPS clause sustained (16/20); coverage clause not met (10/20) \\
 H3 (Pareto) & there is a latency band where the distilled student
-dominates the compressed teacher & yes & band met at 99~\us{}
-(california$^\dagger$), exceeded at 169~\us{} (year); refuted on
-\texttt{kin8nm} \\
+dominates the compressed teacher & yes & not confirmed as
+registered: dominance only on \texttt{year}, at 169~\us{} (above
+the ${\lesssim}100$ band); within the band, merely non-dominated,
+and only on california$^\dagger$; refuted on \texttt{kin8nm} \\
 Sign test & confirmatory instrument of the 16/20 & no (fixed at the
 interim reading) & $p\approx0.019$ sequential \\
 Heavy tail (log) & redoing teacher and students with
 $y'{=}\log(1{+}y)$ recovers retention on the price-scale failures &
-yes (cell registered before the ablation) & refuted (\texttt{fifa}
-stays at $-1.69$; the successes shrink; Appendix~C) \\
+no (fixed at the interim reading, before the ablation) & refuted
+(\texttt{fifa} goes from $-1.29$ to $-1.69$ in the transformed
+space; the two controls move in opposite directions; Appendix~C) \\
 E1 (classical) & distilled beats the best of QRF and NGBoost & yes
 (execution already started) & confirmed (17/20) \\
-E3 (utility) & lower realized cost at $\tau{=}0.90$ & registered
+E3 (utility) & realized cost lower or equal at $\tau{=}0.90$ & registered
 (before any reading) & confirmed (18/20) \\
 Re-tuning & inherited hyperparameters are a floor on retention &
-yes (addendum of 2026-11-12) & refuted (9/20 per dataset; median
+partially (pilot of Oct.~15 read before; extension to the 20
+registered in the addendum of Nov.~12 and run on Nov.~17) & refuted
+(9/20 per dataset; median
 0.19$\to$0.12): sign upheld, magnitude reduced \\
 \bottomrule
 \end{tabular}
@@ -472,7 +477,8 @@ directly, replicating the experiment with TabFM, whose anchor gap
 retention's denominator) is nearly $6\times$ TabPFN's on
 \texttt{california\_\allowbreak housing}$^\dagger$: 0.028 against
 0.005 RMSE. The picture does not change: only the two
-\texttt{california} \emph{soft} cells beat the control, with a best
+\texttt{california} distilled cells (\emph{soft} and
+\emph{mixture}) beat the control, with a best
 intra-pipeline retention of 0.11 (california/mixture), and the
 remaining eight cells sit at the control's level or below. At full
 pool, a tuned GBDT extracts as much point accuracy from the raw
@@ -485,8 +491,10 @@ suggested the hypothesis that the point gain is a low-data
 phenomenon. We investigated with a pool-size sweep (caps of 800,
 2{,}000, and 8{,}000 rows): there is a genuine low-data gain on
 \texttt{wine\_quality} ($\Delta = +0.026$ at $n{=}800$), which
-disappears from $n{=}2{,}000$ on and does \emph{not} replicate on
-\texttt{california\_\allowbreak housing}$^\dagger$. We therefore
+disappears from $n{=}2{,}000$ on and, on
+\texttt{california\_\allowbreak housing}$^\dagger$, replicates
+only as a marginal $+0.005$ residue at $n{=}2{,}000$, gone at
+8{,}000. We therefore
 attribute the residue to a dataset-dependent low-data moderator, and
 report it as an observation, not a general effect.
 
@@ -590,8 +598,9 @@ re-tuned; Section~\ref{sec:destil-retune}). Two supplementary
 instruments agree with different degrees of firmness: the one-sided
 Wilcoxon gives $p=0.045$ (two-sided, 0.090: it would not reject),
 and the Bayesian signed-rank analysis \citep{benavoli2017} assigns
-probability 0.96 to the positive-retention region (ROPE $\pm0.05$;
-expected posterior mass $E[\theta]=0.70$). The verdict therefore
+probability 0.96 that the positive-retention region is the most
+probable one (ROPE $\pm0.05$; expected posterior mass on it:
+$E[\theta]=0.70$). The verdict therefore
 rests on the sign test and the median;
 Table~\ref{tab:destil-robustez} gathers all the variants.
 
@@ -736,7 +745,8 @@ zero in the bootstrap; the absolute successes that resist are
 $[2.6;\,3.2]$) and \texttt{cpu\_activity} ($+0.117$). Third,
 near-null positives (\texttt{miami\_housing}, retention $+0.016$)
 count as successes under the sign test --- the ROPE sweep (0.95--0.96
-posterior probability between ROPE 0.02 and 0.10) delimits the
+probability of the positive region being the most probable, between
+ROPE 0.02 and 0.10) delimits the
 effect of treating them as equivalences.
 
 \subsection{The four defeats, one by one}
@@ -865,26 +875,31 @@ case in the decision rule's relative metric
 (Section~\ref{sec:destil-regra}): the cheap engineering menu settles
 the matter before distillation enters the scene.
 
-H3's verdict: \textbf{the pre-registered band is met on one dataset
-and exceeded on the other}. On
+H3's verdict: \textbf{not confirmed as registered --- Pareto
+dominance only outside the band}. On
 \texttt{year\_\allowbreak prediction} the distilled student is
 Pareto-dominant in the strong sense --- better CRPS than the most
-subsampled teacher (4.43 against 4.70) at $7.8\times$ less latency;
-on \texttt{california\_\allowbreak housing}$^\dagger$ the band
-exists, but it is the band below 245~\us{} in which no teacher
-configuration operates (and which the native QRF occupies with a
-better CRPS, as E1 would measure); on \texttt{kin8nm} the
-hypothesis \emph{fails} --- ensemble shrinking delivers the
-student's latency with a much better CRPS. H3 holds, therefore,
-where no cheap teacher configuration reaches the student's latency
-tier (\texttt{california\_\allowbreak housing}$^\dagger$,
-\texttt{year\_\allowbreak prediction}); where one does, as on
+subsampled teacher (4.43 against 4.70) at $7.8\times$ less latency
+---, but at 169~\us/row, above the pre-registered
+${\lesssim}100$~\us/row band. Within the band, the student is
+merely \emph{non-dominated} --- no teacher configuration operates
+below 245~\us{} --- and only on
+\texttt{california\_\allowbreak housing}$^\dagger$, where its
+CRPS is 15.5\% worse than that of the teacher's cheapest
+configuration (0.109 against 0.094; and the native QRF occupies the
+band with a better CRPS, as E1 would measure); without the binarized
+dataset, the band is not met on any dataset. On \texttt{kin8nm} the
+hypothesis is \emph{refuted} --- ensemble shrinking delivers the
+student's latency with a much better CRPS. What does stand is the
+latency reading: where no cheap teacher configuration reaches the
+student's latency tier
+(\texttt{california\_\allowbreak housing}$^\dagger$,
+\texttt{year\_\allowbreak prediction}), the distilled student is,
+among the teacher-derived strategies, the CRPS-optimal
+distributional system in that regime; where one does, as on
 \texttt{kin8nm}, cheap engineering replaces distillation --- a
 latency condition, complementary to the decision rule's
-relative-advantage gate. The pre-registered ${\lesssim}100$~\us/row
-band is met at 99~\us/row on
-\texttt{california\_\allowbreak housing}$^\dagger$ and exceeded at
-169~\us/row on \texttt{year\_\allowbreak prediction}.
+relative-advantage gate.
 
 Two side findings have independent value. First, shrinking TabPFN's
 ensemble from 8 to 1 member \emph{improved} the RMSE on
@@ -1130,7 +1145,7 @@ criteria already flagged --- the design's eligibility criterion,
 which is the registered one (teacher behind the baseline in RMSE),
 and the decision rule's post-hoc relative-advantage gate (11.8\%,
 below the ${\approx}13.6\%$ median; retention $-0.97$ in
-Table~\ref{tab:destil-retencao}) ---, and there the \emph{default} QRF
+Table~\ref{tab:destil-retencao}) --- and there the \emph{default} QRF
 beats \emph{even the teacher} (CRPS 0.279 against 0.289; the only
 dataset, out of 20, where that happens) --- the study's sharpest
 demonstration that the ``test a strong native student'' step of the
@@ -1217,7 +1232,7 @@ the average over all levels --- and comfortably survives the
 exclusion of the binarized dataset$^\dagger$ (17/19, $p{=}0.0004$;
 16/19, $p{=}0.0022$).
 
-The pre-declared exploratory analysis (H-D3) explains why: the
+The pre-declared exploratory analysis alongside them explains why: the
 profile of the gain per level $\tau$ is U-shaped. In the center of
 the distribution ($\tau$ between 0.45 and 0.65), the median cost
 reduction over the control is ${\sim}1\%$; in the tails, it rises to
@@ -1320,6 +1335,7 @@ Section~\ref{sec:destil-e1-resultados} quantifies it: some
 teacher-free alternative beats it on 9 of 20 --- and distillation
 consistently fills part of that room; in part, that is the niche it
 occupies. A true-label quantile-MLP student, by contrast, matches
+or beats
 the distilled XGBoost \emph{with no teacher at all} on small,
 numeric datasets (CRPS 0.110 against 0.109 on
 \texttt{california\_\allowbreak housing}$^\dagger$; 0.047 against
@@ -1340,7 +1356,8 @@ weekly hours with \emph{negative} skewness ($-0.34$) and
 29.9\% zeros (its own diagnosis in
 Section~\ref{sec:destil-derrotas}) --- plus two positive controls.
 The transformation does \emph{not} rescue the failures
-(\texttt{fifa} persists at $-1.69$) --- and the per-dataset picture,
+(\texttt{fifa} remains strongly negative: $-1.69$ in the
+transformed space) --- and the per-dataset picture,
 with retention measured in the transformed space, is mixed:
 retention rises marginally on the other two failures
 (\texttt{diamonds} $-0.32 \to -0.03$; \texttt{health}
@@ -1419,7 +1436,8 @@ frontier of Section~\ref{sec:destil-fronteira} --- the
 cases on one side and \texttt{kin8nm} (a latency case) on the
 other.
 
-\emph{The decision rule --- transform, test a strong native, and
+\emph{The decision rule --- run the target transformation as a
+diagnostic, test a strong native, and
 distill only the advantage that remains --- is verifiable in
 minutes to hours, depending on the teacher.} The four defeats all fall in the half of the datasets
 where the teacher's relative advantage is smaller (conditional

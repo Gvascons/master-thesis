@@ -62,9 +62,13 @@ desempenho (C1, \emph{regret} normalizado médio), custo de treino
 (C6), custo de ajuste (C8), latência de inferência (C7), robustez
 (C10, pior rank entre dobras) e interpretabilidade (C9; a numeração
 C1--C10 herda o catálogo de critérios do AI-1 --- só os seis medidos
-entram). As estrelas
+entram; rótulos internos e separador decimal da figura em inglês). As estrelas
 são terços do \emph{ranking} dos 14 modelos no critério (3 = terço
-melhor), exceto C9, qualitativa por família (GBDTs avaliados pela
+melhor). Em C10 não há células de duas estrelas: dez modelos empatam
+no pior posto possível (cada um é o último em ao menos uma dobra de
+algum conjunto) e o empate colapsa o terço intermediário --- um
+critério pouco discriminante neste elenco. A exceção restante é C9,
+qualitativa por família (GBDTs avaliados pela
 aceitação de explicações por atribuição na prática regulada, não por
 interpretabilidade intrínseca estrita; arquiteturas de atenção,
 parcial), e o ajuste dos
@@ -138,7 +142,7 @@ isso o reportamos com o protocolo à vista. No estudo com 11 modelos, a árvore 
 (incluindo a geração 2026), 0,72 contra 0,78 do \emph{baseline}. Em nenhuma
 das duas configurações o roteador aprendido supera a regra trivial
 ``preveja sempre a família que mais vence''. Investigado o porquê, a
-atribuição é direta: com $N{=}18$ conjuntos, cada rodada do LODO
+explicação mais provável é direta: com $N{=}18$ conjuntos, cada rodada do LODO
 treina com 17 exemplos --- uma amostra em que qualquer partição por
 meta-características é dominada pelo ruído das reversões individuais, e em
 que o preço de errar uma folha é alto. Em suma:
@@ -360,8 +364,8 @@ padronizada no conjunto \texttt{adult} --- a única disponível para os 14
 modelos sob protocolo idêntico. A latência relativa entre modelos é
 aproximadamente estável entre conjuntos para GBDTs e modelos de deep
 learning; para \emph{foundation models}, porém, ela cresce com o tamanho do
-contexto, de modo que o proxy é conservador a favor dos FMs em
-conjuntos pequenos e contra eles em conjuntos grandes. A ressalva
+contexto, de modo que o proxy superestima a latência dos FMs em
+conjuntos pequenos e a subestima nos grandes. A ressalva
 foi depois fechada com medição em um conjunto pequeno e um grande do
 benchmark; o teste está no fim da Seção~\ref{sec:e2-resultados}.
 
@@ -438,9 +442,9 @@ família que contém o melhor modelo em acurácia contém quase o pior em
 custo de inferência, o retrato numérico do compromisso que a
 Figura~\ref{fig:decision-matrix} mostrava em estrelas.\footnote{Em
 $w{=}1{,}0$, o score da Eq.~\ref{eq:score-ponderado} reduz-se ao rank
-da métrica primária; os valores diferem marginalmente dos da
-Tabela~\ref{tab:regret-lodo} (\emph{regret} médio de sempre-FM 0,023 aqui
-contra 0,021 lá) porque o \emph{regret} do estudo original é normalizado na
+da métrica primária; os valores de sempre-FM diferem marginalmente dos da
+Tabela~\ref{tab:regret-lodo} (\emph{regret} médio 0,023 aqui
+contra 0,021 lá; os das demais políticas mudam com a escala) porque o \emph{regret} do estudo original é normalizado na
 escala da métrica primária, e o de E2, na escala de ranks. As medianas
 coincidem em 0,000.}
 
@@ -474,8 +478,12 @@ amostras) e no \texttt{cardiovascular\_\allowbreak disease} (70~mil) em lugar do
 \texttt{adult}, o cruzamento é idêntico nos três casos (sempre-FM
 regret-ótima apenas em $w \geq 0{,}9$); só a extensão da zona em que
 sempre-GBDT tem mediana zero desloca-se em $\pm 0{,}1$ ($w \leq 0{,}7$
-com o proxy do conjunto pequeno, $w \leq 0{,}5$ com o do grande),
-exatamente na direção do viés declarada no registro. A inversão da
+com o proxy do conjunto pequeno, $w \leq 0{,}5$ com o do grande); o
+deslocamento acompanha a mudança dos postos intermediários de
+latência --- no conjunto de mil linhas os modelos de DL sobem em
+custo por linha (p.~ex., RealMLP 37,1 contra 0,93~\us) ---, e não a
+dependência de contexto dos FMs, que ocupam os últimos postos sob
+qualquer proxy; é a direção oposta à antecipada no registro. A inversão da
 recomendação com 10--20\% de peso na latência (pela mediana) não
 depende, portanto, do
 conjunto em que a latência foi medida. Uma segunda dependência fica
@@ -510,7 +518,7 @@ sua forma final, com os 14 modelos do estudo completo.
 \centering
 \includegraphics[width=0.88\linewidth]{images/decision_flowchart_14_pt.pdf}
 \caption[Fluxograma de decisão]{Fluxograma de decisão, estudo com 14 modelos: cada
-losango é uma restrição verificável \emph{a priori}. Fonte:
+caixa de decisão é uma restrição verificável \emph{a priori}. Fonte:
 elaboração própria.}
 \label{fig:flowchart-14}
 \end{figure}
@@ -577,7 +585,8 @@ sustentam.
 As limitações deste capítulo são declaradas na mesma moeda dos seus
 resultados. A primeira é transversal: a faixa de inversão do E2
 depende da normalização do score --- 10--20\% do peso na latência
-por postos (a adotada no desenho), 20--25\% na logarítmica e
+por postos na grade de 0,1 (a adotada no desenho; 15--20\% na grade
+fina de 0,05), 20--25\% na logarítmica e
 30--35\% na linear, pela mediana
 (Seção~\ref{sec:regret-ponderado}) ---, de modo que o número citado
 nas sínteses é o da normalização adotada no desenho registrado, e a

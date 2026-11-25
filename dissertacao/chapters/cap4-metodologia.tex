@@ -77,26 +77,26 @@ antes do teto de 100~mil amostras).}
 \toprule
 Conjunto & Tarefa & ID OpenML & $n$ & $d$ & Classes & Atributos \\
 \midrule
-adult                   & binária & 1590  & 49\,000  & 14 & 2 & mistos \\
-amazon\_employee        & binária & 4135  & 33\,000  & 9  & 2 & categóricos \\
-bank\_marketing         & binária & 1461  & 45\,000  & 16 & 2 & mistos \\
-cardiovascular\_disease & binária & 45547 & 70\,000  & 11 & 2 & mistos \\
-credit\_g               & binária & 31    & 1\,000   & 20 & 2 & mistos \\
-give\_me\_some\_credit  & binária & 46929 & 150\,000 & 10 & 2 & numéricos \\
-higgs                   & binária & 23512 & 98\,000  & 28 & 2 & numéricos \\
-magictelescope          & binária & 44125 & 13\,000  & 10 & 2 & numéricos \\
-phoneme                 & binária & 1489  & 5\,400   & 5  & 2 & numéricos \\
-telco\_customer\_churn  & binária & 42178 & 7\,000   & 19 & 2 & mistos \\
+adult                   & binária & 1590  & 49.000  & 14 & 2 & mistos \\
+amazon\_employee        & binária & 4135  & 33.000  & 9  & 2 & categóricos \\
+bank\_marketing         & binária & 1461  & 45.000  & 16 & 2 & mistos \\
+cardiovascular\_disease & binária & 45547 & 70.000  & 11 & 2 & mistos \\
+credit\_g               & binária & 31    & 1.000   & 20 & 2 & mistos \\
+give\_me\_some\_credit  & binária & 46929 & 150.000 & 10 & 2 & numéricos \\
+higgs                   & binária & 23512 & 98.000  & 28 & 2 & numéricos \\
+magictelescope          & binária & 44125 & 13.000  & 10 & 2 & numéricos \\
+phoneme                 & binária & 1489  & 5.400   & 5  & 2 & numéricos \\
+telco\_customer\_churn  & binária & 42178 & 7.000   & 19 & 2 & mistos \\
 \midrule
-covertype               & multiclasse & 1596  & 581\,000 & 54 & 7   & numéricos \\
-helena                  & multiclasse & 41169 & 65\,000  & 27 & 100 & numéricos \\
-jannis                  & multiclasse & 41168 & 84\,000  & 54 & 4   & numéricos \\
+covertype               & multiclasse & 1596  & 581.000 & 54 & 7   & numéricos \\
+helena                  & multiclasse & 41169 & 65.000  & 27 & 100 & numéricos \\
+jannis                  & multiclasse & 41168 & 84.000  & 54 & 4   & numéricos \\
 \midrule
-california\_housing$^{\dagger}$ & regressão & 44090 & 21\,000  & 8  & -- & numéricos \\
-kin8nm                  & regressão & 44980 & 8\,192   & 8  & -- & numéricos \\
-online\_news$^{\ddagger}$ & regressão & 44064 & 40\,000  & 59 & -- & mistos \\
-wine\_quality           & regressão & 287   & 6\,500   & 11 & -- & numéricos \\
-year\_prediction        & regressão & 44027 & 515\,000 & 90 & -- & numéricos \\
+california\_housing$^{\dagger}$ & regressão & 44090 & 21.000  & 8  & -- & numéricos \\
+kin8nm                  & regressão & 44980 & 8.192   & 8  & -- & numéricos \\
+online\_news$^{\ddagger}$ & regressão & 44064 & 40.000  & 59 & -- & mistos \\
+wine\_quality           & regressão & 287   & 6.500   & 11 & -- & numéricos \\
+year\_prediction        & regressão & 44027 & 515.000 & 90 & -- & numéricos \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -113,7 +113,8 @@ RMSE sobre alvo $\{0,1\}$ é a raiz do escore de Brier, e os
 \emph{ranks} internos permanecem válidos ---, mas o conjunto é
 degenerado para leituras distribucionais, e cada resultado que o
 envolve no Capítulo~\ref{chap:destilacao} carrega análise de
-sensibilidade com ele excluído. ($\ddagger$)~O
+sensibilidade com ele excluído --- exceto a checagem da dispersão do
+TabFM como professor, medida só nele. ($\ddagger$)~O
 \texttt{online\_news} é o conjunto OnlineNewsPopularity (alvo =
 logaritmo do número de compartilhamentos; regressão contínua
 legítima).
@@ -196,8 +197,8 @@ proveniência de cada implementação.
 \begin{table}[htbp]
 \centering
 \caption[Os 14 modelos do benchmark, por família]{Os 14 modelos do benchmark, por família, com a proveniência de
-cada implementação (``própria'' indica reimplementação a partir do artigo
-original).}
+cada implementação (``própria'' indica implementação no repositório;
+SAINT, STab e TabKAN são reimplementações do artigo original).}
 \label{tab:modelos}
 \footnotesize
 \setlength{\tabcolsep}{3pt}
@@ -273,7 +274,8 @@ Ambos os \emph{foundation models} têm limites arquiteturais declarados, dos
 quais decorre a única lacuna da matriz experimental: o conjunto
 \texttt{helena} (100 classes) excede o limite de classes de ambos. As duas
 células TabPFN$\times$\texttt{helena} e TabFM$\times$\texttt{helena} são,
-portanto, \emph{exclusões estruturais} --- impossibilidades arquiteturais,
+portanto, \emph{exclusões estruturais} --- limites arquiteturais
+nativos,
 não falhas de execução --- e a matriz final tem 250 das 252 células
 possíveis. A política estatística para essas células é definida na
 Seção~\ref{sec:met-estatistica}.
@@ -311,7 +313,7 @@ reavaliação em 5
   \item \textbf{Por que a proporção 80:20.} A fração de teste equilibra
     dois recursos finitos, e os dois lados são mensuráveis nos próprios
     artefatos. Do lado do \emph{teste}, 20\% compram precisão de métrica:
-    no \texttt{adult} (9\,769 linhas de teste), o IC95\% de
+    no \texttt{adult} (9.769 linhas de teste), o IC95\% de
     \emph{bootstrap} da AUC no \emph{hold-out} tem meia-largura de
     $\pm$0{,}005; no piso da grade (\texttt{credit\_g}, 200 linhas), a
     meia-largura sobe a $\pm$0{,}074 --- razão pela qual nenhuma conclusão
@@ -361,7 +363,7 @@ reavaliação em 5
     amostrador \emph{Tree-structured Parzen Estimator} do Optuna
     \citep{akiba2019}) bastariam para a maior parte do \emph{landscape}
     --- uma premissa de orçamento nossa, aferida \emph{a posteriori}
-    pelas configurações vencedoras e pela estabilidade entre sementes
+    pelas configurações vencedoras
     do Apêndice~\ref{app:hp-escolhidos}, não uma afirmação da
     literatura. As medições realizadas mostraram
     disparidade maior que a premissa (o custo mediano por \emph{trial}
@@ -388,11 +390,11 @@ reavaliação em 5
     espaços de busca por modelo estão no Apêndice~\ref{app:espacos-busca},
     e os valores efetivamente escolhidos por conjunto, no
     Apêndice~\ref{app:hp-escolhidos} --- alguns encostam na borda do
-    espaço (p.~ex., \texttt{n\_estimators} próximo do teto de 2\,000),
+    espaço (p.~ex., \texttt{n\_estimators} próximo do teto de 2.000),
     limitação declarada do desenho do espaço.
     A direção de otimização segue a métrica primária de cada tarefa
     (maximização de ROC-AUC; minimização de \emph{log-loss} e RMSE;
-    Seção~\ref{sec:met-estatistica}).
+    Seção~\ref{sec:met-metricas}).
   \item \textbf{Regime de treinamento dos modelos profundos.} Máximo de 200
     épocas com parada antecipada (paciência 20, monitorando a perda de
     validação), lote de 256, otimizador AdamW e restauração do melhor
@@ -567,7 +569,7 @@ reporta os dois critérios; o registro está em
     ($d_z$), a forma correta para o desenho de medidas repetidas (os mesmos
     conjuntos avaliam todos os modelos).
   \item \textbf{Intervalos de confiança:} \emph{bootstrap} percentil com
-    10\,000 reamostragens e semente fixa --- coerente com o restante do
+    10.000 reamostragens e semente fixa --- coerente com o restante do
     arcabouço não paramétrico.
   \item \textbf{Análise bayesiana com ROPE} (\emph{signed-rank} de
     \citealp{benavoli2017}): o arcabouço frequentista não autoriza afirmar
@@ -642,7 +644,7 @@ completam o protocolo:
     hiperparâmetros fixados nos valores selecionados para o conjunto
     completo e o mesmo \emph{hold-out} do benchmark --- isolando o efeito
     do tamanho amostral a capacidade fixa. A reutilização de hiperparâmetros é
-    declarado como limitação: reotimizar por tamanho deslocaria níveis
+    declarada como limitação: reotimizar por tamanho deslocaria níveis
     absolutos, não a direção dos cruzamentos.
   \item \textbf{Validação do arcabouço de decisão (LODO; QP2).} O
     recomendador de família por meta-características é avaliado por
@@ -862,7 +864,7 @@ conhecidas e as decisões tomadas diante delas.
     \emph{rankings} de latência entre os 14 modelos são estáveis entre
     conjuntos (correlação de postos de Spearman 0{,}78--0{,}95) e que a dependência do contexto
     dos \emph{foundation models} tem a direção declarada (TabPFN: 840
-    $\mu$s/linha no menor conjunto, 45{\,}578 no maior). Os números não se
+    $\mu$s/linha no menor conjunto, 45.578 no maior). Os números não se
     transferem para serviço \emph{online} de linha única nem para outro
     hardware; o que se transfere --- e é o que as conclusões usam --- são
     as ordens de grandeza entre famílias.

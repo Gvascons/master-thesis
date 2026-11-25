@@ -37,17 +37,18 @@ without peer review. What the team lacks is evidence produced under a
 single protocol and a procedure to turn it into a choice.
 
 This dissertation produces both. The picture that emerges contradicts
-the maxim on two counts. First, in the generation of models preceding
-2026, the top of the accuracy ranking, measured in binary
+the maxim on two counts. First, in the 11-model core (prior to the
+2026 extension), the top of the accuracy ranking, measured in binary
 classification, is a \emph{statistical tie}:
 under a region of practical equivalence of one percentage point of
 AUC, 8 of the 10 non-leading models are practically equivalent to the
 leader --- itself already a foundation model, TabPFN, at average rank
-3.2 --- under the lenient criterion (3 of the 10, the GBDTs, under the
+3.2 --- under the lenient criterion (3 of the 10, the GBDTs ---
+gradient-boosted decision trees ---, under the
 strict 0.95 cutoff), and performance variance is dominated by the
 model$\times$dataset interaction together with noise (the winner
-depends on the dataset,
-not on the family); ``boosting always wins'' finds no accuracy margin
+depends more on the dataset
+than on the family); ``boosting always wins'' finds no accuracy margin
 to support it (Chapter~\ref{chap:benchmark}). Second, the 2026
 generation shifts the top in an unexpected direction: what moved ahead
 was not tuned deep learning but pre-training. TabFM, evaluated
@@ -65,7 +66,7 @@ XGBoost, serves at
 ${\sim}10^2$~\textmu s/row on the frontier datasets --- hundreds of
 times above the native model and $7\times$ to $880\times$ below the
 teacher, depending on the dataset) --- amortized batch-serving
-latencies, each model on its natural device (four to five orders of
+latencies, each model on its natural device (about five orders of
 magnitude; roughly 131~thousand times on the reference dataset, with
 the ratio varying by dataset). The practical question becomes a
 different one: does the leader's latency fit the use case and, if it
@@ -79,16 +80,18 @@ distillation \citep{hinton2015} trains, on the expensive teacher's
 outputs, a student that serves predictions in about a hundred
 microseconds per row. For tabular foundation models, the literature established this
 route for classification \citep{pocketfm2026}. What it transfers in
-\emph{regression}, in particular when the preservation target is the
+\emph{regression} when the preservation target is the
 full predictive distribution, with quantiles and calibrated
 intervals, had no academic answer as of the dated checks of this
-study. The answer found is selective: \emph{point}
+study (\emph{point} regression was addressed by contemporary work;
+Chapter~\ref{chap:related}). The answer found is selective: \emph{point}
 distillation fails robustly, \emph{distributional} distillation
 transfers part of the advantage (12--19\% at the median) where the
 teacher genuinely has one, and the boundary between
-the two conditions can be checked before the student is trained, by
-a single OOF labeling pass (minutes to a few hours, depending on
-pool size and teacher latency;
+the two conditions can be measured before the student is trained, by
+a single OOF (out-of-fold) labeling pass (minutes to a few hours, depending on
+pool size and teacher latency; the gate's threshold was derived
+in-sample, in its oracle version;
 Chapter~\ref{chap:destilacao}).
 
 \section{Research problem}
@@ -220,10 +223,11 @@ question's answer creates the next question: the tie and its shift
 decision policy runs into a single obstacle, whose reduction is the
 object of RQ3. The falsifiable hypotheses attached to the questions,
 with their decision criteria, are stated where they are tested: in
-the benchmark (Chapter~\ref{chap:benchmark}), in experiment E2 (the
-labels E1--E3 number the final phase's three registered experiments:
+the benchmark (Chapter~\ref{chap:benchmark}), in experiment E2 of
+Chapter~\ref{chap:framework} (E1--E3 denote the three registered
+experiments:
 E1, classical baselines; E2, weighted regret; E3, decision utility)
-(Chapter~\ref{chap:framework}) and in the two-stage design of the
+and in the two-stage design of the
 distillation study (Chapter~\ref{chap:destilacao}). In the diagram,
 solid arrows link each question to the chapter that answers it, and
 dashed arrows mark this logical chain; Chapters~\ref{chap:fundamentacao}
@@ -300,8 +304,10 @@ evidence that were missing. In order of presentation:
     the recommendation), quantitatively justifying the flowchart's
     architecture (Chapter~\ref{chap:framework}).
   \item \textbf{Distributional distillation of tabular foundation
-    models.} On 20 regression datasets, under hypotheses registered
-    before the experiments (Chapter~\ref{chap:destilacao}), it is
+    models.} On 20 regression datasets, under registered hypotheses
+    and criteria --- H1--H3 before the experiments; the confirmatory
+    instrument and the E1--E3 analyses at the dates in Table~7.1 ---
+    (Chapter~\ref{chap:destilacao}), it is
     shown that: (a) \emph{point} distillation does not work --- the
     student trained on the teacher's means beats the control on 4 of
     20 datasets with TabPFN, and the replication with TabFM as
@@ -359,8 +365,9 @@ the project's public repository:
 Both reports are graded coursework of the program and, as of this
 writing, have not been externally peer reviewed; their content corresponds, respectively,
 to Chapters~\ref{chap:benchmark} and~\ref{chap:framework} and to
-Chapter~\ref{chap:destilacao}, which additionally include three
-contributions new to the dissertation: E2 (weighted multi-criteria
+Chapter~\ref{chap:destilacao}; the dissertation additionally
+includes three
+contributions new relative to them: E2 (weighted multi-criteria
 regret), entirely new relative to the reports; the complete
 per-dataset results of E1 (the 17/20 paired comparison against
 classical baselines; the distillation report incorporates the E1

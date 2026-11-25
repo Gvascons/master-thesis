@@ -110,7 +110,9 @@ target --- the latter lives in the unit of the target itself, and it
 is what the quantiles of Section~\ref{sec:fund-distribucional} are
 about.
 
-\section{Measuring a classifier: from the confusion matrix to ROC-AUC}
+{\makeatletter\def\sectionmark#1{}\makeatother
+\section{Measuring a classifier: from the confusion matrix to ROC-AUC}}
+\sectionmark{Measuring a classifier}
 \label{sec:fund-metricas-clf}
 
 Before introducing the competitors, let us fix the yardstick. The
@@ -929,6 +931,7 @@ contribution (Figure~\ref{fig:destil-calibration}).
 \caption[From the quantile curve to coverage]{From the quantile
 curve to coverage (TabPFN, OOF labeling of
 \texttt{fps\_benchmark} --- a regression dataset from the CTR23
+(OpenML-CTR23) regression
 suite used in Chapter~\ref{chap:destilacao}): (a)~the
 prediction for one row; (b)~the empirical coverage per level.}
 \label{fig:quantis-cobertura}
@@ -959,7 +962,8 @@ distribution of those values, from which any quantile can be read
 route: a gradient boosting whose outputs are the \emph{parameters}
 of a distribution (for example, mean and variance of a Gaussian),
 trained by natural gradients on a proper scoring rule
-\citep{duan2020}. The parametric route also includes the LSS family
+\citep{duan2020}. The parametric route also includes the LSS
+(location, scale and shape) family
 --- \emph{XGBoostLSS} and relatives \citep{marz2019} --- which
 takes the same boosting to model all the parameters of the
 distribution; NGBoost represents it in this work as its member
@@ -1166,7 +1170,9 @@ for reversed orders), without assuming a linear relation; it is
 used whenever the question is whether a ranking is stable or
 whether one quantity grows with another.
 
-\section{Choosing a model: algorithm selection, regret and dominance}
+{\makeatletter\def\sectionmark#1{}\makeatother
+\section{Choosing a model: algorithm selection, regret and dominance}}
+\sectionmark{Choosing a model}
 \label{sec:fund-selecao}
 
 The previous instruments compare models. What remains is the

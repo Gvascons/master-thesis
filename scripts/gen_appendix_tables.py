@@ -139,7 +139,7 @@ SECONDARY = {
                    ("r2", "$R^{2}$", True)],
 }
 TASK_PT = {"binary": "binária", "multiclass": "multiclasse",
-           "regression": "regressão"}
+           "regression": "de regressão"}
 
 
 def fmt2(v: float) -> str:
@@ -213,7 +213,7 @@ def build_ks_table(df: pd.DataFrame) -> str:
             v = row.get(m)
             if pd.isna(v):
                 cells.append("---")
-            elif v == best:
+            elif fmt(v) == fmt(best):
                 cells.append(r"\textbf{" + fmt(v) + "}")
             else:
                 cells.append(fmt(v))
@@ -229,7 +229,7 @@ def build_cohensd_table(which: str) -> str:
     order = [m for m, _ in MODELS if m in mat.index]
     disp = {m: d for m, d in MODELS}
     mat = mat.loc[order, order]
-    nome = "binária (AUC-ROC)" if which == "binary" else "regressão (RMSE)"
+    nome = "binária (AUC-ROC)" if which == "binary" else "de regressão (RMSE)"
     direcao = (r"positivo = linha melhor (AUC maior)" if which == "binary"
                else r"positivo = linha \emph{pior} (RMSE maior)")
     lines = [r"\begin{sidewaystable}[p]", r"\centering", r"\scriptsize",

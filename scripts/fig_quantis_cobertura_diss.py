@@ -64,7 +64,7 @@ def main():
     if en:
         ann = f"$y$ falls below $q_\\tau$\nfrom $\\tau = {tau_c:.2f}$ on"
     else:
-        ann = f"$y$ cai abaixo de $q_\\tau$\na partir de $\\tau = {tau_c:.2f}$".replace(".", ",")
+        ann = f"$y$ cai abaixo de $q_\\tau$\na partir de $\\tau$ = " + f"{tau_c:.2f}".replace(".", ",")
     a1.annotate(ann,
                 (tau_c, qi[-1]), xytext=(-8, -2), textcoords="offset points",
                 fontsize=9, color="#555555", ha="right", va="top")

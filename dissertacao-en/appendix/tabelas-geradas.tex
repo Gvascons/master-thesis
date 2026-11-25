@@ -159,7 +159,7 @@ TabFM & \textbf{1.20} & \textbf{1.40} & \textbf{1.20} \\
 \toprule
 \emph{Dataset} & \rotatebox{90}{XGBoost} & \rotatebox{90}{LightGBM} & \rotatebox{90}{CatBoost} & \rotatebox{90}{MLP} & \rotatebox{90}{RealMLP} & \rotatebox{90}{FT-Transformer} & \rotatebox{90}{SAINT} & \rotatebox{90}{STab} & \rotatebox{90}{TabNet} & \rotatebox{90}{TabM} & \rotatebox{90}{KAN} & \rotatebox{90}{TabKAN} & \rotatebox{90}{TabPFN} & \rotatebox{90}{TabFM} \\
 \midrule
-\texttt{adult} & 0.6965 & 0.6920 & 0.6924 & 0.6596 & 0.6707 & 0.6618 & 0.6748 & 0.6690 & 0.6577 & 0.6651 & 0.6600 & 0.6588 & 0.6695 & \textbf{0.6965} \\
+\texttt{adult} & \textbf{0.6965} & 0.6920 & 0.6924 & 0.6596 & 0.6707 & 0.6618 & 0.6748 & 0.6690 & 0.6577 & 0.6651 & 0.6600 & 0.6588 & 0.6695 & \textbf{0.6965} \\
 \texttt{amazon\_\allowbreak employee} & 0.5376 & 0.5674 & \textbf{0.6408} & 0.5110 & 0.5013 & 0.4495 & 0.4251 & 0.2628 & 0.4607 & 0.5025 & 0.4998 & 0.4722 & 0.5440 & 0.6136 \\
 \texttt{bank\_\allowbreak marketing} & 0.7398 & 0.7387 & 0.7350 & 0.7281 & 0.7358 & 0.7465 & 0.7437 & 0.7409 & 0.7238 & 0.7572 & 0.7196 & 0.7118 & 0.7518 & \textbf{0.7671} \\
 \texttt{cardiovascular\_\allowbreak disease} & 0.4701 & 0.4731 & 0.4702 & 0.4678 & 0.4708 & \textbf{0.4738} & 0.4712 & 0.4652 & 0.4492 & 0.4643 & 0.4657 & 0.4599 & 0.4704 & 0.4734 \\
@@ -205,8 +205,7 @@ TabFM & $0.68$ & $0.73$ & $0.31$ & $1.02$ & $0.91$ & $0.72$ & $0.81$ & $0.62$ & 
 \centering
 \scriptsize
 \setlength{\tabcolsep}{3pt}
-\caption[Effect sizes (Cohen's $d$) --- regression]{Paired Cohen's $d$ (row $-$ column) on the regression task (RMSE); positive = row \emph{worse} (higher RMSE). Caveat: the $d$ is computed on raw RMSEs of 5 datasets with different target scales, and the differences are dominated by the larger-scale datasets; the reading is indicative, and the chapter's formal comparisons use ranks. Source:
-\texttt{results/\allowbreak aggregated/\allowbreak cohens\_\allowbreak d\_\allowbreak regression.\allowbreak csv}.}
+\caption[Effect sizes (Cohen's $d$) --- regression]{Paired Cohen's $d$ (row $-$ column) on the regression task (RMSE); positive = row \emph{worse} (higher RMSE). Caveat: the $d$ is computed on raw RMSEs of 5 datasets with different target scales, and the differences are dominated by the larger-scale datasets; the reading is indicative, and the chapter's formal comparisons use ranks. Source: \texttt{results/\allowbreak aggregated/\allowbreak cohens\_\allowbreak d\_\allowbreak regression.\allowbreak csv}.}
 \label{tab:app-cohensd-regression}
 \begin{tabular}{lcccccccccccccc}
 \toprule

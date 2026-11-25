@@ -242,7 +242,7 @@ mede adiante (Seção~\ref{sec:destil-retune}): com ambos reajustados, o
 sinal se mantém (16/20) e a magnitude cai de 2,8\% para 1,4\% de ganho
 mediano de CRPS --- a Seção~\ref{sec:destil-dist} apresenta as duas
 estimativas juntas. São
-três famílias:
+três variantes, em duas famílias de aluno:
 
 \begin{itemize}
   \item \textbf{XGBoost ponto} \citep{chen2016}: treinado nos rótulos
@@ -291,7 +291,7 @@ completas; menor é melhor), estimado como duas vezes a média das
 perdas \emph{pinball} sobre a grade de 19 quantis
 \citep{gneiting2011} --- o estimador de grade padrão na prática de
 previsão probabilística. Validamos esse estimador contra a forma
-fechada gaussiana: ele carrega uma sobre-estimativa multiplicativa
+fechada gaussiana: ele carrega uma superestimativa multiplicativa
 quase constante de ${\sim}4$--5\% (razão 1,048 nos quatro cenários de
 locação$\times$escala;
 \texttt{results/\allowbreak distillation/\allowbreak crps\_\allowbreak grid\_\allowbreak gaussian\_\allowbreak validation.\allowbreak csv}),
@@ -470,21 +470,24 @@ a $\pm$5~p.p. & sim & não confirmada como conjunção: cláusula de
 CRPS sustentada (16/20); cláusula de cobertura não atendida
 (10/20) \\
 H3 (Pareto) & existe faixa de latência em que o destilado domina o
-professor comprimido & sim & faixa atendida a 99~\us{}
-(california$^\dagger$), excedida a 169~\us{} (year); refutada no
-\texttt{kin8nm} \\
+professor comprimido & sim & não confirmada na forma registrada:
+dominância só no \texttt{year}, a 169~\us{} (acima da faixa
+${\lesssim}100$); na faixa, apenas não dominado, e só no
+california$^\dagger$; refutada no \texttt{kin8nm} \\
 Teste de sinal & instrumento confirmatório do 16/20 & não
 (fixado na leitura interina) & $p\approx0{,}019$ sequencial \\
 Cauda pesada (log) & refazer professor e alunos com
 $y'{=}\log(1{+}y)$ recupera a retenção nas falhas de escala de preço
-& sim (célula registrada antes da ablação) & refutada (\texttt{fifa}
-segue em $-1{,}69$; os êxitos encolhem; Apêndice~C) \\
+& não (fixada na leitura interina, antes da ablação) & refutada
+(\texttt{fifa} vai de $-1{,}29$ a $-1{,}69$ no espaço transformado;
+os controles movem-se em direções opostas; Apêndice~C) \\
 E1 (clássicos) & destilado vence o melhor entre QRF e NGBoost & sim
 (execução já iniciada) & confirmada (17/20) \\
-E3 (utilidade) & custo realizado menor em $\tau{=}0{,}90$ & registrada
+E3 (utilidade) & custo realizado menor ou igual em $\tau{=}0{,}90$ & registrada
 (antes de qualquer leitura) & confirmada (18/20) \\
 Reajuste & hiperparâmetros herdados são piso da retenção &
-sim (adendo de 12/11/2026) & refutada (9/20 por conjunto; mediana
+parcialmente (piloto de 15/10 lido antes; extensão aos 20 registrada
+no adendo de 12/11 e executada em 17/11) & refutada (9/20 por conjunto; mediana
 0,19$\to$0,12): sinal mantido, magnitude reduzida \\
 \bottomrule
 \end{tabular}
@@ -504,7 +507,8 @@ diretamente, replicando o experimento com o TabFM, cuja vantagem de referência
 denominador da retenção) é quase $6\times$ o do TabPFN no
 \texttt{california\_\allowbreak housing}$^\dagger$: 0,028 contra
 0,005 de RMSE. O quadro não
-muda: somente as duas células \emph{soft} do \texttt{california}
+muda: somente as duas células destiladas do \texttt{california}
+(\emph{soft} e \emph{mixture})
 superam o controle, com melhor retenção intra-pipeline de 0,11
 (california/misto), e as oito células restantes ficam no nível do
 controle ou abaixo. Em \emph{pool} completo, um GBDT ajustado extrai dos
@@ -517,8 +521,10 @@ piloto sugeriu a hipótese de que o ganho pontual é um fenômeno de
 poucos dados. Investigamos com uma varredura de tamanho de \emph{pool} (caps
 de 800, 2.000 e 8.000 linhas): há um ganho genuíno de poucos dados no
 \texttt{wine\_quality} ($\Delta = +0{,}026$ em $n{=}800$), que
-desaparece a partir de $n{=}2.000$ e \emph{não} replica no
-\texttt{california\_\allowbreak housing}$^\dagger$. Atribuímos o resquício, portanto, a um
+desaparece a partir de $n{=}2.000$ e, no
+\texttt{california\_\allowbreak housing}$^\dagger$, replica
+apenas como um resíduo marginal de $+0{,}005$ em $n{=}2.000$, ausente
+em 8.000. Atribuímos o resquício, portanto, a um
 moderador de poucos dados dependente do conjunto, e o reportamos como
 observação, não como efeito geral.
 
@@ -622,8 +628,9 @@ controle (1,4\% quando os dois braços são reajustados;
 Seção~\ref{sec:destil-retune}). Dois instrumentos suplementares concordam com graus
 distintos de firmeza: o Wilcoxon unilateral dá $p=0{,}045$ (bilateral,
 0,090: não rejeitaria), e a análise bayesiana de postos sinalizados
-\citep{benavoli2017} atribui probabilidade 0,96 à região de retenção
-positiva (ROPE $\pm0{,}05$; massa posterior esperada $E[\theta]=0{,}70$).
+\citep{benavoli2017} atribui probabilidade 0,96 de a região de
+retenção positiva ser a mais provável (ROPE $\pm0{,}05$; massa
+posterior esperada nela: $E[\theta]=0{,}70$).
 O veredito apoia-se, portanto, no teste de sinal e na mediana; a
 Tabela~\ref{tab:destil-robustez} reúne todas as variantes.
 
@@ -769,7 +776,8 @@ $[2{,}6;\,3{,}2]$) e \texttt{cpu\_activity} ($+0{,}117$). Terceira,
 positivos quase nulos (\texttt{miami\_housing}, retenção
 $+0{,}016$) contam
 como sucesso sob o teste de sinal --- a varredura de ROPE
-(0,95--0,96 de probabilidade posterior entre ROPE 0,02 e 0,10)
+(0,95--0,96 de probabilidade de a região positiva ser a mais
+provável, entre ROPE 0,02 e 0,10)
 delimita o efeito de tratá-los como equivalências.
 
 \subsection{As quatro derrotas, uma a uma}
@@ -897,26 +905,31 @@ regra de decisão
 antes que a destilação
 entre em cena.
 
-O veredito de H3: \textbf{a faixa pré-registrada é atendida em um
-conjunto e excedida no outro}. No
+O veredito de H3: \textbf{não confirmada na forma registrada ---
+dominância de Pareto só fora da faixa}. No
 \texttt{year\_\allowbreak prediction} o aluno destilado é
 Pareto-dominante no sentido forte --- CRPS melhor que o do professor
-mais subamostrado (4,43 contra 4,70) a $7{,}8\times$ menos latência;
-no \texttt{california\_\allowbreak housing}$^\dagger$ a faixa existe, mas é a
-banda abaixo de 245~\us\ em que nenhuma configuração do professor
-opera (e que a QRF nativa ocupa com CRPS melhor, como o E1 mediria);
-no \texttt{kin8nm} a hipótese \emph{falha} --- a redução de
-\emph{ensemble} entrega a latência do aluno com CRPS muito melhor.
-H3 vale, portanto, onde nenhuma configuração barata do professor
+mais subamostrado (4,43 contra 4,70) a $7{,}8\times$ menos latência
+---, mas a 169~\us/linha, acima da faixa pré-registrada de
+${\lesssim}100$~\us/linha. Dentro da faixa, o aluno é apenas
+\emph{não dominado} --- nenhuma configuração do professor opera
+abaixo de 245~\us\ --- e só no
+\texttt{california\_\allowbreak housing}$^\dagger$, onde seu CRPS
+é 15,5\% pior que o da configuração mais barata do professor (0,109
+contra 0,094; e a QRF nativa ocupa a banda com CRPS melhor, como o
+E1 mediria); sem o conjunto binarizado, a faixa não é atingida em
+nenhum conjunto. No \texttt{kin8nm} a hipótese é \emph{refutada}
+--- a redução de \emph{ensemble} entrega a latência do aluno com
+CRPS muito melhor. O que se sustenta é a leitura de latência: onde
+nenhuma configuração barata do professor
 alcança o \emph{tier} de latência do aluno
 (\texttt{california\_\allowbreak housing}$^\dagger$,
-\texttt{year\_\allowbreak prediction}); onde uma alcança, como no
+\texttt{year\_\allowbreak prediction}), o destilado é, entre as
+estratégias derivadas do professor, o sistema distribucional
+CRPS-ótimo nesse regime; onde uma alcança, como no
 \texttt{kin8nm}, a engenharia barata substitui a destilação --- uma
 condição de latência, complementar ao \emph{gate} de vantagem
-relativa da regra de decisão. A faixa pré-registrada de
-${\lesssim}100$~\us/linha é atendida a 99~\us/linha no
-\texttt{california\_\allowbreak housing}$^\dagger$ e excedida a
-169~\us/linha no \texttt{year\_\allowbreak prediction}.
+relativa da regra de decisão.
 
 Dois achados colaterais têm valor independente. Primeiro, reduzir o
 \emph{ensemble} do TabPFN de 8 para 1 membro \emph{melhorou} o RMSE no
@@ -993,7 +1006,7 @@ a \emph{inclinação} da curva entre os seus dois níveis, não a sua
 posição: mais íngreme que a diagonal significa intervalos largos
 demais (sobrecobertura), mais plana, intervalos estreitos demais
 (subcobertura); e não
-existe um atalho ``acima = sobre-cobre'' válido para a curva
+existe um atalho ``acima = sobrecobre'' válido para a curva
 inteira. No \texttt{california\_\allowbreak housing}$^\dagger$,
 o controle de rótulos verdadeiros satura em sobrecobertura extrema e o
 professor exibe a forma em S de caudas mal calibradas, enquanto o
@@ -1041,7 +1054,7 @@ o alcançaria. Um piloto declarado (5 conjuntos, 3 sementes,
 \emph{split-conformal} por quantil nos dois braços) responde que não:
 a conformalização conserta a cobertura --- no critério de a distância
 ao nominal diminuir --- em 5/5 conjuntos no braço \emph{soft} e 3/5 no
-\emph{hard} (as exceções: o california-\emph{hard}, que já sobre-cobria
+\emph{hard} (as exceções: o california-\emph{hard}, que já sobrecobria
 e cuja cobertura a conformalização afasta do nominal, com distância de
 PICP80 de $8{,}06$ para $9{,}63$~p.p., e o cps88wages-\emph{hard},
 que já estava a menos de 1~p.p.\ do nominal e se move menos de
@@ -1253,7 +1266,7 @@ conjuntos do que a média sobre todos os níveis --- e sobrevive com
 folga à exclusão do conjunto binarizado$^\dagger$ (17/19,
 $p{=}0{,}0004$; 16/19, $p{=}0{,}0022$).
 
-A análise exploratória pré-declarada (H-D3) explica por quê: o perfil
+A análise exploratória pré-declarada junto delas explica por quê: o perfil
 do ganho por nível $\tau$ tem forma de U. No centro da distribuição
 ($\tau$ entre 0,45 e 0,65), a redução mediana de custo sobre o
 controle é de ${\sim}1\%$; nas caudas, sobe para $8{,}0\%$ em
@@ -1351,7 +1364,7 @@ Seção~\ref{sec:destil-e1-resultados} quantifica: alguma alternativa
 sem professor o vence em 9 de 20 --- e a destilação preenche parte
 desse espaço de forma consistente; esse é, em parte, o espaço que ela
 ocupa. Um aluno MLP-quantil de rótulos verdadeiros, por contraste,
-iguala o XGBoost destilado \emph{sem professor algum} em conjuntos
+iguala ou supera o XGBoost destilado \emph{sem professor algum} em conjuntos
 pequenos e numéricos (CRPS 0,110 contra 0,109 no
 \texttt{california\_\allowbreak housing}$^\dagger$; 0,047 contra
 0,064 no \texttt{kin8nm})
@@ -1373,7 +1386,8 @@ assimetria \emph{negativa} ($-0{,}34$) e
 29,9\% de zeros (diagnóstico próprio na
 Seção~\ref{sec:destil-derrotas}) ---, mais
 dois controles positivos. A transformação \emph{não} resgata as
-falhas (\texttt{fifa} persiste em $-1{,}69$) --- e o quadro por
+falhas (\texttt{fifa} segue fortemente negativo: $-1{,}69$ no
+espaço transformado) --- e o quadro por
 conjunto, com a retenção medida no espaço transformado, é misto: a
 retenção sobe marginalmente nas outras duas falhas
 (\texttt{diamonds} $-0{,}32 \to -0{,}03$; \texttt{health}
@@ -1449,9 +1463,10 @@ fronteira da Seção~\ref{sec:destil-fronteira} --- os casos
 \texttt{california\_\allowbreak housing}$^\dagger$/\texttt{year\_\allowbreak prediction} de um lado e o
 \texttt{kin8nm} (um caso de latência) do outro.
 
-\emph{A regra de decisão --- transforme, teste um nativo forte,
-e destile somente a vantagem que sobrar --- é verificável em
-minutos a horas, conforme o professor.} As quatro derrotas ficam todas na metade dos conjuntos em
+\emph{A regra de decisão --- rode a transformação de alvo como
+diagnóstico, teste um nativo forte e destile somente a vantagem que
+sobrar --- é verificável em minutos a horas, conforme o
+professor.} As quatro derrotas ficam todas na metade dos conjuntos em
 que a vantagem relativa do professor é menor (análise condicional
 acima), mas cada uma tem causa própria: duplicatas no
 \texttt{wine\_quality}, sensibilidade à configuração no
@@ -1543,7 +1558,7 @@ alavanca emergente de serviço, também não medida aqui.
     específico; a leitura do E1 é ``\emph{default} forte'', não
     ``clássico ajustado ao limite''.
   \item \textbf{Estimador de CRPS em grade.} A grade de 19 quantis
-    sobre-estima o CRPS exato em ${\sim}4$--5\% quase constantes:
+    superestima o CRPS exato em ${\sim}4$--5\% quase constantes:
     comparações internas preservadas, valores absolutos não
     comparáveis entre trabalhos; a ablação com grade de 99 quantis
     confirma a constância em dados reais

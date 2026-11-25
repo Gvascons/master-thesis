@@ -43,7 +43,7 @@ PAIRS = [
      "Secondary metrics --- binary task"),
     ("Métricas secundárias --- tarefa multiclasse",
      "Secondary metrics --- multiclass task"),
-    ("Métricas secundárias --- tarefa regressão",
+    ("Métricas secundárias --- tarefa de regressão",
      "Secondary metrics --- regression task"),
     ("Rank médio (1 = melhor) dos 14 modelos em cada métrica da tarefa "
      "binária; a primária aparece como referência. Valores por célula em",
@@ -55,7 +55,7 @@ PAIRS = [
      "multiclass task; the primary metric appears for reference. "
      "Per-cell values in"),
     ("Rank médio (1 = melhor) dos 14 modelos em cada métrica da tarefa "
-     "regressão; a primária aparece como referência. Valores por célula em",
+     "de regressão; a primária aparece como referência. Valores por célula em",
      "Mean rank (1 = best) of the 14 models on each metric of the "
      "regression task; the primary metric appears for reference. "
      "Per-cell values in"),
@@ -77,11 +77,11 @@ PAIRS = [
      "positive = row better (higher AUC)."),
     ("Tamanhos de efeito ($d$ de Cohen) --- regressão",
      "Effect sizes (Cohen's $d$) --- regression"),
-    ("$d$ de\nCohen pareado (linha $-$ coluna) na tarefa regressão "
-     "(RMSE); positivo\n= linha \\emph{pior} (RMSE maior). Ressalva: o "
-     "$d$ é computado sobre\nRMSEs brutos de 5 conjuntos em escalas de "
-     "alvo diferentes, e as\ndiferenças são dominadas pelos conjuntos "
-     "de maior escala; a leitura é\nindicativa, e as comparações "
+    ("$d$ de Cohen pareado (linha $-$ coluna) na tarefa de regressão "
+     "(RMSE); positivo = linha \\emph{pior} (RMSE maior). Ressalva: o "
+     "$d$ é computado sobre RMSEs brutos de 5 conjuntos em escalas de "
+     "alvo diferentes, e as diferenças são dominadas pelos conjuntos "
+     "de maior escala; a leitura é indicativa, e as comparações "
      "formais do capítulo usam ranks.",
      "Paired Cohen's $d$ (row $-$ column) on the regression task "
      "(RMSE); positive = row \\emph{worse} (higher RMSE). Caveat: the "
@@ -92,7 +92,7 @@ PAIRS = [
     ("IC bootstrap da média de AUC --- binária",
      "Bootstrap CI of the mean AUC --- binary"),
     ("Média de AUC-ROC na tarefa binária com IC95\\% de \\emph{bootstrap} "
-     "percentil ($B{=}10\\,000$) sobre os conjuntos.",
+     "percentil ($B{=}10.000$) sobre os conjuntos.",
      "Mean AUC-ROC on the binary task with a percentile-bootstrap 95\\% "
      "CI ($B{=}10\\,000$) over the datasets."),
     ("Custos consolidados por modelo", "Consolidated costs per model"),

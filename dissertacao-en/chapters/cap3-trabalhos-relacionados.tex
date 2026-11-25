@@ -29,7 +29,9 @@ with dates and verdicts, is in Appendix~\ref{app:suplementares}. The
 gaps stated below should be read as ``open as far as we checked, on
 the declared dates'' --- never as timeless certainties.
 
-\section{Tabular benchmarks and the GBDT vs.\ deep learning controversy}
+{\makeatletter\def\sectionmark#1{}\makeatother
+\section{Tabular benchmarks and the GBDT vs.\ deep learning controversy}}
+\sectionmark{Tabular benchmarks and the controversy}
 \label{sec:rel-benchmarks}
 
 The modern protocol for comparing gradient boosting and deep learning
@@ -454,9 +456,11 @@ above, restricted to classification and point regression; what
 Chapter~\ref{chap:destilacao} adds is the test of TabFM as a
 \emph{distributional} teacher, and the result is an architectural
 negative --- TabFM's regression head is point-valued (confirmed by
-the official technical report, \citealp{kong2026}), and, on the
-only dataset where it was measured
-(\texttt{california\_\allowbreak housing}$^\dagger$), the spread
+the official technical report, \citealp{kong2026}), and the only
+empirical check, on the
+binarized-target \texttt{california\_\allowbreak
+housing}$^\dagger$ --- degenerate by construction for
+distributional readings ---, finds that the spread
 of its ensemble does not work as a predictive
 distribution. Finally, we record what we do \emph{not} claim: the
 basic formulation ``distill a tabular foundation model into a fast
