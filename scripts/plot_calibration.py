@@ -123,7 +123,9 @@ def main():
         ax.set_xlim(0, 1); ax.set_ylim(0, 1)
         ax.tick_params(labelsize=13)
     np.atleast_1d(axes)[0].set_ylabel(L["ylabel"], fontsize=13)
-    np.atleast_1d(axes)[0].legend(fontsize=12, frameon=False, loc="upper left")
+    h, l = np.atleast_1d(axes)[0].get_legend_handles_labels()
+    fig.legend(h, l, fontsize=12, frameon=False, ncol=3,
+               loc="lower center", bbox_to_anchor=(0.5, -0.06))
     if args.lang == "pt_diss":
         from matplotlib.ticker import FuncFormatter
         fmt = FuncFormatter(lambda v, _: f"{v:g}".replace(".", ","))

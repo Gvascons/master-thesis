@@ -97,6 +97,11 @@ Destilação Distribucional}
 % terceira passada de quebra: elimina os estouros marginais (~1 mm)
 % de \texttt longos sem afrouxamento visivel
 \setlength{\emergencystretch}{1.5em}
+% paginas so de float: alinhar no topo, nao centrar no vazio
+\makeatletter
+\setlength{\@fptop}{5pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatother
 \usepackage{pdflscape}
 % Diagramação (lote 25/11): floats podem dividir página com texto
 \renewcommand{\topfraction}{0.9}

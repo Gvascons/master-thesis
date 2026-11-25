@@ -91,8 +91,10 @@ def facet(ax, sub, metric, L):
         if system == "student_quant_soft":
             for _, r in s.iterrows():
                 ax.annotate(L["annot"], (r.us_per_row, r[metric]),
-                            textcoords="offset points", xytext=(8, -12),
-                            fontsize=14, color=color, fontweight="bold")
+                            textcoords="offset points", xytext=(9, -15),
+                            fontsize=14, color=color, fontweight="bold",
+                            bbox=dict(fc="white", ec="none", pad=1.0,
+                                      alpha=0.85))
     ax.set_xscale("log")
     ax.grid(alpha=0.25, which="both", lw=0.5)
     ax.tick_params(labelsize=15)

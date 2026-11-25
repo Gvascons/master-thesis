@@ -105,14 +105,14 @@ def main():
                     markeredgecolor="white", markeredgewidth=0.8)
         if PT:
             ax.set_xlabel("peso da acur\u00e1cia $w$  (1$-$$w$ na lat\u00eancia)")
-            ax.set_ylabel(f"regret normalizado {STAT_PT[stat]} (14 modelos)")
+            ax.set_ylabel(f"regret normalizado {STAT_PT[stat]}\n(14 modelos)")
             from matplotlib.ticker import FuncFormatter
             fmt = FuncFormatter(lambda v, _: f"{v:g}".replace(".", ","))
             ax.xaxis.set_major_formatter(fmt)
             ax.yaxis.set_major_formatter(fmt)
         else:
             ax.set_xlabel("accuracy weight $w$  (1$-$$w$ on latency)")
-            ax.set_ylabel(f"{stat} normalized regret (14 models)")
+            ax.set_ylabel(f"{stat} normalized regret\n(14 models)")
         ax.grid(alpha=0.25, lw=0.5)
         ax.set_xlim(0, 1)
     h, l = axes[0].get_legend_handles_labels()
