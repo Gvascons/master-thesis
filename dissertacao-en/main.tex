@@ -87,6 +87,9 @@ Distributional Distillation}
   \renewcommand{\headrulewidth}{0pt}}
 % URLs: não quebrar logo após o ':' (evita "https:" órfão na bibliografia)
 \expandafter\def\expandafter\UrlNoBreaks\expandafter{\UrlNoBreaks\do\:}
+% terceira passada de quebra: elimina os estouros marginais (~1 mm)
+% de \texttt longos sem afrouxamento visivel
+\setlength{\emergencystretch}{1.5em}
 \usepackage{pdflscape}
 % Diagramação (lote 25/11): floats podem dividir página com texto
 \renewcommand{\topfraction}{0.9}

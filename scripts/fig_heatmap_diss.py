@@ -62,13 +62,18 @@ def main():
                 continue
             r = ranks.iloc[i, j]
             ax.text(j, i, f"{v:.3f}" if en else f"{v:.3f}".replace(".", ","), ha="center",
-                    va="center", fontsize=13,
+                    va="center", fontsize=12.6,
                     color="white" if r <= 4 else "#1b1b1b")
     ax.set_xticks(range(len(cols)))
     ax.set_xticklabels([DISPLAY[m] for m in cols], rotation=45, ha="right", fontsize=14)
     ax.set_yticks(range(len(rows)))
     ax.set_yticklabels([r + (" (log-loss)" if task[r] != "binary" else "")
                         for r in rows], fontsize=14)
+    # grade fina branca entre TODAS as celulas (separa os numeros vizinhos)
+    for xx in np.arange(0.5, len(cols) - 0.5, 1.0):
+        ax.axvline(xx, color="white", lw=0.8)
+    for yy in np.arange(0.5, len(rows) - 0.5, 1.0):
+        ax.axhline(yy, color="white", lw=0.8)
     ax.axvline(2.5, color="white", lw=2)
     ax.axvline(11.5, color="white", lw=2)
     ax.axhline(9.5, color="white", lw=2)

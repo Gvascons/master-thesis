@@ -80,6 +80,7 @@ def main():
     args = ap.parse_args()
     L = LABELS[args.lang]
     exp_cfg = load_experiment_config()
+    plt.rcParams["pdf.fonttype"] = 42
     fig, axes = plt.subplots(1, len(DATASETS), figsize=(5.2 * len(DATASETS), 4.6))
     qcols = [f"q{int(t*100):02d}" for t in QUANTILES]
 
@@ -116,13 +117,13 @@ def main():
             ax.plot(QUANTILES, curves[key], "-", color=color, lw=2,
                     marker=marker, ms=ms, label=L[key], zorder=3,
                     markeredgecolor="white", markeredgewidth=0.8)
-        ax.set_title(ds, fontsize=11)
-        ax.set_xlabel(L["xlabel"], fontsize=9)
+        ax.set_title(ds, fontsize=14)
+        ax.set_xlabel(L["xlabel"], fontsize=13)
         ax.grid(alpha=0.25, lw=0.5)
         ax.set_xlim(0, 1); ax.set_ylim(0, 1)
-        ax.tick_params(labelsize=8)
-    np.atleast_1d(axes)[0].set_ylabel(L["ylabel"], fontsize=10)
-    np.atleast_1d(axes)[0].legend(fontsize=9, frameon=False, loc="upper left")
+        ax.tick_params(labelsize=13)
+    np.atleast_1d(axes)[0].set_ylabel(L["ylabel"], fontsize=13)
+    np.atleast_1d(axes)[0].legend(fontsize=12, frameon=False, loc="upper left")
     if args.lang == "pt_diss":
         from matplotlib.ticker import FuncFormatter
         fmt = FuncFormatter(lambda v, _: f"{v:g}".replace(".", ","))

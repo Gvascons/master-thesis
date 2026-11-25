@@ -87,7 +87,7 @@ def build_table(df: pd.DataFrame, task: str, metric: str,
     lines = []
     lines.append(r"\begin{table}[htbp]")
     lines.append(r"\centering")
-    lines.append(r"\footnotesize")
+    lines.append(r"\scriptsize")
     lines.append(r"\setlength{\tabcolsep}{3pt}")
     lines.append(
         r"\caption[" + TASK_TITLES[label].split(" --- ")[0]
@@ -370,6 +370,7 @@ def main() -> None:
     ]
     n_rows = {}
     blocks.append(r"\begin{landscape}")
+    blocks.append(r"\setlength{\floatsep}{10pt plus 2pt}")
     for task, metric, higher, metric_name, label in TASKS:
         blocks.append(build_table(df, task, metric, higher,
                                   metric_name, label))

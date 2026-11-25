@@ -99,10 +99,13 @@ def main():
                        marker="*" if na_f else "o",
                        s=230 if na_f else 70, zorder=3,
                        edgecolors="white", linewidths=0.7)
+            painel_a = ax is axes[0]
             OFF = {"saint": (5, -14), "ft_transformer": (5, 7),
                    "catboost": (5, -13), "lightgbm": (-8, -14),
-                   "tabm": (5, 6), "tabfm": (-8, 5)}
-            HA = {"lightgbm": "right", "tabfm": "right"}
+                   "tabm": (5, 6),
+                   "tabfm": (7, -3) if painel_a else (-9, -13)}
+            HA = {"lightgbm": "right",
+                  "tabfm": "left" if painel_a else "right"}
             ax.annotate(DISPLAY[m], (r.custo, r.rank14), fontsize=13,
                         textcoords="offset points",
                         ha=HA.get(m, "left"),
@@ -113,13 +116,13 @@ def main():
         ax.grid(alpha=0.3, which="both")
     axes[0].invert_yaxis()
     if en:
-        axes[0].set_ylabel("Mean binary rank (lower is better; axis inverted)")
+        axes[0].set_ylabel("Mean binary rank\n(lower is better; axis inverted)")
         leg = ["on the frontier (14-model grid)", "frontier, 14-model grid",
                "frontier, 11-model core (ranks within the cut)"]
         outs = (REPO / "dissertacao-en/images/pareto_binary_en.pdf",
                 REPO / "results/figures/pareto_binary_en.pdf")
     else:
-        axes[0].set_ylabel("Rank binário médio (menor é melhor; eixo invertido)")
+        axes[0].set_ylabel("Rank binário médio\n(menor é melhor; eixo invertido)")
         import math
         from matplotlib.ticker import FuncFormatter, NullFormatter
         _fmt = FuncFormatter(lambda v, _: f"{v:g}".replace(".", ","))
@@ -140,9 +143,10 @@ def main():
         Line2D([], [], ls="-", color="#424242", label=leg[1]),
         Line2D([], [], ls="--", color="#9e9e9e", label=leg[2]),
     ]
-    axes[0].legend(handles=handles, fontsize=12.5, frameon=False,
-                   loc="lower left")
-    plt.tight_layout()
+    fig.legend(handles=handles, fontsize=12.5, frameon=False,
+               loc="lower center", ncol=4,
+               bbox_to_anchor=(0.5, -0.10))
+    plt.tight_layout(rect=(0, 0.0, 1, 0.985))
     for out in outs:
         plt.savefig(out, bbox_inches="tight")
     print("fronteira 14 (treino):", list(fronteira(

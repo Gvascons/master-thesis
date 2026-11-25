@@ -436,25 +436,32 @@ Code & What it claims & Before reading? & Verdict \\
 H1 (point) & point student retains $\geq$50\% of the RMSE gap on
 $\geq$3/5 & yes & refuted (0/5 central datasets reach 50\%
 retention; descriptively, it beats the control on 4/20) \\
+\addlinespace
 H2 (distribution) & distilled beats the control in CRPS, with
 coverage within $\pm$5~p.p. & yes & not confirmed as a conjunction:
 CRPS clause sustained (16/20); coverage clause not met (10/20) \\
+\addlinespace
 H3 (Pareto) & there is a latency band where the distilled student
 dominates the compressed teacher & yes & not confirmed as
 registered: dominance only on \texttt{year}, at 169~\us{} (above
 the ${\lesssim}100$ band); within the band, merely non-dominated,
 and only on california$^\dagger$; refuted on \texttt{kin8nm} \\
+\addlinespace
 Sign test & confirmatory instrument of the 16/20 & no (fixed at the
 interim reading) & $p\approx0.019$ sequential \\
+\addlinespace
 Heavy tail (log) & redoing teacher and students with
 $y'{=}\log(1{+}y)$ recovers retention on the price-scale failures &
 no (fixed at the interim reading, before the ablation) & refuted
 (\texttt{fifa} goes from $-1.29$ to $-1.69$ in the transformed
 space; the two controls move in opposite directions; Appendix~C) \\
+\addlinespace
 E1 (classical) & distilled beats the best of QRF and NGBoost & yes
 (execution already started) & confirmed (17/20) \\
+\addlinespace
 E3 (utility) & realized cost lower or equal at $\tau{=}0.90$ & registered
 (before any reading) & confirmed (18/20) \\
+\addlinespace
 Re-tuning & inherited hyperparameters are a floor on retention &
 partially (pilot of Oct.~15 read before; extension to the 20
 registered in the addendum of Nov.~12 and run on Nov.~17) & refuted

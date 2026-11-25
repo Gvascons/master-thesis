@@ -249,47 +249,50 @@ def fig_learning_curves():
 
 
 def fig_flowchart14_pt():
-    """Variante PT-BR do fluxograma @14 (dissertacao, Fig. 6.x)."""
-    fig, ax = plt.subplots(figsize=(12, 8.5))
+    """Variante PT-BR do fluxograma @14 (dissertacao, Fig. 6.x).
+    Layout refeito no lote de diagramacao de 25/11: figura maior,
+    perguntas a direita, resultados a esquerda, sem sobreposicao."""
+    fig, ax = plt.subplots(figsize=(13, 10))
     ax.axis("off")
+    ax.set_xlim(0, 1.04)
+    ax.set_ylim(0.03, 1.03)
 
     def box(x, y, t, c="#eef"):
-        ax.annotate(t, (x, y), ha="center", va="center", fontsize=13,
-                    bbox=dict(boxstyle="round,pad=0.5", fc=c, ec="#333"))
+        ax.annotate(t, (x, y), ha="center", va="center", fontsize=12,
+                    bbox=dict(boxstyle="round,pad=0.45", fc=c, ec="#333"))
 
     def arrow(x1, y1, x2, y2, lbl=""):
         ax.annotate("", (x2, y2), (x1, y1),
                     arrowprops=dict(arrowstyle="->", color="#333"))
         if lbl:
-            ax.text((x1 + x2) / 2 + 0.015, (y1 + y2) / 2, lbl, fontsize=13,
+            ax.text((x1 + x2) / 2 + 0.012, (y1 + y2) / 2, lbl, fontsize=12,
                     color="#a00", ha="left",
-                    bbox=dict(fc="white", ec="none", pad=1.2))
+                    bbox=dict(fc="white", ec="none", pad=1.0))
 
-    box(0.5, 0.96, "Problema tabular supervisionado")
-    box(0.5, 0.82, "1. Or\u00e7amento de lat\u00eancia de servi\u00e7o cr\u00edtico?\n"
+    box(0.58, 0.985, "Problema tabular supervisionado")
+    box(0.58, 0.86, "1. Or\u00e7amento de lat\u00eancia de servi\u00e7o cr\u00edtico?\n"
                    "(FMs custam 4\u20135 ordens de magnitude mais por linha)")
-    arrow(0.5, 0.93, 0.5, 0.87)
-    box(0.13, 0.66, "Fam\u00edlia GBDT\n(XGBoost / LightGBM / CatBoost)\n"
+    arrow(0.58, 0.955, 0.58, 0.905)
+    box(0.17, 0.68, "Fam\u00edlia GBDT\n(XGBoost / LightGBM / CatBoost)\n"
                     "em regress\u00e3o distribucional, a destila\u00e7\u00e3o\n"
                     "recupera parte da vantagem do TabPFN (Cap. 7)",
         "#fde")
-    arrow(0.36, 0.80, 0.17, 0.71, "sim")
-    box(0.5, 0.62, "2. Limites arquiteturais atingidos?\n"
+    arrow(0.40, 0.835, 0.23, 0.745, "sim")
+    box(0.58, 0.62, "2. Limites arquiteturais atingidos?\n"
                    "(>10 classes; teto de contexto)")
-    arrow(0.5, 0.77, 0.5, 0.67, "n\u00e3o")
-    box(0.13, 0.46, "GBDT ou DL\n(conforme a tarefa; ver revers\u00f5es)", "#fde")
-    arrow(0.36, 0.60, 0.17, 0.50, "sim")
-    box(0.5, 0.42, "3. Explica\u00e7\u00f5es audit\u00e1veis exigidas?\n(regula\u00e7\u00e3o; atribui\u00e7\u00e3o post-hoc)")
-    arrow(0.5, 0.57, 0.5, 0.47, "n\u00e3o")
-    box(0.11, 0.29, "GBDT\n(explic\u00e1vel por atribui\u00e7\u00e3o,\naceito em pr\u00e1tica regulada)", "#fde")
-    arrow(0.36, 0.40, 0.15, 0.33, "sim")
-    box(0.5, 0.18, "4. Nenhuma restri\u00e7\u00e3o ativa \u2192 FOUNDATION MODEL PRIMEIRO\n"
+    arrow(0.58, 0.815, 0.58, 0.665, "n\u00e3o")
+    box(0.17, 0.46, "GBDT ou DL\n(conforme a tarefa; ver revers\u00f5es)", "#fde")
+    arrow(0.40, 0.60, 0.23, 0.50, "sim")
+    box(0.58, 0.40, "3. Explica\u00e7\u00f5es audit\u00e1veis exigidas?\n(regula\u00e7\u00e3o; atribui\u00e7\u00e3o post-hoc)")
+    arrow(0.58, 0.575, 0.58, 0.445, "n\u00e3o")
+    box(0.16, 0.24, "GBDT\n(explic\u00e1vel por atribui\u00e7\u00e3o,\naceito em pr\u00e1tica regulada)", "#fde")
+    arrow(0.40, 0.38, 0.23, 0.295, "sim")
+    box(0.54, 0.12, "4. Nenhuma restri\u00e7\u00e3o ativa \u2192 FOUNDATION MODEL PRIMEIRO\n"
                    "TabPFN (maduro) \u00b7 TabFM (fronteira, ressalvas v1.0.1)\n"
                    "regret mediano 0,000 com 14 modelos (descritivo; execut\u00e1vel:\n"
                    "sempre-TabFM 0,000 mediana / 0,080 m\u00e9dia; sempre-TabPFN 0,242 mediana)",
         "#efe")
-    arrow(0.5, 0.37, 0.5, 0.25, "n\u00e3o")
-    ax.set_ylim(0.08, 1.0)
+    arrow(0.58, 0.355, 0.56, 0.195, "n\u00e3o")
     save(fig, "decision_flowchart_14_pt")
     plt.close(fig)
 
@@ -298,47 +301,49 @@ def fig_flowchart14(ref="AI-2", out="decision_flowchart_14"):
     """Updated practitioner flowchart: the evaluated 4-constraint framework
     at 14 models (AI-1 section 5.3), replacing the pre-2026 @11 version.
     ref: label for the distillation cross-reference ("AI-2" for the paper,
-    "Ch. 7" for the EN dissertation, saved as decision_flowchart_14_en)."""
-    fig, ax = plt.subplots(figsize=(12, 8.5))
+    "Ch. 7" for the EN dissertation, saved as decision_flowchart_14_en).
+    Layout redone in the 2026-11-25 typographic pass (no box overlaps)."""
+    fig, ax = plt.subplots(figsize=(13, 10))
     ax.axis("off")
+    ax.set_xlim(0, 1.04)
+    ax.set_ylim(0.03, 1.03)
 
     def box(x, y, t, c="#eef"):
-        ax.annotate(t, (x, y), ha="center", va="center", fontsize=13,
-                    bbox=dict(boxstyle="round,pad=0.5", fc=c, ec="#333"))
+        ax.annotate(t, (x, y), ha="center", va="center", fontsize=12,
+                    bbox=dict(boxstyle="round,pad=0.45", fc=c, ec="#333"))
 
     def arrow(x1, y1, x2, y2, lbl=""):
         ax.annotate("", (x2, y2), (x1, y1),
                     arrowprops=dict(arrowstyle="->", color="#333"))
         if lbl:
-            ax.text((x1 + x2) / 2 + 0.015, (y1 + y2) / 2, lbl, fontsize=13,
+            ax.text((x1 + x2) / 2 + 0.012, (y1 + y2) / 2, lbl, fontsize=12,
                     color="#a00", ha="left",
-                    bbox=dict(fc="white", ec="none", pad=1.2))
+                    bbox=dict(fc="white", ec="none", pad=1.0))
 
-    box(0.5, 0.96, "Tabular supervised problem")
-    box(0.5, 0.82, "1. Serving-latency budget critical?\n"
-                   "(FMs cost 4–5 orders of magnitude more per row)")
-    arrow(0.5, 0.93, 0.5, 0.87)
-    box(0.13, 0.66, "GBDT family\n(XGBoost / LightGBM / CatBoost)\n"
+    box(0.58, 0.985, "Tabular supervised problem")
+    box(0.58, 0.86, "1. Serving-latency budget critical?\n"
+                   "(FMs cost 4\u20135 orders of magnitude more per row)")
+    arrow(0.58, 0.955, 0.58, 0.905)
+    box(0.17, 0.68, "GBDT family\n(XGBoost / LightGBM / CatBoost)\n"
                     "in distributional regression, distillation\n"
                     f"recovers part of the TabPFN edge ({ref})",
         "#fde")
-    arrow(0.36, 0.80, 0.17, 0.71, "yes")
-    box(0.5, 0.62, "2. Architectural limits hit?\n"
+    arrow(0.40, 0.835, 0.23, 0.745, "yes")
+    box(0.58, 0.62, "2. Architectural limits hit?\n"
                    "(>10 classes; context cap)")
-    arrow(0.5, 0.77, 0.5, 0.67, "no")
-    box(0.13, 0.46, "GBDT or DL\n(task-matched; see reversals)", "#fde")
-    arrow(0.36, 0.60, 0.17, 0.50, "yes")
-    box(0.5, 0.42, "3. Auditable explanations required?\n(regulation; post-hoc attribution)")
-    arrow(0.5, 0.57, 0.5, 0.47, "no")
-    box(0.11, 0.29, "GBDT\n(attribution-explainable,\naccepted in regulated practice)", "#fde")
-    arrow(0.36, 0.40, 0.15, 0.33, "yes")
-    box(0.5, 0.18, "4. No active constraint → FOUNDATION MODEL FIRST\n"
-                   "TabPFN (mature) · TabFM (frontier, v1.0.1 caveats)\n"
+    arrow(0.58, 0.815, 0.58, 0.665, "no")
+    box(0.17, 0.46, "GBDT or DL\n(task-matched; see reversals)", "#fde")
+    arrow(0.40, 0.60, 0.23, 0.50, "yes")
+    box(0.58, 0.40, "3. Auditable explanations required?\n(regulation; post-hoc attribution)")
+    arrow(0.58, 0.575, 0.58, 0.445, "no")
+    box(0.16, 0.24, "GBDT\n(attribution-explainable,\naccepted in regulated practice)", "#fde")
+    arrow(0.40, 0.38, 0.23, 0.295, "yes")
+    box(0.54, 0.12, "4. No active constraint \u2192 FOUNDATION MODEL FIRST\n"
+                   "TabPFN (mature) \u00b7 TabFM (frontier, v1.0.1 caveats)\n"
                    "median normalized regret 0.000 @14 models (descriptive; executable:\n"
                    "always-TabFM 0.000 median / 0.080 mean; always-TabPFN 0.242 median)",
         "#efe")
-    arrow(0.5, 0.37, 0.5, 0.25, "no")
-    ax.set_ylim(0.08, 1.0)
+    arrow(0.58, 0.355, 0.56, 0.195, "no")
     save(fig, out)
     plt.close(fig)
 

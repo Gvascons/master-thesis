@@ -133,9 +133,10 @@ def main():
             # regra: todo eixo log com ao menos duas decadas rotuladas
             lo, hi = ax.get_xlim()
             if math.floor(math.log10(hi)) - math.ceil(math.log10(lo)) < 1:
-                ax.set_xlim(10 ** (math.floor(math.log10(hi)) - 1), hi)
+                lo = 10 ** (math.floor(math.log10(hi)) - 1)
+            ax.set_xlim(lo, hi * 1.35)  # folga p/ o marcador no extremo
     handles, labels = axes[0, 0].get_legend_handles_labels()
-    legend_y = 1.0 if L["suptitle"] else 1.07
+    legend_y = 1.0 if L["suptitle"] else 1.135
     fig.legend(handles, labels, loc="upper center", ncol=3, fontsize=15,
                frameon=False, bbox_to_anchor=(0.5, legend_y))
     if L["suptitle"]:

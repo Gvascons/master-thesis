@@ -57,7 +57,9 @@ def main():
         bars = a1.bar(xs + (k - 1) * width, vals, width * 0.92,
                       color=CMAP[m], label=NAME[m])
         for b, v in zip(bars, vals):
-            a1.text(b.get_x() + b.get_width() / 2, v + 0.015, fmt(v),
+            # alterna a altura do rotulo (as 3 acuracias ~0,94x colidem)
+            dy = 0.055 if (k == 1 and v > 0.5) else 0.015
+            a1.text(b.get_x() + b.get_width() / 2, v + dy, fmt(v),
                     ha="center", va="bottom", fontsize=12.5, color="#333")
         print(f"amazon {m}: acc={vals[0]:.3f} recall_min={vals[1]:.3f}")
     a1.set_xticks(xs)
@@ -106,7 +108,7 @@ def main():
     a2.set_xlim(0, 1.0)
     if EN:
         a2.set_xlabel("minority-class recall (threshold 0.5)")
-        a2.set_title("(b) The 10 binary datasets, most to least imbalanced",
+        a2.set_title("(b) The 10 binary datasets,\nmost to least imbalanced",
                      fontsize=13, loc="left")
     else:
         a2.set_xlabel("recall da classe minoritária (limiar 0,5)")
@@ -115,7 +117,7 @@ def main():
         a1.yaxis.set_major_formatter(_fmt)   # metrica 0-1
         a2.xaxis.set_major_formatter(_fmt)   # recall 0-1
 
-        a2.set_title("(b) As 10 binárias, da mais à menos desbalanceada",
+        a2.set_title("(b) As 10 binárias,\nda mais à menos desbalanceada",
                      fontsize=13, loc="left")
     a2.legend(loc="upper right", fontsize=13, frameon=False)
 

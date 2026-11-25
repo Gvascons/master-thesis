@@ -88,6 +88,7 @@ def main():
     import sys
     PT = len(sys.argv) > 1 and sys.argv[1] == "pt"
     STAT_PT = {"median": "mediano", "mean": "m\u00e9dio"}
+    plt.rcParams.update({"font.size": 13, "pdf.fonttype": 42})
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.4), sharex=True)
     for ax, stat in zip(axes, ("median", "mean")):
         for pol in list(POLICIES) + ["Tree (LODO)"]:
@@ -96,8 +97,11 @@ def main():
                                       "Always-DL": "Sempre-DL",
                                       "Always-FM": "Sempre-FM",
                                       "Tree (LODO)": "\u00c1rvore (LODO)"}[pol]
-            ax.plot(a.w_acc, a[stat], "-", color=COLORS[pol], lw=2,
-                    marker=MARKERS[pol], ms=6, label=lbl,
+            ls = "--" if pol == "Tree (LODO)" else "-"
+            zo = 4 if pol == "Always-FM" else 3
+            ax.plot(a.w_acc, a[stat], ls, color=COLORS[pol],
+                    lw=2.6 if pol == "Always-FM" else 2,
+                    marker=MARKERS[pol], ms=7, label=lbl, zorder=zo,
                     markeredgecolor="white", markeredgewidth=0.8)
         if PT:
             ax.set_xlabel("peso da acur\u00e1cia $w$  (1$-$$w$ na lat\u00eancia)")
@@ -111,7 +115,9 @@ def main():
             ax.set_ylabel(f"{stat} normalized regret (14 models)")
         ax.grid(alpha=0.25, lw=0.5)
         ax.set_xlim(0, 1)
-    axes[0].legend(fontsize=9, frameon=False)
+    h, l = axes[0].get_legend_handles_labels()
+    fig.legend(h, l, fontsize=12, frameon=False, ncol=4,
+               loc="lower center", bbox_to_anchor=(0.5, -0.07))
     plt.tight_layout()
     suffix = "_pt" if PT else ""
     for ext in ("png", "pdf"):

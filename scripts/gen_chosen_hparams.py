@@ -71,7 +71,8 @@ def build_model_table(model: str, disp: str) -> str:
             if k not in param_order:
                 param_order.append(k)
 
-    lines = [r"\begin{table}[htbp]", r"\centering", r"\footnotesize",
+    lines = [r"\begin{table}[htbp]", r"\centering", r"\scriptsize",
+             r"\renewcommand{\arraystretch}{0.95}",
              r"\setlength{\tabcolsep}{4pt}",
              r"\caption[Hiperparâmetros escolhidos --- " + disp + r"]{"
              + disp + r": configuração vencedora do Optuna em cada "

@@ -290,7 +290,7 @@ def plot_cd_diagram(
     max_rank = n_models
     ax.set_xlim(min_rank - 0.5, max_rank + 0.5)
     # bottom must clear every group bar (drawn at -0.3 - gi*0.25)
-    ax.set_ylim(-0.5 - 0.25 * max(len(groups), 1), n_models + len(groups) * 0.3)
+    ax.set_ylim(-0.5 - 0.25 * max(len(groups), 1), n_models + 1.65)
 
     # Draw rank axis at top
     ax.hlines(n_models + 0.2, min_rank, max_rank, colors="black", linewidth=1)
@@ -300,9 +300,9 @@ def plot_cd_diagram(
 
     # Draw CD indicator
     cd_x = (min_rank + max_rank) / 2
-    ax.hlines(n_models + 0.8, cd_x - cd / 2, cd_x + cd / 2, colors="red", linewidth=2)
+    ax.hlines(n_models + 1.1, cd_x - cd / 2, cd_x + cd / 2, colors="red", linewidth=2)
     _num = (lambda v: f"{v:.2f}".replace(".", ",")) if decimal_comma else (lambda v: f"{v:.2f}")
-    ax.text(cd_x, n_models + 0.9, f"CD = {_num(cd)}", ha="center", va="bottom",
+    ax.text(cd_x, n_models + 1.22, f"CD = {_num(cd)}", ha="center", va="bottom",
             fontsize=9 * fs, color="red")
 
     # Draw model labels and ranks

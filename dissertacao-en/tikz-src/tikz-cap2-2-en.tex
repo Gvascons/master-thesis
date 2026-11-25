@@ -41,8 +41,8 @@
 
 \draw[seta] (prior) -- (tarefas);
 \draw[seta] (tarefas) -- node[rotulo, above=2pt] {training} (modelo);
-\draw[seta] (modelo.south) -- ++(0,-4mm) -| node[rotulo, pos=0.08, right=3pt]
-  {$\theta$ fixed} (forward.north);
+\draw[seta] (modelo.south) -- ++(0,-2.5mm) -| node[rotulo, pos=0.08, right=3pt]
+  {$\theta$ fixed} ([xshift=-1.5mm]forward.north east);
 \draw[seta] (contexto) -- (consulta);
 \draw[seta] (consulta) -- (forward);
 \draw[seta] (forward) -- (pred);

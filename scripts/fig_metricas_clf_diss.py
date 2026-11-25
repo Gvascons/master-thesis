@@ -97,8 +97,8 @@ def main():
         a2.set_ylabel("valor da métrica")
         a2.set_title("(b) O trade-off que o limiar governa", fontsize=13, loc="left")
     a2.set_ylim(0, 1.02)
-    a2.legend(loc="upper center", fontsize=12, frameon=True,
-              framealpha=0.95, edgecolor="#ccc")
+    a2.legend(loc="upper center", fontsize=12, frameon=False,
+              ncol=2, bbox_to_anchor=(0.5, -0.16))
 
     for ax in (a1, a2):
         for s in ("top", "right"):

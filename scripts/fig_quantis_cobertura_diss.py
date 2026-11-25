@@ -50,6 +50,7 @@ def main():
     print(f"instância {i}: y={yi:.1f}, q05={qi[0]:.1f}, q95={qi[-1]:.1f}, "
           f"cruza em tau={QUANTILES[int(k_cross[i])]}")
 
+    plt.rcParams.update({"font.size": 12, "pdf.fonttype": 42})
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(11.0, 4.6))
 
     # ---- painel (a): a curva de quantis de UMA linha -----------------------
@@ -58,7 +59,7 @@ def main():
     a1.axhline(yi, color=INK, lw=1.4, ls="--")
     a1.text(0.06, yi,
             "observed target $y$  " if en else "alvo observado $y$  ",
-            fontsize=9, color=INK, va="bottom")
+            fontsize=12, color=INK, va="bottom")
     tau_c = QUANTILES[int(k_cross[i])]
     a1.axvline(tau_c, color="#999999", lw=1.0, ls=":")
     if en:
@@ -67,17 +68,17 @@ def main():
         ann = f"$y$ cai abaixo de $q_\\tau$\na partir de $\\tau$ = " + f"{tau_c:.2f}".replace(".", ",")
     a1.annotate(ann,
                 (tau_c, qi[-1]), xytext=(-8, -2), textcoords="offset points",
-                fontsize=9, color="#555555", ha="right", va="top")
+                fontsize=12, color="#555555", ha="right", va="top")
     if en:
         a1.set_xlabel("nominal level $\\tau$ (fixed by the evaluator)")
         a1.set_ylabel("predicted quantile $q_\\tau(\\mathbf{x})$ (target unit)")
         a1.set_title("(a) The distributional prediction for one row",
-                     fontsize=11, loc="left")
+                     fontsize=13, loc="left")
     else:
         a1.set_xlabel("nível nominal $\\tau$ (fixado pelo avaliador)")
         a1.set_ylabel("quantil predito $q_\\tau(\\mathbf{x})$ (unidade do alvo)")
         a1.set_title("(a) A predição distribucional de uma linha",
-                     fontsize=11, loc="left")
+                     fontsize=13, loc="left")
     a1.set_xlim(0, 1)
 
     # ---- painel (b): a agregação que vira a curva de confiabilidade --------
@@ -94,15 +95,15 @@ def main():
                 f"{cov[k20] * 100:.1f}%".replace(".", ","))
     a2.annotate(ann2,
                 (0.20, cov[k20]), xytext=(14, -6), textcoords="offset points",
-                fontsize=9, color=INK)
+                fontsize=12, color=INK)
     a2.text(0.68, 0.56,
             "perfect calibration\n(diagonal)" if en else "calibração perfeita\n(diagonal)",
-            fontsize=9, color="#999999", rotation=38, rotation_mode="anchor")
+            fontsize=12, color="#999999", rotation=38, rotation_mode="anchor")
     if en:
         a2.set_xlabel("nominal level $\\tau$")
         a2.set_ylabel("empirical coverage $\\hat{P}(y \\leq q_\\tau)$")
         a2.set_title("(b) The fraction of targets below each quantile",
-                     fontsize=11, loc="left")
+                     fontsize=13, loc="left")
     else:
         a2.set_xlabel("nível nominal $\\tau$")
         a2.set_ylabel("cobertura empírica $\\hat{P}(y \\leq q_\\tau)$")
@@ -112,7 +113,7 @@ def main():
             _ax.xaxis.set_major_formatter(_fmt)
             _ax.yaxis.set_major_formatter(_fmt)
         a2.set_title("(b) A fração de alvos abaixo de cada quantil",
-                     fontsize=11, loc="left")
+                     fontsize=13, loc="left")
     a2.set_xlim(0, 1)
     a2.set_ylim(0, 1)
     print("cobertura em tau=0,20:", f"{cov[k20]:.4f}")

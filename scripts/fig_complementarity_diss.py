@@ -87,7 +87,7 @@ def main():
                            fontsize=13)
         a2.set_xlabel("XGBoost margin quintile ($|\\hat p - 0.5|$)")
         a2.set_ylabel("net FM wins per 1,000 instances")
-        a2.set_title("(b) Gain by XGBoost margin (10 binary datasets)",
+        a2.set_title("(b) Gain by XGBoost margin\n(10 binary datasets)",
                      fontsize=13, loc="left")
     else:
         a2.set_xticklabels(["Q1\nincerto", "Q2", "Q3", "Q4", "Q5\nconfiante"],
@@ -99,7 +99,7 @@ def main():
         a2.yaxis.set_major_formatter(_fmt)   # balanco por mil
 
         a2.set_ylabel("vitórias líquidas do FM por 1.000 instâncias")
-        a2.set_title("(b) Ganho por margem do XGBoost (10 binárias)",
+        a2.set_title("(b) Ganho por margem do XGBoost\n(10 binárias)",
                      fontsize=13, loc="left")
     a2.legend(loc="upper right", fontsize=13, frameon=False)
     a2.grid(axis="y", alpha=0.25, lw=0.6)

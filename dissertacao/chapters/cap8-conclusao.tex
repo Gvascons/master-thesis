@@ -430,7 +430,7 @@ custo aceito em troca. Fonte: Capítulos~\ref{chap:benchmark}--\ref{chap:destila
 \label{tab:conc-perfis}
 \scriptsize
 \setlength{\tabcolsep}{5pt}
-\renewcommand{\arraystretch}{1.15}
+\renewcommand{\arraystretch}{1.0}
 \begin{tabular}{>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.33\linewidth}>{\raggedright\arraybackslash}p{0.19\linewidth}}
 \toprule
 \textbf{Perfil (condição)} & \textbf{Recomendação} & \textbf{Evidência} &
@@ -448,14 +448,14 @@ Custo de serviço (de ${\sim}3.900\times$ o GBDT mais lento ---
 TabPFN sobre LightGBM, Tabela~\ref{tab:app-custos} --- a
 $131.097\times$ o XGBoost); licença não comercial
 do TabPFN-2.5 \\
-\addlinespace
+\addlinespace[2.5pt]
 Poucos dados ($n \lesssim 4.000$) &
 TabPFN &
 Rank médio 1,0 no regime, contra 2,8 do XGBoost, nos 5 conjuntos
 varridos (a varredura não incluiu o TabFM;
 Seção~\ref{sec:cap5-ato3}) &
 Latência de inferência; a liderança com $n$ grande depende do conjunto \\
-\addlinespace
+\addlinespace[2.5pt]
 Classe rara com falso negativo caro &
 FM a limiar fixo --- \emph{ou} reotimizar o limiar do GBDT; medir
 recall a precisão igualada antes de trocar &
@@ -471,7 +471,7 @@ Precisão (0,706 $\to$ 0,621) e latência; a vantagem é frequente, não
 uma lei (\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit}: recalls que diferem
 menos de
 0,02 entre si) \\
-\addlinespace
+\addlinespace[2.5pt]
 Regressão com decisão de cauda e orçamento na casa de
 $10^2$~\us/linha &
 Aluno destilado (correção conformal da cobertura: piloto em 5
@@ -486,7 +486,7 @@ junta nos 20 (Seções~\ref{sec:destil-dist},
 Nada no eixo pontual (4 de 20); latência acima do controle, na casa
 de $10^2$~\us{} por linha; \emph{pipeline} OOF; a licença não
 comercial do professor alcança o aluno destilado \\
-\addlinespace
+\addlinespace[2.5pt]
 A métrica da aplicação inverte o vencedor &
 Decidir pela métrica que a aplicação paga; reportar as duas camadas &
 \texttt{telco}: TabFM perde acurácia (0,771 vs.\ 0,801) e a franja no
@@ -496,7 +496,7 @@ O ``vencedor'' da primária; limiar não otimizado; e o
 \texttt{TotalCharges} (cap.~4) alcança este conjunto: com a coluna
 numérica, o TabFM salta de último a melhor AUC entre os 14
 reavaliados \\
-\addlinespace
+\addlinespace[2.5pt]
 Vantagem heterogênea por conjunto (franja de discordância por
 instância, Seção~\ref{sec:cap5-ato5}) &
 Escolha por conjunto/tarefa, nunca por instância; sem roteador
@@ -506,7 +506,7 @@ Concordância $\geq$0,936; TabFM converte a franja no \texttt{jannis}
 trivial (Seções~\ref{sec:cap5-ato5}, \ref{sec:resultado-negativo}) &
 A promessa de ``um vencedor universal''; a vantagem não encolhe com o
 tamanho \\
-\addlinespace
+\addlinespace[2.5pt]
 Latência de microssegundos por linha exigida &
 GBDT nativo (a destilação, a ${\sim}10^2$~\us/linha, só cabe em
 orçamentos dessa ordem) &
@@ -518,7 +518,7 @@ Rank do topo --- perda $<$1~p.p.\ de AUC no pelotão do núcleo (ROPE
 vs.\ TabPFN: 8/10 no critério brando, 3/10 no estrito); vs.\ TabFM a
 equivalência é
 incerta ($P$ 0,33; $E[\theta]$ 0,40) \\
-\addlinespace
+\addlinespace[2.5pt]
 Explicações auditáveis exigidas (regulação) &
 GBDT &
 Família com latência forte e explicações por atribuição aceitas na
@@ -528,14 +528,14 @@ medida; portão 3 do fluxograma
 (Seção~\ref{sec:arcabouco-resultante}) &
 Rank do topo, sob a mesma contabilidade ROPE; sem destilação (o
 aluno, embora GBDT, aprende rótulos de um professor opaco) \\
-\addlinespace
+\addlinespace[2.5pt]
 Limite arquitetural ($>$10 classes; contexto estourado) &
 GBDT ou DL recente conforme a tarefa &
 \texttt{helena} (100 classes) exclui os dois FMs; melhor não-FM na multiclasse
 (descritivo): STab/TabM 3,67 vs.\ XGBoost 6,0, $N{=}3$
 (Seções~\ref{sec:cap5-ato3}, \ref{sec:arcabouco-resultante}) &
 Nada: a exclusão é estrutural, não preferência \\
-\addlinespace
+\addlinespace[2.5pt]
 Vantagem relativa do professor pequena (\emph{gate} verificado na
 versão oráculo; a versão OOF não foi avaliada), ou
 professor de um membro já no \emph{tier} do aluno;

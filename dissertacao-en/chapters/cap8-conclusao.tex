@@ -414,7 +414,7 @@ indicated.}
 \label{tab:conc-perfis}
 \scriptsize
 \setlength{\tabcolsep}{5pt}
-\renewcommand{\arraystretch}{1.15}
+\renewcommand{\arraystretch}{1.0}
 \begin{tabular}{>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.33\linewidth}>{\raggedright\arraybackslash}p{0.19\linewidth}}
 \toprule
 \textbf{Profile (condition)} & \textbf{Recommendation} &
@@ -431,14 +431,14 @@ always-TabPFN: median 0.242); absolute best on 13 of 18
 Serving cost (from ${\sim}3{,}900\times$ the slowest GBDT ---
 TabPFN over LightGBM, Table~\ref{tab:app-custos} --- to
 $131{,}097\times$ XGBoost); TabPFN-2.5's non-commercial license \\
-\addlinespace
+\addlinespace[2.5pt]
 Little data ($n \lesssim 4{,}000$) &
 TabPFN &
 Average rank 1.0 in the regime, against XGBoost's 2.8, on the 5
 swept datasets (the sweep did not include TabFM;
 Section~\ref{sec:cap5-ato3}) &
 Inference latency; large-$n$ leadership depends on the dataset \\
-\addlinespace
+\addlinespace[2.5pt]
 Rare class with expensive false negatives &
 FM at a fixed threshold --- \emph{or} re-optimize the GBDT's
 threshold; measure recall at equalized precision before switching &
@@ -452,7 +452,7 @@ a fixed-threshold advantage, on one dataset &
 Precision (0.706 $\to$ 0.621) and latency; the advantage is
 frequent, not a law (\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit}: recalls that
 differ by less than 0.02 from one another) \\
-\addlinespace
+\addlinespace[2.5pt]
 Regression with tail decisions and a ${\sim}10^2$~\us/row budget &
 Distilled student (conformal coverage correction: piloted on 5
 datasets) &
@@ -466,7 +466,7 @@ jointly on the 20 (Sections~\ref{sec:destil-dist},
 Nothing on the point axis (4 of 20); latency above the control, on
 the order of $10^2$~\us{} per row; the OOF pipeline; the teacher's
 non-commercial license reaches the distilled student \\
-\addlinespace
+\addlinespace[2.5pt]
 The application's metric inverts the winner &
 Decide by the metric the application pays; report both layers &
 \texttt{telco}: TabFM loses accuracy (0.771 vs.\ 0.801) and the
@@ -476,7 +476,7 @@ McNemar fringe ($-29.8$/thousand), but wins recall (0.663 vs.\
 The primary metric's ``winner''; an unoptimized threshold; and
 \texttt{TotalCharges} (Ch.~4) reaches this dataset: with the column
 numeric, TabFM jumps from last to best AUC among the 14 re-evaluated \\
-\addlinespace
+\addlinespace[2.5pt]
 Advantage heterogeneous per dataset (instance-level disagreement
 fringe, Section~\ref{sec:cap5-ato5}) &
 Choose per dataset/task, never per instance; no learned router &
@@ -486,7 +486,7 @@ below the trivial rule (Sections~\ref{sec:cap5-ato5},
 \ref{sec:resultado-negativo}) &
 The promise of ``a universal winner''; the advantage does not
 shrink with size \\
-\addlinespace
+\addlinespace[2.5pt]
 Microseconds-per-row latency required &
 Native GBDT (distillation, at ${\sim}10^2$~\us/row, fits only
 budgets of that order) &
@@ -497,7 +497,7 @@ median regret; E2)
 The top rank --- a loss $<$1~p.p.\ of AUC in the core's pack (ROPE
 vs.\ TabPFN: 8/10 lenient, 3/10 strict); vs.\ TabFM the equivalence
 is uncertain ($P$ 0.33; $E[\theta]$ 0.40) \\
-\addlinespace
+\addlinespace[2.5pt]
 Auditable explanations required (regulation) &
 GBDT &
 The family with strong latency and attribution-based explanations
@@ -507,14 +507,14 @@ declared, not measured; gate 3 of the flowchart
 (Section~\ref{sec:arcabouco-resultante}) &
 The top rank, under the same ROPE accounting; no distillation (the
 student, though a GBDT, learns labels from an opaque teacher) \\
-\addlinespace
+\addlinespace[2.5pt]
 Architectural limit ($>$10 classes; context overflow) &
 GBDT or recent DL depending on the task &
 \texttt{helena} (100 classes) excludes both FMs; descriptive
 best non-FM in multiclass: STab/TabM 3.67 vs.\ XGBoost 6.0, $N{=}3$
 (Sections~\ref{sec:cap5-ato3}, \ref{sec:arcabouco-resultante}) &
 Nothing: the exclusion is structural, not a preference \\
-\addlinespace
+\addlinespace[2.5pt]
 Small relative teacher advantage (gate verified in its oracle
 version; the OOF version was not evaluated), or a single-member
 teacher already at the student's tier; strong
