@@ -89,9 +89,11 @@ distillation fails robustly, \emph{distributional} distillation
 transfers part of the advantage (12--19\% at the median) where the
 teacher genuinely has one, and the boundary between
 the two conditions can be measured before the student is trained, by
-a single OOF (out-of-fold) labeling pass (minutes to a few hours, depending on
+a single OOF labeling pass (out-of-fold; minutes to a few hours,
+depending on
 pool size and teacher latency; the gate's threshold was derived
-in-sample, in its oracle version;
+in-sample, in its oracle version --- the OOF version was not
+evaluated;
 Chapter~\ref{chap:destilacao}).
 
 \section{Research problem}

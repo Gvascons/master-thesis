@@ -883,7 +883,8 @@ known limitations and the decisions taken in response to them.
     confirmed that the latency rankings among the 14 models are
     stable across datasets (Spearman rank correlation 0.78--0.95)
     and that the foundation models' context dependence has the
-    declared direction (TabPFN: 840 $\mu$s/row on the smallest
+    expected sense --- it grows with the context --- (TabPFN: 840
+    $\mu$s/row on the smallest
     dataset, 45{,}578 on the largest). The numbers do not transfer
     to single-row online serving or to other hardware; what
     transfers --- and is what the conclusions use --- are the

@@ -91,7 +91,8 @@ $p\approx0.019$ under the two-stage design's sequential correction),
 and beats the best of QRF and NGBoost on 17 of 20 (experiment E1).
 The distributional student's serving cost is on the order of
 $10^{2}$~\us{} per row in the measured frontier cases (99 and
-169~\us/row; Section~\ref{sec:destil-fronteira}) --- above the point
+169~\us/row; H3 not confirmed as registered ---
+Section~\ref{sec:destil-fronteira}) --- above the point
 control, and $2.5\times$ to $27\times$ below the teacher's cheapest
 competitive configuration in the two measured frontier cases
 (where no cheap teacher configuration reaches the student's latency
@@ -361,7 +362,8 @@ asked --- each item traces to the result that supports it.
     depending on pool and teacher, directly measures
     the teacher's genuine advantage; distill only if it persists
     (the gate's threshold was derived in-sample, in its oracle
-    version; Section~\ref{sec:destil-regra}). Do not distill the mean: at
+    version --- the OOF version was not evaluated;
+    Section~\ref{sec:destil-regra}). Do not distill the mean: at
     realistic pool sizes, there is nothing to transfer on the point axis
     (Section~\ref{sec:destil-ponto}).
   \item \textbf{Always label out-of-fold.} The cost is modest, and
@@ -722,7 +724,9 @@ Appendix~\ref{app:suplementares}).
 analyses (including E2's weighted score) through the standardized
 measurement in a single regime (amortized batch, each model on its
 natural device), with \texttt{adult} as the reference. The bias
-direction was declared in E2's record and its magnitude was
+direction was declared in E2's record --- and the measured shift of
+the always-GBDT zone came out in the opposite direction to the one
+anticipated (Section~\ref{sec:regret-ponderado}) --- and its magnitude was
 later measured on a small and a large dataset of the benchmark: the rankings among
 the 14 models are stable across datasets (Spearman 0.78--0.95) and
 E2's crossover is identical under the three proxies

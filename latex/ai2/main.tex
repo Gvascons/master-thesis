@@ -61,11 +61,13 @@ teacher's quantile curves into a multi-quantile student --- retains a
 median 12--19\% --- depending on whether both arms are re-tuned ---
 and in one case more than the entirety, of the teacher's
 CRPS (continuous ranked probability score) advantage (positive in 16/20
-datasets, including one born-again case where the student surpasses its
-teacher; one-sided sign test $p = 0.006$ at face value and
+datasets, including one born-again case where the student matches
+its
+teacher to within $10^{-4}$ of CRPS; one-sided sign test $p = 0.006$ at face value and
 $p \approx 0.019$ under the sequential correction of the two-stage
 design (declared in the methods), one-sided Wilcoxon $p = 0.045$, Bayesian
-posterior probability of positive retention $0.96$ (expected posterior
+posterior probability $0.96$ that the positive-retention region is
+the most probable (expected posterior
 mass $0.70$) at a region of practical equivalence of
 $\pm$0.05; under the sensitivity that
 excludes one dataset whose target a dated identity erratum found to be
@@ -167,8 +169,9 @@ answer RQ1, \S\ref{sec:frontier} RQ2, and
     arms, maximum above 100\% (a born-again student),
     and agreement across instruments (one-sided sign test $p = 0.006$;
     one-sided Wilcoxon
-    $p = 0.045$; Bayesian signed-rank posterior probability of positive
-    retention $0.96$ --- expected posterior mass $E[\theta] = 0.70$ --- at
+    $p = 0.045$; Bayesian signed-rank posterior probability $0.96$
+    that the positive-retention region is the most probable ---
+    expected posterior mass $E[\theta] = 0.70$ --- at
     ROPE $\pm 0.05$; under the dataset-identity sensitivity of
     \S\ref{sec:setup} the sign test survives --- 15/19, $p = 0.010$ ---
     while the Wilcoxon moves from $0.045$ to $0.067$, above the 5\%
@@ -524,7 +527,8 @@ edge}
 Transferring the teacher's quantile curves changes the outcome. Over the
 complete 20-dataset pool (Table~\ref{tab:retention}), CRPS-gap retention is
 positive in 16 (median $+0.19$), topping at $+1.06$ (\texttt{pumadyn32nh}
---- a born-again student that surpasses its teacher), $+0.64$
+--- a born-again student that matches its teacher to within
+$10^{-4}$ of CRPS), $+0.64$
 (\texttt{california\_\allowbreak housing}), $+0.59$ (\texttt{abalone}), $+0.52$
 (\texttt{fps\_benchmark}) and $+0.50$ (\texttt{cpu\_activity}). Both
 frequentist instruments reject at the 5\% level, both one-sided per the

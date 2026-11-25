@@ -54,7 +54,7 @@ sustentada pela consistência entre conjuntos e pelos tamanhos de
 efeito pareados --- não pelo \emph{post-hoc} frequentista de baixo
 poder nem pelo instrumento bayesiano, que não separa o TabFM de
 XGBoost e CatBoost em equivalência prática --- e vem ao preço de
-quatro a
+cerca de
 cinco ordens de magnitude em latência de serviço (43.262 contra
 0,33~\us/linha do XGBoost no protocolo padronizado). A
 camada por instância (Seção~\ref{sec:cap5-ato5}) diz ainda \emph{onde}
@@ -110,13 +110,14 @@ $p\approx0{,}019$ com a correção sequencial do desenho em duas
 etapas), e supera o melhor entre QRF e NGBoost em 17 de 20
 (experimento E1). O custo de serviço do aluno distribucional é da
 ordem de $10^{2}$~\us{} por linha nos casos medidos da fronteira (99 e
-169~\us/linha; Seção~\ref{sec:destil-fronteira}) --- acima do controle
+169~\us/linha; H3 não confirmada na forma registrada ---
+Seção~\ref{sec:destil-fronteira}) --- acima do controle
 pontual, e $2{,}5\times$ a $27\times$ abaixo da configuração
 competitiva mais barata do professor nos dois casos medidos da
 fronteira (onde nenhuma configuração barata do professor alcança o
 \emph{tier} de latência do aluno). As
-condições verificáveis são três --- as duas primeiras custam de
-minutos (refit sob log) a segundos (QRF; até ${\sim}40$~s no maior
+condições verificáveis são três --- as duas primeiras custam
+minutos (refit sob log) e segundos (QRF; até ${\sim}40$~s no maior
 conjunto), e a terceira é a que exige a rotulagem \emph{out-of-fold}:
 rodar a transformação de alvo como diagnóstico, testar um nativo
 distribucional forte e destilar somente a vantagem que sobrar ao
@@ -379,7 +380,8 @@ e~\ref{chap:destilacao}, na ordem em que as perguntas devem ser feitas
     rotulagem OOF, de custo de minutos a poucas horas conforme o
     \emph{pool} e o professor, mede diretamente a vantagem
     genuína do professor; destile somente se ela persistir (o limiar
-    do \emph{gate} foi derivado na amostra, na versão oráculo;
+    do \emph{gate} foi derivado na amostra, na versão oráculo --- a
+    versão OOF não foi avaliada;
     Seção~\ref{sec:destil-regra}). Não destile a média: em
     tamanhos realistas de \emph{pool}, não há o que transferir no
     eixo pontual
@@ -738,7 +740,9 @@ Apêndice~\ref{app:suplementares}).
 nas análises (inclusive no score ponderado do E2) pela medição
 padronizada em um único regime (lote amortizado, cada modelo em seu
 dispositivo natural), com o \texttt{adult} como referência. A direção do
-viés foi declarada no registro do E2 e a sua magnitude foi depois medida
+viés foi declarada no registro do E2 --- e o deslocamento medido da
+zona sempre-GBDT saiu na direção oposta à antecipada
+(Seção~\ref{sec:regret-ponderado}) --- e a sua magnitude foi depois medida
 em um conjunto pequeno e um grande do benchmark: os \emph{rankings} entre os 14
 modelos são estáveis entre conjuntos (Spearman 0{,}78--0{,}95) e o
 cruzamento do E2 é idêntico sob os três \emph{proxies}
