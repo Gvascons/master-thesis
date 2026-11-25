@@ -267,7 +267,8 @@ linhas.
 \centering
 \includegraphics[width=\linewidth]{images/heatmap_classification_pt.pdf}
 \caption[Mapa de calor da classificação]{Métrica primária por modelo
-(colunas, agrupadas por família e ordenadas pelo rank médio) e
+(colunas, agrupadas por família e ordenadas pelo rank médio sobre os
+13 conjuntos de classificação da própria figura) e
 conjunto (linhas): ROC-AUC nas binárias, log-loss nas multiclasse. A
 cor codifica o \emph{rank} do modelo dentro do conjunto (1 = melhor,
 mais escuro), de modo que a comparação válida --- dentro de cada linha
@@ -454,7 +455,7 @@ moderada (2--5:1) e severa
 \centering
 \includegraphics[width=0.85\linewidth]{images/imbalance_robustness.png}
 \caption[Robustez ao desbalanceamento]{Robustez ao desbalanceamento: rank médio agregado por família e
-faixa de severidade nos conjuntos de classificação (rótulos internos da
+faixa de severidade nos 10 conjuntos binários (rótulos internos da
 figura em inglês).}
 \label{fig:cap5-imbalance}
 \end{figure}
@@ -717,6 +718,7 @@ conforme o contrato de conduta do estudo
 precisamente para que resultados assim venham a público.
 
 \section{Ato V --- por dentro do placar: complementaridade por instância}
+\sectionmark{Ato V --- complementaridade por instância}
 \label{sec:cap5-ato5}
 
 Os ranks médios dizem \emph{quem} vence; não dizem \emph{onde} nem
@@ -732,7 +734,10 @@ complementaridade.\allowbreak md}, 22/10/2026; adendo de execução de
 o protocolo exato do benchmark --- mesmos hiperparâmetros escolhidos,
 mesmo \emph{split}, mesma semente --- com um \emph{gate} de sanidade
 exigindo $|\Delta| \le 10^{-3}$ entre a métrica primária recomputada e a
-registrada: as 52 células passaram, 42 delas com $\Delta = 0$ exato; as
+registrada: as 52 células do portão passaram (as 51 dos 17 conjuntos
+em que os três coexistem, mais a do XGBoost no \texttt{helena}, onde
+os \emph{foundation models} são excluídos), 42 delas com
+$\Delta = 0$ exato; as
 demais ficam entre $10^{-7}$ e $6 \times 10^{-6}$ (ruído numérico do
 TabPFN), com um único caso em $4{,}8 \times 10^{-4}$ (\emph{bfloat16}
 sob lote de predição reduzido no TabFM). O instrumento por par é
@@ -843,7 +848,8 @@ instrutiva duas vezes. No \texttt{amazon\_\allowbreak employee}
 quase indistinguíveis (0{,}943 a 0{,}949), mas o recall da classe
 minoritária salta de 0{,}032 (XGBoost) para 0{,}214 (TabPFN) e 0{,}298
 (TabFM) --- o XGBoost detecta 3 em cada 100 pedidos que deveriam ser
-negados; o TabFM, 30 --- ao preço de alguma precisão (0{,}706 contra
+negados; o TabFM, 30 --- ao preço de alguma precisão na classe
+minoritária (0{,}706 do XGBoost contra
 0{,}621): numa aplicação em que o falso negativo é o erro caro, a
 diferença que a acurácia não vê é a que importa. E no
 \texttt{telco\_\allowbreak customer\_\allowbreak churn} a escolha da métrica

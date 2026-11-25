@@ -60,10 +60,11 @@ statistical separation (Chapter~\ref{chap:benchmark}). The price,
 however, changes the nature of the decision: the accuracy leader costs
 about \textbf{43 milliseconds per row} to serve predictions, against
 \textbf{0.33 microseconds} for native XGBoost (the distilled student
-of Chapter~\ref{chap:destilacao}, also an XGBoost, serves at
-${\sim}10^2$~\textmu s/row --- three orders of magnitude above the
-native one, for carrying 19 quantiles --- and still 2--3 orders
-below the teacher) --- amortized batch-serving
+of Chapter~\ref{chap:destilacao}, a 19-quantile multi-output
+XGBoost, serves at
+${\sim}10^2$~\textmu s/row on the frontier datasets --- hundreds of
+times above the native model and $7\times$ to $880\times$ below the
+teacher, depending on the dataset) --- amortized batch-serving
 latencies, each model on its natural device (four to five orders of
 magnitude; roughly 131~thousand times on the reference dataset, with
 the ratio varying by dataset). The practical question becomes a
@@ -219,7 +220,9 @@ question's answer creates the next question: the tie and its shift
 decision policy runs into a single obstacle, whose reduction is the
 object of RQ3. The falsifiable hypotheses attached to the questions,
 with their decision criteria, are stated where they are tested: in
-the benchmark (Chapter~\ref{chap:benchmark}), in experiment E2
+the benchmark (Chapter~\ref{chap:benchmark}), in experiment E2 (the
+labels E1--E3 number the final phase's three registered experiments:
+E1, classical baselines; E2, weighted regret; E3, decision utility)
 (Chapter~\ref{chap:framework}) and in the two-stage design of the
 distillation study (Chapter~\ref{chap:destilacao}). In the diagram,
 solid arrows link each question to the chapter that answers it, and
@@ -264,6 +267,7 @@ evidence that were missing. In order of presentation:
     and the consistent lead of the 2026 generation (TabFM with the
     best rank in all three tasks --- in multiclass, over the 2
     datasets where it operates --- and best model on 13 of 18
+    (operating on 17)
     datasets, zero-shot, without confirmation as a statistical
     separation by the underpowered tests, at the price of four to
     five orders of magnitude in latency on the reference dataset). It includes the first

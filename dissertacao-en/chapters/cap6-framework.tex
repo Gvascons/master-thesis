@@ -40,7 +40,9 @@ decision matrix of the 14 models (rows, ordered by performance) on
 six criteria (columns): performance (C1, mean normalized regret),
 training cost (C6), tuning cost (C8), inference latency (C7),
 robustness (C10, worst rank across folds), and interpretability
-(C9). The stars are thirds of the 14-model ranking on the criterion
+(C9; the C1--C10 numbering inherits the AI-1 criteria catalog ---
+only the six measured ones enter). The stars are thirds of the
+14-model ranking on the criterion
 (3 = best third), except C9, qualitative by family (GBDTs rated by
 the acceptance of attribution-based explanations in regulated
 practice, not by strict intrinsic interpretability; attention
@@ -89,7 +91,8 @@ a policy: it gathers what the three studies show, plus two
 admissibility constraints (architectural limits and
 interpretability) that none of the studies measures.
 
-\section[The negative result: routing does not generalize]{The negative result: meta-feature routing does not generalize}
+\section{The negative result: meta-feature routing does not generalize}
+\sectionmark{The negative result: routing does not generalize}
 \label{sec:resultado-negativo}
 
 The meta-learning literature, going back to the algorithm selection
@@ -144,7 +147,8 @@ The decision framework should not contain a winning-family predictor
 --- a conclusion corroborated by independent evidence
 \citep{herre2026}.
 
-\section[The positive result: the ``FM first'' policy]{The positive result: the ``FM first'' policy and its evolution}
+\section{The positive result: the ``FM first'' policy and its evolution}
+\sectionmark{The positive result: the ``FM first'' policy}
 \label{sec:resultado-positivo}
 
 If learned routing does not work, the natural alternative is
@@ -255,7 +259,8 @@ variance in Chapter~\ref{chap:benchmark}); the caveat is that this
 result holds for the primary metric in isolation, a question the
 next section confronts.
 
-\section[Weighted multi-criteria regret]{Weighted multi-criteria regret: when the recommendation flips}
+\section{Weighted multi-criteria regret: when the recommendation flips}
+\sectionmark{Weighted multi-criteria regret}
 \label{sec:regret-ponderado}
 
 The positive result of the previous section has a declared
@@ -304,7 +309,8 @@ and, since the accuracy leader (TabFM) is the slowest of the grid
 and TabPFN is among the three slowest, the crossover point is
 governed by the distance, in accuracy ranks, between them and the
 fast models, which is small. The choice of ranks is deliberate (the
-latencies differ by five orders of magnitude, and a cardinal scale
+latencies differ by four to five orders of magnitude, and a cardinal
+scale
 would be dominated by them), but it means that ``10--20\% of the
 weight'' is a claim about ranks, not about microseconds. For each
 value of $w$, the normalized regret of each fixed policy is computed
@@ -512,6 +518,7 @@ checks them:
     regression, with the student serving at about a hundred microseconds
     per row --- with a positive result delimited to that framing.
   \item \textbf{Architectural limits.} More than 10 classes (TabFM's
+    limit; \texttt{helena}, with 100, also exceeds TabPFN's own
     limit) or overflowing the context limit are objective structural
     exclusions --- the \texttt{helena} case (100 classes) in the
     benchmark itself.

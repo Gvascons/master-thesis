@@ -68,7 +68,8 @@ acurácia que a sustente (Capítulo~\ref{chap:benchmark}). Segundo, a
 geração 2026 desloca o topo em direção inesperada: quem passou à
 frente não foi o aprendizado profundo ajustado, e sim o pré-treino. O
 TabFM, avaliado \emph{zero-shot}, sem qualquer ajuste, é o melhor
-modelo em \textbf{13 dos 18 conjuntos} do benchmark e lidera o rank
+modelo em \textbf{13 dos 18 conjuntos} do benchmark (opera em 17) e
+lidera o rank
 médio nas três tarefas (na multiclasse, sobre os dois conjuntos em que
 opera) --- uma liderança consistente entre conjuntos,
 que os testes, de baixo poder com poucos conjuntos por tarefa, não
@@ -77,10 +78,11 @@ chegam a confirmar como separação estatística
 decisão: o
 líder de acurácia custa cerca de \textbf{43 milissegundos por linha} para
 servir predições, contra \textbf{0,33 microssegundos} do XGBoost
-nativo (o aluno destilado do Capítulo~\ref{chap:destilacao}, também
-um XGBoost, serve a ${\sim}10^2$~\textmu s/linha --- três ordens de
-magnitude acima do nativo, por carregar 19 quantis --- e ainda
-2--3 ordens abaixo do professor) ---
+nativo (o aluno destilado do Capítulo~\ref{chap:destilacao}, um
+XGBoost multi-saída de 19 quantis, serve a ${\sim}10^2$~\textmu
+s/linha nos conjuntos da fronteira --- centenas de vezes acima do
+nativo e de $7\times$ a $880\times$ abaixo do professor, conforme o
+conjunto) ---
 latências de serviço em lote amortizado, com cada modelo em seu
 dispositivo natural (quatro a cinco ordens de magnitude;
 aproximadamente 131~mil
@@ -241,7 +243,10 @@ decisão multicritério inevitável (QP2), e a política de decisão
 esbarra num único obstáculo, cuja redução é o objeto da QP3. As
 hipóteses falsificáveis associadas às perguntas, com os critérios de
 decisão, são enunciadas onde são testadas: no benchmark
-(Capítulo~\ref{chap:benchmark}), no experimento E2
+(Capítulo~\ref{chap:benchmark}), no experimento E2 (os rótulos
+E1--E3 numeram os três experimentos registrados da fase final: E1,
+\emph{baselines} clássicos; E2, \emph{regret} ponderado; E3,
+utilidade de decisão)
 (Capítulo~\ref{chap:framework}) e no desenho em duas etapas da
 destilação (Capítulo~\ref{chap:destilacao}). No diagrama,
 as setas sólidas ligam cada pergunta ao capítulo que a responde, e as

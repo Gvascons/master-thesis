@@ -237,7 +237,13 @@ def build_cohensd_table(which: str) -> str:
              r"\caption[Tamanhos de efeito ($d$ de Cohen) --- "
              + ("binária" if which == "binary" else "regressão") + r"]{$d$ "
              + r"de Cohen pareado (linha $-$ coluna) na tarefa " + nome
-             + r"; " + direcao + r". Fonte: \texttt{results/aggregated/"
+             + r"; " + direcao
+             + (r". Ressalva: o $d$ é computado sobre RMSEs brutos de 5 "
+                r"conjuntos em escalas de alvo diferentes, e as diferenças "
+                r"são dominadas pelos conjuntos de maior escala; a leitura "
+                r"é indicativa, e as comparações formais do capítulo usam "
+                r"ranks" if which == "regression" else "")
+             + r". Fonte: \texttt{results/aggregated/"
              + f"cohens\\_d\\_{which}.csv" + r"}.}",
              r"\label{tab:app-cohensd-" + which + "}",
              r"\begin{tabular}{l" + "c" * len(order) + "}", r"\toprule",
@@ -263,7 +269,7 @@ def build_ci_table() -> str:
     lines = [r"\begin{table}[htbp]", r"\centering", r"\small",
              r"\caption[IC bootstrap da média de AUC --- binária]{Média de "
              r"AUC-ROC na tarefa binária com IC95\% de \emph{bootstrap} "
-             r"percentil ($B{=}10\,000$) sobre os conjuntos. Fonte: "
+             r"percentil ($B{=}10.000$) sobre os conjuntos. Fonte: "
              r"\texttt{results/aggregated/bootstrap\_ci.csv}.}",
              r"\label{tab:app-bootstrap-auc}",
              r"\begin{tabular}{lcc}", r"\toprule",

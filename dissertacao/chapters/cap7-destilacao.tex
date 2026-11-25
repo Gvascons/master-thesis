@@ -181,7 +181,7 @@ pelo caminho.
 \subsection{Professores: um distribucional, um pontual}
 \label{sec:destil-professores}
 
-O \textbf{TabPFN v2.5} \citep{hollmann2025,priorlabs2025} é o professor
+O \textbf{TabPFN-2.5} \citep{hollmann2025,priorlabs2025} é o professor
 distribucional: sua API nativa devolve quantis arbitrários da
 distribuição preditiva (a cabeça de \emph{bar distribution}: um
 histograma discretizado sobre a faixa do alvo), dos quais extraímos
@@ -212,7 +212,7 @@ membros mostraram-se equivalentes (medição registrada no wrapper versionado
 \texttt{src/\allowbreak models/\allowbreak tabfm\_\allowbreak model.\allowbreak py}) em acurácia ao \emph{default} de 32 da
 biblioteca, a um quarto do custo (medição no \texttt{adult}).
 
-\subsection{Rotulagem out-of-fold e famílias de alunos}
+\subsection{Rotulagem \emph{out-of-fold} e famílias de alunos}
 \label{sec:destil-alunos}
 
 O professor prevê condicionado ao conjunto de treino que recebe como
@@ -315,10 +315,13 @@ significam que o aluno ficou melhor que o próprio professor --- o que
 a literatura de redes chama de aluno \emph{born-again}
 \citep{furlanello2018}. Um exemplo com números reais da
 Tabela~\ref{tab:destil-retencao} fixa a leitura. No
-\texttt{cpu\_activity}, o controle tem CRPS 1,294, o professor 1,061
-e o aluno destilado 1,178: a vantagem do professor é
-$1{,}294-1{,}061=0{,}233$, o aluno ganhou $1{,}294-1{,}178=0{,}116$, e
-a retenção é $0{,}116/0{,}233=0{,}50$ --- o aluno recuperou metade da
+\texttt{cpu\_activity}, o controle tem CRPS 1,2943, o professor
+1,0610
+e o aluno destilado 1,1777: a vantagem do professor é
+$1{,}2943-1{,}0610=0{,}2333$, o aluno ganhou
+$1{,}2943-1{,}1777=0{,}1166$ (o $+0{,}117$ citado adiante é este
+número arredondado), e
+a retenção é $0{,}1166/0{,}2333=0{,}50$ --- o aluno recuperou metade da
 vantagem. No \texttt{wine\_quality}, o destilado (0,365) ficou
 \emph{pior} que o controle (0,328), com o professor em 0,289: o
 numerador é negativo e a retenção é $-0{,}97$. Como nos 20 conjuntos o
@@ -395,6 +398,7 @@ na Seção~\ref{sec:destil-fronteira}.
 \end{sloppypar}
 
 \section{Desenho registrado em duas etapas: hipóteses, critérios e conduta}
+\sectionmark{Desenho registrado em duas etapas}
 \label{sec:destil-desenho}
 
 O desenho experimental foi registrado em \textbf{duas etapas}, e a
@@ -483,6 +487,7 @@ sim (adendo de 12/11/2026) & refutada (9/20 por conjunto; mediana
 \end{table}
 
 \section{A destilação pontual não transfere --- com nenhum dos dois professores testados}
+\sectionmark{A destilação pontual não transfere}
 \label{sec:destil-ponto}
 
 O primeiro resultado é o negativo que o pré-registro se comprometeu a
@@ -543,6 +548,7 @@ aprende sozinho dos dados.
 
 \section{A destilação distribucional transfere parte da vantagem de
 CRPS do professor}
+\sectionmark{A destilação distribucional transfere parte}
 \label{sec:destil-dist}
 
 Transferir as curvas de quantis do professor --- e não sua média ---
@@ -937,7 +943,8 @@ professor de um membro já opera à latência do aluno. Colaterais: 1
 membro do TabPFN $\approx$ 8 membros a 1/7 da latência, e a última
 duplicação de contexto é desproporcionalmente cara em GPUs de 16~GB.
 
-\section{Por que rotular out-of-fold: calibração, não acurácia}
+\section{Por que rotular \emph{out-of-fold}: calibração, não acurácia}
+\sectionmark{Por que rotular \emph{out-of-fold}}
 \label{sec:destil-oof}
 
 A literatura de classificação \citep{pocketfm2026} estabelece que
@@ -1040,8 +1047,9 @@ move o CRPS em menos de 1\% --- a vantagem de forma do destilado
 sobrevive intacta à correção. Conformalização compra calibração;
 destilação compra forma (Apêndice~\ref{sec:app-pilot-conformal}).
 
-\section{E1 --- baselines distribucionais clássicos: o nativo forte
+\section{E1 --- \emph{baselines} distribucionais clássicos: o nativo forte
 posto à prova}
+\sectionmark{E1 --- \emph{baselines} distribucionais clássicos}
 \label{sec:destil-e1}
 
 Até aqui, baselines
@@ -1212,6 +1220,7 @@ primeiro; custa segundos.
 
 \section{E3 --- utilidade de decisão: o ganho distribucional em
 unidades do problema}
+\sectionmark{E3 --- utilidade de decisão}
 \label{sec:destil-e3}
 
 O CRPS resume a distribuição inteira; uma decisão usa um ponto
@@ -1442,7 +1451,7 @@ acima), mas cada uma tem causa própria: duplicatas no
 \texttt{health\_\allowbreak insurance}, e duas derrotas sem
 explicação testada (\texttt{fifa}, \texttt{diamonds\_\allowbreak
 real}), que a transformação logarítmica não resgata
-(Seção~\ref{sec:destil-derrotas}). A
+(Seção~\ref{sec:destil-regra}). A
 pré-condição mede-se com uma única rotulagem OOF barata, e o E1
 acrescenta o degrau intermediário: a QRF como nativo forte de custo
 desprezível.
@@ -1560,7 +1569,7 @@ alavanca emergente de serviço, também não medida aqui.
     conjuntos.
   \item \textbf{Hardware e versão do professor.} Medições em uma única
     GPU delimitam, não mapeiam, o espaço de hardware; os resultados
-    referem-se ao TabPFN v2.5 e ao TabFM v1.0.1, versões fixadas ---
+    referem-se ao TabPFN-2.5 e ao TabFM v1.0.1, versões fixadas ---
     o método não usa nada específico delas, mas a magnitude pode
     depender da versão (Capítulo~\ref{chap:conclusao}).
   \item \textbf{Apenas regressão.} As afirmações de destilação

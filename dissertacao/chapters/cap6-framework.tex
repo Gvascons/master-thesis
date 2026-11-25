@@ -60,7 +60,9 @@ decisão multicritério dos 14 modelos (linhas, ordenadas por
 desempenho) em seis critérios (colunas; rótulos internos em inglês):
 desempenho (C1, \emph{regret} normalizado médio), custo de treino
 (C6), custo de ajuste (C8), latência de inferência (C7), robustez
-(C10, pior rank entre dobras) e interpretabilidade (C9). As estrelas
+(C10, pior rank entre dobras) e interpretabilidade (C9; a numeração
+C1--C10 herda o catálogo de critérios do AI-1 --- só os seis medidos
+entram). As estrelas
 são terços do \emph{ranking} dos 14 modelos no critério (3 = terço
 melhor), exceto C9, qualitativa por família (GBDTs avaliados pela
 aceitação de explicações por atribuição na prática regulada, não por
@@ -113,6 +115,7 @@ interpretabilidade) que nenhum dos estudos mede.
 
 \section{O resultado negativo: roteamento por meta-características não
 generaliza}
+\sectionmark{O resultado negativo}
 \label{sec:resultado-negativo}
 
 A literatura de meta-learning, que remonta ao problema de seleção de
@@ -170,6 +173,7 @@ corroborada por evidência independente \citep{herre2026}.
 
 \section{O resultado positivo: a política ``FM primeiro'' e sua
 evolução}
+\sectionmark{O resultado positivo}
 \label{sec:resultado-positivo}
 
 Se o roteamento aprendido não funciona, a alternativa natural são
@@ -281,6 +285,7 @@ que esse resultado vale para a métrica primária isolada, questão que a
 próxima seção enfrenta.
 
 \section{Regret multicritério ponderado: quando a recomendação vira}
+\sectionmark{Regret multicritério ponderado}
 \label{sec:regret-ponderado}
 
 O resultado positivo da seção anterior tem uma limitação declarada:
@@ -327,7 +332,8 @@ o líder de acurácia (TabFM) é o mais lento da grade e o TabPFN está
 entre os três mais lentos,
 o ponto de cruzamento é governado pela distância, em postos de
 acurácia, entre eles e os modelos rápidos, que é pequena. A escolha
-por postos é deliberada (as latências diferem por cinco ordens de
+por postos é deliberada (as latências diferem por quatro a cinco
+ordens de
 grandeza, e uma escala cardinal seria dominada por elas), mas
 significa que ``10--20\% do peso'' é uma afirmação sobre ordens, não
 sobre microssegundos. Para cada valor de $w$,
@@ -533,8 +539,10 @@ as verifica:
     Capítulo~\ref{chap:destilacao} mede uma rota em direção a esse
     orçamento --- destilar a distribuição preditiva do TabPFN em
     regressão --- com resultado positivo delimitado a esse recorte.
-  \item \textbf{Limites arquiteturais.} Mais de 10 classes (limite do
-    TabFM) ou estouro do limite de contexto são exclusões estruturais
+  \item \textbf{Limites arquiteturais.} Mais de 10 classes (limite
+    do TabFM; o \texttt{helena}, com 100, excede também o limite
+    próprio do TabPFN) ou estouro do limite de contexto são
+    exclusões estruturais
     objetivas --- o caso \texttt{helena} (100 classes) no próprio
     benchmark.
   \item \textbf{Explicações auditáveis exigidas.} Quando a
