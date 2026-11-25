@@ -92,6 +92,11 @@ def main():
         a2.set_xticklabels(["Q1\nincerto", "Q2", "Q3", "Q4", "Q5\nconfiante"],
                            fontsize=9)
         a2.set_xlabel("quintil de margem do XGBoost ($|\\hat p - 0{,}5|$)")
+        from matplotlib.ticker import FuncFormatter
+        _fmt = FuncFormatter(lambda v, _: f"{v:g}".replace(".", ","))
+        a1.xaxis.set_major_formatter(_fmt)   # vitorias liquidas
+        a2.yaxis.set_major_formatter(_fmt)   # balanco por mil
+
         a2.set_ylabel("vitórias líquidas do FM por 1.000 instâncias")
         a2.set_title("(b) Ganho por margem do XGBoost (10 binárias)",
                      fontsize=11, loc="left")

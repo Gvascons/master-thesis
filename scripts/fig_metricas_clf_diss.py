@@ -62,6 +62,12 @@ def main():
                      fontsize=11, loc="left")
     else:
         a1.set_xlabel("taxa de falsos positivos (1 $-$ especificidade)")
+        from matplotlib.ticker import FuncFormatter
+        _fmt = FuncFormatter(lambda v, _: f"{v:g}".replace(".", ","))
+        for _ax in (a1, a2):
+            _ax.xaxis.set_major_formatter(_fmt)
+            _ax.yaxis.set_major_formatter(_fmt)
+
         a1.set_ylabel("taxa de verdadeiros positivos (recall)")
         a1.set_title("(a) Curva ROC — XGBoost no hold-out do adult",
                      fontsize=11, loc="left")

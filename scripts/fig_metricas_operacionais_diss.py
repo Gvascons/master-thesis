@@ -109,6 +109,11 @@ def main():
                      fontsize=11, loc="left")
     else:
         a2.set_xlabel("recall da classe minoritária (limiar 0,5)")
+        from matplotlib.ticker import FuncFormatter
+        _fmt = FuncFormatter(lambda v, _: f"{v:g}".replace(".", ","))
+        a1.yaxis.set_major_formatter(_fmt)   # metrica 0-1
+        a2.xaxis.set_major_formatter(_fmt)   # recall 0-1
+
         a2.set_title("(b) As 10 binárias, da mais à menos desbalanceada",
                      fontsize=11, loc="left")
     a2.legend(loc="upper right", fontsize=9, frameon=False)
