@@ -372,9 +372,10 @@ de hiperparâmetros por validação cruzada interna (3 \emph{folds}) sobre o
     tempo de busca --- que, ainda assim, não vence --- e a leitura
     correta é ``orçamentos assimétricos por desenho, paridade imperfeita
     medida e declarada'', não equalização. Uma
-    exceção é declarada: no \texttt{adult}, 11 modelos (7 deles de
-    aprendizado profundo) foram ajustados com 100
-    \emph{trials}, e não 25, e os resultados foram mantidos como
+    exceção é declarada: no \texttt{adult}, os 7 modelos legados de
+    aprendizado profundo foram ajustados com 100
+    \emph{trials}, e não 25 (os GBDTs usam 100 em todo o estudo; o
+    TabPFN é \emph{zero-shot}), e os resultados foram mantidos como
     âncora de validação, de modo que,
     nesse único conjunto, as arquiteturas legadas tiveram 4$\times$ o
     orçamento de KAN/TabKAN; o conjunto é excluído dos agregados de
@@ -427,8 +428,9 @@ clássica de vazamento:
   \item \textbf{Aprendizado profundo:} padronização das numéricas e
     \emph{one-hot} das categóricas com teto de 50 categorias por coluna. O
     teto é necessário para evitar explosão dimensional: sem ele, o conjunto
-    \texttt{amazon\_\allowbreak employee} atingiria entre 7 e 16~mil colunas conforme o
-    \emph{split} (a soma de cardinalidades do conjunto completo é 15.626), excedendo a
+    \texttt{amazon\_\allowbreak employee} atingiria da ordem de 11 a
+    14~mil colunas nos \emph{splits} de treino
+    (a soma de cardinalidades do conjunto completo é 15.626), excedendo a
     memória da GPU nos modelos de atenção.
   \item \textbf{\emph{Foundation models}:} codificação ordinal; a
     normalização interna é dos próprios modelos, por desenho.
@@ -851,9 +853,10 @@ conhecidas e as decisões tomadas diante delas.
   \item \textbf{Latência medida em um único regime.} O protocolo de
     latência (Seção~\ref{sec:met-custo}) usa o regime amortizado em lote,
     com cada modelo em seu dispositivo natural, e o \texttt{adult} como
-    conjunto de referência. Uma medição de controle nos extremos de
-    tamanho do benchmark (\texttt{credit\_g}, mil amostras, e
-    \texttt{cardiovascular\_\allowbreak disease}, 70~mil) confirmou que os
+    conjunto de referência. Uma medição de controle em um conjunto
+    pequeno e um grande (\texttt{credit\_g}, mil amostras, e
+    \texttt{cardiovascular\_\allowbreak disease}, 70~mil; o teto do
+    benchmark é 100~mil) confirmou que os
     \emph{rankings} de latência entre os 14 modelos são estáveis entre
     conjuntos (correlação de postos de Spearman 0{,}78--0{,}95) e que a dependência do contexto
     dos \emph{foundation models} tem a direção declarada (TabPFN: 840

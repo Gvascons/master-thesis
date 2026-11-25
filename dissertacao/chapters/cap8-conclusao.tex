@@ -202,7 +202,7 @@ positivos, conforme o contrato de conduta do estudo
     \emph{a priori} --- a forma que os dados sustentam.
   \item \textbf{Regret multicritério ponderado --- E2 (evidência;
     Capítulo~\ref{chap:framework}).} O
-    experimento registrado que localiza o ponto de inversão da
+    análise registrada que localiza o ponto de inversão da
     recomendação: ``FM primeiro'' só é ótima na mediana para
     $w \geq 0{,}9$ de peso na acurácia; com $w \leq 0{,}6$,
     ``sempre-GBDT'' tem \emph{regret} mediano zero. É a justificativa
@@ -242,7 +242,9 @@ positivos, conforme o contrato de conduta do estudo
     conjunto medido (o \texttt{california\_housing}, de alvo
     binarizado) --- mantém o negativo nos cinco conjuntos centrais, e a
     varredura de tamanho de \emph{pool} isola o
-    moderador (ganho residual restrito a $n \leq 800$, dependente do
+    moderador (ganho residual restrito a \emph{pools} pequenos ---
+    $n \leq 800$ no \texttt{wine\_quality}, com um resíduo marginal
+    no \texttt{california}$^\dagger$ em 2.000 ---, dependente do
     conjunto) --- uma hipótese de reconciliação com os ganhos pontuais
     contemporâneos de \citet{jeong2026}, cuja receita difere da nossa
     em eixos que não replicamos (rotulagem com contexto completo,
@@ -257,8 +259,9 @@ positivos, conforme o contrato de conduta do estudo
     sistema distribucional CRPS-ótimo abaixo da
     configuração competitiva mais barata dele ($2{,}5\times$ e
     $27\times$ a latência do aluno nos dois casos medidos --- o E1
-    mostra que uma QRF nativa também habita o regime); onde é
-    pequena, reduzir o \emph{ensemble} basta. Dois achados colaterais de
+    mostra que uma QRF nativa também habita o regime); onde um
+    professor de um único membro já alcança o \emph{tier} de latência
+    do aluno, reduzir o \emph{ensemble} basta. Dois achados colaterais de
     engenharia: um membro do TabPFN $\approx$ oito a um sétimo da
     latência, e a última duplicação de contexto é desproporcionalmente
     cara em GPUs de 16~GB.
@@ -274,8 +277,9 @@ positivos, conforme o contrato de conduta do estudo
     de 20 conjuntos ($p=0{,}0013$, unilateral; contra a melhor
     alternativa sem professor escolhida por conjunto por um oráculo,
     12 de 20, $p=0{,}25$), com os três reveses diagnosticáveis
-    --- no \texttt{wine\_quality}, onde o \emph{gate} pré-registrado já
-    desaconselhava destilar, a QRF \emph{default} supera até o
+    --- no \texttt{wine\_quality}, que o critério de elegibilidade
+    registrado e o \emph{gate} pós-hoc da regra já sinalizavam, a QRF
+    \emph{default} supera até o
     professor. O complemento negativo tem valor próprio: o passo ``teste
     um nativo forte antes'' da regra de decisão deixou de ser retórico.
   \item \textbf{Negativo arquitetural do TabFM como professor
@@ -283,10 +287,11 @@ positivos, conforme o contrato de conduta do estudo
     Capítulo~\ref{chap:destilacao}).} A cabeça de regressão do TabFM é
     pontual --- verificação arquitetural de julho de 2026, confirmada
     pelo relatório técnico oficial \citep{kong2026} --- e a dispersão de
-    seu \emph{ensemble} é mensuravelmente inútil como distribuição
+    no único conjunto em que foi medida (o
+    \texttt{california\_housing}$^\dagger$ de alvo binarizado), a
+    dispersão do seu \emph{ensemble} não funciona como distribuição
     preditiva (CRPS 0,524 contra 0,069 do TabPFN; cobertura de 16,3\%
-    a nominal de 80\% --- medição em um conjunto, o
-    \texttt{california\_housing}$^\dagger$ de alvo binarizado):
+    a nominal de 80\%):
     líder pontual não é líder distribucional, e a
     cabeça distribucional é o ativo arquitetural decisivo para a
     destilação.
@@ -329,7 +334,9 @@ e~\ref{chap:destilacao}, na ordem em que as perguntas devem ser feitas
   \item \textbf{Se latência de microssegundos importa, GBDT.} Com 40\%
     ou mais do peso da utilidade na latência, ``sempre-GBDT'' tem \emph{regret}
     mediano zero; a recomendação ``FM primeiro'' já se inverte com
-    10--20\% de peso na latência, pela mediana do \emph{regret} (E2,
+    10--20\% de peso na latência, pela mediana do \emph{regret} e na
+    normalização por postos do desenho (20--35\% nas normalizações
+    min--max alternativas; E2 e adendo,
     Seção~\ref{sec:regret-ponderado}).
   \item \textbf{Se nenhuma restrição está ativa, \emph{foundation model}
     primeiro.} Regret mediano 0,000 na geração 2026
@@ -391,9 +398,10 @@ recomendação é deliberadamente um modelo \emph{pior na métrica
 primária}, e a troca é defensável porque foi medida. Dois resultados
 sustentam essa contabilidade: no pelotão do núcleo, abrir mão do topo
 custa tipicamente menos de um ponto percentual de AUC
-(Seção~\ref{sec:cap5-ato1}), ao passo que as diferenças de latência,
-de \emph{recall} da classe minoritária e de custo de cauda são de
-fatores inteiros a ordens de magnitude (colunas 3 e 4 da tabela).
+(Seção~\ref{sec:cap5-ato1}), ao passo que as diferenças de latência
+e de \emph{recall} da classe minoritária são de
+fatores inteiros a ordens de magnitude, e o ganho de custo de cauda
+é de ${\sim}8\%$ (colunas 3 e 4 da tabela).
 Quando a métrica em que os modelos diferem é a que a
 aplicação paga, é ela que decide --- e o quadro diz qual é, caso a
 caso.
@@ -427,7 +435,8 @@ do TabPFN-2.5 \\
 Poucos dados ($n \lesssim 4.000$) &
 TabPFN &
 Rank médio 1,0 no regime, contra 2,8 do XGBoost, nos 5 conjuntos
-varridos (Seção~\ref{sec:cap5-ato3}) &
+varridos (a varredura não incluiu o TabFM;
+Seção~\ref{sec:cap5-ato3}) &
 Latência de inferência; a liderança com $n$ grande depende do conjunto \\
 \addlinespace
 Classe rara com falso negativo caro &
@@ -494,9 +503,9 @@ incerta ($P$ 0,33; $E[\theta]$ 0,40) \\
 \addlinespace
 Explicações auditáveis exigidas (regulação) &
 GBDT &
-Família cujas explicações por atribuição são aceitas na prática
-regulada; a única com perfil de latência forte na matriz
-multicritério --- avaliação qualitativa por família, declarada, não
+Família com latência forte e explicações por atribuição aceitas na
+prática regulada (na matriz, RealMLP também tem latência três
+estrelas) --- avaliação qualitativa por família, declarada, não
 medida; portão 3 do fluxograma
 (Seção~\ref{sec:arcabouco-resultante}) &
 Rank do topo, sob a mesma contabilidade ROPE; sem destilação (o
@@ -530,8 +539,9 @@ recomendação contraria a métrica primária (latência,
 explicações auditáveis, classe rara), a troca está contabilizada nas duas
 colunas finais: a perda na primária
 é limitada por medição (pelo ROPE no pelotão, pelo limiar declarado
-nas operacionais), enquanto o ganho na métrica da aplicação é de
-fatores inteiros a ordens de magnitude. Segundo, os perfis negativos
+nas operacionais), enquanto o ganho na métrica da aplicação vai de
+${\sim}8\%$ (custo de cauda) a fatores inteiros e ordens de
+magnitude (latência, \emph{recall}). Segundo, os perfis negativos
 são tão informativos quanto os positivos: o quadro diz quando
 \emph{não} usar o \emph{foundation model} (microssegundos, 100
 classes, regulação) e quando \emph{não} destilar (\texttt{kin8nm},
@@ -609,6 +619,12 @@ Apêndice~\ref{app:suplementares}). A ameaça residual é a que
 correções não removem: a possibilidade de erros análogos ainda não
 descobertos; a mitigação é estrutural (\emph{hashes} de dados,
 configurações versionadas, números rastreáveis a artefatos).
+
+\textbf{Dependência da normalização no E2.} A faixa de inversão
+(10--20\% por postos) move-se para 20--35\% sob normalizações
+min--max (logarítmica, linear) --- a direção é a mesma, o número
+citado é o da normalização pré-registrada
+(Seção~\ref{sec:regret-ponderado}).
 
 \textbf{Multiplicidade entre experimentos.} Nenhuma correção é
 aplicada \emph{entre} experimentos; sob correção de Holm na família
@@ -730,7 +746,8 @@ Listam-se apenas direções com lastro direto na evidência dos capítulos
 \begin{itemize}
   \item \textbf{Professores mais novos: sensibilidade de versão da
     destilação.} O estudo fixou o TabPFN v2.5 por comparabilidade com o
-    benchmark; TabPFN-3 e 3.5 \citep{tabpfn3-2026} já existem, e a
+    benchmark; TabPFN-3 \citep{tabpfn3-2026} e 3.5
+    \citep{tabpfn35tr2026} já existem, e a
     colisão parcial de \citet{jeong2026} (ganhos pontuais com
     professores mais novos, sob protocolo distinto) sugere que a
     fronteira professor-aluno é sensível à versão. Repetir o protocolo
@@ -780,9 +797,11 @@ Listam-se apenas direções com lastro direto na evidência dos capítulos
 
 Em síntese, a dissertação entrega três peças: um benchmark datado da
 geração 2026, com os eixos de custo medidos nas mesmas condições que a
-acurácia; um arcabouço de restrições avaliado fora da amostra, com o
-ponto de inversão por custo localizado; e uma regra, testada também
-nos seus fracassos, para decidir quando destilar a distribuição
+acurácia; um arcabouço de restrições cujo componente aprendido foi
+avaliado fora da amostra, com o
+ponto de inversão por custo localizado; e uma regra de decisão
+derivada dos mesmos experimentos (sem teste fora da amostra), com os
+seus fracassos reportados, para decidir quando destilar a distribuição
 preditiva de um \emph{foundation model} em um aluno que serve na
 casa de cem microssegundos por linha. As três dependem das versões de modelo, dos conjuntos
 e do hardware declarados, e devem ser reavaliadas quando eles mudarem;

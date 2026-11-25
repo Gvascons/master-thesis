@@ -36,7 +36,8 @@ migra para custo, latência, robustez e estrutura da tarefa; a geração
 médio nas
 três tarefas (na multiclasse, sobre os dois conjuntos em que opera),
 ao custo de quatro a cinco ordens de magnitude em latência
-de inferência --- liderança consistente entre conjuntos, que os testes
+de inferência no conjunto de referência --- liderança consistente
+entre conjuntos, que os testes
 de baixo poder não confirmam como separação estatística. Além disso,
 discutem-se o teste independente desfavorável
 da família Kolmogorov--Arnold, as reversões condicionais que alimentam o
@@ -85,9 +86,10 @@ incorporados na extensão: o \emph{foundation model} TabFM
 pelo ano de publicação: o TabPFN, um \emph{foundation model}, pertence
 ao núcleo. Os Atos~I a III leem o
 núcleo de 11 --- é sobre ele que a máxima ``\emph{boosting} sempre
-vence'' \citep{grinsztajn2022} foi formulada, máxima que
+vence'', formulada na literatura \citep{grinsztajn2022} e que
 \citet{mcelfresh2023} já matizavam ao concluir que a escolha do
-conjunto importa mais que a do modelo --- e é sobre ele
+conjunto importa mais que a do modelo, é aqui testada --- e é sobre
+ele
 que o empate se estabelece; o Ato~IV lê a grade completa e mostra o que a
 extensão muda; e o Ato~V desce ao nível da instância para localizar onde
 os \emph{foundation models} e os GBDTs divergem.
@@ -188,8 +190,11 @@ enfraquece no raio mais apertado de 0,005 (2/10 no critério brando;
 0/10 no estrito). Na leitura por $E[\theta]$, o XGBoost
 ($0{,}65$) supera a barra de 0,5 mesmo no raio mais
 apertado de 0,005, com o CatBoost no limite (0,54). O empate do topo,
-portanto, não é um artefato de baixo poder: é equivalência prática
-positivamente aferida --- sob os critérios declarados acima
+portanto, não se explica apenas por baixo poder: é equivalência
+prática positivamente aferida --- sob os critérios declarados acima,
+com as duas ressalvas já postas (o prior põe uma pseudo-observação
+dentro da ROPE, e os critérios foram fixados após o início da
+análise)
 (\texttt{results/\allowbreak aggregated/\allowbreak rope\_\allowbreak sensitivity.csv}). Os tamanhos de efeito pareados ($d$ de Cohen
 sobre as diferenças de AUC por conjunto; item 5 do protocolo do
 Capítulo~\ref{chap:metodologia}) contam a mesma história em outra
@@ -372,9 +377,9 @@ núcleo de 11 modelos resolve-se em uma fronteira de Pareto de
 \{TabPFN, XGBoost, LightGBM\} no eixo de custo de treino (medianas
 sobre os 18 conjuntos, Tabela~\ref{tab:app-custos}: LightGBM 0,66~s,
 XGBoost 0,69~s, TabPFN 1,35~s), que se estreita
-para \{XGBoost, TabPFN\} no eixo de latência (sobre AUC média em vez de
-rank, o CatBoost também entra na fronteira --- e, no eixo de latência, o
-TabPFN sai dela); \textbf{todo o
+para \{XGBoost, TabPFN\} no eixo de latência. Sobre AUC média em vez
+de rank, as fronteiras mudam de composição: a de treino ganha o
+CatBoost, e a de latência perde o TabPFN. \textbf{Todo o
 aprendizado profundo clássico é dominado} em ambos os cruzamentos. A
 Figura~\ref{fig:cap5-pareto} apresenta o retrato completo, já com os
 14 modelos, nos dois planos; na grade completa do painel de treino, a
@@ -652,8 +657,12 @@ entre conjuntos e nos tamanhos de efeito.}
 O contrapeso é frontal, e é o achado central do capítulo: o líder de
 acurácia é o pior modelo da grade em latência de serviço ---
 43.262~\us/linha sob o protocolo padrão, $131.097\times$ o XGBoost, e
-mais em contextos maiores, chegando a ${\sim}394$~ms/linha no maior
-conjunto de regressão. A pergunta de decisão mudou de natureza: não é
+mais em contextos maiores, chegando a ${\sim}394$~ms/linha no
+\texttt{year\_\allowbreak prediction} com \emph{ensemble} completo
+(medição da fronteira do Capítulo~\ref{chap:destilacao},
+\texttt{pareto.csv}); na medição multiconjunto, a razão
+TabFM/XGBoost vai de $3.079\times$ a $247.402\times$ --- de 3,5 a
+5,4 ordens de magnitude, conforme o conjunto. A pergunta de decisão mudou de natureza: não é
 mais ``qual família vence?'', e sim ``\emph{a latência do foundation
 model cabe no caso de uso?}''.
 
@@ -663,7 +672,8 @@ modelo em 13 dos 18 conjuntos, zero-shot
 --- liderança consistente, que os testes de baixo poder não confirmam
 como separação estatística --- ao preço de quatro a cinco ordens de
 magnitude em latência de
-\emph{serving} (43.262 vs.\ 0,33~\us/linha).} O empate não tornou o
+\emph{serving} no conjunto de referência (43.262 vs.\
+0,33~\us/linha).} O empate não tornou o
 arcabouço multicritério obsoleto; o deslocamento o
 tornou mais necessário --- e apontou seu único obstáculo.
 
@@ -674,7 +684,8 @@ KAN (ranks 11,0/12,0/9,8 em binária/multiclasse/regressão) e TabKAN
 atrás até do TabNet em multiclasse e regressão. Surpreendente à luz das
 alegações dos artigos originais \citep{kan2024,tabkan2025}, o resultado
 pede explicação. Sob protocolo uniforme com orçamento de ajuste
-fixado por família, as alegações não se reproduzem --- com a ressalva,
+fixado por família, as alegações não se reproduzem nas nossas
+reimplementações, neste protocolo --- com a ressalva,
 declarada no Capítulo~\ref{chap:metodologia}, de que o TabKAN é
 reimplementação própria (AdamW em mini-lotes em lugar do L-BFGS
 original) e o KAN teve normalização e faixa de \emph{grid}

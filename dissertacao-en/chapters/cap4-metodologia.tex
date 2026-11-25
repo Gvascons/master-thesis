@@ -380,8 +380,9 @@ external folds with the hyperparameters fixed.}
     even so, does not win --- and the correct reading is
     ``asymmetric budgets by design, imperfect parity measured and
     disclosed'', not equalization. One exception is declared: on
-    \texttt{adult}, 11 models (7 of them deep learning) were tuned
-    with 100 trials, not 25, and the results were kept as a
+    \texttt{adult}, the 7 legacy deep-learning models were tuned
+    with 100 trials, not 25 (the GBDTs use 100 throughout the study;
+    TabPFN is zero-shot), and the results were kept as a
     validation anchor, so that, on that single dataset, the legacy
     architectures had 4$\times$ the budget of KAN/TabKAN; the
     dataset is excluded from the tuning-cost aggregates, and the
@@ -396,7 +397,7 @@ external folds with the hyperparameters fixed.}
     2{,}000 cap), a declared limitation of the space design. The
     optimization direction follows each task's primary metric
     (maximizing ROC-AUC; minimizing log-loss and RMSE;
-    Section~\ref{sec:met-estatistica}).
+    Section~\ref{sec:met-metricas}).
   \item \textbf{Training regime of the deep models.} At most 200
     epochs with early stopping (patience 20, monitoring the
     validation loss), batch size 256, AdamW optimizer, and
@@ -870,9 +871,10 @@ known limitations and the decisions taken in response to them.
     protocol (Section~\ref{sec:met-custo}) uses the amortized batch
     regime, with each model on its natural device, and
     \texttt{adult} as the reference dataset. A control measurement
-    at the benchmark's size extremes (\texttt{credit\_g}, a
+    on one small and one large dataset (\texttt{credit\_g}, a
     thousand samples, and
-    \texttt{cardiovascular\_\allowbreak disease}, 70{,}000)
+    \texttt{cardiovascular\_\allowbreak disease}, 70{,}000; the
+    benchmark's cap is 100{,}000)
     confirmed that the latency rankings among the 14 models are
     stable across datasets (Spearman rank correlation 0.78--0.95)
     and that the foundation models' context dependence has the

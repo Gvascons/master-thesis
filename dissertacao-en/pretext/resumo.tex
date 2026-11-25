@@ -20,33 +20,38 @@ fixas, descritivamente, nos mesmos conjuntos. Terceiro,
 estuda-se a destilação das curvas de quantis do professor TabPFN em
 alunos de \emph{gradient boosting}, em 20 conjuntos de regressão, sob
 hipóteses registradas. Entre os 11 modelos anteriores a 2026, o topo da
-acurácia é um empate: de 3 a 8 dos 10 modelos não líderes são
-praticamente equivalentes ao líder, conforme o critério bayesiano
+acurácia, medido na classificação binária (as demais tarefas têm
+leitura descritiva), é um empate: de 3 a 8 dos 10 modelos não líderes são
+praticamente equivalentes ao líder (ele próprio já um \emph{foundation
+model}, o TabPFN), conforme o critério bayesiano
 adotado, na margem de um ponto percentual de AUC. Na geração 2026, o
 TabFM, sem ajuste algum, tem o melhor rank médio nas três tarefas (na
 multiclasse, sobre os dois conjuntos em que opera) e é o
 melhor modelo em 13 dos 18 conjuntos; a liderança é consistente entre
 conjuntos, mas os testes, de baixo poder com tão poucos conjuntos por
 tarefa, não a confirmam como separação estatística, e ela custa de
-quatro a cinco ordens de magnitude a mais em latência de inferência. As
+quatro a cinco ordens de magnitude a mais em latência de inferência
+no conjunto de referência (\texttt{adult}). As
 redes de Kolmogorov--Arnold ficam no último terço nas três tarefas. Na
 decisão, um roteador aprendido por meta-características acerta menos que
 a regra trivial (0,11 contra 0,44); a política fixa ``\emph{foundation
 model} primeiro'' tem \emph{regret} mediano zero na métrica primária,
 mas deixa de ser a recomendada quando 10 a 20 por cento do peso da
-decisão passa da acurácia para a latência, na normalização por postos
+decisão passa da acurácia para a latência (pela mediana do
+\emph{regret}), na normalização por postos
 adotada. Na destilação, o aluno
 treinado nas médias do professor supera o controle em apenas 4 de 20
 conjuntos; o aluno treinado nas curvas de quantis retém, na mediana, de
 12 a 19 por cento da vantagem distribucional do professor, conforme o
 ajuste dos alunos, com retenção positiva em 16 de 20 conjuntos (teste de
 sinal, p de aproximadamente 0,019 com a correção do desenho em duas
-etapas), e supera \emph{baselines} distribucionais clássicos em 17 de
+etapas), e supera \emph{baselines} distribucionais clássicos, em configuração
+\emph{default}, em 17 de
 20. Conclui-se que, no regime estudado (conjuntos de até 100 mil
 amostras, versões fixadas dos modelos, uma única GPU), a escolha deve
 partir das restrições da aplicação (latência, limites arquiteturais,
 interpretabilidade), e não de um vencedor universal; e que a destilação
-recupera uma parte modesta, porém consistente, da incerteza preditiva do
+recupera, na mediana, uma parcela modesta da incerteza preditiva do
 \emph{foundation model}, sob pré-condições que se verificam em minutos.
 
 \vspace{1cm}

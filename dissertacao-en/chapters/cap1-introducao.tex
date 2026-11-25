@@ -38,7 +38,8 @@ single protocol and a procedure to turn it into a choice.
 
 This dissertation produces both. The picture that emerges contradicts
 the maxim on two counts. First, in the generation of models preceding
-2026, the top of the accuracy ranking is a \emph{statistical tie}:
+2026, the top of the accuracy ranking, measured in binary
+classification, is a \emph{statistical tie}:
 under a region of practical equivalence of one percentage point of
 AUC, 8 of the 10 non-leading models are practically equivalent to the
 leader --- itself already a foundation model, TabPFN, at average rank
@@ -248,15 +249,17 @@ evidence that were missing. In order of presentation:
     by selection, frequentist and Bayesian inference and three cost
     axes under the same protocol. It yields the two facts that
     structure the dissertation: the statistical tie of the previous
-    generation (8 of 10 models practically equivalent to the leader
+    generation, measured in binary classification (8 of 10 models
+    practically equivalent to the leader
     under the lenient criterion, 3 of 10 under the strict cutoff;
     rank variance dominated by the model$\times$dataset interaction
     together with noise)
     and the consistent lead of the 2026 generation (TabFM with the
-    best rank in all three tasks and best model on 13 of 18
+    best rank in all three tasks --- in multiclass, over the 2
+    datasets where it operates --- and best model on 13 of 18
     datasets, zero-shot, without confirmation as a statistical
     separation by the underpowered tests, at the price of four to
-    five orders of magnitude in latency). It includes the first
+    five orders of magnitude in latency on the reference dataset). It includes the first
     neutral TabPFN~$\times$~TabFM comparison under an identical
     protocol, as far as the dated checks reach
     (Chapter~\ref{chap:benchmark}).
@@ -267,7 +270,9 @@ evidence that were missing. In order of presentation:
     (dated check), KAN and TabKAN finish in the bottom third on all
     three tasks, though cheap to serve: under a uniform protocol
     with tuning under paired conditions, the original papers' claims
-    do not hold up (Chapter~\ref{chap:benchmark}).
+    do not reproduce in our reimplementations (TabKAN reimplemented;
+    KAN adapted), under this protocol
+    (Chapter~\ref{chap:benchmark}).
   \item \textbf{A decision framework that is evaluated, not merely
     described.} Three studies evaluate the framework's components (the flowchart
     itself is their synthesis, not an evaluated policy) --- the
@@ -414,7 +419,7 @@ between foundation models and GBDTs), answering RQ1.
 \textbf{Chapter~\ref{chap:framework}} submits the decision framework
 to three studies (the negative result of meta-feature routing, this
 one under leave-one-dataset-out; the descriptive evaluation of the
-``foundation model first'' policy; and the registered experiment on
+``foundation model first'' policy; and the registered analysis of
 weighted multi-criteria regret), consolidating the four-constraint
 flowchart that answers RQ2. \textbf{Chapter~\ref{chap:destilacao}}
 presents the distributional-distillation contribution under a

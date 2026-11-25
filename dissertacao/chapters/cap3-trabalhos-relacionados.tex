@@ -109,9 +109,13 @@ Apêndice~\ref{app:suplementares}). Dois recortes
 do elenco ficam declarados: o estudo compara modelos individuais, não
 sistemas de AutoML por combinação de modelos como o AutoGluon
 \citep{erickson2020}, cuja camada de \emph{ensembling} responde a uma
-pergunta diferente da nossa; e os lançamentos posteriores ao
-congelamento de versões (TabICLv2, TabPFN-3/3.5) ficam fora por
-datação, não por julgamento. O
+pergunta diferente da nossa; e o elenco foi congelado com a
+ampliação registrada de 13/07/2026 (memorando de viabilidade em
+\texttt{docs/}): TabPFN-3/3.5, posteriores, ficam fora por datação; o
+TabICLv2, anterior, fica fora por escopo --- a ampliação buscava as
+duas famílias ausentes do elenco (Kolmogorov--Arnold e um
+\emph{foundation model zero-shot} da geração 2026), e a linha PFN já
+estava representada pelo TabPFN. O
 Capítulo~\ref{chap:benchmark} executa esse desenho.
 
 \section{\emph{Foundation models} tabulares e sua avaliação}
@@ -448,8 +452,10 @@ citado acima, restrito a classificação e regressão pontual; o que o
 Capítulo~\ref{chap:destilacao} acrescenta é o teste do TabFM como
 professor \emph{distribucional}, e o resultado é um negativo
 arquitetural --- a cabeça de regressão do TabFM é pontual (confirmado
-pelo relatório técnico oficial, \citealp{kong2026}), e o espalhamento
-do seu \emph{ensemble} é mensuravelmente inútil como distribuição
+pelo relatório técnico oficial, \citealp{kong2026}), e, no único
+conjunto em que foi medida
+(\texttt{california\_\allowbreak housing}$^\dagger$), a dispersão do
+seu \emph{ensemble} não funciona como distribuição
 preditiva. Por fim,
 registramos o que \emph{não} reivindicamos: a formulação básica
 ``destilar \emph{foundation model} tabular em aluno rápido'' é do Pocket FM,

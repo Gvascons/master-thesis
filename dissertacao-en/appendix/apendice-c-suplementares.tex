@@ -225,9 +225,11 @@ and~\ref{sec:destil-e1}.
 The pool-size sweep that scopes this refutation --- and supports the
 reconciliation with the point gains of \citet{jeong2026} via the
 low-data moderator --- is in Table~\ref{tab:app-cap-sweep}: the
-distilled student's point advantage only appears on
-\texttt{wine\_quality} with the pool capped at 800 rows, and
-disappears (or inverts) from 2{,}000 on.
+distilled student's point advantage appears on
+\texttt{wine\_quality} with the pool capped at 800 rows and
+disappears (or inverts) from 2{,}000 on; on
+\texttt{california}$^\dagger$ there is a marginal $+0.005$ residue
+at 2{,}000, gone at 8{,}000.
 
 \begin{table}[htb]
 \centering
@@ -469,9 +471,11 @@ distilling other models \emph{for commercial use} is explicitly
 outside the definition of \emph{Non-Commercial Purpose}; (iii)
 \S2(d) forbids using the outputs to ``\emph{train, fine-tune, or
 distill a model that is competitive with the TABPFN-2.5 Model}'' ---
-this study's student retains 12--19\% of the distributional
-advantage and does not compete with the teacher in quality, but the
-final word on ``competitive'' belongs to the licensor. TabFM (TabFM
+at the median, this study's student retains 12--19\% of the
+teacher's distributional
+advantage; on one dataset (\texttt{pumadyn32nh}), a born-again
+student matches the teacher; the qualification of ``competitive''
+belongs to the licensor. TabFM (TabFM
 Non-Commercial License v1.0, checked on 2026-11-23): non-commercial,
 outputs are not derivatives, no competitive-model clause.
 

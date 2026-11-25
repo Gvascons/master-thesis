@@ -91,7 +91,11 @@ Section~\ref{sec:met-metricas}. The table is computed by
 on the per-instance predictions of the complementarity experiment
 (Section~\ref{sec:cap5-ato5}), with its own sanity gate: each cell's
 recomputed accuracy reproduces the benchmark aggregate's (divergence
-$\leq 10^{-3}$ in all 37 cells). Per-cell F1 and specificity are in
+$\leq 10^{-3}$ in all 37 classification cells of the gate; the
+table shows 36 --- the XGBoost$\times$\texttt{helena} cell passes
+the gate, but the \texttt{helena} row is left out of the table
+because the foundation models are excluded on it). Per-cell F1 and
+specificity are in
 the artifact
 (\texttt{secondary\_\allowbreak metrics\_\allowbreak holdout.csv}).
 

@@ -270,7 +270,8 @@ o recorte e a evidência que faltavam. Em ordem de apresentação:
     pela seleção,
     inferência frequentista e bayesiana e três eixos de custo sob o mesmo
     protocolo. Dele saem os dois fatos que estruturam a dissertação: o
-    empate estatístico da geração anterior (8 de 10 modelos
+    empate estatístico da geração anterior, medido na classificação
+    binária (8 de 10 modelos
     praticamente equivalentes ao líder no critério brando, 3 de 10 no
     corte estrito; variância de rank
     dominada pela interação modelo$\times$conjunto somada ao ruído) e a
@@ -280,7 +281,8 @@ o recorte e a evidência que faltavam. Em ordem de apresentação:
     melhor modelo em 13 de 18 conjuntos, \emph{zero-shot}, sem
     confirmação como separação estatística pelos testes de baixo poder,
     ao preço de
-    quatro a cinco ordens de magnitude em latência). Inclui a primeira
+    quatro a cinco ordens de magnitude em latência no conjunto de
+    referência). Inclui a primeira
     comparação neutra TabPFN~$\times$~TabFM sob protocolo idêntico, até
     onde alcançam as verificações datadas (Capítulo~\ref{chap:benchmark}).
   \item \textbf{Um resultado negativo independente sobre as redes de
@@ -289,8 +291,10 @@ o recorte e a evidência que faltavam. Em ordem de apresentação:
     profundo/\emph{foundation models} em
     benchmark multicritério (verificação datada), KAN e TabKAN terminam no
     último terço nas três tarefas, embora baratas de servir: sob protocolo
-    uniforme com ajuste em condições pareadas, as alegações dos artigos originais não
-    se sustentam (Capítulo~\ref{chap:benchmark}).
+    uniforme com ajuste em condições pareadas, as alegações dos
+    artigos originais não se reproduzem nas nossas reimplementações
+    (TabKAN reimplementado; KAN adaptado), neste protocolo
+    (Capítulo~\ref{chap:benchmark}).
   \item \textbf{Um arcabouço de decisão avaliado, não
     apenas descrito.}
     Três estudos avaliam os componentes do arcabouço (o fluxograma é a
@@ -437,7 +441,7 @@ arcabouço de decisão a três estudos (o resultado negativo do
 roteamento por meta-características, este sob
 \emph{leave-one-dataset-out}; a avaliação descritiva da política
 ``\emph{foundation model}
-primeiro''; e o experimento registrado de \emph{regret} multicritério
+primeiro''; e a análise registrada de \emph{regret} multicritério
 ponderado), consolidando o fluxograma de quatro restrições que responde
 à QP2. O \textbf{Capítulo~\ref{chap:destilacao}} apresenta a contribuição
 de destilação distribucional sob desenho registrado em duas etapas: a refutação da

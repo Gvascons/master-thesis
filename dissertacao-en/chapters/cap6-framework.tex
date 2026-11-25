@@ -9,10 +9,11 @@ evaluation through three studies on the benchmark's own datasets
 a negative result, in which meta-feature routing does not generalize
 under leave-one-dataset-out validation; a positive result, in which
 the fixed policy ``foundation model first'' is regret-optimal on the
-primary metric; and a registered experiment on weighted
+primary metric; and a registered analysis of weighted
 multi-criteria regret, which locates the latency weight at which that
 recommendation flips --- shifting 10--20\% of the weight from
-accuracy to latency (by the median; 20--30\% by the mean) is enough. The resulting framework is a flowchart
+accuracy to latency (by the median; 20--30\% by the mean, on the
+0.1 grid) is enough. The resulting framework is a flowchart
 of four constraints verifiable \emph{a priori}, in which the first
 question --- latency --- is now quantitatively justified.
 
@@ -434,7 +435,8 @@ E2, we know \emph{how much} it needs to matter to change the answer
 \emph{The ``FM first'' recommendation flips with 10--20\% of the
 weight on latency, by median regret.} Under the weighted score
 $S = w \cdot r_{\text{acc}} + (1-w) \cdot r_{\text{lat}}$, the
-always-FM policy is regret-optimal in median only for $w \geq 0.9$;
+always-FM policy is regret-optimal in median only for $w \geq 0.9$
+on the study's 0.1 grid (0.85 on the addendum's fine 0.05 grid);
 at $w{=}0.8$ it is already beaten by always-GBDT and always-DL, and
 for $w \leq 0.6$ ``always-GBDT'' has a zero median regret. The proxy
 caveat accompanies the finding --- and was tested: re-running the
@@ -489,7 +491,7 @@ The recommendation fits in four questions, asked in this order
 before training any model: must predictions come out in microseconds
 per row? does the problem have more than 10 classes, or more rows
 than the foundation model accepts as context? does the domain demand
-a model interpretable by construction? --- if any answer is yes, the
+auditable models, explainable by attribution? --- if any answer is yes, the
 indicated family is the one the constraint leaves standing; if none
 is, the default is the foundation model, compared against a tuned
 GBDT before adoption, because its measured worst case is last place
@@ -503,7 +505,7 @@ checks them:
     microseconds, the FM family is excluded in its native form.
     Experiment E2 quantifies why this is the first question: the
     recommendation flips with just 10--20\% of the weight on latency
-    (by the median; 20--30\% by the mean;
+    (by the median; 20--30\% by the mean, on the 0.1 grid;
     Section~\ref{sec:regret-ponderado}).
     Chapter~\ref{chap:destilacao} measures one route toward that
     budget --- distilling TabPFN's predictive distribution in
@@ -542,7 +544,13 @@ the form the data support.
 \label{sec:limitacoes-framework}
 
 This chapter's limitations are declared in the same currency as its
-results.
+results. The first cuts across the chapter: E2's flip band depends
+on the score normalization --- 10--20\% of the weight on latency by
+ranks (the design's choice), 20--25\% logarithmic and 30--35\%
+linear, by the median (Section~\ref{sec:regret-ponderado}) --- so
+the number quoted in the syntheses is the pre-registered
+normalization's, and the direction (a minority weight suffices) is
+what all three support.
 
 As for the sample's composition, the dataset-identity erratum
 (Table~\ref{tab:datasets}) does not alter this chapter's readings:

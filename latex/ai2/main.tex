@@ -36,7 +36,7 @@ Distributional Regression and the Distill/Compress/Shrink Pareto Frontier}}
   Germano Crispim Vasconcelos (advisor)\\
   \small Centro de Informática, Universidade Federal de Pernambuco\\
   \small \texttt{gcv@cin.ufpe.br}}
-\date{Atividade de Orientação Individual --- October 2026}
+\date{Atividade de Orientação Individual --- November 2026}
 
 \begin{document}
 \maketitle
@@ -74,10 +74,12 @@ hundred-microsecond-per-row latency --- on our three-strategy Pareto
 frontier (distillation vs.\ context compression vs.\ ensemble
 shrinking; three datasets, measured end-to-end), the distilled student
 is the CRPS-optimal teacher-derived system below the teacher's cheapest competitive
-configuration on the two large-edge datasets (2.5$\times$ and
+configuration on the two datasets where no cheap teacher
+configuration reaches the student's latency tier (2.5$\times$ and
 27$\times$ its latency; the 2.5$\times$ case is the erratum dataset
-with binarized target), while on the small-edge one ensemble shrinking
-already matches student latency;
+with binarized target), while on the third (kin8nm, a latency case)
+a single-member teacher already matches student latency and ensemble
+shrinking closes the case;
 (3) out-of-fold (OOF) labeling matters for the student's
 \textbf{calibration}, not its accuracy --- a deconfounded refinement of prior classification findings;
 and (4) failures are diagnosable, yielding a practical decision rule: try
@@ -101,7 +103,9 @@ argument for gradient-boosted decision trees (GBDTs)
 confirmed statistical separation; what they have not changed is the
 cost argument. In a uniform-protocol benchmark we ran of 14 models
 $\times$ 18 OpenML datasets (selection by inner CV separated from an untouched hold-out, per-family
-preprocessing, equal tuning budgets; companion report
+preprocessing, declared per-family tuning budgets (100 Optuna
+trials for GBDTs, 25 for deep models; asymmetric by design);
+companion report
 \citep{companion2026}), the zero-shot TabFM ranks first on all three task
 types and is the single best model on 13 of 18 datasets; TabPFN v2.5
 \citep{hollmann2025,priorlabs2025} is the consistent runner-up.
@@ -452,9 +456,11 @@ core \texttt{wine\_quality}), continuous \texttt{california\_housing}
 overlap the core --- a belief the Oct 19 erratum dissolved, and the
 omission was not revisited) and \texttt{naval\_propulsion\_plant}
 (44969; no recorded justification). Measured under the same protocol
-(one split, seeds \{0,1,2\}), the scoreboard moves from 16/20
+on five data splits (42--46; reporting rule fixed before any
+reading; seeds \{0,1,2\}), the aggregate scoreboard moves from 16/20
 ($p=0.0059$) to 17/24 ($p=0.032$) --- the distilled student \emph{wins}
-on continuous california (+3.7\% CRPS) and loses on the other three ---
+on continuous california on all five splits and loses on the other
+three (naval crosses zero once, on split 45) ---
 and to 16/22 ($p=0.026$) under the conservative cut that excludes the
 two with real core overlap (\texttt{white\_wine} and continuous
 california itself, which is a \emph{win}); the
@@ -494,8 +500,12 @@ labels as from the teacher's opinions of them. Contemporaneous work reports posi
 point-distillation gains in regression \citep{jeong2026}, with
 stronger teachers (TabPFN~v3 and TabICLv2), squared-error transfer and
 RMSE-only
-evaluation on different suites; our sweep above isolates exactly the
-small-data moderator under which such gains appear, and our negative is
+evaluation on different suites; our sweep above offers a moderation
+hypothesis for the contrast --- residual gain confined to small
+pools --- but their recipe differs from ours on axes we did not
+replicate (full-context labeling, synthetic-query expansion, a
+student trained only on teacher predictions), so the reconciliation
+is proposed, not demonstrated. Our negative is
 scoped to realistic pool sizes (3k--100k) under matched, benchmark-tuned
 student capacity.
 % results/distillation/distill.csv, distill_cap*.csv, extension.csv
@@ -813,9 +823,11 @@ student delivers it, at hundred-microsecond-per-row latency
 \subsection{When to distill: two refuted hypotheses become a decision rule}
 \label{sec:rule}
 
-\emph{Does the student family matter?} Greatly. The XGBoost pinball
-objective is a weak distributional learner, and distillation reliably
-repairs it. A hard-label MLP-quantile student, by contrast, matches the
+\emph{Does the student family matter?} Greatly. Under the inherited
+hyperparameters, the XGBoost pinball
+objective leaves measurable room on several datasets (some
+teacher-free alternative beats it on 9/20), and distillation
+consistently fills part of it. A hard-label MLP-quantile student, by contrast, matches the
 distilled XGBoost with no teacher at all on small numeric datasets (CRPS
 0.110 vs.\ 0.109 on \texttt{california\_\allowbreak housing}; 0.047 vs.\ 0.064 on
 \texttt{kin8nm}) --- yet collapses on \texttt{year\_\allowbreak prediction} (CRPS 9.66,
@@ -888,8 +900,11 @@ and surpasses the student on \texttt{california\_\allowbreak housing} --- which 
 why the rule puts ``try a strong native student'' first; overall the
 distilled student wins 17/20, $p=0.0013$, and the QRF --- which shares
 the students' latency tier, at 4.1--21.4~\textmu s/row across datasets
---- wins only 3/20) --- and when
-the teacher's edge is small, ensemble reduction alone may close the case.
+--- wins only 3/20; against the best of four teacher-free
+alternatives chosen per dataset, an oracle selection favorable to
+the alternatives, the student wins 12/20, $p=0.25$) --- and when a
+single teacher member already runs at the student's latency, as on
+kin8nm, ensemble reduction alone may close the case.
 % results/distillation/baselines_analysis.csv
 
 \section{Limitations}
@@ -944,7 +959,7 @@ across papers. TabFM results
 refer to the pinned v1.0.1 release (July 2026); the official technical
 report \citep{kong2026} appeared only in late September 2026 and remains
 unreviewed. Classical distributional baselines (NGBoost, QRF) enter
-only in documented default configuration, via the pre-registered E1
+only in documented default configuration, via the registered E1
 comparison (17/20, $p=0.0013$; the QRF, at 4.1--21.4~\textmu s/row
 across datasets, wins only 3/20)
 % results/distillation/baselines_analysis.csv + classical_baselines.csv

@@ -1,10 +1,10 @@
 %% ============================================================================
-%% Capítulo 6 --- O Arcabouço de Decisão Validado
+%% Capítulo 6 --- O Arcabouço de Decisão Avaliado
 %%
 %% Fontes (auditadas; nenhum número sem origem em artefato versionado):
 %%   - dissertation/cap6-framework.md ............ prosa auditada; tabela de
 %%     regret @11/@14 (idêntica à da AI-1)
-%%   - latex/ai1/main.tex, seção "The Validated Decision Framework" ........
+%%   - latex/ai1/main.tex, seção do arcabouço (AI-1) ........
 %%     formulação final auditada (taxa de acerto (\emph{hit-rate}) 0,11 vs 0,44 @11 e 0,72 vs 0,78
 %%     @14; explicação do empate árvore/FM; rice1976; herre2026) --- prevalece
 %%     sobre o rascunho em caso de divergência
@@ -30,10 +30,10 @@ conjuntos do benchmark (18; 17 onde a família FM participa): um resultado negat
 roteamento por meta-características não generaliza sob validação
 \emph{leave-one-dataset-out}; um resultado positivo, em que a política
 fixa ``\emph{foundation model} primeiro'' é regret-ótima na métrica
-primária; e um experimento registrado de \emph{regret} multicritério
+primária; e uma análise registrada de \emph{regret} multicritério
 ponderado, que localiza o peso de latência em que essa recomendação se
 inverte --- basta deslocar 10--20\% do peso da acurácia para a
-latência (pela mediana; 20--30\% pela média).
+latência (pela mediana; 20--30\% pela média, na grade de 0,1).
 O arcabouço resultante é um fluxograma de quatro restrições verificáveis
 \emph{a priori}, no qual a primeira pergunta --- latência --- é agora
 quantitativamente justificada.
@@ -458,7 +458,8 @@ e a resposta é: pouco.
 \emph{A recomendação ``FM primeiro'' inverte-se com 10--20\% de
 peso na latência, pela mediana do \emph{regret}.} Sob o score ponderado
 $S = w \cdot r_{\text{acc}} + (1-w) \cdot r_{\text{lat}}$, a política
-sempre-FM só é regret-ótima na mediana para $w \geq 0{,}9$; em
+sempre-FM só é regret-ótima na mediana para $w \geq 0{,}9$ na grade
+de 0,1 do estudo (0,85 na grade fina de 0,05 do adendo); em
 $w{=}0{,}8$ já é superada por sempre-GBDT e sempre-DL, e para
 $w \leq 0{,}6$ ``sempre-GBDT'' tem \emph{regret} mediano zero. A ressalva
 do proxy acompanha o achado --- e foi testada: re-executando a varredura
@@ -527,7 +528,7 @@ as verifica:
     microssegundos, a família FM está excluída na forma nativa. O
     experimento E2 quantifica por que esta é a primeira pergunta: a
     recomendação inverte com apenas 10--20\% do peso na latência
-    (pela mediana; 20--30\% pela média;
+    (pela mediana; 20--30\% pela média, na grade de 0,1;
     Seção~\ref{sec:regret-ponderado}). O
     Capítulo~\ref{chap:destilacao} mede uma rota em direção a esse
     orçamento --- destilar a distribuição preditiva do TabPFN em
@@ -566,7 +567,13 @@ sustentam.
 \label{sec:limitacoes-framework}
 
 As limitações deste capítulo são declaradas na mesma moeda dos seus
-resultados.
+resultados. A primeira é transversal: a faixa de inversão do E2
+depende da normalização do score --- 10--20\% do peso na latência
+por postos (a adotada no desenho), 20--25\% na logarítmica e
+30--35\% na linear, pela mediana
+(Seção~\ref{sec:regret-ponderado}) ---, de modo que o número citado
+nas sínteses é o da normalização pré-registrada, e a direção (um
+peso minoritário basta) é o que as três sustentam.
 
 Quanto à composição da amostra, a errata de identidade dos conjuntos
 (Tabela~\ref{tab:datasets}) não altera as leituras deste capítulo: o
@@ -608,7 +615,7 @@ meta-características não generaliza (taxa de acerto 0,11 vs.\ 0,44 com 11 mode
 métrica primária (\emph{regret} mediano 0,000 na geração 2026,
 preservado na política executável sempre-TabFM, cuja média é 0,080 e
 cujo pior caso é 1,000); e o \emph{regret}
-multicritério ponderado, o experimento registrado E2, localiza o
+multicritério ponderado, a análise registrada E2, localiza o
 ponto em que essa recomendação vira --- entre $w{=}0{,}9$ e $w{=}0{,}8$
 de peso na acurácia pela mediana --- e com isso justifica
 quantitativamente a arquitetura do fluxograma: a latência é a primeira

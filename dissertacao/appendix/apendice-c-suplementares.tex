@@ -227,9 +227,11 @@ Seções~\ref{sec:destil-ponto} e~\ref{sec:destil-e1}.
 A varredura de tamanho de \emph{pool} que escopa essa refutação ---
 e sustenta a reconciliação com os ganhos pontuais de
 \citet{jeong2026} via o moderador de poucos dados --- está na
-Tabela~\ref{tab:app-cap-sweep}: a vantagem pontual do destilado só
+Tabela~\ref{tab:app-cap-sweep}: a vantagem pontual do destilado
 aparece no \texttt{wine\_quality} com \emph{pool} limitado a 800
-linhas, e desaparece (ou inverte) a partir de 2~mil.
+linhas e desaparece (ou inverte) a partir de 2~mil; no
+\texttt{california}$^\dagger$ há um resíduo marginal de $+0{,}005$
+em 2~mil, que desaparece em 8~mil.
 
 \begin{table}[htb]
 \centering
@@ -460,9 +462,10 @@ licenciado é o não comercial, e treinar, afinar ou destilar outros
 modelos \emph{para uso comercial} está explicitamente fora da
 definição de \emph{Non-Commercial Purpose}; (iii) o \S2(d) veda usar
 as saídas para ``\emph{train, fine-tune, or distill a model that is
-competitive with the TABPFN-2.5 Model}'' --- o aluno deste estudo
-retém 12--19\% da vantagem distribucional e não compete com o
-professor em qualidade, mas a palavra final sobre ``competitivo'' é do
+competitive with the TABPFN-2.5 Model}'' --- na mediana, o aluno
+deste estudo retém 12--19\% da vantagem distribucional do professor;
+num conjunto (\texttt{pumadyn32nh}), um aluno \emph{born-again} o
+iguala; a qualificação de ``competitivo'' cabe ao
 licenciante. TabFM (TabFM Non-Commercial License v1.0, verificada em
 23/11/2026): não comercial, saídas não são derivados, sem cláusula de
 modelo competitivo.

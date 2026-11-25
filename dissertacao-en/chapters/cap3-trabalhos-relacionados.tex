@@ -104,9 +104,13 @@ Appendix~\ref{app:suplementares}). Two exclusions from the model
 roster are disclosed: the study compares individual models, not
 model-combination AutoML systems such as AutoGluon
 \citep{erickson2020}, whose ensembling layer answers a different
-question from ours; and the releases after the version freeze
-(TabICLv2, TabPFN-3/3.5) are excluded because of their release
-dates, not by judgment.
+question from ours; and the roster was frozen with the registered
+expansion of 2026-07-13 (feasibility memo in \texttt{docs/}):
+TabPFN-3/3.5, later releases, are excluded by dating; TabICLv2,
+earlier, is excluded by scope --- the expansion targeted the two
+families absent from the roster (Kolmogorov--Arnold and a zero-shot
+foundation model of the 2026 generation), and the PFN line was
+already represented by TabPFN.
 Chapter~\ref{chap:benchmark} executes this design.
 
 \section{Tabular foundation models and their evaluation}
@@ -451,8 +455,10 @@ above, restricted to classification and point regression; what
 Chapter~\ref{chap:destilacao} adds is the test of TabFM as a
 \emph{distributional} teacher, and the result is an architectural
 negative --- TabFM's regression head is point-valued (confirmed by
-the official technical report, \citealp{kong2026}), and the spread
-of its ensemble is measurably useless as a predictive
+the official technical report, \citealp{kong2026}), and, on the
+only dataset where it was measured
+(\texttt{california\_\allowbreak housing}$^\dagger$), the spread
+of its ensemble does not work as a predictive
 distribution. Finally, we record what we do \emph{not} claim: the
 basic formulation ``distill a tabular foundation model into a fast
 student'' belongs to Pocket FM, and under no circumstances do we

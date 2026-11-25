@@ -16,7 +16,8 @@ rank variance, so that the decision migrates to cost, latency,
 robustness, and task structure; the 2026 generation shifts the top
 --- TabFM, zero-shot, leads the average rank in all three tasks (in
 multiclass, over the two datasets where it operates), at the cost of
-four to five orders of magnitude in inference latency --- a lead that
+four to five orders of magnitude in inference latency on the
+reference dataset --- a lead that
 is consistent across datasets, which the underpowered tests do not
 confirm as a statistical separation. The chapter also discusses the
 unfavorable independent test of the Kolmogorov--Arnold family, the
@@ -64,11 +65,14 @@ model \citep{tabfm2026,kong2026} and the two Kolmogorov--Arnold
 networks (KAN \citep{kan2024} and TabKAN \citep{tabkan2025}). The cut
 is defined by the models' order of entry into the study, not by
 publication year: TabPFN, a foundation model, belongs to the core.
-Acts~I to III read the 11-model core --- it is on it that the maxim
-``boosting always wins'' \citep{grinsztajn2022} was formulated, a
-maxim \citet{mcelfresh2023} already nuanced by concluding that the
-choice of dataset matters more than the choice of model --- and it is
-on it that the tie is established; Act~IV reads the full grid and
+Acts~I to III read the 11-model core --- it is on the core that the
+maxim
+``boosting always wins'', formulated in the literature
+\citep{grinsztajn2022} and
+already nuanced by \citet{mcelfresh2023}, who concluded that the
+choice of dataset matters more than the choice of model, is here put
+to the test --- and it is
+on the core that the tie is established; Act~IV reads the full grid and
 shows what the extension changes; and Act~V descends to the instance
 level to locate where the foundation models and the GBDTs diverge.
 
@@ -167,9 +171,11 @@ for the networks --- it holds for ROPE $\geq 0.01$ and weakens at
 the tighter 0.005 radius (2/10 lenient; 0/10 strict). On the
 $E[\theta]$ reading, XGBoost ($0.65$) clears
 the 0.5 bar even at the tighter 0.005 radius, with CatBoost at the
-edge (0.54). The tie at the top is therefore not an artifact of low
-power: it is practical equivalence positively gauged --- under the
-criteria declared above
+edge (0.54). The tie at the top is therefore not explained by low
+power alone: it is practical equivalence positively gauged --- under
+the criteria declared above, with the two caveats already stated
+(the prior places a pseudo-observation inside the ROPE, and the
+criteria were fixed after the analysis began)
 (\texttt{results/\allowbreak aggregated/\allowbreak rope\_\allowbreak sensitivity.csv}).
 The paired effect sizes (Cohen's $d$ on the per-dataset AUC
 differences; item 5 of the protocol of
@@ -353,9 +359,10 @@ rank being the study's primary comparison instrument --- the 11-model
 core resolves into a Pareto frontier of \{TabPFN, XGBoost, LightGBM\}
 on the training-cost axis (medians over the 18 datasets,
 Table~\ref{tab:app-custos}: LightGBM 0.66~s, XGBoost 0.69~s, TabPFN
-1.35~s), which narrows to \{XGBoost, TabPFN\} on the latency axis (on
-mean AUC instead of rank, CatBoost also joins the frontier --- and,
-on the latency axis, TabPFN leaves it); \textbf{all classical deep
+1.35~s), which narrows to \{XGBoost, TabPFN\} on the latency axis.
+On mean AUC instead of rank, the frontiers change composition: the
+training one gains CatBoost, and the latency one loses TabPFN.
+\textbf{All classical deep
 learning is dominated} in both crosses.
 Figure~\ref{fig:cap5-pareto} presents the complete picture, already
 with the 14 models, on both planes; on the full grid of the training
@@ -632,7 +639,12 @@ The counterweight is head-on, and it is the chapter's central
 finding: the accuracy leader is the grid's worst model in serving
 latency --- 43{,}262~\us/row under the standard protocol,
 $131{,}097\times$ XGBoost, and more in larger contexts, reaching
-${\sim}394$~ms/row on the largest regression dataset. The decision
+${\sim}394$~ms/row on \texttt{year\_\allowbreak prediction} with the
+full ensemble (the frontier measurement of
+Chapter~\ref{chap:destilacao}, \texttt{pareto.csv}); in the
+multi-dataset measurement, the TabFM/XGBoost ratio runs from
+$3{,}079\times$ to $247{,}402\times$ --- 3.5 to 5.4 orders of
+magnitude, depending on the dataset. The decision
 question has changed its nature: it is no longer ``which family
 wins?'' but ``\emph{does the foundation model's latency fit the use
 case?}''.
@@ -642,7 +654,8 @@ rank in all three tasks (in multiclass, over 2 datasets) and is the
 best model on 13 of the 18 datasets, zero-shot --- a consistent lead,
 which the underpowered tests do not confirm as a statistical
 separation --- at the price of four to five orders of magnitude in
-serving latency (43{,}262 vs.\ 0.33~\us/row).} The tie did not make
+serving latency on the reference dataset (43{,}262 vs.\
+0.33~\us/row).} The tie did not make
 the multi-criteria framework obsolete; the shift made it more
 necessary --- and pointed to its single obstacle.
 
@@ -676,7 +689,8 @@ tier (2.3--3.1~\us/row) --- \textbf{the problem is the performance,
 not the cost}.
 
 \emph{Under a uniform protocol, KAN and TabKAN sit in the bottom
-third in all three tasks --- the original papers' claims do not hold
+third in all three tasks --- the original papers' claims do not
+reproduce in our reimplementations, under this protocol; they do not hold
 up in the first independent test against the full grid, as far as our
 dated check reaches --- though both are cheap to serve.} The negative
 result is reported with the same status as the positive ones, per the

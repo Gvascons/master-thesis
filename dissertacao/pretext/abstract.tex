@@ -1,6 +1,5 @@
 % Abstract — faithful mirror of pretext/resumo.tex (NBR 6028: one
-% paragraph, 150-500 words, no formulas). Updated 2026-11-24 to match
-% the English version's corrected abstract.
+% paragraph, no formulas).
 For a decade, model selection for tabular data relied on the maxim that
 gradient boosting always wins. Tabular foundation models, pre-trained
 networks that predict without task-specific training, have cast doubt on
@@ -18,7 +17,8 @@ time (leave-one-dataset-out), its fixed policies descriptively on the
 same datasets. Third, the distillation of the TabPFN
 teacher's quantile curves into gradient-boosting students is studied on
 20 regression datasets, under registered hypotheses. Among the 11
-pre-2026 models, the top of the accuracy ranking is a tie: 3 to 8 of the
+pre-2026 models, the top of the accuracy ranking, measured in binary classification
+(the other tasks are read descriptively), is a tie: 3 to 8 of the
 10 non-leading models are practically equivalent to the leader (itself
 already a foundation model, TabPFN),
 depending on the Bayesian criterion adopted, within one percentage point
@@ -27,7 +27,8 @@ best average rank in all three tasks (in multiclass, over the two
 datasets where it operates) and is the best model on 13 of the
 18 datasets; the lead is consistent across datasets, but the tests,
 underpowered with so few datasets per task, do not confirm it as a
-statistical separation, and it costs four to five orders of magnitude
+statistical separation, and it costs four to five orders of magnitude,
+on the reference dataset (\texttt{adult}),
 more inference latency. Kolmogorov--Arnold networks finish in the bottom
 third on all three tasks. For the decision, a router learned from
 meta-features is less accurate than the trivial rule (0.11 vs.\ 0.44);

@@ -184,7 +184,7 @@ distribuição preditiva (a cabeça de \emph{bar distribution}: um
 histograma discretizado sobre a faixa do alvo), dos quais extraímos
 uma grade de 19 níveis ($\tau = 0{,}05, 0{,}10, \ldots, 0{,}95$).
 Usamos a v2.5, e não os lançamentos mais recentes TabPFN-3/3.5
-\citep{tabpfn3-2026}, por comparabilidade com a versão fixada no
+\citep{tabpfn3-2026,tabpfn35tr2026}, por comparabilidade com a versão fixada no
 benchmark do Capítulo~\ref{chap:benchmark} e por operação verificada
 na GPU de 16~GB do estudo; o método não usa nada específico da
 versão, mas a magnitude transferida pode depender dela
@@ -456,13 +456,16 @@ Apêndice~\ref{app:suplementares}.}
 Código & O que afirma & Antes de ler? & Veredito \\
 \midrule
 H1 (ponto) & aluno pontual retém $\geq$50\% do gap de RMSE em
-$\geq$3/5 & sim & refutada (4/20) \\
+$\geq$3/5 & sim & refutada (0/5 centrais com retenção $\geq$50\%;
+descritivamente, vence o controle em 4/20) \\
 H2 (distribuição) & destilado vence o controle em CRPS, com cobertura
-a $\pm$5~p.p. & sim & CRPS: confirmada (16/20); cobertura: não
-cumprida (10/20) \\
+a $\pm$5~p.p. & sim & não confirmada como conjunção: cláusula de
+CRPS sustentada (16/20); cláusula de cobertura não atendida
+(10/20) \\
 H3 (Pareto) & existe faixa de latência em que o destilado domina o
 professor comprimido & sim & faixa atendida a 99~\us{}
-(california$^\dagger$), excedida a 169~\us{} (year) \\
+(california$^\dagger$), excedida a 169~\us{} (year); refutada no
+\texttt{kin8nm} \\
 Teste de sinal & instrumento confirmatório do 16/20 & não
 (fixado na leitura interina) & $p\approx0{,}019$ sequencial \\
 E1 (clássicos) & destilado vence o melhor entre QRF e NGBoost & sim
@@ -529,7 +532,9 @@ controle de rótulos verdadeiros em apenas 4 de 20 conjuntos; a
 replicação com um professor quase $6\times$ mais forte (gap de âncora
 0,028 vs.\ 0,005 de RMSE no \texttt{california\_\allowbreak housing}$^\dagger$) não altera o
 quadro, e a varredura de \emph{pool} mostra que o ganho residual é um
-fenômeno de poucos dados ($n \leq 800$) em alguns conjuntos apenas.
+fenômeno de poucos dados ($n \leq 800$ no \texttt{wine\_quality};
+resíduo marginal de $+0{,}005$ no \texttt{california}$^\dagger$ em
+$n{=}2.000$) em alguns conjuntos apenas.
 H1 é refutada; o que o professor sabe sobre a \emph{média} o aluno
 aprende sozinho dos dados.
 
@@ -945,7 +950,9 @@ separa.
 
 O resultado: o vazamento, isolado, \emph{não} degrada acurácia --- o
 RMSE até melhora nos quatro conjuntos testados, e o CRPS em três dos
-quatro ---
+quatro (no \texttt{kin8nm} por 0,0006, um empate no arredondamento
+da Tabela~\ref{tab:app-abl-oof}; no \texttt{california}$^\dagger$ o
+CRPS piora) ---
 e o tamanho do contexto contribui pouco (embora, no
 \texttt{wine\_quality}, custe 5,9~p.p.\ adicionais de cobertura). O
 dano concentra-se na \textbf{cobertura de intervalos}: a contexto
@@ -1049,7 +1056,7 @@ resultado, com a execução já iniciada --- o estatuto exato está na
 Tabela~\ref{tab:destil-hipoteses} ---, conforme o contrato de conduta
 do estudo.
 
-\subsection{Desenho pré-registrado}
+\subsection{Desenho registrado (execução já iniciada)}
 \label{sec:destil-e1-desenho}
 
 Duas hipóteses falsificáveis foram fixadas, com critérios de
@@ -1104,8 +1111,10 @@ conjunto dos clássicos ficam entre 4,1 e 31,9~\us/linha (QRF
 4,1--21,4; NGBoost 12,2--31,9) --- o \emph{tier} dos alunos, de
 menos de uma a quatro
 ordens de magnitude abaixo dos professores, conforme o professor e o
-contexto. Os clássicos competem com o
-aluno destilado em acurácia, nunca em custo, e a leitura da fronteira
+contexto. Os clássicos competem com o aluno destilado em acurácia e
+são ainda mais baratos que ele ($5$--$25\times$, contra os 99--169
+\us/linha do destilado); o que não alcançam é o CRPS do destilado na
+maioria dos conjuntos (17 de 20), e a leitura da fronteira
 da Seção~\ref{sec:destil-fronteira} permanece intacta.
 \end{sloppypar}
 
@@ -1131,9 +1140,12 @@ wine\_quality           & 0,365 & 0,328 & \textbf{0,279} & 0,289 \\
 \end{table}
 
 Três leituras emergem. Primeiro, os reveses não são aleatórios: o
-\texttt{wine\_quality} é precisamente o conjunto em que o critério
-pré-registrado já desaconselhava destilar (o professor atrás do \emph{baseline}
-em RMSE; retenção $-0{,}97$ na Tabela~\ref{tab:destil-retencao}), e lá
+\texttt{wine\_quality} é precisamente o conjunto que dois critérios
+distintos já sinalizavam --- o critério de elegibilidade do desenho,
+este sim registrado (professor atrás do \emph{baseline}
+em RMSE), e o \emph{gate} pós-hoc de vantagem relativa da regra de
+decisão (11,8\%, abaixo da mediana de ${\approx}13{,}6\%$; retenção
+$-0{,}97$ na Tabela~\ref{tab:destil-retencao}) ---, e lá
 a QRF \emph{default} bate \emph{inclusive o professor} (CRPS 0,279 contra
 0,289; o único conjunto, em 20, onde isso ocorre) --- a demonstração
 mais nítida, em todo o estudo, de que o
@@ -1366,14 +1378,18 @@ e o quanto move o seu conjunto mede-se em minutos); (ii)~teste um aluno distribu
 --- uma QRF \emph{default} custa segundos, e um MLP-quantil cobre os
 conjuntos pequenos e numéricos. Destile quando uma vantagem genuína do
 professor persistir após ambos --- uma única rotulagem OOF, de custo de
-minutos, mede essa vantagem diretamente. Onde nenhuma configuração
+minutos a horas, conforme o tamanho do \emph{pool} e a latência do
+professor (no \texttt{year\_\allowbreak prediction}, 80~mil linhas a
+${\sim}149$~ms/linha dão ${\sim}3$~horas), mede essa vantagem
+diretamente. Onde nenhuma configuração
 barata do professor alcança o \emph{tier} de latência do aluno (os
 dois casos medidos da fronteira), a
 destilação é a estratégia derivada do professor que carrega parte da
 vantagem para
 baixo da configuração competitiva mais barata dele (um nativo forte
-como a QRF pode ocupar o mesmo regime de latência, e num conjunto a
-superou); onde um único membro do professor já opera à latência do
+como a QRF ocupa o mesmo regime de latência e supera o destilado em
+3 de 20 conjuntos); onde um único membro do professor já opera à
+latência do
 aluno, a simples redução de \emph{ensemble} pode encerrar o caso.}
 \end{quote}
 
@@ -1387,7 +1403,8 @@ $p{=}0{,}033$ sem o conjunto binarizado$^\dagger$). O critério prediz
 o \emph{sinal} do efeito, não a magnitude (Spearman não
 significativo), e carrega dois limites declarados: condicionante e
 desfecho compartilham o CRPS do controle no mesmo \emph{hold-out}, e
-o condicionante usa a versão oráculo do critério
+o condicionante usa a versão oráculo do critério --- a versão OOF,
+a que a regra recomenda ao praticante, não foi avaliada
 (\texttt{retention\_\allowbreak conditional.csv}). Um terceiro
 limite é estrutural: a regra é derivada nos mesmos 20 conjuntos em
 que é ilustrada, sem teste fora da amostra da própria regra.
@@ -1402,7 +1419,7 @@ fronteira da Seção~\ref{sec:destil-fronteira} --- os casos
 
 \emph{A regra de decisão --- transforme, teste um nativo forte,
 e destile somente a vantagem que sobrar --- é verificável em
-minutos.} As quatro derrotas ficam todas na metade dos conjuntos em
+minutos a horas, conforme o professor.} As quatro derrotas ficam todas na metade dos conjuntos em
 que a vantagem relativa do professor é menor (análise condicional
 acima), mas cada uma tem causa própria: duplicatas no
 \texttt{wine\_quality}, sensibilidade à configuração no
@@ -1472,7 +1489,9 @@ alavanca emergente de serviço, também não medida aqui.
   \item \textbf{Magnitude heterogênea e dependente do orçamento de
     ajuste.} A retenção varia de $-1{,}3$ a $+1{,}1$ entre conjuntos,
     o posterior bayesiano deixa ${\sim}25\%$ de massa em retenção
-    negativa, e a Seção~\ref{sec:destil-retune} mostra que metade da
+    mediana negativa (grandeza distinta da probabilidade 0,96 sobre
+    $\theta$, a proporção de pares da análise de postos), e a
+    Seção~\ref{sec:destil-retune} mostra que metade da
     magnitude do desenho principal vinha da configuração do controle.
     O que se entrega é a regra de decisão da
     Seção~\ref{sec:destil-regra}, não uma afirmação universal.
@@ -1551,7 +1570,7 @@ medições da fronteira, \texttt{pareto.csv}; frente à
 configuração competitiva mais barata dele, $2{,}5\times$ e $27\times$
 nos dois casos medidos da fronteira ---
 Seção~\ref{sec:destil-fronteira}), e
-vence o melhor entre QRF e NGBoost em 17 de 20 no E1 pré-registrado
+vence o melhor entre QRF e NGBoost em 17 de 20 no E1 registrado
 (12 de 20 contra a melhor de quatro alternativas sem professor
 escolhida por conjunto).
 % fonte: results/distillation/pareto.csv

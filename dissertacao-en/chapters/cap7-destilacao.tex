@@ -428,13 +428,15 @@ dates in Appendix~\ref{app:suplementares}.}
 Code & What it claims & Before reading? & Verdict \\
 \midrule
 H1 (point) & point student retains $\geq$50\% of the RMSE gap on
-$\geq$3/5 & yes & refuted (4/20) \\
+$\geq$3/5 & yes & refuted (0/5 central datasets reach 50\%
+retention; descriptively, it beats the control on 4/20) \\
 H2 (distribution) & distilled beats the control in CRPS, with
-coverage within $\pm$5~p.p. & yes & CRPS: confirmed (16/20);
-coverage: not met (10/20) \\
+coverage within $\pm$5~p.p. & yes & not confirmed as a conjunction:
+CRPS clause sustained (16/20); coverage clause not met (10/20) \\
 H3 (Pareto) & there is a latency band where the distilled student
 dominates the compressed teacher & yes & band met at 99~\us{}
-(california$^\dagger$), exceeded at 169~\us{} (year) \\
+(california$^\dagger$), exceeded at 169~\us{} (year); refuted on
+\texttt{kin8nm} \\
 Sign test & confirmatory instrument of the 16/20 & no (fixed at the
 interim reading) & $p\approx0.019$ sequential \\
 E1 (classical) & distilled beats the best of QRF and NGBoost & yes
@@ -499,7 +501,9 @@ control on only 4 of 20 datasets; the replication with a teacher
 nearly $6\times$ stronger (anchor gap 0.028 vs.\ 0.005 RMSE on
 \texttt{california\_\allowbreak housing}$^\dagger$) does not change
 the picture, and the pool sweep shows the residual gain is a
-low-data phenomenon ($n \leq 800$) on some datasets only. H1 is
+low-data phenomenon ($n \leq 800$ on \texttt{wine\_quality}; a
+marginal $+0.005$ residue on \texttt{california}$^\dagger$ at
+$n{=}2{,}000$) on some datasets only. H1 is
 refuted; what the teacher knows about the \emph{mean}, the student
 learns on its own from the data.
 
@@ -913,7 +917,9 @@ in-sample comparison does not separate.
 
 The result: leakage, isolated, does \emph{not} degrade accuracy ---
 RMSE even improves on all four tested datasets, and CRPS on three of
-the four
+the four (on \texttt{kin8nm} by 0.0006, a tie at the rounding of
+Table~\ref{tab:app-abl-oof}; on \texttt{california}$^\dagger$ the
+CRPS worsens)
 --- and context size contributes little (though, on
 \texttt{wine\_quality}, it costs 5.9~p.p.\ of additional coverage).
 The damage concentrates on \textbf{interval coverage}: at identical
@@ -1015,7 +1021,7 @@ before any result was read, with execution already started --- the
 exact status is in Table~\ref{tab:destil-hipoteses} --- per the
 study's conduct contract.
 
-\subsection{Pre-registered design}
+\subsection{Registered design (execution already started)}
 \label{sec:destil-e1-desenho}
 
 Two falsifiable hypotheses were fixed, with interpretation criteria
@@ -1071,8 +1077,12 @@ datasets (NGBoost beats it only on \texttt{cps88wages}).
 \textbf{H-B2 too}: the classicals' per-dataset median latencies fall
 between 4.1 and 31.9~\us/row (QRF 4.1--21.4; NGBoost 12.2--31.9)
 --- the students' tier, from under one to four orders of magnitude
-below the teachers, depending on the teacher and the context. The classicals
-compete with the distilled student in accuracy, never in cost, and
+below the teachers, depending on the teacher and the context. The
+classicals
+compete with the distilled student in accuracy and are even cheaper
+than it is ($5$--$25\times$, against the distilled student's
+99--169~\us/row); what they do not reach is the distilled student's
+CRPS on most datasets (17 of 20), and
 the frontier reading of Section~\ref{sec:destil-fronteira} remains
 intact.
 \end{sloppypar}
@@ -1099,10 +1109,12 @@ wine\_quality           & 0.365 & 0.328 & \textbf{0.279} & 0.289 \\
 \end{table}
 
 Three readings emerge. First, the upsets are not random:
-\texttt{wine\_quality} is precisely the dataset where the
-pre-registered criterion already advised against distilling (the
-teacher behind the baseline in RMSE; retention $-0.97$ in
-Table~\ref{tab:destil-retencao}), and there the \emph{default} QRF
+\texttt{wine\_quality} is precisely the dataset that two distinct
+criteria already flagged --- the design's eligibility criterion,
+which is the registered one (teacher behind the baseline in RMSE),
+and the decision rule's post-hoc relative-advantage gate (11.8\%,
+below the ${\approx}13.6\%$ median; retention $-0.97$ in
+Table~\ref{tab:destil-retencao}) ---, and there the \emph{default} QRF
 beats \emph{even the teacher} (CRPS 0.279 against 0.289; the only
 dataset, out of 20, where that happens) --- the study's sharpest
 demonstration that the ``test a strong native student'' step of the
@@ -1332,13 +1344,17 @@ and how much it moves your dataset is measured in minutes);
 (ii)~test a strong native distributional student --- a default QRF
 costs seconds, and a quantile MLP covers the small, numeric
 datasets. Distill when a genuine teacher advantage persists after
-both --- a single OOF labeling, at a cost of minutes, measures that
-advantage directly. Where no cheap teacher configuration reaches
+both --- a single OOF labeling measures that
+advantage directly, at a cost of minutes to hours depending on pool
+size and teacher latency (on \texttt{year\_\allowbreak prediction},
+80~thousand rows at ${\sim}149$~ms/row give ${\sim}3$~hours). Where
+no cheap teacher configuration reaches
 the student's latency tier (the two measured frontier cases),
 distillation is the teacher-derived strategy that carries part of
 the advantage below the teacher's cheapest competitive
-configuration (a strong native such as the QRF can occupy the same
-latency regime, and on one dataset outperformed it); where a single
+configuration (a strong native such as the QRF occupies the same
+latency regime and beats the distilled student on 3 of 20
+datasets); where a single
 teacher member already runs at the student's latency, ensemble
 shrinking may close the case.}
 \end{quote}
@@ -1354,7 +1370,8 @@ dataset$^\dagger$). The criterion predicts the effect's \emph{sign},
 not its magnitude (non-significant Spearman), and carries two
 declared limits: conditioner and outcome share the control's CRPS
 on the same hold-out, and the conditioner uses the oracle version
-of the criterion
+of the criterion --- the OOF version, the one the rule recommends
+to the practitioner, was not evaluated
 (\texttt{retention\_\allowbreak conditional.csv}). A third limit is
 structural: the rule is derived on the same 20 datasets on which it
 is illustrated, with no out-of-sample test of the rule itself.
@@ -1370,7 +1387,7 @@ other.
 
 \emph{The decision rule --- transform, test a strong native, and
 distill only the advantage that remains --- is verifiable in
-minutes.} The four defeats all fall in the half of the datasets
+minutes to hours, depending on the teacher.} The four defeats all fall in the half of the datasets
 where the teacher's relative advantage is smaller (conditional
 analysis above), but each has its own cause: duplicates on
 \texttt{wine\_quality}, configuration sensitivity on
@@ -1442,7 +1459,9 @@ measured here.
   \item \textbf{Heterogeneous, budget-dependent magnitude.}
     Retention varies from $-1.3$ to $+1.1$ across datasets, the
     Bayesian posterior leaves ${\sim}25\%$ of mass on negative
-    retention, and Section~\ref{sec:destil-retune} shows that half
+    median retention (a different quantity from the 0.96 probability
+    on $\theta$, the pair proportion of the signed-rank analysis),
+    and Section~\ref{sec:destil-retune} shows that half
     of the main design's magnitude came from the control's
     configuration. What is delivered is the decision rule of
     Section~\ref{sec:destil-regra}, not a universal claim.
@@ -1521,7 +1540,7 @@ frontier measurements, \texttt{pareto.csv}; against its cheapest
 competitive configuration, $2.5\times$ and $27\times$ in the two
 measured frontier cases ---
 Section~\ref{sec:destil-fronteira}), and
-beats the best of QRF and NGBoost on 17 of 20 in the pre-registered
+beats the best of QRF and NGBoost on 17 of 20 in the registered
 E1 (12 of 20 against the best of four teacher-free alternatives
 chosen per dataset).
 % source: results/distillation/pareto.csv

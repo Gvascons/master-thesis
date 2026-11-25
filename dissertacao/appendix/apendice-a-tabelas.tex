@@ -93,8 +93,11 @@ Seção~\ref{sec:met-metricas}. A tabela é computada por
 \texttt{scripts/\allowbreak secondary\_\allowbreak metrics\_\allowbreak report.py} sobre as predições por
 instância do experimento de complementaridade (Seção~\ref{sec:cap5-ato5}),
 com um portão de sanidade próprio: a acurácia recomputada de cada célula
-reproduz a do agregado do benchmark (divergência $\leq 10^{-3}$ em todas
-as 37 células). F1 e especificidade por célula estão no artefato
+reproduz a do agregado do benchmark (divergência $\leq 10^{-3}$ em
+todas as 37 células de classificação do portão; a tabela exibe 36 ---
+a célula XGBoost$\times$\texttt{helena} passa pelo portão, mas a
+linha do \texttt{helena} sai da tabela porque os \emph{foundation
+models} são excluídos nela). F1 e especificidade por célula estão no artefato
 (\texttt{secondary\_\allowbreak metrics\_\allowbreak holdout.csv}).
 
 \input{appendix/tabelas-geradas}

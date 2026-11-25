@@ -181,7 +181,7 @@ same status as positive ones, per the study's conduct contract
     flowchart of four constraints verifiable \emph{a priori} ---
     the form the data support.
   \item \textbf{Weighted multi-criteria regret --- E2 (evidence;
-    Chapter~\ref{chap:framework}).} The registered experiment that
+    Chapter~\ref{chap:framework}).} The registered analysis that
     locates the recommendation's inversion point: ``FM first'' is
     optimal in median only for $w \geq 0.9$ of accuracy weight;
     with $w \leq 0.6$, ``always-GBDT'' has a zero median regret. It
@@ -221,7 +221,9 @@ same status as positive ones, per the study's conduct contract
     the measured dataset (the binarized-target
     \texttt{california\_housing}) --- remains negative on the five
     central datasets, and the pool-size sweep isolates the
-    moderator (residual gain confined to $n \leq 800$,
+    moderator (residual gain confined to small pools --- $n \leq
+    800$ on \texttt{wine\_quality}, with a marginal residue on
+    \texttt{california}$^\dagger$ at 2{,}000 ---,
     dataset-dependent) --- a reconciliation hypothesis with the
     contemporary point gains of \citet{jeong2026}, whose recipe
     differs from ours on axes we did not replicate (full-context
@@ -254,8 +256,9 @@ same status as positive ones, per the study's conduct contract
     datasets ($p=0.0013$, one-sided; against the best teacher-free
     alternative chosen per dataset by an oracle, 12 of 20,
     $p=0.25$), with the three upsets
-    diagnosable --- on \texttt{wine\_quality}, where the
-    pre-registered gate already advised against distilling, the
+    diagnosable --- on \texttt{wine\_quality}, which the registered
+    eligibility criterion and the rule's post-hoc gate already
+    flagged, the
     default QRF beats even the teacher. The negative complement has
     value of its own: the ``test a strong native first'' step of
     the decision rule stopped being rhetorical.
@@ -264,10 +267,10 @@ same status as positive ones, per the study's conduct contract
     TabFM's regression head is point-valued --- an architectural
     check of July 2026, confirmed by the official technical report
     \citep{kong2026} --- and the spread of its ensemble is
-    measurably useless as a predictive distribution (CRPS 0.524
-    against TabPFN's 0.069; 16.3\% coverage at a nominal 80\% ---
-    measured on one dataset, the binarized-target
-    \texttt{california\_housing}$^\dagger$): a
+    not functional as a predictive distribution on the only dataset
+    where it was measured (the binarized-target
+    \texttt{california\_housing}$^\dagger$: CRPS 0.524
+    against TabPFN's 0.069; 16.3\% coverage at a nominal 80\%): a
     point leader is not a distributional leader, and the
     distributional head is the decisive architectural asset for
     distillation.
@@ -309,8 +312,10 @@ asked --- each item traces to the result that supports it.
   \item \textbf{If microsecond latency matters, GBDT.} With 40\% or
     more of the utility weight on latency, ``always-GBDT'' has a
     zero median regret; the ``FM first'' recommendation already
-    flips with 10--20\% of the weight on latency (by median regret;
-    E2, Section~\ref{sec:regret-ponderado}).
+    flips with 10--20\% of the weight on latency, by median regret
+    and under the design's rank normalization (20--35\% under the
+    alternative min--max normalizations; E2 and addendum,
+    Section~\ref{sec:regret-ponderado}).
   \item \textbf{If no constraint is active, foundation model
     first.} Median regret 0.000 in the 2026 generation
     (Section~\ref{sec:resultado-positivo}) --- with TabPFN as the
@@ -372,8 +377,10 @@ in several profiles, the recommendation is deliberately a model
 because it was measured. Two results support this accounting: in the
 core's pack, giving up the top typically costs less than one
 percentage point of AUC (Section~\ref{sec:cap5-ato1}), while the
-differences in latency, minority-class recall, and tail cost are of
-whole factors to orders of magnitude (columns 3 and 4 of the table).
+differences in latency
+and minority-class recall are of
+whole factors to orders of magnitude, and the tail-cost gain is
+${\sim}8\%$ (columns 3 and 4 of the table).
 When the metric on which the models differ is the one the
 application pays, it is the one that decides --- and the table says
 which it is, case by case.
@@ -409,7 +416,8 @@ $131{,}097\times$ XGBoost); TabPFN-2.5's non-commercial license \\
 Little data ($n \lesssim 4{,}000$) &
 TabPFN &
 Average rank 1.0 in the regime, against XGBoost's 2.8, on the 5
-swept datasets (Section~\ref{sec:cap5-ato3}) &
+swept datasets (the sweep did not include TabFM;
+Section~\ref{sec:cap5-ato3}) &
 Inference latency; large-$n$ leadership depends on the dataset \\
 \addlinespace
 Rare class with expensive false negatives &
@@ -472,9 +480,9 @@ is uncertain ($P$ 0.33; $E[\theta]$ 0.40) \\
 \addlinespace
 Auditable explanations required (regulation) &
 GBDT &
-The family whose attribution-based explanations are accepted in
-regulated practice; the only one with a strong latency profile in
-the multi-criteria matrix --- a qualitative per-family rating,
+The family with strong latency and attribution-based explanations
+accepted in regulated practice (in the matrix, RealMLP also has
+three-star latency) --- a qualitative per-family rating,
 declared, not measured; gate 3 of the flowchart
 (Section~\ref{sec:arcabouco-resultante}) &
 The top rank, under the same ROPE accounting; no distillation (the
@@ -510,8 +518,9 @@ recommendation goes against the primary metric (latency,
 auditable explanations, rare class), the trade is accounted for in the two
 final columns: the loss on the primary is bounded by measurement (by
 the ROPE in the pack, by the declared threshold in the operational
-metrics), while the gain on the application's metric is of whole
-factors to orders of magnitude. Second, the negative profiles are as
+metrics), while the gain on the application's metric runs from
+${\sim}8\%$ (tail cost) to whole
+factors and orders of magnitude (latency, recall). Second, the negative profiles are as
 informative as the positive ones: the table says when \emph{not} to
 use the foundation model (microseconds, 100 classes, regulation) and
 when \emph{not} to distill (\texttt{kin8nm},
@@ -590,6 +599,12 @@ Appendix~\ref{app:suplementares}). The residual threat is the one
 corrections do not remove: the possibility of analogous errors not
 yet discovered; the mitigation is structural (data hashes,
 versioned configurations, numbers traceable to artifacts).
+
+\textbf{Normalization dependence in E2.} The flip band (10--20\% by
+ranks) moves to 20--35\% under min--max normalizations (logarithmic,
+linear) --- the direction is the same, and the quoted number is the
+pre-registered normalization's
+(Section~\ref{sec:regret-ponderado}).
 
 \textbf{Multiplicity across experiments.} No correction is applied
 \emph{across} experiments; under Holm correction on the
@@ -769,9 +784,11 @@ listed (extensions this study leaves ready, not speculations).
 
 In synthesis, the dissertation delivers three pieces: a dated
 benchmark of the 2026 generation, with the cost axes measured under
-the same conditions as accuracy; a constraint framework evaluated
-out of sample in its learned component, with the cost-driven
-inversion point located; and a rule, tested also in its failures,
+the same conditions as accuracy; a constraint framework whose
+learned component was evaluated
+out of sample, with the cost-driven
+inversion point located; and a decision rule derived from the same
+experiments (with no out-of-sample test), its failures reported,
 for deciding when to distill a foundation model's predictive
 distribution into a student that serves at about a hundred
 microseconds per row. All three depend on the declared model
