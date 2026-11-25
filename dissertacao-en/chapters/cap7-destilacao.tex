@@ -388,10 +388,10 @@ prominence as positive ones. The three hypotheses:
     beats, in CRPS, the quantile student trained on the true labels
     (control), with interval coverage (PICP~80/90\%) within
     $\pm 5$~p.p.\ of nominal.
-  \item \textbf{H3 (Pareto).} There exists a latency band (the
+  \item \textbf{H3 (Pareto).} {\sloppy There exists a latency band (the
     pre-registration anticipated ${\lesssim}100$~\us/row) in which
     the distilled student is Pareto-dominant over the teacher with
-    subsampled context.
+    subsampled context.\par}
 \end{itemize}
 
 The post-pilot criteria even anticipated the zero-retention scenario
@@ -428,7 +428,7 @@ were fixed before any result was read, and the verdict. Details and
 dates in Appendix~\ref{app:suplementares}.}
 \label{tab:destil-hipoteses}
 \small
-\begin{tabular}{p{0.14\linewidth}p{0.38\linewidth}p{0.14\linewidth}p{0.22\linewidth}}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedright\arraybackslash}p{0.38\linewidth}>{\raggedright\arraybackslash}p{0.14\linewidth}>{\raggedright\arraybackslash}p{0.22\linewidth}}
 \toprule
 Code & What it claims & Before reading? & Verdict \\
 \midrule
@@ -691,6 +691,7 @@ Section~\ref{sec:destil-setup} and
 Appendix~\ref{app:suplementares}.}
 \label{tab:destil-robustez}
 \small
+\setlength{\tabcolsep}{3pt}
 \begin{tabular}{lcccc}
 \toprule
 Variant & Score & Median ret. & Sign (one-s.) & Wilcoxon (one-s.) \\

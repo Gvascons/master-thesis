@@ -15,7 +15,11 @@ Convenções (documentadas na prosa do apêndice):
 - melhor valor da linha em negrito; células estruturalmente ausentes
   (helena x TabPFN/TabFM) como "---";
 - 4 casas decimais, separador decimal PT via ``{,}``;
-- layout: ``sidewaystable`` (pacote rotating, já no preâmbulo) com
+- layout: A.1--A.3 e A.7 em ``landscape`` (pdflscape; a página gira no
+  leitor e lê-se de pé) com cabeçalhos HORIZONTAIS; A.8/A.9 em RETRATO
+  com cabeçalhos \rotatebox{90} (padrão
+  das tabelas B.5+; nada de página deitada — decisão do lote de
+  diagramação de 25/11), antes ``sidewaystable`` (pacote rotating, já no preâmbulo) com
   cabeçalhos de modelo rotacionados 90 graus — 15 colunas não cabem em
   retrato; ver decisão registrada no apêndice.
 
@@ -81,7 +85,7 @@ def build_table(df: pd.DataFrame, task: str, metric: str,
     datasets = sorted(pivot.index)
 
     lines = []
-    lines.append(r"\begin{sidewaystable}[p]")
+    lines.append(r"\begin{table}[htbp]")
     lines.append(r"\centering")
     lines.append(r"\small")
     lines.append(r"\setlength{\tabcolsep}{3pt}")
@@ -97,9 +101,7 @@ def build_table(df: pd.DataFrame, task: str, metric: str,
     lines.append(r"\label{tab:app-" + label + "}")
     lines.append(r"\begin{tabular}{l" + "c" * len(MODELS) + "}")
     lines.append(r"\toprule")
-    header = [r"\emph{Conjunto}"] + [
-        r"\rotatebox{90}{" + disp + "}" for _, disp in MODELS
-    ]
+    header = [r"\emph{Conjunto}"] + [disp for _, disp in MODELS]
     lines.append(" & ".join(header) + r" \\")
     lines.append(r"\midrule")
 
@@ -121,7 +123,7 @@ def build_table(df: pd.DataFrame, task: str, metric: str,
 
     lines.append(r"\bottomrule")
     lines.append(r"\end{tabular}")
-    lines.append(r"\end{sidewaystable}")
+    lines.append(r"\end{table}")
     return "\n".join(lines)
 
 
@@ -191,7 +193,7 @@ def build_ks_table(df: pd.DataFrame) -> str:
     de crédito, mas só o rank médio estava impresso."""
     sub = df[df["task_type"] == "binary"]
     pivot = sub.pivot(index="dataset", columns="model", values="ks")
-    lines = [r"\begin{sidewaystable}[htbp]", r"\centering", r"\small",
+    lines = [r"\begin{table}[htbp]", r"\centering", r"\small",
              r"\setlength{\tabcolsep}{3pt}",
              r"\caption[Estatística KS por conjunto --- binária]{Estatística "
              r"de Kolmogorov--Smirnov (KS; maior é melhor) por modelo em "
@@ -201,8 +203,7 @@ def build_ks_table(df: pd.DataFrame) -> str:
              r"\texttt{results/aggregated/test\_results.csv}.}",
              r"\label{tab:app-ks}",
              r"\begin{tabular}{l" + "c" * len(MODELS) + "}", r"\toprule",
-             " & ".join([r"\emph{Conjunto}"]
-                        + [r"\rotatebox{90}{" + d + "}" for _, d in MODELS])
+             " & ".join([r"\emph{Conjunto}"] + [d for _, d in MODELS])
              + r" \\", r"\midrule"]
     for ds in sorted(pivot.index):
         row = pivot.loc[ds]
@@ -218,7 +219,7 @@ def build_ks_table(df: pd.DataFrame) -> str:
             else:
                 cells.append(fmt(v))
         lines.append(" & ".join(cells) + r" \\")
-    lines += [r"\bottomrule", r"\end{tabular}", r"\end{sidewaystable}"]
+    lines += [r"\bottomrule", r"\end{tabular}", r"\end{table}"]
     return "\n".join(lines)
 
 
@@ -232,7 +233,7 @@ def build_cohensd_table(which: str) -> str:
     nome = "binária (AUC-ROC)" if which == "binary" else "de regressão (RMSE)"
     direcao = (r"positivo = linha melhor (AUC maior)" if which == "binary"
                else r"positivo = linha \emph{pior} (RMSE maior)")
-    lines = [r"\begin{sidewaystable}[p]", r"\centering", r"\scriptsize",
+    lines = [r"\begin{table}[htbp]", r"\centering", r"\scriptsize",
              r"\setlength{\tabcolsep}{3pt}",
              r"\caption[Tamanhos de efeito ($d$ de Cohen) --- "
              + ("binária" if which == "binary" else "regressão") + r"]{$d$ "
@@ -256,7 +257,7 @@ def build_cohensd_table(which: str) -> str:
             # modo matemático para o sinal de menos tipográfico correto
             cells.append("---" if m == c else "$" + fmt2(v) + "$")
         lines.append(" & ".join(cells) + r" \\")
-    lines += [r"\bottomrule", r"\end{tabular}", r"\end{sidewaystable}"]
+    lines += [r"\bottomrule", r"\end{tabular}", r"\end{table}"]
     return "\n".join(lines)
 
 
@@ -368,14 +369,18 @@ def main() -> None:
         "% ============================================================\n"
     ]
     n_rows = {}
+    blocks.append(r"\begin{landscape}")
     for task, metric, higher, metric_name, label in TASKS:
         blocks.append(build_table(df, task, metric, higher,
                                   metric_name, label))
         n_rows[label] = df[df["task_type"] == task]["dataset"].nunique()
+    blocks.append(r"\end{landscape}")
 
     for task in ("binary", "multiclass", "regression"):
         blocks.append(build_secondary_rank_table(df, task))
+    blocks.append(r"\begin{landscape}")
     blocks.append(build_ks_table(df))
+    blocks.append(r"\end{landscape}")
     blocks.append(build_cohensd_table("binary"))
     blocks.append(build_cohensd_table("regression"))
     blocks.append(build_ci_table())

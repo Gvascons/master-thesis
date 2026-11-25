@@ -71,6 +71,15 @@ Destilação Distribucional}
 % capítulo listado, mantendo numeração/refs do .aux da última completa):
 % \includeonly{chapters/cap7-destilacao}
 
+\usepackage{array}
+\usepackage{pdflscape}
+% Diagramação (lote 25/11): floats podem dividir página com texto
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.6}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.66}
+\setcounter{topnumber}{3}\setcounter{totalnumber}{5}
+
 \begin{document}
 
 \frontpage

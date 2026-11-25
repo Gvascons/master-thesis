@@ -415,7 +415,7 @@ indicated.}
 \scriptsize
 \setlength{\tabcolsep}{5pt}
 \renewcommand{\arraystretch}{1.15}
-\begin{tabular}{p{0.21\linewidth}p{0.17\linewidth}p{0.33\linewidth}p{0.19\linewidth}}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.33\linewidth}>{\raggedright\arraybackslash}p{0.19\linewidth}}
 \toprule
 \textbf{Profile (condition)} & \textbf{Recommendation} &
 \textbf{Evidence} & \textbf{Accepted in exchange} \\
@@ -450,7 +450,7 @@ rare-class-gain hypothesis was not confirmed; the dataset's best AUC
 belongs to a GBDT (CatBoost 0.887, Table~\ref{tab:app-binaria}) ---
 a fixed-threshold advantage, on one dataset &
 Precision (0.706 $\to$ 0.621) and latency; the advantage is
-frequent, not a law (\texttt{give\_me\_some\_credit}: recalls that
+frequent, not a law (\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit}: recalls that
 differ by less than 0.02 from one another) \\
 \addlinespace
 Regression with tail decisions and a ${\sim}10^2$~\us/row budget &
