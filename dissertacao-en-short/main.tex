@@ -1,0 +1,152 @@
+%% =========================================================================
+%% Master's Dissertation — PPGCC, CIn-UFPE — ENGLISH VERSION
+%% Template: risethesis (CIn class), option [en]
+%% Adapted (not literally translated) from dissertacao/, which remains the
+%% deposit reference; this version targets international dissemination.
+%% Compile: tectonic main.tex (or pdflatex -> bibtex -> pdflatex x2)
+%% =========================================================================
+\documentclass[en,oneside,onehalfspacing,msc]{risethesis}
+
+\usepackage{babel}% the class passes [brazil,english]; english is primary
+\usepackage{color}
+\usepackage[table]{xcolor}
+\usepackage{microtype}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{amsmath,amssymb}
+\usepackage{textcomp}
+% Escape valve for paragraphs with long tokens (artifact paths in \texttt):
+\emergencystretch=1.5em
+% tikz is not in the preamble: diagrams are pre-compiled into
+% images/tikz-*-en.pdf (editable sources in tikz-src/).
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+
+%% ---- Title format following the CIn dissertation standard ----
+\titleformat{\chapter}[hang]
+  {\normalsize\bfseries}{\thechapter}{1em}{\MakeUppercase}
+\titleformat{name=\chapter,numberless}[hang]
+  {\normalsize\bfseries\filcenter}{}{0pt}{\MakeUppercase}
+\titlespacing*{\chapter}{0pt}{0pt}{24pt}
+\titleformat{\section}
+  {\normalsize}{\thesection}{1em}{\MakeUppercase}
+\titleformat{\subsection}
+  {\normalsize\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalsize\itshape}{\thesubsubsection}{1em}{}
+\captionsetup{font=small,labelfont=small,skip=6pt}
+
+\newcommand{\us}{\textmu s}
+
+\address{RECIFE}
+\universitypt{Universidade Federal de Pernambuco}
+\universityen{Federal University of Pernambuco}
+\institutept{Centro de Informática}
+\instituteen{Center for Informatics}
+\programpt{Pós-graduação em Ciência da Computação}
+\programen{Graduate Program in Computer Science}
+\majorfieldpt{Ciência da Computação}
+\majorfielden{Computer Science}
+
+% PROVISIONAL title — mirrors the Portuguese title; the word "Validated"
+% (like "Validado" in the PT version) is pending the author's decision.
+\title{Models for Tabular Data in the Era of Foundation Models:
+a Multi-Criteria Benchmark, an Evaluated Decision Framework, and
+Distributional Distillation}
+
+\date{2026}
+\author{João Gabriel de Araújo Vasconcelos}
+\adviser{Germano Crispim Vasconcelos}
+
+% \includeonly{chapters/cap7-destilacao}
+
+\usepackage{array}
+% Cabeçalho corrente (lote 25/11): título curto já na página de abertura
+% da seção — \hdrshort{...} antes de \section{...} declara o mark curto
+% que o \sectionmark automático do \section usará uma única vez.
+\makeatletter
+\gdef\hdr@short{}
+\newcommand{\hdrshort}[1]{\gdef\hdr@short{#1}}
+\renewcommand{\sectionmark}[1]{%
+  \ifx\hdr@short\@empty
+    \markright{\MakeUppercase{\thesection.\ #1}}%
+  \else
+    \markright{\MakeUppercase{\thesection.\ \hdr@short}}\gdef\hdr@short{}%
+  \fi}
+\makeatother
+% Correção (lote 25/11): o estilo plain da classe usa \fancyhead sem
+% seletor e desenha o número da página 3x sobreposto (L, C e R, todos
+% com \hfill) nas aberturas de capítulo; aqui, uma única vez, à direita.
+\fancypagestyle{plain}{%
+  \fancyhead{}\fancyfoot{}%
+  \fancyhead[R]{\rule{0cm}{4mm}\thepage}%
+  \renewcommand{\headrulewidth}{0pt}}
+% URLs: não quebrar logo após o ':' (evita "https:" órfão na bibliografia)
+\expandafter\def\expandafter\UrlNoBreaks\expandafter{\UrlNoBreaks\do\:}
+% terceira passada de quebra: elimina os estouros marginais (~1 mm)
+% de \texttt longos sem afrouxamento visivel
+\setlength{\emergencystretch}{1.5em}
+% paginas so de float: alinhar no topo, nao centrar no vazio
+\makeatletter
+\setlength{\@fptop}{5pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatother
+\usepackage{pdflscape}
+% Diagramação (lote 25/11): floats podem dividir página com texto
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.6}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.66}
+\setcounter{topnumber}{3}\setcounter{totalnumber}{5}
+
+\begin{document}
+
+\frontpage
+\presentationpage
+
+\begin{fichacatalografica}
+% Blank page: the catalog card is produced by the library at deposit time.
+\end{fichacatalografica}
+
+% Approval sheet: produced by the graduate office after the defense.
+
+\acknowledgements
+\input{pretext/agradecimentos}
+
+\abstract
+\input{pretext/abstract}
+
+\resumo
+\input{pretext/resumo}
+
+\input{pretext/declaracao-ia}
+
+\listoffigures
+\listoftables
+\input{pretext/acronimos}
+\tableofcontents
+\clearpage
+\pagestyle{fancy}
+
+\include{chapters/cap1-introducao}
+\include{chapters/cap2-fundamentacao}
+\include{chapters/cap3-trabalhos-relacionados}
+\include{chapters/cap4-metodologia}
+\include{chapters/cap5-benchmark}
+\include{chapters/cap6-framework}
+\include{chapters/cap7-destilacao}
+\include{chapters/cap8-conclusao}
+
+\cleardoublepage
+\markboth{REFERENCES}{REFERENCES}
+\bibliographystyle{abnt}
+\bibliography{references}
+
+\theappendix
+\include{appendix/apendice-unico}
+
+\end{document}
