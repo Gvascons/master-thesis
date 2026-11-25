@@ -1034,7 +1034,9 @@ regression, what survives the transfer is the distribution --- a median
 12--19\% (depending on tuning of the arms), and in one case more than
 the entirety, of the teacher's CRPS edge
 at hundred-microsecond-per-row latency --- under conditions a
-practitioner can verify in minutes. The rest
+practitioner can verify before training the student (one OOF
+labeling pass: minutes to a few hours, depending on pool size and
+teacher latency). The rest
 of the teacher's advantage either saturates from raw labels, changes
 error regime under a free log transform (without losing its relative
 edge), or waits on architectures that expose what their

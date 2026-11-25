@@ -376,6 +376,6 @@ Tabular foundation models ended the accuracy tie; their serving cost is now
 the binding constraint, and distillation attacks it selectively. In
 regression, what survives the transfer is the distribution — a median 19% and up to
 the entirety of the teacher's CRPS edge at microsecond latency — under conditions a
-practitioner can verify in minutes. The rest of the teacher's advantage
+practitioner can verify before training the student (one OOF labeling pass: minutes to a few hours, depending on pool size and teacher latency). The rest of the teacher's advantage
 either saturates from raw labels, dissolves under a log transform, or waits
 on architectures that expose what their training already knows.

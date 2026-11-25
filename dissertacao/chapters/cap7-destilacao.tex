@@ -47,7 +47,10 @@ braços são re-ajustados), servindo na casa de cem microssegundos por
 linha. Terceiro, esse ganho concentra-se nas caudas da distribuição
 --- exatamente onde operam as decisões de custo assimétrico. Quarto,
 ele não é universal, e as condições em que vale a pena cabem numa
-regra que se verifica em minutos. A Seção~\ref{sec:destil-metodo}
+regra que se verifica antes de treinar o aluno, por uma única
+rotulagem OOF (de minutos a poucas horas, conforme o tamanho do
+\emph{pool} e a latência do professor).
+A Seção~\ref{sec:destil-metodo}
 descreve o método; as seções seguintes apresentam os resultados, o
 que os ameaça e quando usar cada coisa.
 
@@ -1584,7 +1587,8 @@ estratégias localiza quando cada alavanca vence, a ablação OOF mostra
 que a salvaguarda certa protege calibração, e os resultados negativos
 --- ponto refutado, cauda pesada não confirmada, redundância parcial
 com clássicos --- convertem-se numa
-regra de decisão cuja pré-condição se verifica em minutos. É a
+regra de decisão cuja pré-condição se verifica antes de treinar o
+aluno. É a
 resposta da dissertação à QP3: o que o \emph{foundation model} sabe e o
 \emph{baseline} não aprende sozinho é parte da forma da distribuição
 --- e é essa parte, entre um oitavo e um quinto da vantagem do

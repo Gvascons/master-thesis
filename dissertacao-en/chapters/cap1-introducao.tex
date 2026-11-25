@@ -80,8 +80,10 @@ intervals, had no academic answer as of the dated checks of this
 study. The answer found is selective: \emph{point}
 distillation fails robustly, \emph{distributional} distillation works
 where the teacher has a genuine advantage, and the boundary between
-the two conditions can be checked in minutes
-(Chapter~\ref{chap:destilacao}).
+the two conditions can be checked before the student is trained, by
+a single OOF labeling pass (minutes to a few hours, depending on
+pool size and teacher latency;
+Chapter~\ref{chap:destilacao}).
 
 \section{Research problem}
 \label{sec:intro-problema}
@@ -305,7 +307,8 @@ evidence that were missing. In order of presentation:
     compressing the context and shrinking the ensemble are measured
     on the same hold-outs, and out-of-fold labeling protects
     calibration, not accuracy; (e) these results condense into a
-    decision rule whose precondition is measured in minutes. The
+    decision rule whose precondition is measured before the student
+    is trained. The
     dated searches of this study found no prior academic work on
     this framing (Chapter~\ref{chap:destilacao}).
   \item \textbf{Reusable infrastructure and conduct.} The protocol,

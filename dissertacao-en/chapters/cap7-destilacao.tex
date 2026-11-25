@@ -23,7 +23,9 @@ beats its control on 16 of 20 datasets, with a median CRPS gain of
 microseconds per row. Third, that gain concentrates in the tails of
 the distribution --- exactly where asymmetric-cost decisions operate.
 Fourth, it is not universal, and the conditions under which it pays
-off fit in a rule that can be checked in minutes.
+off fit in a rule that can be checked before the student is trained,
+by a single OOF labeling pass (minutes to a few hours, depending on
+pool size and teacher latency).
 Section~\ref{sec:destil-metodo} describes the method; the following
 sections present the results, what threatens them, and when to use
 each thing.
@@ -1553,7 +1555,8 @@ The three-strategy frontier locates when each lever wins, the OOF
 ablation shows that the right safeguard protects calibration, and
 the negative results --- point refuted, heavy tail not confirmed,
 partial redundancy with classicals --- convert into a decision rule
-whose precondition can be checked in minutes. It is the
+whose precondition can be checked before the student is trained.
+It is the
 dissertation's answer to RQ3: what the foundation model knows and
 the baseline does not learn on its own is part of the
 distribution's shape --- and it is that part, between an eighth and

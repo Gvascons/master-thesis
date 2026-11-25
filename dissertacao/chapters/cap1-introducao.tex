@@ -97,8 +97,10 @@ quantis e intervalos calibrados, permanecia sem resposta acadêmica até
 as verificações datadas deste estudo. A resposta encontrada é
 seletiva: a destilação \emph{pontual} falha de
 forma robusta, a destilação \emph{distribucional} funciona onde o
-professor tem vantagem genuína, e a fronteira entre as duas condições é
-verificável em minutos (Capítulo~\ref{chap:destilacao}).
+professor tem vantagem genuína, e a fronteira entre as duas condições
+é verificável antes de treinar o aluno, por uma única rotulagem OOF
+(de minutos a poucas horas, conforme o tamanho do \emph{pool} e a
+latência do professor; Capítulo~\ref{chap:destilacao}).
 
 \section{Problema de pesquisa}
 \label{sec:intro-problema}
@@ -330,7 +332,8 @@ o recorte e a evidência que faltavam. Em ordem de apresentação:
     contexto e reduzir o \emph{ensemble} são medidos nos mesmos
     \emph{hold-outs}, e a rotulagem \emph{out-of-fold} protege a
     calibração, não a acurácia; (e) esses resultados condensam-se numa
-    regra de decisão cuja pré-condição se mede em minutos. Nas buscas
+    regra de decisão cuja pré-condição se mede antes de treinar o
+    aluno. Nas buscas
     datadas deste estudo não se encontrou trabalho acadêmico anterior
     sobre esse recorte (Capítulo~\ref{chap:destilacao}).
   \item \textbf{Infraestrutura e conduta reutilizáveis.} O protocolo, os
