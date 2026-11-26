@@ -107,7 +107,8 @@ No active constraint; latency-tolerant &
 Foundation model first (TabPFN mature; TabFM frontier) &
 Median regret 0.000 (the family's ceiling, on the 17 datasets where
 the FMs operate; executable always-TabFM: mean 0.080, worst case
-1.0); best on 13 of 18 (Chapter~\ref{chap:framework},
+1.0); best on 13 of 18, without statistical separation
+(Chapter~\ref{chap:framework};
 Section~\ref{sec:cap5-shift}) \\
 \addlinespace[2pt]
 Microseconds-per-row latency required &
@@ -192,7 +193,8 @@ the three proxies, but hardware sensitivity is unmeasured.
 
 \textbf{Distillation.} One teacher (TabPFN-2.5, whose default
 regressor checkpoint is purely synthetic), regression only, with
-TabFM's spread checked on a single binarized-target dataset. Two of
+the spread of TabFM's ensemble predictions checked as a distribution
+on a single binarized-target dataset. Two of
 the four omitted CTR23 datasets overlap the study's core (17/24 with
 all four, $p=0.032$; 16/22 without the two, $p=0.026$). The decision rule has no out-of-sample test.
 Both teachers carry non-commercial licenses.

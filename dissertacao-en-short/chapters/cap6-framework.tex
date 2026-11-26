@@ -8,8 +8,9 @@ answers RQ2 with three studies on the benchmark's own datasets (18;
 17 wherever the foundation-model family participates): a negative
 result, in which meta-feature routing does not generalize under
 leave-one-dataset-out (LODO) validation; a descriptive comparison of
-fixed policies, in which ``foundation model first'' is regret-optimal
-on the primary metric; and a registered analysis of weighted
+fixed policies, in which ``foundation model first'' --- an
+intra-family oracle whose zero median the executable always-TabFM
+policy also attains --- is regret-optimal on the primary metric; and a registered analysis of weighted
 multi-criteria regret, which locates the latency weight at which that
 recommendation flips. The decision flowchart that closes the chapter
 is the synthesis of the three studies, not a policy evaluated in its
@@ -148,9 +149,10 @@ preserves the zero median} --- but by the mean, always-TabFM's 0.080
 sits above even the LODO tree's 0.051, a tree that nonetheless fails
 as a predictor. The 0.080 mean and the 1.000 worst case are why the
 practical recommendation is never ``use the FM blindly'' but ``FM
-first, with the cheap boundary checks''. The choice of \emph{family}
-by the primary metric no longer depends on the dataset; the choice of
-\emph{model} within it still does --- and the result holds for the
+first, with the cheap boundary checks''. On half or more of the
+datasets, the choice of \emph{family} by the primary metric no
+longer depends on the dataset --- the FM family contains the best
+model outright; the choice of \emph{model} within it still does --- and the result holds for the
 primary metric in isolation, which the next section confronts.
 
 \section{Weighted multi-criteria regret (E2)}
@@ -204,7 +206,8 @@ median only for $w \geq 0.9$ on the study's 0.1 grid (0.85 on a fine
 0.05 grid). At $w{=}0.8$ it is already beaten by always-GBDT (0.067)
 and always-DL (0.035), against its own 0.096. The recommendation
 therefore flips with 10--20\% of the weight on latency by the median
---- 20--30\% by the mean, on the 0.1 grid, where always-FM is still
+(rank normalization; the alternative normalizations below move the
+band) --- 20--30\% by the mean, on the 0.1 grid, where always-FM is still
 the best policy at $w{=}0.8$ (0.119 against the GBDT's 0.143 and the
 DL's 0.146) and only loses at $w{=}0.7$ (0.243 against the GBDT's
 0.105). From $w \leq 0.6$ on, always-GBDT has a median regret of
@@ -262,7 +265,7 @@ constraint leaves standing.
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.88\linewidth]{images/decision_flowchart_14_en.pdf}
+\includegraphics[width=0.88\linewidth]{images/decision_flowchart_14_en_short.pdf}
 \caption[Decision flowchart]{Decision flowchart, 14-model study: each
 decision box is a constraint verifiable \emph{a priori}.}
 \label{fig:flowchart-14}
@@ -273,7 +276,8 @@ decision box is a constraint verifiable \emph{a priori}.}
     out in microseconds per row, the FM family is excluded in its
     native form: it costs four to five orders of magnitude more to
     serve, and the recommendation flips with 10--20\% of the weight
-    on latency (by the median).
+    on latency (by the median, under rank normalization;
+    Section~\ref{sec:regret-ponderado}).
   \item \textbf{Architectural limits.} More than 10 classes (TabFM's
     limit; \texttt{helena}, with 100, also exceeds TabPFN's) or more
     rows than the foundation model accepts as context are objective
@@ -318,8 +322,8 @@ flip band depends on the score normalization (10--20\% by ranks,
 20--25\% logarithmic, 30--35\% linear, by the median). Latency ranks
 come from a reference dataset measured on a single machine, with the
 sensitivity to two other datasets measured above. In the
-multi-criteria matrix, the robustness criterion (worst rank across
-folds) discriminates poorly on this roster --- ten of the 14 models
+extended report's multi-criteria matrix, the robustness criterion
+(worst rank across folds) discriminates poorly on this roster --- ten of the 14 models
 tie at the worst possible rank --- and interpretability is not
 measured. Finally, the framework is dated: the difference between the
 @11 and @14 columns of Table~\ref{tab:regret-lodo} is itself the

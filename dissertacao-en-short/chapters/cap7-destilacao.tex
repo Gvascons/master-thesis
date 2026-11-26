@@ -26,7 +26,8 @@ teacher whose context excludes it. The teacher natively outputs a
 predictive distribution, read as 19 quantile curves
 ($\tau \in \{0.05, \ldots, 0.95\}$). TabFM cannot play this role:
 its regression head is point-valued (an architectural negative
-confirmed by the official technical report, \citealp{kong2026});
+confirmed by the official technical report, not yet peer-reviewed,
+\citealp{kong2026});
 Section~\ref{sec:destil-ponto} uses it as a point-teacher anchor.
 
 \textbf{Students and control.} The distilled student is the
@@ -66,21 +67,25 @@ distilled student 1.178: the student recovers half of the gap
 15 from the OpenML-CTR23 suite. Four eligible CTR23 datasets were
 left out of the extension (one with no recorded justification); a
 sensitivity run on five data splits puts the scoreboard with them at
-17/24 ($p=0.032$), and excluding the two that duplicate core
-datasets gives 16/22 ($p=0.026$) --- the
-verdict does not depend on the roster choice.
+17/24 ($p=0.032$), and excluding the two that overlap the study's
+central datasets gives 16/22 ($p=0.026$) --- the verdict does not
+depend on the roster choice.
 
 \section{Registered design}
 \label{sec:destil-desenho}
 
-The design was registered in two stages: the July~15 pre-registration
+The design was registered in two stages: the pre-registration
 fixed H1--H3 on the five central datasets before any execution; the
 confirmatory sign test and the extension's eligibility rule were
-fixed at an interim reading (11/15, $p=0.059$), and the final test
-therefore carries a two-stage sequential correction --- the headline
-$p=0.006$ is reported as $p\approx0.019$ after splitting the
-significance level across the two looks (single-stage threshold
-0.0118). Table~\ref{tab:destil-hipoteses} lists every hypothesis and
+fixed at an interim reading of the picture on 15 datasets (11
+positive retentions, $p=0.059$), and the population was then
+completed to 20. A design with an interim reading inflates the
+type~I error; treated as sequential in two stages, the final
+result's $p$-value goes from 0.006 to approximately 0.019, the
+confirmatory value --- the stagewise-ordered adjustment is adopted
+over the smaller Bonferroni bound (0.0118) because it respects the
+order in which the two readings occurred, a conservative choice (the
+full computation is in the extended report). Table~\ref{tab:destil-hipoteses} lists every hypothesis and
 analysis with its registration status and verdict; negative results
 are reported with the same prominence as positive ones.
 
@@ -126,9 +131,9 @@ E3 (utility) & realized cost lower or equal at $\tau{=}0.90$ &
 registered (before any reading) & confirmed (18/20) \\
 \addlinespace[2pt]
 Re-tuning & inherited hyperparameters are a floor on retention &
-partially (pilot read before; extension to the 20 registered in a
-dated addendum) & refuted (9/20 per dataset; median
-0.19$\to$0.12): sign upheld, magnitude reduced \\
+partially (pilot read before; extension to the 20 registered
+before execution, after the pilot) & refuted (re-tuning raises retention on only 9/20
+datasets; median 0.19$\to$0.12): sign upheld, magnitude reduced \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -138,11 +143,13 @@ dated addendum) & refuted (9/20 per dataset; median
 
 The first result is the negative the pre-registration committed to
 report. Across the 20 datasets, the point student trained on the
-teacher's means beats its true-label control on only \textbf{4}; H1
-is refuted already on the five central datasets (0/5 reach the
-registered 50\% retention). The natural objection --- ``the teacher
+teacher's means beats its true-label control on only \textbf{4};
+H1 --- that the point student retains at least half the teacher's
+RMSE advantage --- is refuted already on the five central datasets
+(0/5 reach the registered 50\% retention). The natural objection --- ``the teacher
 was not strong enough'' --- was tested directly by replicating the
-experiment with TabFM as teacher on the five central datasets: its
+\emph{point} experiment with TabFM as teacher on the five central
+datasets: its
 reference advantage is almost $6\times$ TabPFN's on
 \texttt{california\_\allowbreak housing}$^\dagger$ (0.028 against
 0.005 RMSE), and the negative holds --- with the caveat that this
@@ -184,7 +191,7 @@ it: $E[\theta]=0.70$).
 \caption[Distributional distillation result per dataset]{Result per
 dataset (mean of 3 seeds), sorted by retention. Gain = relative CRPS
 reduction over the control; CI by bootstrap over hold-out rows.
-$^\dagger$binarized-target erratum dataset.}
+$^\dagger$binarized-target dataset (Table~\ref{tab:datasets}).}
 \label{tab:destil-retencao}
 \scriptsize
 \setlength{\tabcolsep}{4pt}
@@ -220,8 +227,10 @@ fifa & 2{,}837 & 2{,}893 & 2{,}795 & $-$1.9 & [$-$3.8; $-$0.1] & $-$1.287 \\
 \centering
 \includegraphics[width=0.92\linewidth]{images/forest_distill_en.pdf}
 \caption[CRPS gain per dataset, with uncertainty]{Relative CRPS gain
-of the distilled student over the control, with bootstrap 95\% CIs
-(log-scaled axis).}
+of the distilled student over the control, per dataset (filled
+points; 95\% CI by paired bootstrap of the test rows: green =
+interval entirely positive, gray = contains zero, red = entirely
+negative; hollow circles = both arms re-tuned).}
 \label{fig:destil-forest}
 \end{figure}
 
@@ -241,7 +250,10 @@ robustness variants.
 \begin{table}[htb]
 \centering
 \caption[Robustness of the distributional distillation verdict]{The
-verdict under every variation: roster, re-tuning, seeds and splits.}
+verdict under every variation: roster, re-tuning, seeds and splits.
+The omitted-datasets scoreboards are the aggregate by the sign of
+the mean retention; the per-split variation (18/24 and 17/22 on a
+single split) is in the extended report.}
 \label{tab:destil-robustez}
 \small
 \setlength{\tabcolsep}{3pt}
@@ -255,27 +267,29 @@ Both arms re-tuned & 16/20 & 0.12 & 0.006 & 0.035 \\
 Re-tuned, without the binarized & 15/19 & 0.10 & 0.010 & 0.048 \\
 Ten student seeds & 16/20 & 0.19 & --- & --- \\
 With the 4 omitted eligible (5 splits) & 17/24 & --- & 0.032 & --- \\
-Without the 2 overlapping the core (5 splits) & 16/22 & --- & 0.026 & --- \\
+Without the 2 overlapping the central datasets (5 splits) & 16/22 & --- & 0.026 & --- \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \textbf{The defeats are diagnosable.} \texttt{wine\_quality} is a
 dataset artifact: 27.6\% of the test set has an exact covariate twin
-in the pool (1{,}179 duplicated rows), and on the deduplicated
+in the pool (the original dataset carries 1{,}179 duplicated rows),
+and on the deduplicated
 dataset ($n=5{,}318$, teacher re-labeled OOF) the defeat disappears.
 \texttt{health\_\allowbreak insurance} is configuration-sensitive,
-not structural: its retention goes from $-0.26$ (inherited) to
+not a scale effect: its retention goes from $-0.26$ (inherited) to
 $+0.65$ (re-tuned). \texttt{fifa} and
 \texttt{diamonds\_\allowbreak real} remain unexplained failures on
 price-scale targets --- and the registered heavy-tail hypothesis
 (that a $\log(1{+}y)$ re-run would rescue them) was refuted:
 \texttt{fifa} goes from $-1.29$ to $-1.69$ in the transformed space,
-and the two positive controls move in opposite directions.
+and the two positive controls --- datasets where the transform was
+expected to help --- move in opposite directions.
 
 \textbf{Coverage: the H2 clause that fails.} The distilled student's
 central-interval coverage lands within $\pm5$~p.p.\ of nominal on
-only 10 of 20 datasets (2/5 core), so H2 is not confirmed as a
+only 10 of 20 datasets (2/5 central), so H2 is not confirmed as a
 conjunction: the CRPS clause holds (16/20), the coverage clause does
 not. Calibration is the dimension to watch, and
 Section~\ref{sec:destil-oof} shows where it comes from.
@@ -322,27 +336,32 @@ latency --- ensemble shrinking is an underrated first lever.
 serving frontier on three datasets: RMSE (top) and CRPS (bottom)
 against latency (log). The teacher's context-compression curve, its
 shrunk-ensemble points, the distilled student and the controls, with
-TabFM (full context) as the accuracy anchor.}
+TabFM (full context, 4{,}905--394{,}301~\us/row) as the accuracy
+anchor.}
 \label{fig:destil-pareto}
 \end{figure}
 
 \section{OOF labeling protects calibration, not accuracy}
 \label{sec:destil-oof}
 
-An ablation relabeling the pool \emph{in-sample} (teacher sees the
-rows it labels) moves CRPS by at most ${\sim}0.003$ on three of four
+An ablation relabeling the pool \emph{in-sample} at identical
+context (teacher sees the rows it labels) moves CRPS by at most ${\sim}0.003$ on three of four
 datasets --- and on \texttt{wine\_quality} the in-sample run
 \emph{improves} CRPS by 0.029, consistent with the
 duplicate-memorization mechanism above. What leakage degrades is
 \emph{calibration}: OOF labeling keeps the student's central-interval
 coverage 0.5--5.1~p.p.\ closer to nominal. OOF labeling is therefore
-the student's calibration safeguard, not an accuracy booster.
+the student's calibration safeguard, not an accuracy booster (the
+evidence is this four-dataset ablation, in the extended report;
+the figure below does not compare OOF with in-sample).
 Figure~\ref{fig:destil-calibration} shows the hold-out reliability
 curves; the reading rule is that the
 \emph{slope} decides (steeper than the diagonal = overcoverage) ---
 there is no shortcut ``above the diagonal = overcovers''. Two
-post-hoc repairs are measured in the extended report: re-sorting the
-19 quantile curves repairs 96\% of the crossing violations, and a
+post-hoc repairs are measured in the extended report: quantile crossings
+affect a median 96\% of hold-out rows, and re-sorting the 19
+predicted quantiles removes them by construction while improving or
+tying CRPS on 20 of 20 datasets in both arms; and a
 split-conformal pilot (5 datasets) brings coverage closer to nominal
 on 5/5 datasets for the distilled arm and 3/5 for the control,
 leaving CRPS essentially unchanged --- distillation and
@@ -369,15 +388,18 @@ Quantile Regression Forest and NGBoost in \emph{default}
 configuration, the distilled student wins in CRPS on \textbf{17 of
 20} datasets (one-sided sign test $p=0.0013$); against the best
 teacher-free alternative chosen \emph{per dataset} by an oracle
-(QRF, NGBoost, quantile MLP, or a Gaussian point-plus-residual
-baseline), 12 of 20 ($p=0.25$) --- distillation's edge over a
-well-chosen native is real but not statistically separable. The
+(control, Gaussian, QRF, or NGBoost --- an oracle selection, overly
+favorable to the alternative), 12 of 20 ($p=0.25$): the student
+beats each cheap alternative taken in isolation, not the best of
+them chosen per dataset. The
 three upsets are diagnosable: on \texttt{wine\_quality} --- flagged
 in advance by the registered eligibility criterion --- the default
 QRF beats even the teacher; on california$^\dagger$ the QRF (CRPS
 0.084) occupies the student's latency band with a better score; on
 \texttt{physiochemical\_\allowbreak protein} the teacher's advantage
-is thin. The QRF serves at 4.1--21.4~\us/row and NGBoost at
+is large (CRPS 1.212 against the control's 1.785) but the student
+retains little of it ($+0.086$), and the QRF (1.528) sits between
+the student (1.736) and the teacher. The QRF serves at 4.1--21.4~\us/row and NGBoost at
 12.2--31.9~\us/row: the classical baselines live in the student's
 latency regime, which is exactly why the decision rule makes
 ``test a strong native first'' a mandatory step.
@@ -385,13 +407,16 @@ latency regime, which is exactly why the decision rule makes
 \section{Decision utility (E3)}
 \label{sec:destil-e3}
 
-Registered before any reading: in a newsvendor-style reserve task at
-$\tau=0.90$, provisioning by the distilled student's quantile yields
+Registered before any reading: in a newsvendor-style reserve task
+at $\tau=0.90$ --- over-provisioning costs the unit price,
+under-provisioning nine times it --- provisioning by the distilled student's quantile yields
 realized cost lower than or equal to the control's on \textbf{18 of
 20} datasets ($p=0.0002$; without the binarized dataset, 17/19,
 $p=0.0004$). The pre-declared exploratory profile shows where the
-gain lives: the cost reduction is ${\sim}1\%$ at
-central quantiles and rises to ${\sim}8\%$ in the tails --- e.g.\ on
+gain lives: the median cost reduction is ${\sim}1\%$ at central
+quantiles and rises to ${\sim}8\%$ in the tails. An illustration
+from the \emph{teacher's} OOF curves --- rows chosen for
+legibility, not a statistic of the student: on
 \texttt{fps\_benchmark}, two configurations with the same point
 prediction (107--109~FPS) carry different minimum-performance
 guarantees at the 0.10 quantile (108 against 103~FPS), a distinction
@@ -422,9 +447,12 @@ on 3 of 20 datasets); where a single teacher member already runs at
 the student's latency, ensemble shrinking may settle the matter.}
 \end{quote}
 
-Two honesty notes bound the rule's status: its advantage gate was
-verified in the \emph{oracle} version (the OOF version, the one a
-practitioner would use, was not evaluated), and the rule was derived
+Two caveats bound the rule's status. The rule's \emph{advantage
+gate} --- the precondition that the teacher's relative advantage
+over the control exceed the cohort median --- was verified in its
+\emph{oracle} version, with the advantage measured on the hold-out
+CRPS; the OOF-measured version, the one a practitioner would
+actually compute, was not evaluated. And the rule was derived
 on the same 20 datasets --- there is no out-of-sample test of the
 rule itself.
 
@@ -433,7 +461,8 @@ rule itself.
 
 The design inherits the benchmark's non-nested protocol; the teacher
 is a single model (TabPFN-2.5) and the scope is regression only,
-with TabFM's spread checked on a single, binarized-target dataset;
+with the spread of TabFM's ensemble predictions checked as a
+distribution on a single, binarized-target dataset;
 students inherit benchmark hyperparameters, and the re-tuning
 analysis shows the inherited setting \emph{overstates} the
 magnitude (0.19$\to$0.12). No multiplicity correction is applied
@@ -443,8 +472,8 @@ $0.0026$; $0.0006$), the supplementary instruments do not, and in a
 family including them the headline's adjusted $p$ would be 0.057.
 The Bayesian 0.96 is the probability that the positive region is the
 most probable component --- the expected posterior mass is 0.70
-positive and ${\sim}0.25$ negative. Two CTR23 datasets duplicate core datasets (verdict unchanged
-without them, 16/22).
+positive and ${\sim}0.25$ negative. Two of the four omitted CTR23 datasets overlap the study's central
+datasets (verdict unchanged without them, 16/22).
 
 \emph{In synthesis --- the answer to RQ3: what the foundation model
 knows about the mean, a tuned GBDT learns by itself; part of what it
@@ -454,4 +483,6 @@ ${\sim}10^2$~\us/row, under verifiable preconditions; and the
 negative results (point and heavy tail refuted, H3 not confirmed as
 registered, partial redundancy with classical baselines) convert
 into a decision rule whose precondition is measured before the
-student is trained.}
+student is trained --- a rule derived on these same 20 datasets;
+and H2 is not confirmed as a conjunction, since the coverage clause
+holds on 10 of 20.}

@@ -32,7 +32,9 @@ is inferential and what is descriptive is fixed here: the tests are
 read on the ten binary-classification datasets, while multiclass
 ($N=3$) and regression ($N=5$) are read descriptively; the
 pre-registered hypotheses with explicit decision criteria are those
-of the distillation (Table~\ref{tab:destil-hipoteses}).
+of the distillation (Table~\ref{tab:destil-hipoteses}) and of the
+instance-level complementarity analysis
+(Section~\ref{sec:cap5-ato5}).
 
 \section{Datasets}
 \label{sec:met-datasets}
@@ -105,10 +107,8 @@ Chapter~\ref{chap:destilacao} carries a sensitivity analysis with it
 excluded, except the check of TabFM as a teacher, measured only on
 it. ($\ddagger$)~\texttt{online\_news} is OnlineNewsPopularity, with
 the logarithm of the number of shares as a legitimate continuous
-target. Identifiers and dimensions were checked against OpenML, and
-a configuration-label error discovered during the study was
-rectified publicly; every number reported here postdates the
-rectification. The distillation
+target. Identifiers and dimensions were checked against OpenML. The
+distillation
 (Chapter~\ref{chap:destilacao}) works on 20 regression datasets: the
 5 above plus 15 from the OpenML-CTR23 suite \citep{fischer2023}.
 
@@ -177,11 +177,12 @@ conditioning the pre-trained model on the training set by in-context
 learning (Section~\ref{sec:fund-fm}). The asymmetry is deliberate ---
 the zero-shot regime is the claim under test --- and their inference
 parameters are fixed policies, not quantities tuned to our data: an
-8-member inference ensemble (TabPFN's default, mirrored in TabFM for
-comparability and cost, although TabFM's library default is 32) and a
-50{,}000-sample context cap per member, enforced by an external
-ensemble of 4 subsamples in TabPFN and internally by the library in
-TabFM. TabPFN is used at version 2.5; TabFM at release v1.0.1,
+inference ensemble of 8 members in total (TabPFN's default, mirrored
+in TabFM for comparability and cost, although TabFM's library
+default is 32), each member conditioned on a context capped at
+50{,}000 rows --- a cap enforced in TabPFN by an external
+subsampling of the pool (4 distinct subsamples) and in TabFM by the
+library itself. TabPFN is used at version 2.5; TabFM at release v1.0.1,
 pinned by commit, with the \texttt{tabfm-1.0.0-pytorch} weights,
 running on the PyTorch backend in bf16 \citep{tabfm2026}. The
 \texttt{helena} dataset (100 classes) exceeds both models' class
@@ -392,7 +393,8 @@ control measurement on one small and one large dataset
 (\texttt{credit\_g} and \texttt{cardiovascular\_\allowbreak
 disease}) checks the stability of the rankings across datasets
 (Section~\ref{sec:met-limitacoes}). All experiments run on a single
-machine --- one 16~GB GPU and 32~GB of RAM --- which is declared
+machine --- an NVIDIA RTX 5080 GPU (16~GB of VRAM) and 32~GB of
+RAM, with the GBDTs serving on the CPU --- which is declared
 because it delimits the regime studied and because cost is only
 interpretable with the machine explicit; reproducibility rests on
 fixed seeds, a SHA-256 hash of each dataset recorded per experiment
@@ -498,7 +500,8 @@ The known weaknesses of the design are declared before any result.
     dependence of the foundation models (TabPFN: 840~\us/row on the
     smallest, 45{,}578 on the largest). The numbers do not transfer
     to single-row serving or other hardware; the orders of
-    magnitude between families do.
+    magnitude between families are expected to transfer, but
+    hardware sensitivity was not measured.
   \item \textbf{Learning curves with fixed hyperparameters.}
     Reusing the full-dataset hyperparameters on all slices isolates
     the size effect at fixed capacity, but may disfavor models whose
@@ -510,6 +513,11 @@ The known weaknesses of the design are declared before any result.
     TabICLv2, which predates the roster's closing, was not
     considered --- a limitation of the roster, not an effect of
     dating.
+  \item \textbf{Bayesian reading criteria fixed after the analysis
+    began.} The ROPE radius and the two decision cutoffs were fixed
+    after the analysis of the results had begun, not pre-registered;
+    both are reported with a sensitivity sweep
+    (Chapter~\ref{chap:benchmark}).
   \item \textbf{Construct validity.} Threshold-free primary metrics
     reduce the risk of optimizing an inadequate proxy, but any scalar
     metric compresses

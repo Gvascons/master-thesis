@@ -106,7 +106,7 @@ the analysis of the results had begun, not pre-registered. Paired
 effect sizes (Cohen's $d$ on per-dataset AUC differences) tell the
 same story: small to medium within the pack (TabPFN $-$ XGBoost
 $d{=}0.28$) and large only against the tail of the grid (TabNet $-$
-TabPFN $d{=}{-}1.54$).
+TabPFN $d{=}{-}1.54$; tables in the extended report).
 
 \textbf{In the 11-model core, the top of binary classification is a
 statistical tie}: the omnibus rejects global equality, the post-hoc
@@ -361,7 +361,8 @@ equivalence (expected posterior mass of equivalence $E[\theta]=0.40$),
 and against CatBoost the modal region is equivalence. Regression is
 descriptive: the order of average RMSE ranks is TabFM (1.2), TabPFN
 (3.0), XGBoost (5.0), RealMLP (5.2), LightGBM (5.6) and CatBoost
-(5.8), and MAE and R\textsuperscript{2} preserve the top two places.
+(5.8), and MAE and R\textsuperscript{2} preserve the top two places
+(tables in the extended report).
 In binary classification, the KS statistic, usual in credit, gives the
 same order at the top as ROC-AUC: TabFM (3.0), TabPFN (4.8), XGBoost
 (5.0).
@@ -384,8 +385,8 @@ accuracy leader is the grid's slowest model at inference,
 43{,}262~\us/row on \texttt{adult} against XGBoost's 0.33 --- about
 five orders of magnitude on the reference dataset, 3.5 to 5.4 orders
 depending on the dataset, and more in larger contexts
-(${\sim}394$~ms/row on \texttt{year\_\allowbreak prediction} with the
-full ensemble, in the frontier measurement of
+(${\sim}394$~ms/row on \texttt{year\_\allowbreak prediction} at
+full context, in the frontier measurement of
 Chapter~\ref{chap:destilacao}). The decision question changes nature: no
 longer ``which family wins?'' but ``does the foundation model's
 latency fit the use case?''. The tie did not make the multi-criteria
@@ -424,7 +425,10 @@ Average ranks say \emph{who} wins, not \emph{where}. This section
 compares the case-by-case hold-out predictions of XGBoost, TabPFN and
 TabFM on the 17 datasets where the three coexist. The design, with
 four directional hypotheses and their falsification criteria, was
-pre-registered before execution. Generating the predictions required
+pre-registered before execution: H-C1, high label agreement; H-C2,
+gains concentrated where XGBoost's margin is low; H-C3,
+disproportionate gain on the minority class; H-C4, advantage
+shrinking with pool size. Generating the predictions required
 refitting the final models under the benchmark's exact protocol
 (same hyperparameters, split and seed), behind a sanity gate requiring
 $|\Delta| \le 10^{-3}$ between the recomputed and the recorded primary

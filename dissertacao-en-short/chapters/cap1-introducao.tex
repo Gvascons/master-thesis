@@ -45,7 +45,8 @@ unexpected direction --- what moved ahead was not tuned deep learning
 but pre-training --- through a lead that is consistent across
 datasets but not confirmed as a statistical separation. The price
 changes the nature of the decision: the accuracy leader is about five
-orders of magnitude slower to serve than XGBoost. The practical
+orders of magnitude slower to serve than XGBoost on the reference
+dataset. The practical
 question becomes a different one: does the leader's latency fit the
 use case and, if it does not, what then?
 
@@ -166,10 +167,13 @@ learned; no new learning mechanism is claimed.
     era}: 14 models $\times$ 18 datasets (250 of the 252 cells; two
     structural exclusions), with a hold-out untouched by selection,
     frequentist and Bayesian inference and three cost axes. In the
-    11-model core, the top of binary classification is a statistical
-    tie: 8 of the 10 non-leaders are practically equivalent to the
-    leader under the lenient criterion, 3 of 10 under the strict 0.95
-    cutoff --- and the leader is already a foundation model, TabPFN
+    11-model core --- the eleven models that entered the study before
+    the 2026 extension --- the top of binary classification is a
+    statistical tie: under a ROPE of $\pm$0.01 AUC, 8 of the 10
+    non-leaders are practically equivalent to the leader under the
+    lenient criterion, 3 of 10 under the strict 0.95 cutoff (the
+    reading holds for ROPE $\geq 0.01$) --- and the leader is
+    already a foundation model, TabPFN
     (mean rank 3.2). With the 2026 generation, TabFM has the best
     mean rank in all three tasks (in multiclass, over the two
     datasets where it operates) and is the best model on 13 of 18
@@ -194,22 +198,28 @@ learned; no new learning mechanism is claimed.
     scores 0.11 against 0.44 for the trivial majority rule (11-model
     study; 0.72 against 0.78 with 14); the fixed
     policies are compared descriptively by regret, with ``foundation
-    model first'' at zero median regret in the 2026 generation, a
-    median the executable always-TabFM policy preserves; experiment E2 locates the
-    inversion of that recommendation at 10--20\% of the weight on
-    latency, by median regret under rank normalization; the
+    model first'' (an intra-family oracle) at zero median regret in
+    the 2026 generation, a median the executable always-TabFM policy
+    also attains; experiment E2 locates the inversion of that
+    recommendation at 10--20\% of the weight on latency, by median
+    regret under rank normalization (20--35\% under the alternative
+    normalizations); the
     flowchart is the synthesis of these studies, not an evaluated
     policy (Chapter~\ref{chap:framework}).
   \item \textbf{Distributional distillation of a tabular foundation
     model}: with TabPFN-2.5 as teacher, in regression, \emph{point}
-    distillation does not transfer (H1 refuted), while distilling the
+    distillation does not transfer (H1, the point student retaining
+    at least half the teacher's advantage: refuted), while distilling the
     quantile curves retains 12--19\% of the teacher's CRPS advantage
     at the median (median CRPS gain 2.8\%, shrinking to 1.4\% with
     both arms re-tuned), positive on 16 of 20 datasets
-    ($p\approx0.019$ under the sequential correction), in a student
-    serving at ${\sim}10^2$~\us/row. The distilled student also beats
-    the best of QRF and NGBoost (both in default
-    configuration) on 17 of 20 datasets (E1), and out-of-fold labeling
+    ($p\approx0.019$ under the sequential correction; H2 is not
+    confirmed as a conjunction, with coverage within $\pm5$~p.p.\ on
+    10 of 20), in a student serving at ${\sim}10^2$~\us/row. The
+    distilled student also beats the best of QRF and NGBoost (both in
+    default configuration) on 17 of 20 datasets (E1; 12 of 20,
+    $p=0.25$, against the best teacher-free alternative chosen per
+    dataset), and out-of-fold labeling
     of the teacher protects the student's calibration, not its
     accuracy. The results condense into a decision rule whose
     precondition is measured before the student is trained; its
@@ -257,6 +267,8 @@ two-stage design. Chapter~\ref{chap:conclusao} confronts each
 question with the evidence and consolidates contributions,
 limitations and future work. Appendix~\ref{app:suplementares}
 gathers the per-dataset tables and a map to the extended technical
-report --- the long version of this study --- which, with the public
-repository, holds the full process record, ablations and secondary
-analyses.
+report --- the long version of this dissertation (181 pages), the
+destination of every ``extended report'' remission in this text ---
+which, with the code, artifacts and registration documents in the
+project repository,\footnote{\url{https://github.com/Gvascons/master-thesis}.}
+holds the full process record, ablations and secondary analyses.

@@ -135,7 +135,6 @@ MLP beats KAN on most machine-learning tasks \citep{kancritical2024};
 the independent tabular evaluation of \citet{poeta2024} favors KAN
 in accuracy, but without GBDT baselines and with ten-epoch training.
 
-\hdrshort{Tabular foundation models}
 \subsection{Tabular foundation models and in-context learning}
 \label{sec:fund-fm}
 
@@ -468,9 +467,11 @@ whether two orderings agree (1 identical, $-1$ reversed).
 The frequentist framework can reject equality but cannot
 \emph{establish} it; non-rejection with small $N$ is not evidence of
 equivalence. \citet{benavoli2017} offer the Bayesian complement. A
-\emph{region of practical equivalence} (ROPE) $[-r, r]$ is fixed a
-priori, by domain judgment, as the band within which a performance
-difference is irrelevant. The $N$ paired differences are treated as
+\emph{region of practical equivalence} (ROPE) $[-r, r]$ is fixed by
+domain judgment as the band within which a performance difference is
+irrelevant (in this study the radius and the decision cutoffs were
+fixed after the analysis began; Chapters~\ref{chap:metodologia}
+and~\ref{chap:benchmark}). The $N$ paired differences are treated as
 a sample from an unknown distribution with a non-parametric prior (a
 Dirichlet process with a pseudo-observation at zero, of weight 0.6
 in this study). The object of interest is
@@ -540,7 +541,6 @@ July and November 2026 (record in the extended technical report),
 and every ``no work does X'' should be read as ``open as far as we
 checked, on those dates''.
 
-\hdrshort{Benchmarks and the GBDT--DL controversy}
 \subsection{Tabular benchmarks and the GBDT vs.\ deep learning controversy}
 \label{sec:rel-benchmarks}
 
@@ -689,8 +689,8 @@ XGBoost, but only for classification and point
 regression.\footnote{TabFMKD,
 \url{https://github.com/gegen07/TabFMKD} (last commit 2026-09-14;
 accessed 2026-11-23).}
-Contemporary with this work (2026-10-01, when our experiments were
-already concluded), \citet{jeong2026} extend distillation on the
+Contemporary with this work, and postdating the conclusion of our
+experiments, \citet{jeong2026} extend distillation on the
 regression side to \textbf{point targets} only: squared-error
 transfer of the teacher's means, evaluated on RMSE, with stronger
 teachers (TabPFN~v3 and TabICLv2) and a different protocol,
@@ -722,7 +722,9 @@ Chapter~\ref{chap:destilacao} tests it as a \emph{distributional}
 teacher, and its scalar regression head \citep{kong2026} makes the
 answer architecturally negative, with its ensemble spread checked
 only on the binarized-target
-\texttt{california\_\allowbreak housing}$^\dagger$. What we do not claim:
+\texttt{california\_\allowbreak housing}$^\dagger$ (the dagger
+marks the binarized target throughout;
+Chapter~\ref{chap:metodologia}). What we do not claim:
 the formulation ``distill a tabular foundation model into a fast
 student'' belongs to Pocket FM, and this is not the first
 distillation of tabular foundation models.

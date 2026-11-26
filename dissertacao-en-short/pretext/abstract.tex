@@ -12,17 +12,16 @@ deep learning, and foundation models) on 18 public OpenML datasets,
 with a hold-out untouched by selection, frequentist and
 Bayesian inference, and measured training, tuning, and latency
 costs.
-Second, a decision framework is assessed: its learned component by
-leaving one dataset out at a
-time (leave-one-dataset-out), its fixed policies descriptively. Third, the distillation of the TabPFN
+Second, a decision framework is assessed: its learned component
+under leave-one-dataset-out validation, its fixed policies
+descriptively. Third, the distillation of the TabPFN
 teacher's quantile curves into gradient-boosting students is studied on
 20 regression datasets, under registered hypotheses. Among the 11
 core models (prior to the 2026 extension), the top of the accuracy ranking, measured in binary classification
-(the other tasks are read descriptively), is a tie: 3 to 8 of the
-10 non-leading models are practically equivalent to the leader (itself
-already a foundation model, TabPFN),
-depending on the Bayesian criterion, within one percentage point
-of AUC. In the 2026 generation, TabFM, with no tuning at all, has the
+(the other tasks are read descriptively), is a tie: under a ROPE of one percentage point of AUC, 3 of the 10
+non-leading models are practically equivalent to the leader (itself
+already a foundation model, TabPFN) by the strict Bayesian
+criterion, and 8 by the lenient one. In the 2026 generation, TabFM, without tuning, has the
 best average rank in all three tasks (in multiclass, over the two
 datasets where it operates) and is the best model on 13 of the
 18 datasets (operating on 17); the lead is consistent across
@@ -33,25 +32,27 @@ magnitude more latency
 on the reference dataset (\texttt{adult}). Kolmogorov--Arnold networks finish in the bottom
 third on all three tasks. For the decision, a router learned from
 meta-features is less accurate than the trivial rule (0.11 vs.\ 0.44);
-the fixed ``foundation model first'' policy has median regret of zero on
-the primary metric, but stops being the recommendation once 10 to 20
+the fixed ``foundation model first'' policy (an intra-family
+oracle) has median regret of zero on the primary metric, but stops
+being the recommendation once 10 to 20
 percent of the decision weight shifts from accuracy to latency (by
-median regret), under the rank normalization adopted.
+median regret), under rank normalization.
 In distillation, the student trained on the teacher's means beats
 the
 control on only 4 of 20 datasets; the one trained on the quantile
 curves retains, at the median, 12 to 19 percent of the
 distributional advantage, depending on how the arms are tuned, with
-positive retention on 16 of 20 (sign test, p of approximately
+positive retention on 16 of 20 (sign test, p approximately
 0.019 after the sequential correction), and beats default-configured classical
-distributional baselines on 17 of 20. In the
+distributional baselines on 17 of 20 (12 of 20 against the best
+alternative chosen per dataset). In the
 regime studied (up to 100 thousand samples, pinned
 versions, a single GPU), model choice should start from the
 application's constraints --- latency, architectural limits,
 auditable explanations --- rather than from a universal winner; and
 distillation recovers a modest median share of the foundation
 model's predictive uncertainty, under preconditions that can be
-checked before the student is trained.
+checked before the student is trained, in an in-sample evaluation.
 
 \vspace{0.4cm}
 \noindent\textbf{Keywords:} tabular data; foundation models;
