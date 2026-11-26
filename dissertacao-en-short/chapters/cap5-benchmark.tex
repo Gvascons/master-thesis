@@ -38,8 +38,10 @@ selected once by internal 3-fold cross-validation on the pool (not
 nested), re-evaluated on 5 external folds with the configuration
 fixed, and that a fixed 20\% hold-out (seed 42) is never observed by
 any selection stage. Tuning budgets are fixed per family (100 Optuna
-trials for GBDTs, 25 for deep models); the residual bias of this
-asymmetry favors DL, which still does not win. The foundation models
+trials for GBDTs, 25 for deep models), set to attenuate the
+wall-clock disparity of a deep-model trial; the measured disparity
+exceeded the ${\sim}4\times$ design premise, so the residual bias
+favors DL, which still does not win. The foundation models
 enter zero-shot, because that entry is the paradigm claim under test,
 with inference settings fixed a priori and never tuned to our data
 (context capped at 50{,}000 rows, 8-member ensemble). Secondary metrics,
@@ -112,9 +114,8 @@ does not separate the leading pack, and the Bayesian instrument
 declares practical equivalence under the criteria above. The maxim
 ``boosting always wins'' \citep{grinsztajn2022}, already nuanced by
 \citet{mcelfresh2023}, finds in this generation no accuracy margin to
-support it. The tie is measured in binary classification, the only
-task with enough datasets for the instruments to operate with useful
-power. In regression, $N{=}5$ puts a combinatorial floor of 0.0625 on
+support it. The tie is measured in binary classification, where $N{=}10$ gives
+the instruments useful power. In regression, $N{=}5$ puts a combinatorial floor of 0.0625 on
 the paired Wilcoxon p-value --- no comparison can cross 5\% there, by
 arithmetic, not by absence of effect --- and in multiclass $N{=}3$
 reduces any analysis to the descriptive plane. No central conclusion
@@ -167,8 +168,8 @@ per dataset, and the folds feed only the variability table of the
 extended report. While the top ties, the bottom does not: TabNet
 \citep{arik2021} is consistently the worst model of the core
 generation, with average ranks of 11.8, 11.7 and 11.4 (binary,
-multiclass, regression) on the full grid --- the only raw-performance
-verdict the benchmark licenses without qualification within the core.
+multiclass, regression) on the full grid --- no other raw-performance
+verdict within the core holds without qualification.
 
 \section{The cost axes}
 \label{sec:cap5-ato2}
@@ -186,7 +187,7 @@ medians, excluding \texttt{adult}) runs from 104~s (LightGBM) to
 646~s (CatBoost) for the GBDTs, from 1{,}117~s (MLP) to 2{,}242~s
 (TabM) for MLP-style deep models, and reaches 9{,}831~s (SAINT) and
 14{,}622~s (STab) for heavy attention --- two orders of magnitude above
-the cheapest GBDTs, without leaving the tie. This axis rarely appears
+the cheapest GBDTs, without being separated by the post-hoc. This axis rarely appears
 in benchmarks, but the practitioner pays it at every model refresh.
 When performance ties, cost decides --- and cost does not tie.
 
@@ -236,7 +237,8 @@ frontier \{LightGBM, XGBoost, TabPFN\} (medians over the 18 datasets,
 \{XGBoost, TabPFN\} on the latency axis; \textbf{all classical deep
 learning is dominated} in both crosses. The composition depends on
 the accuracy summary: on mean AUC instead of rank, the training
-frontier gains CatBoost and the latency one loses TabPFN. On the full grid's training
+frontier gains CatBoost and the latency one swaps TabPFN for
+CatBoost. On the full grid's training
 panel the frontier reduces to TabFM itself, which combines the best
 rank with the lowest median training time. The double reading is the
 chapter's central finding: on the training $\times$ rank plane the
@@ -288,8 +290,8 @@ not give the lead back (\texttt{higgs} and \texttt{jannis} via TabM;
 \texttt{year\_\allowbreak prediction} via RealMLP alone, by ${\sim}0.8\%$
 of RMSE from $n{=}1{,}000$ on, a margin not visible at the figure's
 scale; the other DL curves on that panel reflect the unstandardized
-target declared in Section~\ref{sec:met-limitacoes}; without it, 2 of
-4). On \texttt{adult} the GBDT takes the lead at $n \approx 4{,}000$,
+target declared in Section~\ref{sec:met-limitacoes}; without
+\texttt{year\_\allowbreak prediction}, the count is 2 of 4). On \texttt{adult} the GBDT takes the lead at $n \approx 4{,}000$,
 and on \texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak
 credit} it leads from start to finish: there is no universal
 ``critical $n$'' to recommend. Second, TabPFN has the best average
@@ -364,7 +366,8 @@ In binary classification, the KS statistic, usual in credit, gives the
 same order at the top as ROC-AUC: TabFM (3.0), TabPFN (4.8), XGBoost
 (5.0).
 One of the five regression datasets is the binarized-target
-\texttt{california\_\allowbreak housing}$^\dagger$; without it the
+\texttt{california\_\allowbreak housing}$^\dagger$
+(Table~\ref{tab:datasets}); without it the
 leaders do not change (TabFM 1.25, TabPFN 3.25), and only XGBoost
 ($5.0{\to}5.5$) and RealMLP (4.75) swap positions mid-grid. TabFM is
 evaluated at the pinned v1.0.1 version, whose technical report
@@ -372,7 +375,8 @@ evaluated at the pinned v1.0.1 version, whose technical report
 that version.
 
 The tie of Section~\ref{sec:cap5-ato1} is therefore correctly read as
-a picture of the previous generation. What overtook the GBDTs was not
+a picture of the previous generation. What overtook the GBDTs --- in average
+rank, without statistical separation --- was not
 a model trained on the task but a pre-trained model used without
 tuning --- the association with pre-training describes what is
 measured, not a tested mechanism. The counterweight is direct: the
@@ -404,7 +408,9 @@ undertuned baselines, consistent with the cost-parity critique
 results came without GBDT baselines and with ten-epoch training. As
 far as our dated check reaches, this is the family's first test
 against the full GBDT/DL/foundation-model grid in a multi-criteria
-tabular benchmark. Both KANs sit in the fast latency tier
+tabular benchmark --- the previous independent evaluations
+\citep{poeta2024,kancritical2024} compare KANs only against MLPs and
+do not measure cost axes. Both KANs sit in the fast latency tier
 (2.3--3.1~\us/row): the problem is the performance, not the cost.
 The negative result is reported with the same status as the positive
 ones: a neutral benchmark exists precisely so that results like this
@@ -418,16 +424,21 @@ Average ranks say \emph{who} wins, not \emph{where}. This section
 compares the case-by-case hold-out predictions of XGBoost, TabPFN and
 TabFM on the 17 datasets where the three coexist. The design, with
 four directional hypotheses and their falsification criteria, was
-registered before execution. Generating the predictions required
+pre-registered before execution. Generating the predictions required
 refitting the final models under the benchmark's exact protocol
 (same hyperparameters, split and seed), behind a sanity gate requiring
 $|\Delta| \le 10^{-3}$ between the recomputed and the recorded primary
-metric. All 52 gate cells passed, 42 with $\Delta = 0$ exactly; the
+metric. All 52 gate cells passed (the 51 of the three
+models on the 17 datasets plus XGBoost on \texttt{helena}), 42 with
+$\Delta = 0$ exactly; the
 rest fall between $10^{-7}$ and $6 \times 10^{-6}$, with a single case
 at $4.8 \times 10^{-4}$. The per-pair instrument is McNemar's exact
 test \citep{mcnemar1947} on the discordant instances, with the
 agreement rate and the win balance per quintile of XGBoost's
 \emph{margin} $|\hat p - 0.5|$ (low margin means the tree hesitates).
+H-C2 and H-C3 are judged by a one-sided sign test ($\alpha=0.05$)
+over the 10 binary datasets; H-C4 by a negative Spearman correlation
+between pool size and advantage over the 17 datasets.
 
 \begin{figure}[htb]
 \centering
@@ -442,7 +453,7 @@ of XGBoost's margin on the 10 binary datasets.}
 
 The first result is the scale of the agreement (H-C1,
 confirmed): median label agreement of 0.950 between XGBoost
-and TabPFN and 0.936 between XGBoost and TabFM, above the registered
+and TabPFN and 0.936 between XGBoost and TabFM, above the pre-registered
 criterion of 0.85. The accuracy dispute therefore lives in a
 \emph{fringe} of 0.6 to 15.5\% discordant instances per dataset.
 Inside it, the outcome is asymmetric and strongly heterogeneous
@@ -459,12 +470,13 @@ the published preprocessing, in which \texttt{TotalCharges} enters as
 a categorical and which penalizes TabFM alone: with the column numeric
 its AUC rises from last (0.8233) to the dataset's best (0.8515)
 (Section~\ref{sec:met-limitacoes}); the per-instance analysis was not
-repeated under the corrected arm. TabPFN, in turn, loses the fringe on
+repeated with the column treated as numeric. TabPFN, in turn, loses the fringe on
 \texttt{adult} ($-8.2$, $p = 1.2 \times 10^{-5}$). The foundation
 models' aggregate win is not uniform dominance: it is a sum of large
 local wins and real local defeats.
 
-The three mechanistic hypotheses were \textbf{not confirmed under the
+The three pre-registered mechanistic hypotheses were \textbf{not
+confirmed under the
 dated criteria} (none of the tests rejects in the opposite direction
 either). H-C2 (gains concentrate where XGBoost's margin is low) holds
 on 5/10 binary datasets for TabPFN and 7/10 for TabFM, with
@@ -507,10 +519,11 @@ preprocessing) the choice of metric inverts the verdict: TabFM loses
 the fringe on McNemar and loses in accuracy (0.771 against 0.801), but
 has the highest minority recall (0.663 against 0.570) and the highest
 balanced accuracy (0.737 against 0.727); in balanced accuracy TabFM is
-the best of the three on 9 of the 10 binary datasets. Measured on one dataset,
-with an unoptimized threshold, this ranks no models; it shows that
-where the false negative is the expensive error, accuracy can hide
-the difference that matters. In regression the instance-level reading
+the best of the three on 9 of the 10 binary datasets. None of these
+numbers ranks models --- the threshold was not optimized and the cost
+of each error belongs to the application; they show that where the
+false negative is the expensive error, accuracy can hide the
+difference that matters. In regression the instance-level reading
 is descriptive: the foundation model's absolute error is smaller than
 XGBoost's on more than half the instances in 9 of the 10 pairs, but
 the errors are co-ranked (Spearman 0.33 to 0.95 per dataset; median
@@ -543,7 +556,7 @@ zero-shot, a lead resting on consistency and on effect size ($d=0.68$),
 not on the post-hoc or the Bayesian test; at the instance level, the
 difference comes from a small disputed fringe that TabFM wins on some
 datasets and loses on others (on \texttt{telco}, under the
-preprocessing caveat), and the three registered mechanistic
+preprocessing caveat), and the three pre-registered mechanistic
 explanations were not confirmed. In cost, the tie never existed: the
 accuracy leader serves at 43{,}262~\us/row on \texttt{adult} against
 XGBoost's 0.33. These conclusions hold within four limits, declared
