@@ -57,11 +57,11 @@ of requests are denied, XGBoost reaches 94.3\% hold-out accuracy
 while detecting only 3.2\% of the requests that should have been
 denied. A model that approved everything would have nearly identical
 accuracy and zero utility; under imbalance, accuracy mostly measures
-prevalence, not the model. Figure~\ref{fig:roc-adult} makes the
-distinction concrete on \texttt{adult}: panel (a) is the ROC curve of
-XGBoost on the hold-out; panel (b), precision and recall as functions
-of the threshold --- moving the cutoff slides errors from one type to
-the other.
+prevalence, not the model. Figure~\ref{fig:roc-adult} shows the two
+views on \texttt{adult}: panel (a), the ROC curve of XGBoost on the
+hold-out, which sweeps all thresholds at once; panel (b), precision
+and recall as functions of the threshold --- moving the cutoff slides
+errors from one type to the other.
 
 \begin{figure}[htbp]
 \centering

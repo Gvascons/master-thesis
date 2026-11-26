@@ -125,7 +125,7 @@ difference between gradient boosting and tuned deep learning is small
 and the winner alternates with the dataset \citep{mcelfresh2023}. The
 ``realistic'' $N$ of RQ2 is the regime of a few dozen datasets in
 which any operational benchmark lives. The answers form a chain
-(Table~\ref{tab:intro-qps}): the tie and its shift (RQ1) make the
+(Figure~\ref{fig:intro-qps}): the tie and its shift (RQ1) make the
 multi-criteria decision unavoidable (RQ2), and the decision policy
 runs into a single obstacle, latency, whose reduction is the object
 of RQ3. The falsifiable hypotheses are stated where they are tested;
@@ -133,27 +133,17 @@ E1--E3 denote the three registered complementary experiments
 (E1, classical distributional baselines; E2, weighted multi-criteria
 regret; E3, decision utility).
 
-\begin{table}[htb]
+\begin{figure}[htb]
 \centering
+% Pre-compiled diagram (editable source: tikz-src/tikz-cap1-1-en-short.tex,
+% the short-version variant with chapter numbers 4/5/6; recompile with:
+% tectonic tikz-src/tikz-cap1-1-en-short.tex && mv the PDF to images/).
+\includegraphics{images/tikz-cap1-1-en-short.pdf}
 \caption[Research questions and chapters]{Research questions and the
 chapters that answer them (the shift of the top is a consistent lead,
 not a statistically confirmed separation).}
-\label{tab:intro-qps}
-\small
-\begin{tabular}{>{\raggedright\arraybackslash}p{0.07\linewidth}>{\raggedright\arraybackslash}p{0.38\linewidth}>{\raggedright\arraybackslash}p{0.43\linewidth}}
-\toprule
-RQ & Question, in short & Answered in \\
-\midrule
-RQ1 & Does the tie survive? & Chapter~\ref{chap:benchmark} ---
-multi-criteria benchmark (tie $+$ shift of the top) \\
-RQ2 & Which decision artifact holds up? &
-Chapter~\ref{chap:framework} --- the decision framework, evaluated
-(obstacle: latency) \\
-RQ3 & What does distillation transfer, at what cost? &
-Chapter~\ref{chap:destilacao} --- distributional distillation \\
-\bottomrule
-\end{tabular}
-\end{table}
+\label{fig:intro-qps}
+\end{figure}
 
 \section{Contributions}
 \label{sec:intro-contribuicoes}
