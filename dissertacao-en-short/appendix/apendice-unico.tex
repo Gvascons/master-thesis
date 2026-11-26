@@ -1,16 +1,38 @@
-%% Apendice unico da versao curta — tabelas copiadas de
-%% dissertacao-en/appendix/tabelas-geradas.tex @295dde3 (geradas por
-%% scripts/gen_appendix_tables.py; valores identicos).
+%% Condensed from dissertacao-en/appendix/*.tex @295dde3.
+%% Tables in Sections 1 and 2 are copied verbatim from
+%% dissertacao-en/appendix/tabelas-geradas.tex (only "Source: ..." removed
+%% from the captions); the search-space summary transcribes
+%% dissertacao-en/appendix/apendice-b-espacos-busca.tex without changing
+%% any limit.
 \chapter{Supplementary Tables and Map to the Extended Report}
 \label{app:suplementares}
-\label{app:espacos-busca}
-\label{app:hp-escolhidos}
+
+This appendix gives the primary metric of every model on every
+dataset, the consolidated costs per model and a summary of the
+hyperparameter search spaces. Everything else --- secondary metrics,
+effect sizes, chosen hyperparameters, distillation ablations and the
+process record --- is in the extended technical report and in the
+project repository; Table~\ref{tab:app-mapa} says where.
 
 \section{Primary metric per model and dataset}
-The three tables below give the full primary-metric matrix behind
-Chapter~\ref{chap:benchmark} (AUC-ROC on binary, log-loss on
-multiclass, RMSE on regression; bold = best in row; ``---'' =
-structural exclusion).
+\label{app:tabelas}
+
+Tables~\ref{tab:app-binaria}, \ref{tab:app-multiclasse}
+and~\ref{tab:app-regressao} give the primary metric of each of the 14
+models on each of the 18 datasets, on the test hold-out --- one table
+per task, because the primary metric differs across tasks: ROC-AUC
+for binary classification (higher is better), log-loss for multiclass
+and RMSE for regression (lower is better). The RMSE is on the scale in
+which the source suite ships each target
+(\texttt{california\_\allowbreak housing} has a binarized target, so
+its RMSE is the square root of the Brier score;
+\texttt{online\_news} has a log-shares target), so no RMSE is
+aggregated across datasets. The two cells marked ``---''
+(\texttt{helena} $\times$ TabPFN/TabFM) are the study's structural
+exclusions: 100 classes, above both foundation models' architectural
+limit; the complete state is 250 measured cells out of
+$14 \times 18 = 252$.
+
 
 \begin{landscape}
 
@@ -20,7 +42,7 @@ structural exclusion).
 \centering
 \scriptsize
 \setlength{\tabcolsep}{3pt}
-\caption[Binary classification --- complete results]{Binary classification --- test ROC-AUC (higher is better). Primary metric per model on each dataset; \textbf{bold} = best in row; ``---'' = structurally absent cell. Source: \texttt{results/\allowbreak aggregated/\allowbreak test\_\allowbreak results.\allowbreak csv}.}
+\caption[Binary classification --- complete results]{Binary classification --- test ROC-AUC (higher is better). Primary metric per model on each dataset; \textbf{bold} = best in row; ``---'' = structurally absent cell.}
 \label{tab:app-binaria}
 \begin{tabular}{lcccccccccccccc}
 \toprule
@@ -44,7 +66,7 @@ structural exclusion).
 \centering
 \scriptsize
 \setlength{\tabcolsep}{3pt}
-\caption[Multiclass classification --- complete results]{Multiclass classification --- test log-loss (lower is better). Primary metric per model on each dataset; \textbf{bold} = best in row; ``---'' = structurally absent cell. Source: \texttt{results/\allowbreak aggregated/\allowbreak test\_\allowbreak results.\allowbreak csv}.}
+\caption[Multiclass classification --- complete results]{Multiclass classification --- test log-loss (lower is better). Primary metric per model on each dataset; \textbf{bold} = best in row; ``---'' = structurally absent cell.}
 \label{tab:app-multiclasse}
 \begin{tabular}{lcccccccccccccc}
 \toprule
@@ -61,7 +83,7 @@ structural exclusion).
 \centering
 \scriptsize
 \setlength{\tabcolsep}{3pt}
-\caption[Regression --- complete results]{Regression --- test RMSE (lower is better). Primary metric per model on each dataset; \textbf{bold} = best in row; ``---'' = structurally absent cell. Source: \texttt{results/\allowbreak aggregated/\allowbreak test\_\allowbreak results.\allowbreak csv}.}
+\caption[Regression --- complete results]{Regression --- test RMSE (lower is better). Primary metric per model on each dataset; \textbf{bold} = best in row; ``---'' = structurally absent cell.}
 \label{tab:app-regressao}
 \begin{tabular}{lcccccccccccccc}
 \toprule
@@ -79,13 +101,17 @@ structural exclusion).
 \end{landscape}
 
 \section{Costs per model}
-Median training and tuning time, and amortized batch latency on the
-reference dataset (\texttt{adult}), per model.
+\label{app:custos}
+
+Table~\ref{tab:app-custos} consolidates the three cost axes of
+Chapter~\ref{chap:benchmark}: median training time over the 18
+datasets, median tuning time (the foundation models have no search)
+and inference latency on the reference dataset.
 
 \begin{table}[htbp]
 \centering
 \small
-\caption[Consolidated costs per model]{Median costs per model: training (s, 18 datasets), tuning (s, excl.\ \texttt{adult}), and latency (\textmu s/row, \texttt{adult}). Source: \texttt{test\_\allowbreak results.\allowbreak csv} + \texttt{latency\_\allowbreak adult.\allowbreak csv}.}
+\caption[Consolidated costs per model]{Median costs per model: training (s, 18 datasets), tuning (s, excl.\ \texttt{adult} --- Section~\ref{sec:met-custo}), and latency (\textmu s/row, \texttt{adult}).}
 \label{tab:app-custos}
 \begin{tabular}{lrrr}
 \toprule
@@ -109,33 +135,228 @@ TabFM & 0.18 & --- & 43,262.04 \\
 \end{tabular}
 \end{table}
 
-\section{Hyperparameter search in one view}
-Per-model search: GBDTs with 100 Optuna trials over the standard
-spaces (depth/estimators/learning rate/subsampling/regularization);
-deep models with 25 trials over the per-architecture spaces of their
-original papers (width/depth/dropout/learning rate), with the
-KAN-family grids following their papers' NAS sections; the
-foundation models are not tuned (zero search by construction). The
-sixteen full search-space and winning-configuration tables are in
-the extended report's appendices.
+\section{Search spaces}
+\label{app:espacos-busca}
+
+Table~\ref{tab:app-busca} summarizes, for each of the 12 tuned models,
+the hyperparameters searched and their ranges, as defined in the
+project's configuration file. Optimization uses Optuna with the TPE
+sampler and MedianPruner on the internal 3-fold cross-validation, with
+\textbf{100 trials} for the GBDTs and \textbf{25 trials} for the
+deep-learning models. The two foundation models, TabPFN and TabFM, are
+applied zero-shot and have no search space. Conventions:
+$[a,\ b]$ is a closed interval sampled uniformly --- integer when the
+limits are written without a decimal point, float otherwise; ``(log)''
+marks a float sampled on the log scale; braces list a categorical
+choice. Parameter names are the literal strings of the configuration
+file.
+
+\begin{table}[htbp]
+\centering
+\caption[Search spaces of the 12 tuned models]{Search spaces of the 12
+tuned models (trials per model in parentheses).}
+\label{tab:app-busca}
+\footnotesize
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.16\linewidth}>{\raggedright\arraybackslash}p{0.78\linewidth}}
+\toprule
+Model & Hyperparameter: range / values \\
+\midrule
+XGBoost (100) &
+\texttt{n\_estimators} $[100,\ 2000]$;
+\texttt{max\_depth} $[3,\ 12]$;
+\texttt{learning\_rate} (log) $[0.005,\ 0.3]$;
+\texttt{subsample} $[0.5,\ 1.0]$;
+\texttt{colsample\_\allowbreak bytree} $[0.5,\ 1.0]$;
+\texttt{min\_\allowbreak child\_\allowbreak weight} $[1.0,\ 10.0]$;
+\texttt{reg\_alpha} (log) $[10^{-8},\ 10]$;
+\texttt{reg\_lambda} (log) $[10^{-8},\ 10]$ \\
+\addlinespace[2pt]
+LightGBM (100) &
+\texttt{n\_estimators} $[100,\ 2000]$;
+\texttt{max\_depth} $[3,\ 12]$;
+\texttt{learning\_rate} (log) $[0.005,\ 0.3]$;
+\texttt{num\_leaves} $[16,\ 256]$;
+\texttt{subsample} $[0.5,\ 1.0]$;
+\texttt{colsample\_\allowbreak bytree} $[0.5,\ 1.0]$;
+\texttt{min\_\allowbreak child\_\allowbreak samples} $[5,\ 100]$;
+\texttt{reg\_alpha} (log) $[10^{-8},\ 10]$;
+\texttt{reg\_lambda} (log) $[10^{-8},\ 10]$ \\
+\addlinespace[2pt]
+CatBoost (100) &
+\texttt{iterations} $[100,\ 2000]$;
+\texttt{depth} $[3,\ 10]$;
+\texttt{learning\_rate} (log) $[0.005,\ 0.3]$;
+\texttt{l2\_leaf\_reg} $[1.0,\ 10.0]$;
+\texttt{bagging\_\allowbreak temperature} $[0.0,\ 1.0]$;
+\texttt{random\_\allowbreak strength} $[0.0,\ 10.0]$ \\
+\addlinespace[2pt]
+MLP (25) &
+\texttt{n\_blocks} $[1,\ 4]$;
+\texttt{d\_hidden} $\{64,\ 128,\ 256,\ 512\}$;
+\texttt{dropout} $[0.0,\ 0.5]$;
+\texttt{learning\_rate} (log) $[10^{-5},\ 10^{-3}]$;
+\texttt{weight\_decay} (log) $[10^{-6},\ 10^{-3}]$ \\
+\addlinespace[2pt]
+RealMLP (25) &
+\texttt{learning\_rate} (log) $[0.02,\ 0.3]$;
+\texttt{hidden\_width} $\{64,\ 256,\ 512\}$;
+\texttt{n\_\allowbreak hidden\_\allowbreak layers} $[1,\ 5]$;
+\texttt{dropout} $\{0.0,\ 0.15,\ 0.3\}$;
+\texttt{weight\_decay} $\{0.0,\ 0.02\}$;
+\texttt{activation} \{\texttt{selu}, \texttt{mish}, \texttt{relu}\};
+\texttt{num\_emb\_type} \{\texttt{none}, \texttt{pbld}, \texttt{pl},
+\texttt{plr}\};
+\texttt{add\_\allowbreak front\_\allowbreak scale} \{\texttt{true},
+\texttt{false}\};
+\texttt{ls\_eps} $\{0.0,\ 0.1\}$ \\
+\addlinespace[2pt]
+TabM (25) &
+\texttt{arch\_type} \{\texttt{tabm}, \texttt{tabm-mini}\};
+\texttt{k} $[8,\ 64]$;
+\texttt{d\_block} $\{128,\ 256,\ 512\}$;
+\texttt{n\_blocks} $[1,\ 4]$;
+\texttt{dropout} $[0.0,\ 0.5]$;
+\texttt{learning\_rate} (log) $[10^{-5},\ 10^{-3}]$;
+\texttt{weight\_decay} (log) $[10^{-6},\ 10^{-3}]$ \\
+\addlinespace[2pt]
+FT-Transformer (25) &
+\texttt{n\_blocks} $[1,\ 6]$;
+\texttt{d\_block} $\{64,\ 128,\ 192,\ 256\}$;
+\texttt{attention\_\allowbreak n\_\allowbreak heads} $\{4,\ 8\}$;
+\texttt{attention\_\allowbreak dropout} $[0.0,\ 0.5]$;
+\texttt{ffn\_\allowbreak d\_\allowbreak hidden\_\allowbreak multiplier}
+$[1.333,\ 2.666]$;
+\texttt{ffn\_dropout} $[0.0,\ 0.5]$;
+\texttt{residual\_\allowbreak dropout} $[0.0,\ 0.2]$;
+\texttt{learning\_rate} (log) $[10^{-5},\ 10^{-3}]$;
+\texttt{weight\_decay} (log) $[10^{-6},\ 10^{-3}]$ \\
+\addlinespace[2pt]
+SAINT (25) &
+\texttt{depth} $[1,\ 6]$;
+\texttt{heads} $\{4,\ 8\}$;
+\texttt{dim} $\{32,\ 64,\ 128,\ 256\}$;
+\texttt{attn\_dropout} $[0.0,\ 0.4]$;
+\texttt{ff\_dropout} $[0.0,\ 0.4]$;
+\texttt{learning\_rate} (log) $[10^{-5},\ 10^{-3}]$;
+\texttt{weight\_decay} (log) $[10^{-6},\ 10^{-3}]$ \\
+\addlinespace[2pt]
+STab (25) &
+\texttt{depth} $[2,\ 7]$;
+\texttt{dim} $\{64,\ 96,\ 128,\ 192,\ 256\}$;
+\texttt{heads} $\{4,\ 8\}$;
+\texttt{attn\_dropout} $[0.0,\ 0.3]$;
+\texttt{ff\_dropout} $[0.0,\ 0.3]$;
+\texttt{cases} $\{4,\ 8,\ 16\}$;
+\texttt{learning\_rate} (log) $[10^{-5},\ 10^{-3}]$;
+\texttt{weight\_decay} (log) $[10^{-5},\ 10^{-3}]$ \\
+\addlinespace[2pt]
+TabNet (25) &
+\texttt{n\_d} $\{8,\ 16,\ 32,\ 64\}$;
+\texttt{n\_a} $\{8,\ 16,\ 32,\ 64\}$;
+\texttt{n\_steps} $[3,\ 10]$;
+\texttt{gamma} $[1.0,\ 2.0]$;
+\texttt{lambda\_sparse} (log) $[10^{-6},\ 10^{-3}]$;
+\texttt{learning\_rate} (log) $[0.005,\ 0.05]$;
+\texttt{mask\_type} \{\texttt{sparsemax}, \texttt{entmax}\} \\
+\addlinespace[2pt]
+KAN (25) &
+\texttt{n\_layers} $[1,\ 3]$;
+\texttt{d\_hidden} $\{32,\ 64,\ 128,\ 256\}$;
+\texttt{grid\_size} $\{3,\ 5,\ 10,\ 20\}$;
+\texttt{learning\_rate} (log) $[10^{-4},\ 10^{-2}]$;
+\texttt{weight\_decay} (log) $[10^{-6},\ 10^{-3}]$;
+\texttt{reg\_lambda} (log) $[10^{-8},\ 10^{-2}]$ \\
+\addlinespace[2pt]
+TabKAN (25) &
+\texttt{n\_layers} $[1,\ 4]$;
+\texttt{d\_hidden} $\{16,\ 32,\ 64,\ 128\}$;
+\texttt{degree} $[2,\ 5]$;
+\texttt{learning\_rate} (log) $[10^{-4},\ 10^{-2}]$;
+\texttt{weight\_decay} $\{0,\ 10^{-6},\ 10^{-5},\ 10^{-4}\}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+In KAN, the spline order ($3$), the SiLU base function and the grid
+range $[-2,\ 2]$ after per-layer LayerNorm stay fixed, outside the
+search; in TabKAN, the ChebyKAN variant is fixed.
+
+\section{Chosen hyperparameters}
+\label{app:hp-escolhidos}
+
+The winning configuration of each tuned model on each dataset ---
+exactly what the final refit and the external folds consumed --- is
+tabulated per model and dataset in the extended technical report and
+recorded in the project repository. The search does not converge to a
+single configuration per model: depths and learning rates vary by
+orders of magnitude across datasets.
 
 \section{Map to the extended report}
-\begin{table}[htb]
+\label{app:mapa}
+
+\begin{table}[htbp]
 \centering
-\caption[Where to find the full record]{Material kept in the
-extended technical report (and the project repository).}
+\caption[Map to the extended report]{Where the material left out of
+this text is found in the extended technical report (chapter or
+appendix $\rightarrow$ section).}
+\label{tab:app-mapa}
 \small
-\begin{tabular}{ll}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.36\linewidth}>{\raggedright\arraybackslash}p{0.56\linewidth}}
 \toprule
-Material & Extended report \\
+Item & Location in the extended report \\
 \midrule
-Search spaces and winning configurations & App.~B \\
-Distillation ablations (OOF, log-target, dense grid, sort repair) & App.~C \\
-Conformal and sampling pilots & App.~C \\
-Teacher licenses (clause text) & App.~C \\
-Hypothesis graveyard and process record & App.~C \\
-Secondary metrics, KS, Cohen's $d$, bootstrap CIs & App.~A \\
-Per-instance complementarity artifacts & Ch.~5 record \\
+Secondary metrics per task, as average ranks & Appendix ``Complete
+Result Tables per Dataset'' (secondary-metric tables) \\
+\addlinespace[2pt]
+KS statistic per binary dataset & Appendix ``Complete Result Tables
+per Dataset'' \\
+\addlinespace[2pt]
+Paired Cohen's $d$ (binary and regression) & Appendix ``Complete
+Result Tables per Dataset'' \\
+\addlinespace[2pt]
+Bootstrap CI of the mean AUC; across-fold variability & Appendix
+``Complete Result Tables per Dataset'' \\
+\addlinespace[2pt]
+Operational metrics (minority-class precision and recall, balanced
+accuracy) & Appendix ``Complete Result Tables per Dataset'' \\
+\addlinespace[2pt]
+Chosen hyperparameters per model and dataset & Appendix
+``Hyperparameter Search Spaces'' $\rightarrow$ ``Chosen
+hyperparameters per dataset'' \\
+\addlinespace[2pt]
+Multi-criteria decision matrix; per-weight median regret of E2;
+router robustness & Chapter ``The Decision Framework, Evaluated''
+$\rightarrow$ ``From descriptive to evaluated'', ``Weighted
+multi-criteria regret: when the recommendation flips'', ``The
+negative result: meta-feature routing does not generalize'' \\
+\addlinespace[2pt]
+Distillation ablation: OOF \emph{vs.}\ in-sample labeling & Appendix
+``Supplementary Results and Process Record'' $\rightarrow$
+``Distillation ablations: disaggregated tables'' $\rightarrow$ ``OOF
+\emph{vs.} in-sample labeling'' \\
+\addlinespace[2pt]
+Distillation ablation: sort repair & idem $\rightarrow$ ``Quantile
+sort repair'' \\
+\addlinespace[2pt]
+Conformal pilot & idem $\rightarrow$ ``Post-hoc conformal calibration
+(declared pilot)'' \\
+\addlinespace[2pt]
+Logarithmic target transformation & idem $\rightarrow$ ``Logarithmic
+target transformation'' \\
+\addlinespace[2pt]
+Pool-size sweep (point distillation) & Appendix ``Supplementary
+Results and Process Record'' $\rightarrow$ ``Graveyard of hypotheses
+and deviations'' $\rightarrow$ ``H1 --- point distillation'' \\
+\addlinespace[2pt]
+Graveyard of hypotheses and process record (errata, deviations) &
+Appendix ``Supplementary Results and Process Record'' $\rightarrow$
+``Graveyard of hypotheses and deviations'' \\
+\addlinespace[2pt]
+Design chronology, novelty searches and teacher licenses & Appendix
+``Supplementary Results and Process Record'' $\rightarrow$ ``Design
+record, searches, and licenses of
+Chapter~\ref{chap:destilacao}'' \\
 \bottomrule
 \end{tabular}
 \end{table}

@@ -1,61 +1,109 @@
 %% Condensed from dissertacao-en/chapters/cap6-framework.tex @295dde3.
+%% Every number and qualifier exists in the extended report (same chapter).
 \chapter{The Decision Framework, Evaluated}
 \label{chap:framework}
 
-If accuracy near-ties and costs decide, how should a practitioner
-choose? This chapter submits the decision framework to evaluation by
-three studies on the benchmark's own datasets (18; 17 where the FM
-family participates): a negative result on learned routing, a
-positive result on a fixed-policy reading, and a registered
-weighted-regret analysis that locates when the recommendation
-flips. Full tables and the multi-criteria star matrix are in the
-extended report.
+Given a new tabular problem, which model should be used? This chapter
+answers RQ2 with three studies on the benchmark's own datasets (18;
+17 wherever the foundation-model family participates): a negative
+result, in which meta-feature routing does not generalize under
+leave-one-dataset-out (LODO) validation; a descriptive comparison of
+fixed policies, in which ``foundation model first'' is regret-optimal
+on the primary metric; and a registered analysis of weighted
+multi-criteria regret, which locates the latency weight at which that
+recommendation flips. The decision flowchart that closes the chapter
+is the synthesis of the three studies, not a policy evaluated in its
+own right. The router robustness record, the per-weight tables and
+the analysis artifacts are in the extended technical report and in
+the project repository.
 
-\section{Regret and the LODO protocol}
-\label{sec:cap6-regret}
+\section{From descriptive to evaluated}
+\label{sec:descritivo-validado}
 
-Normalized regret measures, per dataset, how far a choice sits from
-that dataset's best model on the primary metric, scaled to $[0,1]$
-(on \texttt{adult}, picking the best GBDT costs regret 0.10; the
-best deep model, 0.60). Policies are evaluated under
-leave-one-dataset-out (LODO) where learning is involved: the router
-is trained on 17 datasets and judged on the held-out one --- the
-most rigorous protocol available at $N{=}18$.
+What each study tests must be separated from the start. The
+out-of-sample test applies to what is \emph{learned}: a tree trained
+on 17 datasets and evaluated on the eighteenth --- and that is the
+test it fails. The fixed policies learn nothing; their regret
+describes what would have happened on the benchmark's datasets, and
+the choice of the best of them is made on the same datasets on which
+it is measured. The criteria the benchmark measures per model ---
+performance, training cost, tuning cost, inference latency and
+robustness --- are summarized, together with interpretability, in the
+multi-criteria matrix of the extended report; interpretability there
+is a qualitative attribution by family, not a measurement.
 
-\section{A negative and a positive result}
-\label{sec:cap6-router}
+The common yardstick is normalized regret. On a given dataset, let
+$m^{*}$ be the primary metric of the best of the 14 models, $m^{-}$
+that of the worst, and $m_{F}$ that of the best model of the family
+$F$ a policy recommends:
+\begin{equation}
+\mathrm{regret}(F) \;=\;
+\frac{\lvert m^{*} - m_{F} \rvert}{\lvert m^{*} - m^{-} \rvert}.
+\label{eq:regret-normalizado}
+\end{equation}
+It is 0 when the recommended family contains the dataset's best model
+and 1 when the best it offers is the dataset's worst. On
+\texttt{adult}, the best model is a foundation model: recommending
+the FM family has regret 0, GBDT 0.10, deep learning 0.60. The policy
+is credited with the best model of the recommended family --- a
+measure of the family's ceiling --- and, because the normalization
+depends on the dataset's worst model, regret compares policies within
+a study; the 11- and 14-model studies are not comparable line by
+line.
 
-\textbf{Routing by meta-features does not generalize.} A
-decision-tree router over dataset meta-features hits the correct
-model family on 0.11 of held-out datasets against 0.44 for the
-trivial rule ``always predict the most frequent family'' with 11
-models, and 0.72 against 0.78 with 14 (including the 2026
-generation); a registered robustness sweep over eight router
-configurations leaves the conclusion unchanged in every cell. The
-most likely cause is structural: each LODO round trains on 17
-examples, a sample where any partition by meta-features is dominated
-by the noise of individual reversals.
+\hdrshort{The negative result: routing does not generalize}
+\section{The negative result: meta-feature routing does not generalize}
+\label{sec:resultado-negativo}
 
-\textbf{A fixed policy is regret-optimal.}
-Table~\ref{tab:regret-lodo} evaluates fixed policies descriptively
-(only the tree is a learned object under LODO; ``Always-FM'' is the
-within-family oracle --- the family's ceiling). At 14 models the
-oracle has median regret 0.000 and mean 0.021; the \emph{executable}
-always-TabFM also has median 0.000 with mean 0.080, pulled by a
-single worst case of 1.000 on
-\texttt{telco\_\allowbreak customer\_\allowbreak churn} --- the
-dataset whose declared preprocessing idiosyncrasy penalizes the FM
-(Chapter~\ref{chap:metodologia}); always-TabPFN sits at median 0.242.
-By the mean, the LODO tree (0.051) beats every executable fixed
-policy --- the headline ``FM first'' is a median statement about a
-family ceiling, and the chapter says so wherever it is used.
+The meta-learning literature, going back to the algorithm selection
+problem \citep{rice1976}, suggests predicting the winning algorithm
+from a dataset's meta-features --- size, dimensionality, imbalance,
+fraction of categorical attributes. We tested that promise under
+LODO: a depth-2 decision tree is trained on 17 datasets to predict
+the winning family of the excluded one, repeating the procedure for
+each of the 18. In the 11-model study, the tree reaches a
+\textbf{hit rate of 0.11 against 0.44 for the majority-class
+baseline}; in the 14-model study, 0.72 against the baseline's 0.78.
+Nor does the result depend on the router class: a depth-3 tree,
+$k$NN ($k{=}3$, standardized meta-features) and multinomial logistic
+regression, under the same protocol, also fail to beat the baseline
+in either grid --- 0 of 8 cells, including the depth-2 tree replica
+as a sanity check.
+
+The most likely cause is the sample size: each LODO round trains on
+17 examples, in which any partition by meta-features is dominated by
+the noise of individual reversals. The conclusion is therefore
+phrased as ``not learnable under LODO with these router classes at
+this $N$'', not as a general impossibility; independent evidence
+points the same way --- global meta-feature approaches are not robust
+enough to explain or select among models of the tabular
+foundation-model era \citep{herre2026}. The tree is the only
+component of the framework evaluated under LODO; it remains in the
+work as a descriptive illustration of the reversals between
+families, never as a predictor, and the framework contains no
+winning-family predictor.
+
+\section{Fixed policies, descriptively}
+\label{sec:resultado-positivo}
+
+If learned routing does not work, the alternative is \emph{fixed
+policies}: always recommending the same family, whatever the dataset.
+Table~\ref{tab:regret-lodo} gives the regret of the tree under LODO
+and of the three fixed policies in the two studies. The tree and
+always-FM rows aggregate over the 17 datasets in which the FM family
+participates (\texttt{helena}, with 100 classes, exceeds the FMs'
+cap), the always-GBDT and always-DL rows over all 18.
 
 \begin{table}[htb]
 \centering
-\caption[Normalized regret of policies under LODO]{Mean and median
-normalized regret of the LODO tree and fixed policies, at 11 and at
-14 models. ``Always-FM'' is the within-family oracle; the executable
-policies are listed separately.}
+\caption[Regret of the recommendation policies]{Normalized regret of
+the recommendation policies (the tree under LODO; the fixed
+policies, descriptive on the same datasets), in the 11- and 14-model
+studies (\textbf{bold} = best policy in the column). ``Always-FM''
+takes the \emph{best} FM of each dataset --- an intra-family oracle
+--- and the last two rows are the single-model policies a
+practitioner can actually execute (in the @11 study the FM family
+has a single model, and the always-FM row is already executable).}
 \label{tab:regret-lodo}
 \small
 \begin{tabular}{lcccc}
@@ -74,62 +122,217 @@ Always-TabPFN (executable) & 0.115 & 0.018 & 0.261 & 0.242 \\
 \end{tabular}
 \end{table}
 
-\section{When the recommendation flips: weighted regret (E2)}
+Already in the 11-model core, ``use the foundation model by default''
+was the best fixed policy (mean regret 0.115; median 0.018). With the
+2026 generation, its median drops to zero: on half or more of the
+datasets, the FM family contains the best model outright. The
+apparent tie with the tree at the @14 median (both 0.000) is not a
+victory of the router: with 14 models, the tree learns to predict the
+FM family on nearly every dataset, collapsing into the fixed policy
+while keeping a hit rate \emph{below} the majority-class baseline.
+
+The always-FM row, however, picks on each dataset the better of the
+two foundation models by looking at the outcome --- it is an
+\emph{intra-family oracle}, the family's ceiling, not a policy a
+practitioner can execute. The executable single-model policies, by
+the same yardstick: always-TabFM has mean regret 0.080, median 0.000
+and worst case 1.000 on \texttt{telco\_\allowbreak customer\_\allowbreak churn},
+where TabFM is last of 14 on the primary metric --- a last place
+sensitive to preprocessing: with the \texttt{TotalCharges} column
+numeric, TabFM rises to the dataset's best AUC among the 14
+re-evaluated models (Section~\ref{sec:met-limitacoes});
+always-TabPFN has mean 0.261 and median 0.242 @14.
+\textbf{The FM family's ceiling reaches mean regret 0.021 and median
+0.000 on the primary metric, and the executable always-TabFM
+preserves the zero median} --- but by the mean, always-TabFM's 0.080
+sits above even the LODO tree's 0.051, a tree that nonetheless fails
+as a predictor. The 0.080 mean and the 1.000 worst case are why the
+practical recommendation is never ``use the FM blindly'' but ``FM
+first, with the cheap boundary checks''. The choice of \emph{family}
+by the primary metric no longer depends on the dataset; the choice of
+\emph{model} within it still does --- and the result holds for the
+primary metric in isolation, which the next section confronts.
+
+\section{Weighted multi-criteria regret (E2)}
 \label{sec:regret-ponderado}
+
+Chapter~\ref{chap:benchmark} showed that the accuracy leader costs
+about five orders of magnitude more to serve than a GBDT on the
+reference dataset; a
+practitioner whose utility weighs accuracy \emph{and} inference cost
+may legitimately reach another recommendation. Experiment E2 asks
+whether ``FM first'' remains regret-optimal when the decision metric
+weighs accuracy against latency. Its design (weight grid, policies
+and metric) was written before the result was read, but no
+independent timestamp proves that the design preceded the result, so
+the correct label is \emph{registered analysis}, not
+pre-registration.
+
+\subsection{Registered design}
+\label{sec:e2-desenho}
+
+Each model$\times$dataset receives the score
+\begin{equation}
+S \;=\; w \cdot r_{\text{acc}} \;+\; (1-w) \cdot r_{\text{lat}},
+\label{eq:score-ponderado}
+\end{equation}
+where $r_{\text{acc}}$ is the model's rank on the dataset's primary
+metric and $r_{\text{lat}}$ its rank of inference latency, both
+normalized to $[0,1]$ with 0 the best model of the dataset, and
+$w \in \{1.0,\, 0.9,\, \ldots,\, 0.0\}$ sweeps from ``only accuracy
+matters'' to ``only latency matters''. For each $w$, each fixed
+policy's regret is computed as in Eq.~\ref{eq:regret-normalizado},
+on the score $S$. The rank normalization is deliberate --- the
+latencies differ by four to five orders of magnitude, and a cardinal
+scale would be dominated by them --- but it ignores whether the
+slowest model is twice as slow or a hundred thousand times slower, so
+the flip band reported below is a claim about ranks, not about
+microseconds. The registered hypothesis H-W1 states that there exists
+$w^{*} < 1$ from which always-GBDT has a lower median regret than
+always-FM. Latency enters through a \emph{proxy}: the standardized
+measurement on \texttt{adult}, the only one available for the 14
+models under an identical protocol. For foundation models latency
+grows with the context size, so the proxy overstates FM latency on
+small datasets and understates it on large ones.
+
+\subsection{Results: the crossover}
 \label{sec:e2-resultados}
 
-E2 is a \emph{registered analysis} (design fixed before execution;
-not a pre-registration, since the accuracy-only endpoint was already
-known): the per-dataset score becomes
-$S = w \cdot r_{\mathrm{acc}} + (1-w) \cdot r_{\mathrm{lat}}$, with
-rank-normalized accuracy and latency, swept over $w$
-(Figure~\ref{fig:cap6-regret}). ``FM first'' is regret-optimal by
-the median only while $w \geq 0.9$: shifting \textbf{10--20\%} of
-the weight from accuracy to latency hands the lead to the cheaper
-families (by the mean, 20--30\%). The band is a property of the
-design's rank normalization: min--max alternatives move the flip to
-20--25\% (logarithmic) and 30--35\% (linear) --- the direction is
-the same, and the rank normalization flips earliest. The latency
-proxy was also stress-tested: re-running the sweep with latency
-measured on a small and a large dataset leaves the crossover
-identical, with the always-GBDT zone shifting $\pm0.1$ --- in the
-direction opposite to the one anticipated in the record.
+\textbf{Hypothesis H-W1 is confirmed, and the crossover is early}
+(Figure~\ref{fig:lodo-weighted}): always-FM is regret-optimal by the
+median only for $w \geq 0.9$ on the study's 0.1 grid (0.85 on a fine
+0.05 grid). At $w{=}0.8$ it is already beaten by always-GBDT (0.067)
+and always-DL (0.035), against its own 0.096. The recommendation
+therefore flips with 10--20\% of the weight on latency by the median
+--- 20--30\% by the mean, on the 0.1 grid, where always-FM is still
+the best policy at $w{=}0.8$ (0.119 against the GBDT's 0.143 and the
+DL's 0.146) and only loses at $w{=}0.7$ (0.243 against the GBDT's
+0.105). From $w \leq 0.6$ on, always-GBDT has a median regret of
+zero, mirroring at the opposite extreme what the FM family does at
+$w{=}1$; at $w{=}0$, always-FM's median regret reaches 0.846.
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=\linewidth]{images/lodo_weighted_regret.pdf}
-\caption[Weighted regret against the latency weight]{Median (left)
-and mean (right) normalized regret of the policies as the weight
-moves from accuracy ($w{=}1$) to latency.}
-\label{fig:cap6-regret}
+\caption[Weighted multi-criteria regret per policy]{Weighted
+multi-criteria regret of the three fixed policies and the LODO tree
+as a function of the accuracy weight $w$
+(Eq.~\ref{eq:score-ponderado}; experiment E2, 14-model study); left,
+median over the datasets; right, mean. Lower is better; the axis runs
+from $w{=}0$ (latency only) to $w{=}1$ (accuracy only). The always-FM
+curve is the best on the right and the worst on the left, and crosses
+the others between $w{=}0.9$ and $w{=}0.8$ (median panel; between 0.8
+and 0.7 on the mean panel).}
+\label{fig:lodo-weighted}
 \end{figure}
+
+Two dependencies qualify the band. The first, the latency proxy, was
+tested: with the latency rankings measured on \texttt{credit\_g} (a
+thousand samples) and \texttt{cardiovascular\_\allowbreak disease}
+(70{,}000) in place of \texttt{adult}, the crossover is identical
+(always-FM regret-optimal only at $w \geq 0.9$); only the zone in
+which always-GBDT has a zero median shifts by $\pm 0.1$ ($w \leq 0.7$
+with the small dataset's proxy, $w \leq 0.5$ with the large one's).
+The shift tracks the intermediate latency ranks of the deep models,
+not the FMs' context dependence --- the FMs occupy the last latency
+ranks under any proxy --- and it runs in the opposite direction to
+the one anticipated in the record. The second is the normalization.
+In a post-hoc analysis with accuracy and latency in per-dataset
+min--max, and latency in $\log_{10}$ or on a linear scale, the ``FM
+first'' recommendation stops being optimal with 20--25\% and
+30--35\% of the weight on latency by the median, and 25--30\% and
+35--40\% by the mean, against 15--20\% and 20--25\% by ranks on the
+same fine grid. The reading the framework uses holds in all three ---
+a minority latency weight suffices to flip the recommendation --- and
+the rank normalization adopted in the design is the one that flips
+earliest. This is what places latency first in the flowchart: if the
+recommendation held only with 99\% of the weight on accuracy,
+latency would be an edge detail; since a minority weight flips it,
+latency is the pivot of the decision.
 
 \section{The resulting framework: decision by constraints}
 \label{sec:arcabouco-resultante}
 
-The three studies justify a constraint-first flowchart
-(Figure~\ref{fig:cap6-flow}): latency budget, architectural limits
-(>10 classes; context caps), and the requirement of auditable
-explanations --- GBDTs are accepted in regulated practice via
-attribution-based explanations, which is an acceptance criterion,
-not strict intrinsic interpretability --- are checked in order;
-with no active constraint, foundation model first (TabPFN mature;
-TabFM frontier, v1.0.1 caveats). The flowchart is a \emph{synthesis
-of the three studies, not an evaluated policy}: no end-to-end
-accuracy claim is attached to following it.
+What remains informative in the decision are \textbf{constraints
+verifiable \emph{a priori}}, not performance predictions.
+Figure~\ref{fig:flowchart-14} gives the flowchart for the 14-model
+study. Its four questions are asked in order, before training any
+model; if any answer is yes, the indicated family is the one the
+constraint leaves standing.
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.9\linewidth]{images/decision_flowchart_14_en.pdf}
-\caption[The evaluated decision flowchart]{The four-constraint
-flowchart at 14 models. Each box is a constraint verifiable a
-priori.}
-\label{fig:cap6-flow}
+\includegraphics[width=0.88\linewidth]{images/decision_flowchart_14_en.pdf}
+\caption[Decision flowchart]{Decision flowchart, 14-model study: each
+decision box is a constraint verifiable \emph{a priori}.}
+\label{fig:flowchart-14}
 \end{figure}
 
-\emph{Limitations, briefly: regret compares models within this
-benchmark's grid; the flip band depends on the score normalization
-(10--20\% by ranks; up to 35\% under min--max variants); latency
-enters by a single-machine proxy; only the tree was evaluated under
-LODO; and the flowchart inherits every caveat of
-Chapter~\ref{chap:benchmark}'s measurements.}
+\begin{enumerate}
+  \item \textbf{Latency and inference cost.} If predictions must come
+    out in microseconds per row, the FM family is excluded in its
+    native form: it costs four to five orders of magnitude more to
+    serve, and the recommendation flips with 10--20\% of the weight
+    on latency (by the median).
+  \item \textbf{Architectural limits.} More than 10 classes (TabFM's
+    limit; \texttt{helena}, with 100, also exceeds TabPFN's) or more
+    rows than the foundation model accepts as context are objective
+    structural exclusions.
+  \item \textbf{Auditable explanations required.} When the domain's
+    regulation demands auditable, attribution-explainable models, the
+    recommendation is the GBDTs, whose attribution-based explanations
+    are commonly accepted in regulated practice. A boosted ensemble
+    is not intrinsically interpretable; domains demanding strictly
+    intrinsic interpretability should look at shallow trees or
+    additive models, outside this benchmark.
+  \item \textbf{No active constraint.} Foundation model first ---
+    TabPFN \citep{hollmann2025} as the mature option, TabFM
+    \citep{tabfm2026} as the frontier --- compared against a tuned
+    GBDT before adoption, because its measured worst case is last
+    place on one dataset.
+\end{enumerate}
+
+The three studies are consistent with these four questions capturing
+the essential --- though the flowchart itself is a synthesis, not an
+evaluated policy: it gathers what the three studies show plus two
+admissibility constraints (architectural limits and auditable
+explanations) that none of them measures. The obstacle left between
+the practitioner and the regret-optimal default is inference latency.
+Chapter~\ref{chap:destilacao} measures one route toward that budget
+--- distilling the predictive distribution of another teacher,
+TabPFN-2.5, in regression, with the student serving at about a
+hundred microseconds per row --- a positive result delimited to that
+framing, not the general removal of the obstacle.
+
+\section{Limitations and synthesis}
+\label{sec:limitacoes-framework}
+
+With $N{=}18$ datasets, fine statistical validation of the framework
+itself is out of reach; LODO is the honest tool at that scale, which
+is why the negative result is phrased as not learnable, not
+impossible. The original regret is computed on the primary metric;
+E2 weighs only two criteria (accuracy and latency) of a utility that
+may include training cost, robustness and interpretability, and its
+flip band depends on the score normalization (10--20\% by ranks,
+20--25\% logarithmic, 30--35\% linear, by the median). Latency ranks
+come from a reference dataset measured on a single machine, with the
+sensitivity to two other datasets measured above. In the
+multi-criteria matrix, the robustness criterion (worst rank across
+folds) discriminates poorly on this roster --- ten of the 14 models
+tie at the worst possible rank --- and interpretability is not
+measured. Finally, the framework is dated: the difference between the
+@11 and @14 columns of Table~\ref{tab:regret-lodo} is itself the
+demonstration.
+
+\emph{In synthesis --- the answer to RQ2: a benchmark with a
+realistic $N$ of datasets does not support a learned router (hit rate
+0.11 vs.\ 0.44 with 11 models; 0.72 vs.\ 0.78 with 14); among fixed
+policies, described on the same datasets, the FM family's ceiling is
+regret-optimal on the primary metric (median 0.000 @14), a zero
+median the executable always-TabFM preserves, with mean 0.080 and
+worst case 1.000; and when the decision weighs accuracy against
+latency, the registered analysis E2 shows the recommendation flipping
+with 10--20\% of the weight on latency by the median, under rank
+normalization. What the data support is a flowchart of four
+constraints verifiable a priori, latency first --- a synthesis of the
+three studies, not an evaluated policy.}
