@@ -39,9 +39,10 @@ features and hyperparameters are shared. A point student
 (single output, trained on the teacher's means) answers H1, and a
 true-label quantile MLP enters the decision rule's analysis. All
 students inherit the benchmark's tuned hyperparameters (on the
-fifteen CTR23 datasets, outside the benchmark's grid, the student's
-XGBoost is tuned per dataset under the same search recipe); the
-re-tuning analysis below removes that crutch.
+fifteen CTR23 datasets, outside the benchmark's grid, an XGBoost is
+first tuned on the true labels under the benchmark protocol, and
+both arms inherit its hyperparameters); the re-tuning analysis
+below removes that crutch.
 Figure~\ref{fig:destil-pipeline} summarizes the pipeline.
 
 \begin{figure}[htb]
