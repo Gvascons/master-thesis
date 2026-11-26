@@ -1,7 +1,523 @@
-%% STUB — reescrito no bloco B3.
+%% Condensed from dissertacao-en/chapters/cap4-metodologia.tex @295dde3.
+%% Every number and qualifier exists in the extended report.
 \chapter{Experimental Methodology}
 \label{chap:metodologia}
-\label{sec:met-metricas}
-\label{sec:met-limitacoes}
+
+This chapter fixes the protocol behind the whole empirical part: 14
+models from three families evaluated on 18 public OpenML datasets,
+with hyperparameters selected by internal cross-validation and every
+reported number measured on a hold-out split off before any
+selection. It closes, before any result, with the limitations of the
+design itself. The distillation design, registered in its own
+document, is presented in Chapter~\ref{chap:destilacao}; here we
+describe only the shared data, partitions and hyperparameters it
+inherits. Configuration files, per-run artifacts and the full
+infrastructure record are in the extended technical report and the
+project repository.
+
+\section{Design principles}
+\label{sec:met-visao}
+
+A single protocol serves the three research questions: the same
+partitions, seeds and per-family budgets feed the benchmark (RQ1),
+the decision framework (RQ2) and the distillation (RQ3). Four
+principles run through it: strict separation between selection and
+measurement (the prior hold-out is never observed by any selection
+stage); parity of conditions across models, with the unavoidable
+asymmetries --- the foundation models' zero-shot regime, the unequal
+tuning budgets --- declared and measured rather than hidden; the
+dataset, never the fold, as the unit of statistical analysis; and
+traceable provenance of every number to a versioned artifact. What
+is inferential and what is descriptive is fixed here: the tests are
+read on the ten binary-classification datasets, while multiclass
+($N=3$) and regression ($N=5$) are read descriptively; the
+pre-registered hypotheses with explicit decision criteria are those
+of the distillation (Table~\ref{tab:destil-hipoteses}).
+
+\section{Datasets}
+\label{sec:met-datasets}
+
+The benchmark uses \textbf{18 public OpenML datasets}
+\citep{vanschoren2014}: 10 binary classification, 3 multiclass
+classification and 5 regression (Table~\ref{tab:datasets}). They
+were chosen to cover the three task types (regression included, with
+\texttt{kin8nm} and others drawn from curated suites such as
+OpenML-CTR23, \citealp{fischer2023}), a wide range of sample sizes
+(from about a thousand samples in \texttt{credit\_g} to 581{,}000 in
+\texttt{covertype}), because RQ1 asks, among other things, where the
+lead changes hands along the size axis; purely numeric, mixed and one predominantly
+categorical high-cardinality case (\texttt{amazon\_\allowbreak
+employee}), since the treatment of categoricals historically
+separates the families \citep{grinsztajn2022, mcelfresh2023}, and
+realistic imbalance, from 1:1 to about 16:1 in classification.
+Datasets with more than 100{,}000 samples (\texttt{covertype},
+\texttt{year\_\allowbreak prediction},
+\texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit})
+are subsampled to 100{,}000 \emph{before any partitioning}
+(stratified in classification, simple random sampling in
+regression). The cap is adopted in tabular benchmarks for
+computational feasibility \citep{mcelfresh2023} and delimits the
+regime studied to small-to-medium tabular data.
+
+\begin{table}[htb]
+\centering
+\caption[The 18 datasets of the benchmark]{The 18 OpenML datasets of
+the benchmark (approximate sizes before the 100{,}000-sample cap).}
+\label{tab:datasets}
+\small
+\begin{tabular}{llrrrrl}
+\toprule
+Dataset & Task & OpenML ID & $n$ & $d$ & Classes & Attributes \\
+\midrule
+adult                   & binary & 1590  & 49{,}000  & 14 & 2 & mixed \\
+amazon\_employee        & binary & 4135  & 33{,}000  & 9  & 2 & categorical \\
+bank\_marketing         & binary & 1461  & 45{,}000  & 16 & 2 & mixed \\
+cardiovascular\_disease & binary & 45547 & 70{,}000  & 11 & 2 & mixed \\
+credit\_g               & binary & 31    & 1{,}000   & 20 & 2 & mixed \\
+give\_me\_some\_credit  & binary & 46929 & 150{,}000 & 10 & 2 & numeric \\
+higgs                   & binary & 23512 & 98{,}000  & 28 & 2 & numeric \\
+magictelescope          & binary & 44125 & 13{,}000  & 10 & 2 & numeric \\
+phoneme                 & binary & 1489  & 5{,}400   & 5  & 2 & numeric \\
+telco\_customer\_churn  & binary & 42178 & 7{,}000   & 19 & 2 & mixed \\
+\midrule
+covertype               & multiclass & 1596  & 581{,}000 & 54 & 7   & numeric \\
+helena                  & multiclass & 41169 & 65{,}000  & 27 & 100 & numeric \\
+jannis                  & multiclass & 41168 & 84{,}000  & 54 & 4   & numeric \\
+\midrule
+california\_housing$^{\dagger}$ & regression & 44090 & 21{,}000  & 8  & -- & numeric \\
+kin8nm                  & regression & 44980 & 8{,}192   & 8  & -- & numeric \\
+online\_news$^{\ddagger}$ & regression & 44064 & 40{,}000  & 59 & -- & mixed \\
+wine\_quality           & regression & 287   & 6{,}500   & 11 & -- & numeric \\
+year\_prediction        & regression & 44027 & 515{,}000 & 90 & -- & numeric \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two notes on dataset identity. ($\dagger$)~The
+\texttt{california\_\allowbreak housing} of ID 44090 is the
+tabular-benchmark variant of \citet{grinsztajn2022} with the
+\textbf{target binarized at the median}, not the original
+regression. All models compete on the same task --- the RMSE on a
+$\{0,1\}$ target is the square root of the Brier score, and the
+internal ranks remain valid --- but the dataset is degenerate for
+distributional readings: every result involving it in
+Chapter~\ref{chap:destilacao} carries a sensitivity analysis with it
+excluded, except the check of TabFM as a teacher, measured only on
+it. ($\ddagger$)~\texttt{online\_news} is OnlineNewsPopularity, with
+the logarithm of the number of shares as a legitimate continuous
+target. Identifiers and dimensions were checked against OpenML, and
+a configuration-label error discovered during the study was
+rectified publicly; every number reported here postdates the
+rectification. The distillation
+(Chapter~\ref{chap:destilacao}) works on 20 regression datasets: the
+5 above plus 15 from the OpenML-CTR23 suite \citep{fischer2023}.
+
+\section{Models evaluated}
+\label{sec:met-modelos}
+
+The benchmark compares \textbf{14 models in three families}
+(Table~\ref{tab:modelos}): gradient boosting, the consolidated state
+of practice; tabular deep learning, the family with the most recent
+proposals and the greatest internal heterogeneity; and foundation
+models, the paradigmatic bet of the 2025--2026 generation. Five
+models use our own implementations: MLP and FT-Transformer, and
+SAINT, STab and TabKAN, reimplemented from the original papers for
+lack of a mature package; KAN uses the \emph{efficient-kan} backbone
+with documented adaptations (layer normalization before each KAN
+layer and a grid range of $[-2, 2]$, because standardized inputs fall
+mostly outside the original $[-1, 1]$ grid of \citealp{kan2024}). A
+weak result from a reimplemented model therefore confounds method
+and implementation; sanity checks mitigate the risk --- the TabKAN
+reimplementation reaches ROC-AUC 0.914--0.915 on \texttt{adult},
+compatible with the approximately 0.90 reported by its authors
+\citep{tabkan2025} --- and every protocol deviation is declared
+(TabKAN, for instance, is trained with AdamW and mini-batches
+instead of full-batch L-BFGS, for uniformity with the other
+networks).
+
+\begin{table}[htb]
+\centering
+\caption[The 14 models of the benchmark, by family]{The 14 models of
+the benchmark, by family, with the provenance of each implementation
+(``own'' indicates an implementation in the repository; SAINT, STab
+and TabKAN are reimplementations from the original papers; KAN is an
+adaptation of \emph{efficient-kan}).}
 \label{tab:modelos}
-[B3]
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llll}
+\toprule
+Family & Model & Reference & Implementation \\
+\midrule
+\multirow{3}{*}{\shortstack[l]{Gradient\\boosting}}
+ & XGBoost        & \citet{chen2016}          & official \\
+ & LightGBM       & \citet{ke2017}            & official \\
+ & CatBoost       & \citet{prokhorenkova2018} & official \\
+\midrule
+\multirow{9}{*}{\shortstack[l]{Deep\\learning}}
+ & MLP            & \citet{gorishniy2021}     & own (baseline) \\
+ & RealMLP        & \citet{realmlp2024}       & official \\
+ & TabM           & \citet{tabm2025}          & official \\
+ & TabNet         & \citet{arik2021}          & community \\
+ & FT-Transformer & \citet{gorishniy2021}     & own \\
+ & SAINT          & \citet{somepalli2021}     & own (reimpl.) \\
+ & STab           & \citet{stab-ref}          & own (reimpl.) \\
+ & KAN            & \citet{kan2024}           & \emph{efficient-kan} adapt.\ \\
+ & TabKAN         & \citet{tabkan2025}        & own (reimpl.) \\
+\midrule
+\multirow{2}{*}{\shortstack[l]{Foundation\\models}}
+ & TabPFN-2.5     & \citet{hollmann2025, priorlabs2025} & official \\
+ & TabFM          & \citet{tabfm2026}         & official (v1.0.1) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The two foundation models enter \textbf{zero-shot}: ``training'' is
+conditioning the pre-trained model on the training set by in-context
+learning (Section~\ref{sec:fund-fm}). The asymmetry is deliberate ---
+the zero-shot regime is the claim under test --- and their inference
+parameters are fixed policies, not quantities tuned to our data: an
+8-member inference ensemble (TabPFN's default, mirrored in TabFM for
+comparability and cost, although TabFM's library default is 32) and a
+50{,}000-sample context cap per member, enforced by an external
+ensemble of 4 subsamples in TabPFN and internally by the library in
+TabFM. TabPFN is used at version 2.5; TabFM at release v1.0.1,
+pinned by commit, with the \texttt{tabfm-1.0.0-pytorch} weights,
+running on the PyTorch backend in bf16 \citep{tabfm2026}. The
+\texttt{helena} dataset (100 classes) exceeds both models' class
+limit: the two cells TabPFN$\times$\texttt{helena} and
+TabFM$\times$\texttt{helena} are \emph{structural exclusions} ---
+native architectural limits, not execution failures --- and the
+final matrix has 250 of the 252 possible cells.
+
+\section{Experimental protocol}
+\label{sec:met-protocolo}
+
+Figure~\ref{fig:protocolo} summarizes the protocol; the shaded boxes
+mark the data and the stage that no selection stage observes.
+
+\begin{figure}[htb]
+\centering
+\includegraphics{images/tikz-cap4-1-en.pdf}
+\caption[Experimental protocol]{Experimental protocol: prior hold-out
+of 20\%; hyperparameter selection by internal cross-validation (3
+folds) on the pool (the remaining 80\% development split, which
+supplies folds, validation, and labeling), executed once, followed
+by re-evaluation on 5 external folds with the hyperparameters
+fixed.}
+\label{fig:protocolo}
+\end{figure}
+
+\textbf{Untouched hold-out.} 20\% of each dataset is split off
+\emph{before} any cross-validation (stratified in classification;
+seed 42); the remaining 80\%, the development partition or
+\emph{pool}, feeds all selection. Every final result reported comes
+exclusively from the hold-out, so even a subtle leakage error in the
+selection loop cannot contaminate it. The 80:20 split balances two finite resources. On the test side,
+20\% buys metric precision (Section~\ref{sec:met-limitacoes}, item
+3). On the training side, the measured learning curves
+(Figure~\ref{fig:cap5-curvas}) show the primary metric already nearly
+flat near the cut --- from the grid point closest to half the pool
+to the full pool, the median relative improvement is 1.2\% (maximum
+5.1\%, RealMLP on \texttt{jannis}) --- yet still rising for the
+sample-hungry networks, so ceding more training data to the test
+would selectively penalize one family. The split was fixed before
+any result and is identical for the 14 models, which preserves the
+pairing of the rank comparisons.
+
+\textbf{Tuning once, then re-evaluation --- not nested
+cross-validation.} Hyperparameter selection uses \emph{internal}
+cross-validation (3 folds) on the full pool, executed \textbf{once}
+per (model, dataset) pair; the 5 external folds then re-evaluate
+the model with the hyperparameters already fixed, and the networks'
+early stopping uses the fold under evaluation itself. This design is
+\textbf{not} classical nested cross-validation, in which the search
+would repeat inside each external fold. The consequence is declared
+precisely: the external-fold metrics are optimistic as
+generalization estimates, because selection observed those same
+data; they play only internal roles (stability across folds), and
+no reported result comes from them --- all come from the prior
+hold-out. All classification partitions are stratified (hold-out,
+external and internal folds, and the 90/10 train/validation split of
+the final fit); regression uses shuffled K-Fold.
+
+\textbf{Budgets of 100/25 trials, with the disparity measured.} The
+search uses Optuna with the TPE sampler and MedianPruner
+\citep{akiba2019}: \textbf{100 trials for gradient boosting and 25
+for deep learning}, optimizing each task's primary metric. The
+nominal asymmetry was meant to attenuate the cost disparity: the
+design premise estimated a deep-learning trial at about 4$\times$ a
+GBDT trial and assumed that 25 TPE trials would cover most of the
+landscape --- our own premise, not a claim from the literature. The
+realized disparity was larger: the median cost per deep-learning
+trial was more than an order of magnitude above the GBDTs' (about
+57$\times$ by the ratio of medians), and total search time was
+1.1--140$\times$ above, depending on the model pair. The residual
+bias favors deep learning in search time --- and deep learning
+nonetheless does not win; the correct reading is ``asymmetric
+budgets by design, imperfect parity measured and disclosed'', not
+equalization. One exception: on \texttt{adult}, the 7 legacy
+deep-learning models were tuned with 100 trials, kept as a
+validation anchor, so the legacy architectures had there 4$\times$
+the budget of KAN/TabKAN; the dataset is excluded from the
+tuning-cost aggregates, and the bias, in favor of models that still
+do not beat the GBDTs there, touches no conclusion. The foundation
+models are not tuned. Some selected values touch the edge of the
+search space (e.g., \texttt{n\_estimators} close to the 2{,}000
+cap), a declared limitation of the space design; the search spaces
+are summarized in Appendix~\ref{app:espacos-busca}.
+
+\textbf{Early stopping and training regime.} The GBDTs use internal
+early stopping (50 rounds on a validation set). The networks share
+one regime --- at most 200 epochs, early stopping with patience 20
+on the validation loss, batch size 256, AdamW, restoration of the
+best state --- so that training schedule is not confounded with
+architecture; RealMLP alone keeps its package's schedule (256
+epochs), whose tuned defaults are part of the model's claim. Each
+trial receives a seed derived deterministically from the global seed
+42, so any cell of the matrix is reproducible in isolation. Each
+experiment runs in an isolated subprocess; out-of-memory errors
+trigger automatic batch-size reduction and, at the limit, pruning of
+the trial, and the runner is resumable.
+
+\section{Per-family preprocessing}
+\label{sec:met-preproc}
+
+Each family receives the input in the format its literature
+prescribes, and every preprocessor is fitted exclusively on each
+fold's training data. Gradient boosting gets ordinal encoding and
+median imputation, with CatBoost receiving the categorical indices
+for its native treatment \citep{prokhorenkova2018}; the foundation
+models get ordinal encoding, their internal normalization being part
+of the models; the deep models get standardized numeric columns and
+one-hot categoricals with a \textbf{cap of 50 categories per
+column}. The cap avoids dimensional explosion: without it,
+\texttt{amazon\_\allowbreak employee} would reach roughly 11{,}000 to
+14{,}000 columns in the training splits (15{,}626 on the full
+dataset), exceeding GPU memory for the attention models.
+
+\section{Metrics per task type}
+\label{sec:met-metricas}
+
+Each task's primary metric is threshold-free and sensitive to
+probabilistic quality: \textbf{ROC-AUC} in binary classification
+(independent of threshold and prevalence, on a grid with imbalance
+up to 16:1), \textbf{log-loss} in multiclass (a proper scoring rule
+that scales to $K$ classes), and \textbf{RMSE} in regression, on the
+scale in which the suite ships the target. Secondary metrics --- KS,
+log-loss, F1 and accuracy in binary; macro- and weighted F1, OvR-AUC
+and accuracy in multiclass; MAE and $R^2$ in regression --- are
+reported but do not rank models. Accuracy is misleading under
+imbalance --- a trivial classifier ``gets'' 94\% on a 16:1 dataset ---
+and is never used in conclusions; KS connects the benchmark to
+credit and risk practice. Threshold metrics depend on a cutoff that
+belongs to the application, so they rank nothing here; they are
+opened, at the standard 0.5 threshold, only for XGBoost, TabPFN and
+TabFM in the instance-level analysis (Section~\ref{sec:cap5-ato5}). Across datasets, models are compared
+by their \textbf{mean rank} on the primary metric, which assumes
+neither normality nor commensurability of the metrics.
+
+\section{Statistical-inference protocol}
+\label{sec:met-estatistica}
+
+The tests, presented in Section~\ref{sec:fund-estatistica}, follow
+the canonical practice for comparing several models on several
+datasets \citep{demsar2006, benavoli2017}, applied in this order:
+
+\begin{enumerate}
+  \item \textbf{Unit of analysis: the dataset.} The tests operate on
+    $N=10$ (binary), $N=3$ (multiclass) and $N=5$ (regression)
+    datasets, never on folds, which are not independent
+    (pseudo-replication). The binary tie of Chapter~\ref{chap:benchmark}
+    is measured on $N=10$; multiclass and regression are
+    descriptive.
+  \item \textbf{Friedman} on the per-dataset ranks, with the
+    Iman--Davenport correction, less conservative for small $N$;
+    \textbf{Nemenyi} post-hoc with critical-difference diagrams,
+    $\mathrm{CD} = q_\alpha \sqrt{k(k+1)/6N}$ \citep{demsar2006}.
+  \item \textbf{Pairwise Wilcoxon with Holm correction}, for the
+    magnitudes. With $N=5$ regression datasets the smallest
+    attainable two-sided $p$ is 0.0625, so rejection at
+    $\alpha=0.05$ is mathematically impossible: regression
+    conclusions rest on ranks and effect sizes.
+  \item \textbf{Effect size} by paired Cohen's $d$ ($d_z$), and
+    \textbf{confidence intervals} by percentile bootstrap with
+    $B=10{,}000$ resamples and a fixed seed.
+  \item \textbf{Bayesian signed-rank with ROPE}
+    \citep{benavoli2017}, because non-rejection does not license
+    equivalence. The primary ROPE is $\pm0.01$ of AUC --- a declared
+    convention, not a constant of the field --- with sensitivity at
+    $\{0.005, 0.01, 0.02\}$. The reference implementation returns
+    the expected posterior mass $E[\theta]$, not the sample fraction
+    of the \citet{benavoli2017} convention; both are implemented and
+    Chapter~\ref{chap:benchmark} reports both criteria.
+  \item \textbf{Variance decomposition ($\eta^2$)} of the ranks into
+    between-family, within-family and residual shares; the residual
+    bundles the model$\times$dataset interaction and noise, and with
+    unbalanced families the between-family share is mechanically
+    conservative.
+  \item At the instance level, McNemar's exact test on discordant
+    pairs \citep{mcnemar1947} serves the pre-registered
+    complementarity analysis (Section~\ref{sec:cap5-ato5}).
+\end{enumerate}
+
+Two comparison grids coexist. The \textbf{11-model core} gathers
+the three GBDTs, seven deep-learning models (MLP, FT-Transformer,
+SAINT, TabNet, STab, RealMLP, TabM) and one foundation model
+(TabPFN); the \textbf{full 14-model grid} adds TabFM, KAN and
+TabKAN. The cut is defined by the models' order of entry into the
+study, not by publication year: TabPFN, a foundation model, belongs
+to the core. The structural exclusions are declared, never imputed
+--- imputing the worst rank would punish a known architectural
+limit, imputing the mean would fabricate data; analyses that need a
+complete matrix use the fully covered models or exclude
+\texttt{helena}, and the foundation models' multiclass ranks are
+averages over 2 datasets, a fact repeated in every affected table.
+
+\section{Cost axes and complementary experiments}
+\label{sec:met-custo}
+\label{sec:met-reprodutibilidade}
+
+Three cost axes complement predictive performance.
+\textbf{Training} and \textbf{tuning} cost are the wall-clock time
+recorded per experiment, decomposed into hyperparameter search and
+final fit. \textbf{Inference latency} is measured in microseconds
+per row (\us/row) on the full hold-out of \texttt{adult}, the
+reference dataset: median of 5 passes after warm-up, with CUDA
+synchronization and an identical batch protocol for the 14 models,
+each on its natural device (GBDTs on CPU; deep and foundation models
+on GPU). The ratios therefore describe the amortized batch-serving
+regime on a declared machine, not single-row online latency. A
+control measurement on one small and one large dataset
+(\texttt{credit\_g} and \texttt{cardiovascular\_\allowbreak
+disease}) checks the stability of the rankings across datasets
+(Section~\ref{sec:met-limitacoes}). All experiments run on a single
+machine --- one 16~GB GPU and 32~GB of RAM --- which is declared
+because it delimits the regime studied and because cost is only
+interpretable with the machine explicit; reproducibility rests on
+fixed seeds, a SHA-256 hash of each dataset recorded per experiment
+(against silent changes of the data), corrections by rectification
+that preserve history, versioned configurations, pinned
+dependencies and public raw results.
+
+Two complementary experiments feed RQ1. \textbf{Learning curves}
+re-train six representative models on growing slices of the pool
+(from 500 samples to the available total; 3 seeds; 5 datasets),
+with hyperparameters fixed at the full-dataset values and the same
+hold-out, isolating the effect of sample size at fixed capacity.
+\textbf{Instance-level complementarity} compares the per-instance
+hold-out predictions of the foundation models and XGBoost under a
+pre-registered design (Section~\ref{sec:cap5-ato5}). The decision
+framework's leave-one-dataset-out protocol is described in
+Chapter~\ref{chap:framework}, and the distillation design in
+Chapter~\ref{chap:destilacao}.
+
+\section{Limitations of the experimental design}
+\label{sec:met-limitacoes}
+
+The known weaknesses of the design are declared before any result.
+
+\begin{enumerate}
+  \item \textbf{Not nested.} Tuning runs once on the pool and the
+    external folds reuse its data; their metrics are optimistic and
+    feed no reported result (Section~\ref{sec:met-protocolo}).
+  \item \textbf{Unequal tuning budget.} 100 trials for GBDTs, 25 for
+    deep learning (100 for the 7 legacy deep models on
+    \texttt{adult}); the realized cost disparity (about 57$\times$
+    per trial) is measured and disclosed, not equalized.
+  \item \textbf{A single hold-out partition.} On \texttt{adult}
+    (9{,}769 test rows) the bootstrap 95\% CI of the hold-out AUC
+    has a half-width of $\pm$0.005; on \texttt{credit\_g} (200
+    rows), $\pm$0.074 --- which is why no conclusion rests on a
+    single dataset and inference aggregates ranks.
+  \item \textbf{Small $N$, low power.} With 10/3/5 datasets per
+    task, the regression Wilcoxon has a floor of $p \ge 0.0625$ and
+    multiclass is descriptive; the mitigation is to claim no single
+    winner, to support equivalences by the Bayesian analysis, and to
+    name the limit wherever it binds.
+  \item \textbf{\texttt{TotalCharges} on \texttt{telco} treated as
+    categorical.} The column arrives from OpenML as text and becomes
+    a categorical with 6{,}531 levels, so most of the hold-out gets
+    the unknown-category code. The treatment is identical for the 14
+    models, but re-evaluating all of them with the column numeric
+    changes the AUC by $-0.003$ to $+0.006$ for the other models and
+    by $+0.028$ for \textbf{TabFM alone}, which jumps from last
+    (0.8233) to the best AUC on the dataset among the 14
+    re-evaluated (0.8515; second is LightGBM, 0.8505). The dataset is
+    the worst case of the ``always-TabFM'' policy
+    (Chapter~\ref{chap:framework}), a reading that carries this
+    caveat.
+  \item \textbf{Regression target not standardized for the
+    networks.} A dedicated measurement (5 networks $\times$ 5
+    datasets $\times$ 3 seeds, inherited hyperparameters --- a floor
+    on the effect) finds RMSE improvement with standardization in 17
+    of the 25 cells, typically below 2\%, largest for the MLP
+    ($+9.6\%$ on \texttt{kin8nm}, $+5.3\%$ on
+    \texttt{year\_\allowbreak prediction}) and TabM ($+3.4\%$ on
+    \texttt{year\_\allowbreak prediction}), with small degradations
+    elsewhere (maximum $-4.3\%$): the deep regression baselines are
+    slightly underestimated in those cases.
+  \item \textbf{TabPFN's default classifier checkpoint saw real
+    data.} The default v2.5 classifier checkpoint is Real-TabPFN-2.5,
+    fine-tuned on 43 OpenML/Kaggle datasets that include
+    \texttt{higgs} and, by a name match not verified row by row,
+    probably \texttt{cardiovascular\_disease}
+    \citep{priorlabs2025}; the hold-out protects against our
+    leakage, not the pre-training's. Repeating the final fit with
+    the synthetic-only checkpoint on the twelve classification
+    datasets where TabPFN operates (one seed) gives an AUC
+    difference of $-0.0051$ to $+0.0002$, median $-0.0002$; on
+    \texttt{higgs} the synthetic checkpoint is slightly better
+    (0.8113 against 0.8111), with no sign of memorization. The
+    regressor checkpoint is purely synthetic, so the distillation is
+    out of this risk's reach; TabFM declares exclusively synthetic
+    pre-training \citep{kong2026}. A residual, unaddressable risk
+    remains: priors and inference policies tuned across versions by
+    teams that know the public benchmarks. It is mitigated by stating
+    conclusions about foundation models at the regime level
+    (consistency across datasets), not per cell, and by keeping the
+    cost axis, immune to contamination, in every practical
+    conclusion.
+  \item \textbf{Pinned, unreviewed TabFM.} Results refer to release
+    v1.0.1; its technical report \citep{kong2026} has not undergone
+    peer review.
+  \item \textbf{Reimplementations.} SAINT, STab and TabKAN are
+    reimplemented and KAN adapted (Section~\ref{sec:met-modelos});
+    a weak result from them confounds method and implementation.
+  \item \textbf{Double exclusion of \texttt{helena}.} Both
+    foundation models' multiclass ranks average 2 datasets. It is a
+    native limit, not an impossibility --- TabPFN-2.5 offers an
+    official \texttt{ManyClassClassifier} --- and the exclusion keeps
+    the models in their native zero-shot form; removing
+    \texttt{helena} instead would hide the kind of architectural
+    restriction a study of practical decision-making should expose.
+  \item \textbf{Latency measured on one reference dataset and one
+    regime.} The control measurement on \texttt{credit\_g} and
+    \texttt{cardiovascular\_\allowbreak disease} finds stable
+    latency rankings (Spearman 0.78--0.95) and the expected context
+    dependence of the foundation models (TabPFN: 840~\us/row on the
+    smallest, 45{,}578 on the largest). The numbers do not transfer
+    to single-row serving or other hardware; the orders of
+    magnitude between families do.
+  \item \textbf{Learning curves with fixed hyperparameters.}
+    Reusing the full-dataset hyperparameters on all slices isolates
+    the size effect at fixed capacity, but may disfavor models whose
+    optimal configuration varies strongly with $n$.
+  \item \textbf{Delimited external validity.} Eighteen datasets, the
+    100{,}000-sample cap and a single 16~GB GPU delimit the regime
+    to small and medium data; Chapter~\ref{chap:destilacao} extends
+    the regression evaluation to OpenML-CTR23 partly to probe this.
+    TabICLv2, which predates the roster's closing, was not
+    considered --- a limitation of the roster, not an effect of
+    dating.
+  \item \textbf{Construct validity.} Threshold-free primary metrics
+    reduce the risk of optimizing an inadequate proxy, but any scalar
+    metric compresses
+    what an operator weighs; the decision framework keeps cost and
+    performance as separate axes instead of aggregating them
+    prematurely.
+\end{enumerate}
+
+With data, models, partitions, metrics, tests and limitations fixed,
+Chapter~\ref{chap:benchmark} executes the protocol on the matrix's
+250 cells.

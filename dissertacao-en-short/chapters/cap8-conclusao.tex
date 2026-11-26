@@ -1,4 +1,226 @@
-%% STUB — reescrito no bloco B4.
+%% Condensed from dissertacao-en/chapters/cap8-conclusao.tex @295dde3.
+%% Every number and qualifier exists in the extended report.
 \chapter{Conclusion}
 \label{chap:conclusao}
-[B4]
+
+This chapter answers the three research questions, restates the
+contributions, translates the results into advice for the
+practitioner, and consolidates the limitations and future work.
+
+\section{Answers to the research questions}
+\label{sec:conc-finais}
+
+\textbf{RQ1 --- does the accuracy tie survive?} Within the 11-model
+core, yes, in binary classification: under a ROPE of $\pm0.01$ AUC,
+8 of the 10 non-leaders are practically equivalent to the leader,
+TabPFN, on the lenient criterion and 3 of 10 --- the GBDTs --- at the
+strict 0.95 cutoff, a reading that holds for ROPE $\geq 0.01$; the
+model$\times$dataset interaction, inseparable from noise at one
+observation per cell, takes 0.69 of the rank variance against 0.20
+for the family and 0.11 for the model within the family. Multiclass
+and regression are descriptive. With TabFM, a consistent leader
+emerges without the statistical tie being rejected: best mean rank
+in all three tasks (2.7/1.0/1.2; multiclass over the two datasets
+where it operates) and best model on 13 of 18 datasets --- a lead
+supported by consistency and paired effect size, not by the
+underpowered post-hoc nor by the Bayesian instrument, which does not
+separate TabFM from XGBoost and CatBoost. It costs about five orders
+of magnitude in serving latency on the reference dataset
+(43{,}262 against XGBoost's 0.33~\us/row).
+
+\textbf{RQ2 --- which decision artifact holds up?} A
+constraint-based policy, not a learned router. Under
+leave-one-dataset-out, meta-feature routing scores below the trivial
+majority rule (0.11 against 0.44 with 11 models; 0.72 against 0.78
+with 14). ``Foundation model first'' has zero median regret on the
+primary metric in a descriptive evaluation over the 17 datasets on
+which the FMs operate; that row is an intra-family oracle, and the
+executable always-TabFM policy keeps mean 0.080 and median 0.000 ---
+by the mean, above the LODO tree's 0.051, a tree that nonetheless
+fails as a predictor. When the decision weighs latency, the answer
+changes early: in the registered analysis E2 the recommendation flips
+with 10--20\% of the weight on latency, by median regret under rank
+normalization (20--35\% under the alternative min--max
+normalizations, the rank one flipping earliest) --- which is why the
+flowchart's first question is the latency budget.
+
+\textbf{RQ3 --- what does distillation transfer?} Part of the shape
+of the predictive distribution, not the mean --- with TabPFN-2.5 as
+the single teacher and in regression only. The point student beats
+its control on 4 of 20 datasets (H1 refuted). The distributional
+student retains 12--19\% of the teacher's CRPS advantage at the
+median, a median CRPS gain of 2.8\% shrinking to 1.4\% with both arms
+re-tuned, positive on 16 of 20 datasets ($p\approx0.019$ under the
+sequential correction). H2 is not confirmed as a conjunction
+(coverage within $\pm5$~p.p.\ on 10 of 20) and H3 is not confirmed
+as registered; the student serves at 99--169~\us/row in the measured
+frontier cases. The verifiable conditions condense into a decision
+rule --- run the log transformation as a diagnostic, test a strong
+native such as the QRF, distill only the advantage that remains, as
+measured by an OOF labeling --- derived on the same 20 datasets, with
+its gate verified only in the oracle version.
+
+\section{Contributions}
+\label{sec:conc-contribuicoes}
+
+\begin{enumerate}
+  \item A 14-model, 18-dataset benchmark with Bayesian equivalence
+    and cost axes under one protocol, showing the core's tie and the
+    2026 shift of the top as a consistent lead, not a confirmed
+    separation.
+  \item An independent negative result for Kolmogorov--Arnold
+    networks: bottom third on all three tasks under a uniform
+    protocol, though cheap to serve.
+  \item A decision framework whose learned component fails under
+    LODO, whose fixed policies are compared descriptively by regret,
+    and whose latency inversion point is located by E2.
+  \item Distributional distillation of a tabular foundation model:
+    point transfer refuted, a modest distributional transfer
+    measured, and a decision rule for when to distill.
+  \item Reproducible infrastructure and conduct: pinned versions,
+    versioned artifacts, registered hypotheses and public errata.
+\end{enumerate}
+
+\section{Advice to the practitioner}
+\label{sec:conc-conselhos}
+
+Table~\ref{tab:conc-perfis} condenses the results into usage
+profiles. Most conditions are verifiable before any training; the
+rare-class and teacher-advantage rows call for one cheap, declared
+measurement first. Several recommendations are deliberately a model
+worse on the primary metric, a trade defensible because it was
+measured: within the core's pack, giving up the top typically costs
+less than one percentage point of AUC.
+
+\begin{table}[htb]
+\centering
+\caption[Usage profiles: condition, recommendation, evidence]{Usage
+profiles: verifiable condition, recommendation and evidence.}
+\label{tab:conc-perfis}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.22\linewidth}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.46\linewidth}}
+\toprule
+\textbf{Condition} & \textbf{Recommendation} & \textbf{Evidence} \\
+\midrule
+No active constraint; latency-tolerant &
+Foundation model first (TabPFN mature; TabFM frontier) &
+Median regret 0.000 (the family's ceiling, on the 17 datasets where
+the FMs operate; executable always-TabFM: mean 0.080, worst case
+1.0); best on 13 of 18 (Chapter~\ref{chap:framework},
+Section~\ref{sec:cap5-shift}) \\
+\addlinespace[2pt]
+Microseconds-per-row latency required &
+Native GBDT (distillation, at ${\sim}10^2$~\us/row, fits only budgets
+of that order) &
+0.33~\us/row (XGBoost) vs.\ 43{,}262 (TabFM); the FM recommendation
+flips with 10--20\% of latency weight, by median regret
+(Sections~\ref{sec:cap5-custos}, \ref{sec:regret-ponderado}) \\
+\addlinespace[2pt]
+Auditable explanations required (regulation) &
+GBDT &
+Strong latency and attribution-based explanations accepted in
+regulated practice --- a qualitative per-family rating, declared, not
+measured; no distillation (the student learns labels from an opaque
+teacher) \\
+\addlinespace[2pt]
+Architectural limit ($>$10 classes; context overflow) &
+GBDT or recent DL depending on the task &
+\texttt{helena} (100 classes) excludes both FMs; descriptive best
+non-FM in multiclass: STab/TabM 3.67 vs.\ XGBoost 6.0, $N{=}3$ \\
+\addlinespace[2pt]
+Rare class with expensive false negatives &
+FM at a fixed threshold, \emph{or} re-optimize the GBDT's threshold;
+compare recall at equalized precision &
+Measured on one dataset (\texttt{amazon\_employee}): accuracies
+0.943--0.949 indistinguishable; minority recall 0.032 $\to$ 0.298 at
+threshold 0.5, precision 0.706 $\to$ 0.621; the dataset's best AUC
+is a GBDT's (Section~\ref{sec:cap5-ato5}) \\
+\addlinespace[2pt]
+Regression with tail decisions and a ${\sim}10^2$~\us/row budget &
+Distilled student, after the QRF check &
+Positive retention on 16/20 ($p\approx0.019$ sequential), median
+CRPS gain 1.4--2.8\%; at $\tau{=}0.90$, 18/20 with ${\sim}8\%$ gain
+in the tails; nothing on the point axis
+(Sections~\ref{sec:destil-dist}, \ref{sec:destil-e3}) \\
+\addlinespace[2pt]
+Small teacher advantage (gate verified in its oracle version), a
+single-member teacher at the student's tier, or a strong native &
+Do \emph{not} distill: QRF first, ensemble shrinking (the log runs
+before, as a diagnostic) &
+E1: the default QRF beats the distilled student on 3 of 20 (on
+\texttt{wine\_quality}, even the teacher); \texttt{kin8nm}: one
+member at the student's latency --- a latency case
+(Sections~\ref{sec:destil-e1}, \ref{sec:destil-fronteira}) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Limitations and threats to validity}
+\label{sec:conc-limitacoes}
+
+\textbf{Internal.} The selection design is not nested: tuning runs
+once per pair on the full pool, so the external-fold metrics are
+optimistic and only the untouched hold-out is reported. Tuning
+budgets are unequal by design (100 trials for GBDTs, 25 for deep
+learning), with the realized cost disparity measured and disclosed.
+On \texttt{telco\_customer\_churn} a preprocessing idiosyncrasy
+penalizes only TabFM (AUC 0.8233, against 0.8515 with
+\texttt{TotalCharges} numeric), and regression networks train on an
+unstandardized target, which standardization improves in 17 of 25
+cells. TabPFN's default classifier checkpoint is fine-tuned on real
+datasets that include \texttt{higgs}; the measured sensitivity is
+$-0.0051$ to $+0.0002$ AUC. The Bayesian equivalence criteria were
+fixed after the analysis began and are reported with a sensitivity
+sweep.
+
+\textbf{External.} Eighteen OpenML datasets (twenty regression
+datasets in the distillation), up to 100{,}000 samples, a single
+16~GB GPU and pinned versions (TabFM v1.0.1, whose technical report
+was not peer reviewed; TabPFN v2.5) delimit the regime; with 10/3/5
+datasets per task, power is low by construction. TabICLv2, which
+predates the roster's closing, was not considered --- a limitation of
+the roster --- and TabPFN-3 and 3.5, later releases, were not
+evaluated.
+
+\textbf{Construct.} E2's 10--20\% band is a property of its rank
+normalization; min--max alternatives move it to 20--35\%, in the
+same direction. Latency enters through one regime measured on a
+reference dataset (\texttt{adult}); rankings are stable across
+datasets (Spearman 0.78--0.95) and E2's crossover is identical under
+the three proxies, but hardware sensitivity is unmeasured.
+
+\textbf{Distillation.} One teacher (TabPFN-2.5, whose default
+regressor checkpoint is purely synthetic), regression only, with
+TabFM's spread checked on a single binarized-target dataset. Two of
+the four omitted CTR23 datasets overlap the study's core (17/24 with
+all four, $p=0.032$; 16/22 without the two, $p=0.026$). The decision rule has no out-of-sample test.
+Both teachers carry non-commercial licenses.
+
+\textbf{Multiplicity.} No correction is applied across experiments;
+under Holm over the three main sign tests all stand (adjusted
+$p \approx 0.019$; $0.0026$; $0.0006$), but in a family including the
+supplementary instruments the headline's adjusted $p$ would be
+0.057.
+
+\section{Future work}
+\label{sec:conc-futuros}
+
+\begin{itemize}
+  \item Repeat the distributional protocol with newer teachers
+    (TabPFN-3 and 3.5 \citep{tabpfn3-2026,tabpfn35tr2026}) to test
+    whether retention grows with teacher strength.
+  \item Apply conformal calibration on the student beyond the
+    five-dataset pilot, against the teacher-side conformal route
+    \citep{park2026}.
+  \item Add attention quantization \citep{kubler2026} as a fourth
+    arm of the serving frontier, on the same hold-outs.
+  \item Extend E2 to more criteria and to utility functions elicited
+    from practitioners.
+  \item Keep the benchmark living as the next generation arrives, in
+    the style of TabArena \citep{tabarena2025}.
+\end{itemize}
+
+The public protocol, with versioned seeds, artifacts and errata,
+exists so that re-evaluating these conclusions when models, data or
+hardware change costs little to whoever comes next.
