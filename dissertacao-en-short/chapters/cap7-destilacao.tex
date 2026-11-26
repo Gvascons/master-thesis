@@ -3,8 +3,9 @@
 \chapter{Distributional Distillation}
 \label{chap:destilacao}
 
-The benchmark's accuracy leader costs four to five orders of
-magnitude more latency per row than a gradient-boosted tree. This
+The benchmark's accuracy leader costs about five orders of
+magnitude more latency per row than a gradient-boosted tree on the
+reference dataset. This
 chapter asks what of a tabular foundation model's advantage can be
 carried into a student that serves fast --- and answers RQ3 with a
 selective result: \emph{point} distillation does not transfer,
@@ -31,8 +32,9 @@ Section~\ref{sec:destil-ponto} uses it as a point-teacher anchor.
 \textbf{Students and control.} The distilled student is the
 benchmark's XGBoost with a 19-output head trained by squared error
 on the teacher's quantile curves; the \emph{control} is the same
-architecture trained by pinball loss on the true labels --- so the
-teacher is the only difference between the arms. A point student
+architecture trained by pinball loss on the true labels --- the arms
+differ in the training target and, with it, the loss; architecture,
+features and hyperparameters are shared. A point student
 (single output, trained on the teacher's means) answers H1, and a
 true-label quantile MLP enters the decision rule's analysis. All
 students inherit the benchmark's tuned hyperparameters; the
@@ -45,8 +47,7 @@ Figure~\ref{fig:destil-pipeline} summarizes the pipeline.
 \caption[Distributional distillation pipeline]{Distributional
 distillation pipeline: the teacher labels the pool OOF with 19
 quantile curves; the distilled student regresses on the curves; the
-control learns the same quantiles from the true labels. Source: the
-author.}
+control learns the same quantiles from the true labels.}
 \label{fig:destil-pipeline}
 \end{figure}
 
@@ -65,8 +66,8 @@ distilled student 1.178: the student recovers half of the gap
 15 from the OpenML-CTR23 suite. Four eligible CTR23 datasets were
 left out of the extension (one with no recorded justification); a
 sensitivity run on five data splits puts the scoreboard with them at
-17/24 ($p=0.032$), and excluding the two datasets that overlap the
-teacher's pre-training corpus gives 16/22 ($p=0.026$) --- the
+17/24 ($p=0.032$), and excluding the two that duplicate core
+datasets gives 16/22 ($p=0.026$) --- the
 verdict does not depend on the roster choice.
 
 \section{Registered design}
@@ -213,8 +214,7 @@ fifa & 2{,}837 & 2{,}893 & 2{,}795 & $-$1.9 & [$-$3.8; $-$0.1] & $-$1.287 \\
 \includegraphics[width=0.92\linewidth]{images/forest_distill_en.pdf}
 \caption[CRPS gain per dataset, with uncertainty]{Relative CRPS gain
 of the distilled student over the control, with bootstrap 95\% CIs
-(log-scaled axis). Source:
-\texttt{results/distillation}.}
+(log-scaled axis).}
 \label{fig:destil-forest}
 \end{figure}
 
@@ -315,8 +315,7 @@ latency --- ensemble shrinking is an underrated first lever.
 serving frontier on three datasets: RMSE (top) and CRPS (bottom)
 against latency (log). The teacher's context-compression curve, its
 shrunk-ensemble points, the distilled student and the controls, with
-TabFM (full context) as the accuracy anchor. Source:
-\texttt{results/distillation/pareto.csv}.}
+TabFM (full context) as the accuracy anchor.}
 \label{fig:destil-pareto}
 \end{figure}
 
@@ -332,14 +331,15 @@ duplicate-memorization mechanism above. What leakage degrades is
 coverage 0.5--5.1~p.p.\ closer to nominal. OOF labeling is therefore
 the student's calibration safeguard, not an accuracy booster.
 Figure~\ref{fig:destil-calibration} shows the hold-out reliability
-curves; the reading rule, corrected mid-study, is that the
+curves; the reading rule is that the
 \emph{slope} decides (steeper than the diagonal = overcoverage) ---
 there is no shortcut ``above the diagonal = overcovers''. Two
 post-hoc repairs are measured in the extended report: re-sorting the
-19 quantile curves repairs 96\% of the crossing violations, and
-split-conformal calibration fixes both arms' coverage while leaving
-CRPS essentially intact --- distillation and conformalization are
-complementary.
+19 quantile curves repairs 96\% of the crossing violations, and a
+split-conformal pilot (5 datasets) brings coverage closer to nominal
+on 5/5 datasets for the distilled arm and 3/5 for the control,
+leaving CRPS essentially unchanged --- distillation and
+conformalization are complementary.
 
 \begin{figure}[htb]
 \centering
@@ -349,7 +349,7 @@ hold-out: empirical coverage $P(y \le q_\tau)$ against nominal
 $\tau$, for teacher, distilled student and control, on the
 binarized-target california$^\dagger$ (a Bernoulli calibration) and
 on \texttt{cpu\_activity}, where the three systems are well
-calibrated. Source: \texttt{results/distillation}.}
+calibrated.}
 \label{fig:destil-calibration}
 \end{figure}
 
@@ -381,13 +381,15 @@ latency regime, which is exactly why the decision rule makes
 Registered before any reading: in a newsvendor-style reserve task at
 $\tau=0.90$, provisioning by the distilled student's quantile yields
 realized cost lower than or equal to the control's on \textbf{18 of
-20} datasets ($p=0.0002$; by the conservative reading, 17/19
-$p=0.0004$). The pre-declared exploratory profile explains why the
-gain matters where it matters: the cost reduction is ${\sim}1\%$ at
+20} datasets ($p=0.0002$; without the binarized dataset, 17/19,
+$p=0.0004$). The pre-declared exploratory profile shows where the
+gain lives: the cost reduction is ${\sim}1\%$ at
 central quantiles and rises to ${\sim}8\%$ in the tails --- e.g.\ on
-\texttt{fps\_benchmark} the distilled reserve costs 103 against the
-control's 108 per decision. Distributional quality translates into
-money exactly where point predictions fail.
+\texttt{fps\_benchmark}, two configurations with the same point
+prediction (107--109~FPS) carry different minimum-performance
+guarantees at the 0.10 quantile (108 against 103~FPS), a distinction
+the mean cannot see. Distributional quality translates into
+decisions exactly where point predictions fail.
 
 \section{When to distill: the decision rule}
 \label{sec:destil-regra}
@@ -434,9 +436,8 @@ $0.0026$; $0.0006$), the supplementary instruments do not, and in a
 family including them the headline's adjusted $p$ would be 0.057.
 The Bayesian 0.96 is the probability that the positive region is the
 most probable component --- the expected posterior mass is 0.70
-positive and ${\sim}0.25$ negative. Two CTR23 datasets overlap the
-teacher's pre-training corpus (verdict unchanged without them,
-16/22).
+positive and ${\sim}0.25$ negative. Two CTR23 datasets duplicate core datasets (verdict unchanged
+without them, 16/22).
 
 \emph{In synthesis --- the answer to RQ3: what the foundation model
 knows about the mean, a tuned GBDT learns by itself; part of what it
