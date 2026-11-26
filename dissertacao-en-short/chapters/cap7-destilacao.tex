@@ -152,7 +152,14 @@ on \texttt{wine\_quality} ($\Delta=+0.026$ at $n{=}800$), gone from
 $n{=}2{,}000$ on, and on california$^\dagger$ only a marginal
 $+0.005$ residue at 2{,}000. At realistic pool sizes, what the
 teacher knows about the \emph{mean}, a tuned GBDT learns on its own
-from the raw labels.
+from the raw labels. That sweep is also the key to the
+reconciliation with the point-distillation gains \citet{jeong2026}
+report with newer teachers (TabPFN~v3 and TabICLv2), under a
+different protocol and a recipe that differs on axes we did not
+replicate (full-context labeling, synthetic-query expansion, a
+student trained only on teacher predictions): the residual low-data
+gain offers a moderation \emph{hypothesis} for the contrast ---
+proposed, not demonstrated.
 
 \section{Distributional distillation transfers part of the advantage}
 \label{sec:destil-dist}

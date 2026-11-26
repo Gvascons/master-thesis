@@ -88,7 +88,7 @@ XGBoost \citep{chen2016} (regularized objective), LightGBM
 \citep{ke2017} (leaf-wise growth with histograms) and CatBoost
 \citep{prokhorenkova2018} (ordered target statistics and ordered
 boosting). Light tuning of a GBDT matters, on average, more than the
-choice between families \citep{mcelfresh2023}; in this dissertation the
+choice between neural networks and GBDTs \citep{mcelfresh2023}; in this dissertation the
 GBDTs play the role of the null hypothesis that every new proposal
 must be measured against.
 
@@ -100,8 +100,10 @@ $\mathbf{h}^{(l)} = \phi(\mathbf{W}^{(l)}\mathbf{h}^{(l-1)} +
 \mathbf{b}^{(l)})$ trained by backpropagation \citep{rumelhart1986};
 on tables the question was never expressiveness but whether training
 finds, with finite heterogeneous data, solutions as good as the
-GBDTs'. Categorical attributes enter through learned embeddings,
-since one-hot encoding explodes with cardinality. Two recent
+GBDTs'. One-hot encoding of categorical attributes explodes with
+cardinality (the benchmark caps it at 50 categories per column,
+Chapter~\ref{chap:metodologia}); the standard alternative is learned
+embeddings, which the architectures below adopt in some form. Two recent
 proposals show that much of the MLP's historical disadvantage was one
 of recipe: \textbf{RealMLP} \citep{realmlp2024} competes with tuned
 GBDTs through numeric embeddings, scheduling, regularization and
@@ -138,7 +140,7 @@ in accuracy, but without GBDT baselines and with ten-epoch training.
 \label{sec:fund-fm}
 
 Every model above is trained anew for each dataset; tabular
-foundation models abandon that premise. An \emph{in-context learning}
+foundation models (TFMs) abandon that premise. An \emph{in-context learning}
 (ICL) model is a pre-trained Transformer that receives, in a single
 input, the entire training set --- pairs $(\mathbf{x}_i, y_i)$ ---
 followed by the query row, and produces the prediction in one
@@ -233,9 +235,9 @@ produces nearly deterministic labels, collapsing the soft targets.
 The safeguard is \emph{out-of-fold} (OOF) labeling: the training
 pool is split into folds and each fold is labeled by the teacher
 conditioned only on the others, never on itself \citep{pocketfm2026}.
-Chapter~\ref{chap:destilacao} inherits this safeguard and shows that,
-in distributional regression, what it protects is calibration, not
-accuracy.
+Chapter~\ref{chap:destilacao} inherits this safeguard and shows, in
+an ablation on four datasets, that in distributional regression what
+it protects is calibration, not accuracy.
 
 \hdrshort{Distributional regression}
 \section{Distributional regression: quantiles, CRPS and calibration}
@@ -458,7 +460,9 @@ cross-dataset average, resampling a dataset's test rows (paired, when
 two models share them) that of a result on that dataset. McNemar's
 test \citep{mcnemar1947} compares two classifiers on the same rows
 using only the rows where they disagree --- the sign test applied to
-instances rather than datasets.
+instances rather than datasets. Spearman's rank correlation, used
+for the stability of latency rankings across datasets, measures
+whether two orderings agree (1 identical, $-1$ reversed).
 
 \textbf{The Bayesian test with a region of practical equivalence.}
 The frequentist framework can reject equality but cannot
@@ -477,7 +481,7 @@ drawn differences) falls left of the ROPE, inside it, or right of
 it. Its posterior is sampled, and two summaries coexist that do not
 give the same number: the \emph{expected mass} in a region,
 $E[\theta_{\text{ROPE}}]$, read in this study with a 0.5 cutoff (the
-lenient criterion, $E[\theta]>0.5$: equivalence is more probable
+lenient criterion, $E[\theta_{\text{ROPE}}]>0.5$: equivalence is more probable
 than the two alternatives combined); and the fraction of posterior
 samples in which $\theta_{\text{ROPE}}$ is the largest of the three
 components, the convention of \citet{benavoli2017}, read with a 0.95
@@ -553,8 +557,9 @@ standard; the Bayesian ROPE layer of \citet{benavoli2017} rarely
 appears in tabular benchmarks, and the sensitivity of conclusions to
 the ROPE radius is almost never analyzed. The two narratives ---
 ``trees win'' and ``modern deep learning has caught up''
-\citep{realmlp2024,tabm2025} --- are best read as claims conditional
-on sample size and task structure; and the arrival of foundation
+\citep{realmlp2024,tabm2025} --- are, in our reading, supported by
+the learning curves of Chapter~\ref{chap:benchmark}, claims
+conditional on sample size and task structure; and the arrival of foundation
 models displaces the controversy to pre-trained vs.\ trained from
 scratch. The two reference benchmarks predate the second generation
 of tabular foundation models, a matter of timing rather than a
@@ -707,7 +712,14 @@ multi-quantile objectives in XGBoost \citep{chen2016} and arbitrary
 quantiles exposed by TabPFN v2.5. The gap is their composition:
 \textbf{distributional distillation of a tabular foundation model
 into a tree-ensemble student, measured against a pinball-trained
-control and evaluated by CRPS and coverage}. What we do not claim:
+control and evaluated by CRPS and coverage}. A narrower point: TabFM
+already appears as a teacher in the public repository above,
+restricted to classification and point regression;
+Chapter~\ref{chap:destilacao} tests it as a \emph{distributional}
+teacher, and its scalar regression head \citep{kong2026} makes the
+answer architecturally negative, with its ensemble spread checked
+only on the binarized-target
+\texttt{california\_\allowbreak housing}$^\dagger$. What we do not claim:
 the formulation ``distill a tabular foundation model into a fast
 student'' belongs to Pocket FM, and this is not the first
 distillation of tabular foundation models.
@@ -772,7 +784,7 @@ Test against the full GBDT/DL/TFM slate under a uniform
 multi-criteria protocol &
 Ch.~\ref{chap:benchmark} \\
 \addlinespace
-TFM acceleration/ serving &
+TFM acceleration/\allowbreak serving &
 Strategies evaluated in isolation: TACO, CRUMB, MotherNet, FP8
 quantization \citep{taco2026,crumb2026,mothernet2023,kubler2026} &
 Crossed frontier distill $\times$ compress $\times$ shrink ensemble
