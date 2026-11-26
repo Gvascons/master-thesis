@@ -101,9 +101,10 @@ cap), the always-GBDT and always-DL rows over all 18.
 the recommendation policies (the tree under LODO; the fixed
 policies, descriptive on the same datasets), in the 11- and 14-model
 studies (\textbf{bold} = best policy in the column). ``Always-FM''
-takes the \emph{best} FM of each dataset --- an intra-family oracle
---- and the last two rows are the single-model policies a
-practitioner can actually execute (in the @11 study the FM family
+takes the \emph{best} FM of each dataset --- an intra-family
+oracle; by Eq.~\ref{eq:regret-normalizado} all three family rows
+are intra-family ceilings --- and the last two rows are the
+single-model policies a practitioner can actually execute (in the @11 study the FM family
 has a single model, and the always-FM row is already executable).}
 \label{tab:regret-lodo}
 \small
@@ -225,7 +226,9 @@ median over the datasets; right, mean. Lower is better; the axis runs
 from $w{=}0$ (latency only) to $w{=}1$ (accuracy only). The always-FM
 curve is the best on the right and the worst on the left, and crosses
 the others between $w{=}0.9$ and $w{=}0.8$ (median panel; between 0.8
-and 0.7 on the mean panel).}
+and 0.7 on the mean panel). In the median panel the Tree (LODO)
+curve coincides with always-FM except around $w{=}0.2$--$0.3$ and is
+largely hidden behind it.}
 \label{fig:lodo-weighted}
 \end{figure}
 
@@ -269,7 +272,9 @@ constraint leaves standing.
     native form: it costs four to five orders of magnitude more to
     serve, and the recommendation flips with 10--20\% of the weight
     on latency (by the median, under rank normalization;
-    Section~\ref{sec:regret-ponderado}).
+    Section~\ref{sec:regret-ponderado}). The distilled student of
+    Chapter~\ref{chap:destilacao} serves at ${\sim}10^2$~\us/row
+    and fits only budgets of that order.
   \item \textbf{Architectural limits.} More than 10 classes (TabFM's
     limit; \texttt{helena}, with 100, also exceeds TabPFN's) or more
     rows than the foundation model accepts as context are objective
@@ -288,6 +293,10 @@ constraint leaves standing.
     GBDT before adoption, because its measured worst case is last
     place on one dataset.
 \end{enumerate}
+
+When more than one constraint is active, the admissible set is the
+intersection of the answers (more than 10 classes \emph{and}
+auditable explanations required leaves the GBDTs).
 
 \begin{figure}[t]
 \centering

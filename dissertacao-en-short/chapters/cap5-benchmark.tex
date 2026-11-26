@@ -41,7 +41,8 @@ any selection stage. Tuning budgets are fixed per family (100 Optuna
 trials for GBDTs, 25 for deep models), set to attenuate the
 wall-clock disparity of a deep-model trial; the measured disparity
 exceeded the ${\sim}4\times$ design premise, so the residual bias
-favors DL, which still does not win. The foundation models
+favors deep learning in search time, and deep learning still does
+not win. The foundation models
 enter zero-shot, because that entry is the paradigm claim under test,
 with inference settings fixed a priori and never tuned to our data
 (context capped at 50{,}000 rows, 8-member ensemble). Secondary metrics,
@@ -116,7 +117,7 @@ declares practical equivalence under the criteria above. The maxim
 \citet{mcelfresh2023}, finds in this generation no accuracy margin to
 support it. The tie is measured in binary classification, where $N{=}10$ gives
 the instruments useful power. In regression, $N{=}5$ puts a combinatorial floor of 0.0625 on
-the paired Wilcoxon p-value --- no comparison can cross 5\% there, by
+the two-sided paired Wilcoxon p-value --- no comparison can cross 5\% there, by
 arithmetic, not by absence of effect --- and in multiclass $N{=}3$
 reduces any analysis to the descriptive plane. No central conclusion
 of this chapter depends on significance in a task without power to

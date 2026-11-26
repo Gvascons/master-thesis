@@ -4,7 +4,7 @@
 %% from the captions); the search-space summary transcribes
 %% dissertacao-en/appendix/apendice-b-espacos-busca.tex without changing
 %% any limit.
-\chapter{Supplementary Tables and Map to the \mbox{Extended} Report}
+\chapter{Supplementary Tables and Report Map}
 \label{app:suplementares}
 
 This appendix gives the primary metric of every model on every
@@ -105,13 +105,13 @@ $14 \times 18 = 252$.
 
 Table~\ref{tab:app-custos} consolidates the three cost axes of
 Chapter~\ref{chap:benchmark}: median training time over the 18
-datasets, median tuning time (the foundation models have no search)
+datasets (17 for the foundation models), median tuning time (the foundation models have no search)
 and inference latency on the reference dataset.
 
 \begin{table}[htbp]
 \centering
 \small
-\caption[Consolidated costs per model]{Median costs per model: training (s, 18 datasets), tuning (s, excl.\ \texttt{adult} --- Section~\ref{sec:met-protocolo}), and latency (\textmu s/row, \texttt{adult}).}
+\caption[Consolidated costs per model]{Median costs per model: training (s; 18 datasets, 17 for the foundation models), tuning (s, excl.\ \texttt{adult} --- Section~\ref{sec:met-protocolo}), and latency (\textmu s/row, \texttt{adult}).}
 \label{tab:app-custos}
 \begin{tabular}{lrrr}
 \toprule

@@ -255,7 +255,7 @@ trial was more than an order of magnitude above the GBDTs' (about
 57$\times$ by the ratio of medians), and total search time was
 1.1--140$\times$ above, depending on the model pair. The residual
 bias favors deep learning in search time --- and deep learning
-nonetheless does not win; the correct reading is ``asymmetric
+nonetheless does not win in accuracy; the correct reading is ``asymmetric
 budgets by design, imperfect parity measured and disclosed'', not
 equalization. One exception: on \texttt{adult}, the 7 legacy
 deep-learning models were tuned with 100 trials, kept as a
@@ -339,8 +339,11 @@ datasets \citep{demsar2006, benavoli2017}, applied in this order:
   \item \textbf{Pairwise Wilcoxon with Holm correction}, for the
     magnitudes. With $N=5$ regression datasets the smallest
     attainable two-sided $p$ is 0.0625, so rejection at
-    $\alpha=0.05$ is mathematically impossible: regression
-    conclusions rest on ranks and effect sizes.
+    $\alpha=0.05$ is mathematically impossible, and after Holm all
+    p-values saturate: regression conclusions rest on ranks and
+    effect sizes, and the pairwise instrument serves the distillation
+    chapter's supplementary readings and the conclusion's
+    cross-experiment multiplicity check.
   \item \textbf{Effect size} by paired Cohen's $d$ ($d_z$), and
     \textbf{confidence intervals} by percentile bootstrap with
     $B=10{,}000$ resamples and a fixed seed.

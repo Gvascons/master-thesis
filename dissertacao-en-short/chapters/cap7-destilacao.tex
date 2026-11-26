@@ -38,7 +38,9 @@ differ in the training target and, with it, the loss; architecture,
 features and hyperparameters are shared. A point student
 (single output, trained on the teacher's means) answers H1, and a
 true-label quantile MLP enters the decision rule's analysis. All
-students inherit the benchmark's tuned hyperparameters; the
+students inherit the benchmark's tuned hyperparameters (on the
+fifteen CTR23 datasets, outside the benchmark's grid, the student's
+XGBoost is tuned per dataset under the same search recipe); the
 re-tuning analysis below removes that crutch.
 Figure~\ref{fig:destil-pipeline} summarizes the pipeline.
 
@@ -76,13 +78,16 @@ depend on the roster choice.
 
 The design was registered in two stages: the pre-registration
 fixed H1--H3 on the five central datasets before any execution; the
-confirmatory sign test and the extension's eligibility rule were
-fixed at an interim reading of the picture on 15 datasets (11
-positive retentions, $p=0.059$), and the population was then
-completed to 20. A design with an interim reading inflates the
-type~I error; treated as sequential in two stages, the final
-result's $p$-value goes from 0.006 to approximately 0.019, the
-confirmatory value --- the stagewise-ordered adjustment is adopted
+confirmatory sign test and the extension's eligibility rule (CTR23
+suite datasets with 3 to 100 thousand rows) were fixed at an interim
+reading of the picture on 15 datasets (11 positive retentions,
+$p=0.059$), and the population was then completed to 20. A design
+with an interim reading inflates the type~I error; treated as a
+two-stage sequential design (nominal 5\% level at each stage), the
+procedure's global type~I error is 0.0283 and the final result's
+$p$-value goes from 0.006 to the stage-ordered 0.0189, the
+confirmatory value (the extension alone gave 5 positives out of 5,
+$p=0.03125$) --- the stagewise-ordered adjustment is adopted
 over the smaller Bonferroni bound (0.0118) because it respects the
 order in which the two readings occurred, a conservative choice (the
 full computation is in the extended report). Table~\ref{tab:destil-hipoteses} lists every hypothesis and
@@ -248,6 +253,22 @@ teacher's advantage), with the lower end as the conservative
 estimate. Table~\ref{tab:destil-robustez} gathers all the
 robustness variants.
 
+
+\textbf{Diagnosing the defeats.} \texttt{wine\_quality} is a
+dataset artifact: 27.6\% of the test set has an exact covariate twin
+in the pool (the original dataset carries 1{,}179 duplicated rows),
+and on the deduplicated
+dataset ($n=5{,}318$, teacher re-labeled OOF) the defeat disappears.
+\texttt{health\_\allowbreak insurance} is configuration-sensitive,
+not a scale effect: its retention goes from $-0.26$ (inherited) to
+$+0.65$ (re-tuned). \texttt{fifa} and
+\texttt{diamonds\_\allowbreak real} remain unexplained failures on
+price-scale targets --- and the registered heavy-tail hypothesis
+(that a $\log(1{+}y)$ re-run would rescue them) was refuted:
+\texttt{fifa} goes from $-1.29$ to $-1.69$ in the transformed space,
+and the two positive controls --- datasets where the transform was
+expected to help --- move in opposite directions.
+
 \begin{table}[htb]
 \centering
 \caption[Robustness of the distributional distillation verdict]{The
@@ -268,25 +289,10 @@ Both arms re-tuned & 16/20 & 0.12 & 0.006 & 0.035 \\
 Re-tuned, without the binarized & 15/19 & 0.10 & 0.010 & 0.048 \\
 Ten student seeds & 16/20 & 0.19 & --- & --- \\
 With the 4 omitted eligible (5 splits) & 17/24 & --- & 0.032 & --- \\
-Without the 2 overlapping the central datasets (5 splits) & 16/22 & --- & 0.026 & --- \\
+Without the 2 overlapping (5 splits) & 16/22 & --- & 0.026 & --- \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-\textbf{The defeats are diagnosable.} \texttt{wine\_quality} is a
-dataset artifact: 27.6\% of the test set has an exact covariate twin
-in the pool (the original dataset carries 1{,}179 duplicated rows),
-and on the deduplicated
-dataset ($n=5{,}318$, teacher re-labeled OOF) the defeat disappears.
-\texttt{health\_\allowbreak insurance} is configuration-sensitive,
-not a scale effect: its retention goes from $-0.26$ (inherited) to
-$+0.65$ (re-tuned). \texttt{fifa} and
-\texttt{diamonds\_\allowbreak real} remain unexplained failures on
-price-scale targets --- and the registered heavy-tail hypothesis
-(that a $\log(1{+}y)$ re-run would rescue them) was refuted:
-\texttt{fifa} goes from $-1.29$ to $-1.69$ in the transformed space,
-and the two positive controls --- datasets where the transform was
-expected to help --- move in opposite directions.
 
 \textbf{Coverage: the H2 clause that fails.} The distilled student's
 central-interval coverage lands within $\pm5$~p.p.\ of nominal on
@@ -301,7 +307,9 @@ Section~\ref{sec:destil-oof} shows where it comes from.
 To answer H3, accuracy and latency of \emph{all} strategies ---
 distill, compress the teacher's context, shrink its ensemble ---
 were measured on the same hold-outs of three positive-advantage
-datasets (Figure~\ref{fig:destil-pareto}). The distilled student
+datasets (Figure~\ref{fig:destil-pareto}); latency in \us/row on
+the benchmark's hold-out, median of 5 passes for the students and a
+single timed pass for the teachers, whose cost per pass is minutes. The distilled student
 delivers CRPS 0.109 at 99~\us/row where the teacher's cheapest
 configuration needs 245~\us/row for 0.094
 (california$^\dagger$), and 4.43 at 169~\us/row where the cheapest
@@ -342,7 +350,7 @@ anchor.}
 \label{fig:destil-pareto}
 \end{figure}
 
-\section{OOF labeling protects calibration, not accuracy}
+\section{What OOF labeling protects: calibration, not accuracy}
 \label{sec:destil-oof}
 
 An ablation relabeling the pool \emph{in-sample} at identical
@@ -389,8 +397,10 @@ Quantile Regression Forest and NGBoost in \emph{default}
 configuration, the distilled student wins in CRPS on \textbf{17 of
 20} datasets (one-sided sign test $p=0.0013$); against the best
 teacher-free alternative chosen \emph{per dataset} by an oracle
-(control, Gaussian, QRF, or NGBoost --- an oracle selection, overly
-favorable to the alternative), 12 of 20 ($p=0.25$): the student
+(control; Gaussian --- the point prediction plus a global Gaussian
+residual estimated on 10\% of the pool; QRF; or NGBoost --- an
+oracle selection, overly favorable to the alternative), 12 of 20
+($p=0.25$): the student
 beats each cheap alternative taken in isolation, not the best of
 them chosen per dataset. The
 three upsets are diagnosable: on \texttt{wine\_quality} --- flagged
@@ -421,8 +431,11 @@ legibility, not a statistic of the student: on
 \texttt{fps\_benchmark}, two configurations with the same point
 prediction (107--109~FPS) carry different minimum-performance
 guarantees at the 0.10 quantile (108 against 103~FPS), a distinction
-the mean cannot see. Distributional quality translates into
-decisions exactly where point predictions fail.
+the mean cannot see. By construction, the expected cost at
+$\tau=0.90$ is the pinball loss at that level: E3 brings no evidence
+independent of the CRPS --- it decomposes it per level and expresses
+it in cost units. Distributional quality translates into decisions
+exactly where point predictions fail.
 
 \section{When to distill: the decision rule}
 \label{sec:destil-regra}
@@ -460,7 +473,10 @@ rule itself.
 \section{Limitations and synthesis}
 \label{sec:destil-limitacoes}
 
-The design inherits the benchmark's non-nested protocol; the teacher
+The design inherits the benchmark's non-nested protocol; no arm
+distills from a teacher without pre-training, so the measured gain
+does not separate the teacher's prior from the effect of regressing
+on smoothed targets; the teacher
 is a single model (TabPFN-2.5) and the scope is regression only,
 with the spread of TabFM's ensemble predictions checked as a
 distribution on a single, binarized-target dataset;
@@ -479,7 +495,8 @@ datasets (verdict unchanged without them, 16/22).
 \emph{In synthesis --- the answer to RQ3: what the foundation model
 knows about the mean, a tuned GBDT learns by itself; part of what it
 knows about the shape of the predictive distribution --- 12--19\% at
-the median --- can be carried into a student serving at
+the median; mean re-tuned retention $-0.02$, pulled by the negatives
+--- can be carried into a student serving at
 ${\sim}10^2$~\us/row, under verifiable preconditions; and the
 negative results (point and heavy tail refuted, H3 not confirmed as
 registered, partial redundancy with classical baselines) convert

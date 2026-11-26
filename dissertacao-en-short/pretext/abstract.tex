@@ -4,8 +4,7 @@ For a decade, model selection for tabular data relied on the maxim that
 gradient boosting always wins. Tabular foundation models, pre-trained
 networks that predict without task-specific training, have cast doubt on
 that maxim, yet most of the available evidence comes from the
-proponents themselves, under differing protocols. This dissertation
-produces comparative evidence under a single protocol and turns it
+proponents themselves, under differing protocols. This dissertation produces evidence under a single protocol and turns it
 into a selection procedure, along three lines. First, a multi-criteria
 benchmark evaluates 14 models from three families (gradient boosting,
 deep learning, and foundation models) on 18 public OpenML datasets,
@@ -33,7 +32,7 @@ on the reference dataset (\texttt{adult}). Kolmogorov--Arnold networks finish in
 third on all three tasks. For the decision, a router learned from
 meta-features is less accurate than the trivial rule (0.11 vs.\ 0.44);
 the fixed ``foundation model first'' policy (an intra-family
-oracle) has median regret of zero on the primary metric, but stops
+oracle) has zero median regret on the primary metric, but stops
 being the recommendation once 10 to 20
 percent of the decision weight shifts from accuracy to latency (by
 median regret), under rank normalization.
@@ -51,8 +50,9 @@ versions, a single GPU), model choice should start from the
 application's constraints --- latency, architectural limits,
 auditable explanations --- rather than from a universal winner; and
 distillation recovers a modest median share of the foundation
-model's predictive uncertainty, under preconditions that can be
-checked before the student is trained, in an in-sample evaluation.
+model's predictive uncertainty, under preconditions checked
+before the student is trained (the rule itself was assessed only on
+the datasets it was derived from).
 
 \vspace{0.4cm}
 \noindent\textbf{Keywords:} tabular data; foundation models;
