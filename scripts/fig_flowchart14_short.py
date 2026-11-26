@@ -41,7 +41,7 @@ def main(ref="Ch. 6", out="decision_flowchart_14_en_short"):
     arrow(0.58, 0.955, 0.58, 0.905)
     box(0.17, 0.68, "GBDT family\n(XGBoost / LightGBM / CatBoost)\n"
                     "in distributional regression, distillation\n"
-                    f"recovers part of the TabPFN edge ({ref})",
+                    f"recovers part of the TabPFN edge at ~10\u00b2 \u00b5s/row ({ref})",
         "#fde")
     arrow(0.44, 0.835, 0.23, 0.745, "yes")
     box(0.58, 0.62, "2. Architectural limits hit?\n(>10 classes)")
