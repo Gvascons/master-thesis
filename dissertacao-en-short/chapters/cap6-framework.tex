@@ -150,9 +150,9 @@ sits above even the LODO tree's 0.051, a tree that nonetheless fails
 as a predictor. The 0.080 mean and the 1.000 worst case are why the
 practical recommendation is never ``use the FM blindly'' but ``FM
 first, with the cheap boundary checks''. On half or more of the
-datasets, the choice of \emph{family} by the primary metric no
-longer depends on the dataset --- the FM family contains the best
-model outright; the choice of \emph{model} within it still does --- and the result holds for the
+datasets the FM family contains the best model outright (hence the
+zero median); which \emph{model} within the family is best still
+depends on the dataset --- and the result holds for the
 primary metric in isolation, which the next section confronts.
 
 \section{Weighted multi-criteria regret (E2)}
@@ -263,14 +263,6 @@ study. Its four questions are asked in order, before training any
 model; if any answer is yes, the indicated family is the one the
 constraint leaves standing.
 
-\begin{figure}[htb]
-\centering
-\includegraphics[width=0.88\linewidth]{images/decision_flowchart_14_en_short.pdf}
-\caption[Decision flowchart]{Decision flowchart, 14-model study: each
-decision box is a constraint verifiable \emph{a priori}.}
-\label{fig:flowchart-14}
-\end{figure}
-
 \begin{enumerate}
   \item \textbf{Latency and inference cost.} If predictions must come
     out in microseconds per row, the FM family is excluded in its
@@ -296,6 +288,14 @@ decision box is a constraint verifiable \emph{a priori}.}
     GBDT before adoption, because its measured worst case is last
     place on one dataset.
 \end{enumerate}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.88\linewidth]{images/decision_flowchart_14_en_short.pdf}
+\caption[Decision flowchart]{Decision flowchart, 14-model study: each
+decision box is a constraint verifiable \emph{a priori}.}
+\label{fig:flowchart-14}
+\end{figure}
 
 The three studies are consistent with these four questions capturing
 the essential --- though the flowchart itself is a synthesis, not an
