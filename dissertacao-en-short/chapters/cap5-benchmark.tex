@@ -196,7 +196,8 @@ Inference latency is the most dramatic axis. Measured under
 an identical protocol for the 14 models (median of 5 passes over the
 full \texttt{adult} hold-out, amortized batch, each model on its
 natural device: GBDTs on CPU, deep and foundation models on GPU), it
-forms four tiers. XGBoost serves at 0.33~\us/row. The fast tier holds
+forms four tiers, which Figure~\ref{fig:cap5-latencia} presents on a
+logarithmic scale (lower is better). XGBoost serves at 0.33~\us/row. The fast tier holds
 the other GBDTs, the MLP-style deep models and the two KANs (CatBoost
 1.4, RealMLP 1.5, LightGBM 1.9, TabKAN 2.3, MLP 2.4, KAN 3.1, TabM
 3.5~\us/row) --- deep learning is not synonymous with expensive
@@ -214,6 +215,15 @@ single factor should be quoted without its dataset. Single-row online
 serving is expected to narrow the differences; it was not measured
 here. The
 per-model costs are consolidated in Table~\ref{tab:app-custos}.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\linewidth]{images/inference_time_en.pdf}
+\caption[Inference latency on \texttt{adult}]{Inference latency on
+\texttt{adult}, in \us{} per row (median of 5 passes, log scale;
+colors by family).}
+\label{fig:cap5-latencia}
+\end{figure}
 
 \begin{figure}[htb]
 \centering
@@ -259,7 +269,8 @@ distillation question (Chapter~\ref{chap:destilacao}).
 The tie is an aggregate picture; conditioning on task structure and
 sample size reveals real reversals. Stratifying the 10 binary datasets
 by majority/minority ratio into mild ($<$2:1), moderate (2--5:1) and
-severe ($\geq$5:1) bands, the GBDTs' average rank on the full grid
+severe ($\geq$5:1) bands (Figure~\ref{fig:cap5-imbalance}), the
+GBDTs' average rank on the full grid
 improves as imbalance grows (6.6, 5.5, 4.6), the deep models' worsens
 (8.7, 8.9, 9.6), and the foundation models stay ahead in all three
 bands with no defined trend (3.3, 4.1, 2.7). With 3, 4 and 3 datasets
@@ -271,6 +282,15 @@ test has useful power on $N{=}3$ datasets. TabPFN also combines,
 within the core and across the three tasks, the best average rank with
 the best worst rank over the 17 datasets where it operates (in
 classification alone, XGBoost's worst case is equal or better).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\linewidth]{images/imbalance_robustness.png}
+\caption[Robustness to imbalance]{Robustness to imbalance: average
+rank aggregated by family and severity band on the 10 binary
+datasets.}
+\label{fig:cap5-imbalance}
+\end{figure}
 
 \begin{figure}[htb]
 \centering
@@ -317,7 +337,8 @@ separated. TabFM, evaluated zero-shot with no per-dataset tuning,
 leads the average rank in all three tasks: 2.7 in binary,
 1.00 in multiclass (over the two datasets where it operates;
 \texttt{helena} is a structural exclusion) and 1.2 in regression
-(Table~\ref{tab:cap5-ranks}). It is the best model on 13 of
+(Table~\ref{tab:cap5-ranks} and Figure~\ref{fig:cap5-ranks}). It is
+the best model on 13 of
 the 18 datasets, operating on 17. TabPFN is the grid's consistent
 runner-up (4.2, 2.50, 3.0): the two foundation models occupy the top
 two places in every task (in multiclass, over the two datasets where
@@ -351,11 +372,22 @@ TabKAN              & 11.4         & 13.3          & 11.8 \\
 \end{tabular}
 \end{table}
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.62\linewidth]{images/average_ranks_diss_en.pdf}
+\caption[Average ranks per task on the full grid]{Average ranks per
+task on the full grid. The multiclass panel re-ranks the 12 models
+with results on all three datasets, so its values do not coincide
+with Table~\ref{tab:cap5-ranks}, which ranks all 14 (the foundation
+models over their two eligible datasets).}
+\label{fig:cap5-ranks}
+\end{figure}
+
 The lead is \textbf{consistent across datasets, but neither the
 post-hoc nor the Bayesian test separates it}. With $k{=}14$ and
 $N{=}10$ the Nemenyi critical difference is 6.27, nearly half the
-axis, and the instrument has no power to separate TabFM from the pack.
-The lead rests on consistency (13 wins in 18) and on the paired effect
+axis, and the instrument has no power to separate TabFM from the pack
+(Figure~\ref{fig:cap5-cd14}). The lead rests on consistency (13 wins in 18) and on the paired effect
 size ($d=0.68$ against XGBoost), not on the frequentist post-hoc nor on
 the Bayesian instrument: against XGBoost, the Benavoli convention puts
 0.67 of the posterior probability on TabFM's superiority and 0.33 on
@@ -376,6 +408,18 @@ leaders do not change (TabFM 1.25, TabPFN 3.25), and only XGBoost
 evaluated at the pinned v1.0.1 version, whose technical report
 \citep{kong2026} remains without peer review; the results are about
 that version.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\linewidth]{images/cd_diagram_binary.pdf}
+\caption[Critical difference diagram (14-model grid)]{Critical
+difference diagram (Nemenyi) for binary classification on the full
+14-model grid ($N{=}10$ datasets, $\mathrm{CD}=6.27$). With $k{=}14$,
+the critical difference spans nearly half the axis: the instrument
+has no power to separate TabFM from the pack, and the reading of the
+lead rests on consistency across datasets and on effect sizes.}
+\label{fig:cap5-cd14}
+\end{figure}
 
 The tie of Section~\ref{sec:cap5-ato1} is therefore correctly read as
 a picture of the previous generation. What overtook the GBDTs --- in average
@@ -519,7 +563,9 @@ employee} the accuracies are nearly indistinguishable (0.943 to
 0.949), but minority-class recall goes from 0.032 (XGBoost) to 0.214
 (TabPFN) and 0.298 (TabFM), at the price of some minority-class
 precision (XGBoost's 0.706 against 0.621) --- XGBoost detects 3 in
-every 100 requests that should be denied, TabFM 30. Across the 10
+every 100 requests that should be denied, TabFM 30
+(Figure~\ref{fig:cap5-operacionais}a; panel~b gives the minority
+recall on the 10 binary datasets). Across the 10
 binary datasets the largest recall separations appear on imbalanced
 ones, though not on all (on \texttt{give\_\allowbreak me\_\allowbreak
 some\_\allowbreak credit}, with 6.7\% minority, the three recalls
@@ -546,6 +592,15 @@ hurts on others, where XGBoost remains the fringe's owner (on
 \texttt{telco}, under the preprocessing caveat above); with median agreement
 above 0.93 and an advantage whose sign changes across datasets, model
 choice is a per-dataset decision, not a per-instance one.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{images/metricas_operacionais_diss_en.pdf}
+\caption[Operational reading of the fringe]{Operational reading:
+(a)~accuracy and minority recall on \texttt{amazon\_\allowbreak
+employee}; (b)~minority recall on the 10 binary datasets.}
+\label{fig:cap5-operacionais}
+\end{figure}
 
 \section{Summary: the answer to RQ1}
 \label{sec:cap5-sintese}

@@ -29,9 +29,32 @@ describes what would have happened on the benchmark's datasets, and
 the choice of the best of them is made on the same datasets on which
 it is measured. The criteria the benchmark measures per model ---
 performance, training cost, tuning cost, inference latency and
-robustness --- are summarized, together with interpretability, in the
-multi-criteria matrix of the extended report; interpretability there
-is a qualitative attribution by family, not a measurement.
+robustness --- are summarized, together with interpretability, in
+the multi-criteria matrix of Figure~\ref{fig:decision-matrix};
+interpretability there is a qualitative attribution by family, not a
+measurement.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.92\linewidth]{images/decision_matrix.png}
+\caption[Multi-criteria decision matrix of the 14 models]{Multi-criteria
+decision matrix of the 14 models (rows, ordered by performance) on
+six criteria (columns): performance (C1, mean normalized regret),
+training cost (C6), tuning cost (C8), inference latency (C7),
+robustness (C10, worst rank across folds) and interpretability (C9).
+The stars are thirds of the 14-model ranking on the criterion (3 =
+best third; darker = better). In C10 ten models tie at the worst
+possible rank and the tie collapses the middle third --- a poorly
+discriminating criterion on this roster; C9 is qualitative by
+family, declared, and the foundation models' tuning is 3 by
+construction (zero hyperparameter search). At the resolution of
+thirds, XGBoost is the only row with three stars in every column,
+but the contest at the top is finer than the matrix resolves: within
+the top performance third, the foundation models are ahead
+(Chapter~\ref{chap:benchmark}), at the price of the bottom latency
+third.}
+\label{fig:decision-matrix}
+\end{figure}
 
 The common yardstick is normalized regret. On a given dataset, let
 $m^{*}$ be the primary metric of the best model in the study's grid
@@ -337,7 +360,8 @@ flip band depends on the score normalization (10--20\% by ranks,
 20--25\% logarithmic, 30--35\% linear, by the median). Latency ranks
 come from a reference dataset measured on a single machine, with the
 sensitivity to two other datasets measured above. In the
-extended report's multi-criteria matrix, the robustness criterion
+multi-criteria matrix (Figure~\ref{fig:decision-matrix}), the
+robustness criterion
 (worst rank across folds) discriminates poorly on this roster --- ten of the 14 models
 tie at the worst possible rank --- and interpretability is not
 measured. Finally, the framework is dated: the difference between the

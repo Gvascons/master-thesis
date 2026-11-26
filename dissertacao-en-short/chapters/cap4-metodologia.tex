@@ -52,6 +52,18 @@ categorical high-cardinality case (\texttt{amazon\_\allowbreak
 employee}), since the treatment of categoricals historically
 separates the families \citep{grinsztajn2022, mcelfresh2023}, and
 realistic imbalance, from 1:1 to about 16:1 in classification.
+Figure~\ref{fig:dataset-landscape} places the 18 datasets on the
+size~$\times$~dimensionality plane, with both axes on a logarithmic
+scale and colors by task type.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.7\linewidth]{images/dataset_landscape.pdf}
+  \caption[Dataset landscape: samples $\times$ attributes]{Landscape
+  of the 18 datasets on the samples $\times$ attributes plane.}
+  \label{fig:dataset-landscape}
+\end{figure}
+
 Datasets with more than 100{,}000 samples (\texttt{covertype},
 \texttt{year\_\allowbreak prediction},
 \texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit})
