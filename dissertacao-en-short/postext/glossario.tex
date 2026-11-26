@@ -1,0 +1,67 @@
+%% Glossary (B16, 2026-11-26) --- manual, like the list of acronyms.
+%% Post-textual element (NBR 14724: references, glossary, appendix).
+%% Every definition restates one already given in the chapters; no new
+%% number.
+\chapter*{Glossary}
+\addcontentsline{toc}{chapter}{Glossary}
+\markboth{GLOSSARY}{GLOSSARY}
+\begin{description}\itemsep3pt
+  \item[Context] The labeled training rows that an in-context model
+    receives as input, together with the query row, at prediction
+    time.
+  \item[Control] The student's architecture trained by pinball loss
+    on the true labels, with no teacher; the baseline against which
+    distillation is measured.
+  \item[Coverage] The fraction of hold-out targets that fall inside
+    a prediction interval, compared with the interval's nominal
+    level.
+  \item[CRPS] Continuous ranked probability score: a score for a
+    whole predictive distribution, in the unit of the target, lower
+    is better. Estimated here as twice the mean pinball loss over 19
+    quantile levels.
+  \item[Distillation] Training a small \emph{student} model on the
+    outputs of a larger \emph{teacher} instead of on the observed
+    labels. Point distillation uses the teacher's means;
+    distributional distillation uses its quantile curves.
+  \item[Foundation model (tabular)] A pre-trained model that predicts
+    on a new dataset without being trained on it, by in-context
+    learning. In this work, TabPFN and TabFM.
+  \item[Hold-out] The 20\% of each dataset split off before any
+    selection. Every final result reported is measured on it.
+  \item[In-context learning] Prediction by a single forward pass of a
+    pre-trained Transformer with frozen weights, which receives the
+    training set as input instead of being fitted to it.
+  \item[Leave-one-dataset-out] Validation of a recommender that is
+    fitted on all datasets but one and tested on the one left out.
+  \item[Meta-feature] A descriptive property of a dataset --- size,
+    dimensionality, imbalance --- used as input to a model
+    recommender.
+  \item[Oracle (intra-family)] A policy credited with the best model
+    of the recommended family on each dataset, chosen knowing the
+    results; a ceiling for the family, not an executable policy.
+  \item[Out-of-fold labeling] Labeling of the training pool by a
+    teacher conditioned only on the other folds, never on the fold
+    being labeled.
+  \item[Pareto frontier] The models that no other model beats on
+    both criteria at once (here, accuracy and cost).
+  \item[Pinball loss] The asymmetric loss whose expected-value
+    minimizer is the $\tau$ quantile; the training loss of quantile
+    regression.
+  \item[Pool] The 80\% of each dataset left after the hold-out is
+    split off; it feeds all selection.
+  \item[Quantile crossing] A prediction in which a higher quantile
+    level receives a lower value than a lower level; repaired by
+    re-sorting each row's quantiles.
+  \item[Regret] The normalized distance between the best model on a
+    dataset and the best model a policy recommends: 0 when the
+    recommended family contains the best model, 1 when the best it
+    offers is the worst.
+  \item[Retention] The fraction of the teacher's CRPS advantage over
+    the control that the distilled student preserves.
+  \item[ROPE] Region of practical equivalence: the band within which
+    a performance difference is treated as irrelevant; $\pm 0.01$ AUC
+    in the main analysis.
+  \item[Serving latency] The time to predict one row, in
+    microseconds per row, measured in batch on the reference dataset
+    and hardware.
+\end{description}

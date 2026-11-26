@@ -120,8 +120,13 @@ the university library at deposit time]\end{center}
 the graduate office after the defense]\end{center}
 \vspace*{\fill}\clearpage
 
+% B16 (26/11): dedication, acknowledgements, epigraph — NBR 14724 order.
+\input{pretext/dedicatoria}
+
 \acknowledgements
 \input{pretext/agradecimentos}
+
+\input{pretext/epigrafe}
 
 \abstract
 \input{pretext/abstract}
@@ -150,6 +155,11 @@ the graduate office after the defense]\end{center}
 \markboth{REFERENCES}{REFERENCES}
 \bibliographystyle{abnt}
 \bibliography{references}
+
+% B16 (26/11): glossary — post-textual (NBR 14724: references,
+% glossary, appendix).
+\clearpage
+\input{postext/glossario}
 
 % Single appendix: skip the \appendixpage divider (double opening).
 \appendixmatter\clearpage\appendix
