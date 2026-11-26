@@ -1,11 +1,11 @@
 %% =========================================================================
 %% Master's Dissertation — PPGCC, CIn-UFPE — ENGLISH VERSION
 %% Template: risethesis (CIn class), option [en]
-%% Adapted (not literally translated) from dissertacao/, which remains the
-%% deposit reference; this version targets international dissemination.
 %% Compile: tectonic main.tex (or pdflatex -> bibtex -> pdflatex x2)
 %% =========================================================================
 \documentclass[en,oneside,onehalfspacing,msc]{risethesis}
+\AtBeginDocument{\renewcommand{\bibname}{References}%
+  \renewcommand{\bibliographytocname}{References}}
 
 \usepackage{babel}% the class passes [brazil,english]; english is primary
 \usepackage{color}
@@ -52,8 +52,6 @@
 \majorfieldpt{Ciência da Computação}
 \majorfielden{Computer Science}
 
-% PROVISIONAL title — mirrors the Portuguese title; the word "Validated"
-% (like "Validado" in the PT version) is pending the author's decision.
 \title{Models for Tabular Data in the Era of Foundation Models:
 a Multi-Criteria Benchmark, an Evaluated Decision Framework, and
 Distributional Distillation}

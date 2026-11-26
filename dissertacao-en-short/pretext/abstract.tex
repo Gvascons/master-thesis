@@ -2,12 +2,11 @@
 % Abstract (NBR 6028: one paragraph, no formulas).
 For a decade, model selection for tabular data relied on the maxim that
 gradient boosting always wins. Tabular foundation models, pre-trained
-networks that predict without task-specific training, have cast doubt on
-that maxim, yet most of the available evidence comes from the
-proponents themselves, under differing protocols. This dissertation produces evidence under a single protocol and turns it
+networks that predict without task-specific training, have cast doubt on it,
+yet most available evidence comes from the proponents themselves, under differing protocols. This dissertation produces evidence under a single protocol and turns it
 into a selection procedure, along three lines. First, a multi-criteria
 benchmark evaluates 14 models from three families (gradient boosting,
-deep learning, and foundation models) on 18 public OpenML datasets,
+deep learning, and foundation models) on 18 OpenML datasets,
 with a hold-out untouched by selection, frequentist and
 Bayesian inference, and measured training, tuning, and latency
 costs.
@@ -17,7 +16,7 @@ descriptively. Third, the distillation of the TabPFN
 teacher's quantile curves into gradient-boosting students is studied on
 20 regression datasets, under registered hypotheses. Among the 11
 core models (prior to the 2026 extension), the top of the accuracy ranking, measured in binary classification
-(the other tasks are read descriptively), is a tie: under a ROPE of one percentage point of AUC, 3 of the 10
+(other tasks are read descriptively), is a tie: under a ROPE of one percentage point of AUC, 3 of the 10
 non-leading models are practically equivalent to the leader (itself
 already a foundation model, TabPFN) by the strict Bayesian
 criterion, and 8 by the lenient one. In the 2026 generation, TabFM, without tuning, has the
@@ -43,16 +42,17 @@ curves retains, at the median, 12 to 19 percent of the
 distributional advantage, depending on how the arms are tuned, with
 positive retention on 16 of 20 (sign test, p approximately
 0.019 after the sequential correction), and beats default-configured classical
-distributional baselines on 17 of 20 (12 of 20 against the best
-alternative chosen per dataset). In the
+distributional baselines on 17 of 20 (12 of 20 against the
+per-dataset best alternative). In the
 regime studied (up to 100 thousand samples, pinned
 versions, a single GPU), model choice should start from the
 application's constraints --- latency, architectural limits,
 auditable explanations --- rather than from a universal winner; and
 distillation recovers a modest median share of the foundation
-model's predictive uncertainty, under preconditions checked
-before the student is trained (the rule itself was assessed only on
-the datasets it was derived from).
+model's predictive uncertainty, under preconditions
+measurable before the student is trained (the advantage gate
+verified only in an oracle version; the rule assessed only on the
+datasets it was derived from).
 
 \vspace{0.4cm}
 \noindent\textbf{Keywords:} tabular data; foundation models;

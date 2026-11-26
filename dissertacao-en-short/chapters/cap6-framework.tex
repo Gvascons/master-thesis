@@ -34,7 +34,8 @@ multi-criteria matrix of the extended report; interpretability there
 is a qualitative attribution by family, not a measurement.
 
 The common yardstick is normalized regret. On a given dataset, let
-$m^{*}$ be the primary metric of the best of the 14 models, $m^{-}$
+$m^{*}$ be the primary metric of the best model in the study's grid
+(11 or 14 models, per study), $m^{-}$
 that of the worst, and $m_{F}$ that of the best model of the family
 $F$ a policy recommends:
 \begin{equation}
@@ -100,7 +101,8 @@ cap), the always-GBDT and always-DL rows over all 18.
 \caption[Regret of the recommendation policies]{Normalized regret of
 the recommendation policies (the tree under LODO; the fixed
 policies, descriptive on the same datasets), in the 11- and 14-model
-studies (\textbf{bold} = best policy in the column). ``Always-FM''
+studies (\textbf{bold} = best policy in the column; ties with the
+bolded 0.000 are not re-bolded). ``Always-FM''
 takes the \emph{best} FM of each dataset --- an intra-family
 oracle; by Eq.~\ref{eq:regret-normalizado} all three family rows
 are intra-family ceilings --- and the last two rows are the
@@ -242,7 +244,8 @@ with the small dataset's proxy, $w \leq 0.5$ with the large one's).
 The shift tracks the intermediate latency ranks of the deep models,
 not the FMs' context dependence --- the FMs occupy the last latency
 ranks under any proxy --- and it runs in the opposite direction to
-the one anticipated in the record. The second is the normalization.
+the one anticipated in the record, which expected the FMs' context
+dependence to drive it. The second is the normalization.
 In a post-hoc analysis with accuracy and latency in per-dataset
 min--max, and latency in $\log_{10}$ or on a linear scale, the ``FM
 first'' recommendation stops being optimal with 20--25\% and
@@ -276,13 +279,15 @@ constraint leaves standing.
     Chapter~\ref{chap:destilacao} serves at ${\sim}10^2$~\us/row
     and fits only budgets of that order.
   \item \textbf{Architectural limits.} More than 10 classes (TabFM's
-    limit; \texttt{helena}, with 100, also exceeds TabPFN's) or more
-    rows than the foundation model accepts as context are objective
-    structural exclusions.
+    limit; \texttt{helena}, with 100, also exceeds TabPFN's) is an
+    objective structural exclusion; more rows than the context limit
+    is not --- the foundation model then runs on a subsampled
+    context, as in this benchmark.
   \item \textbf{Auditable explanations required.} When the domain's
     regulation demands auditable, attribution-explainable models, the
     recommendation is the GBDTs, whose attribution-based explanations
-    are commonly accepted in regulated practice. A boosted ensemble
+    are commonly accepted in regulated practice --- a qualitative
+    judgment, declared, not measured. A boosted ensemble
     is not intrinsically interpretable; domains demanding strictly
     intrinsic interpretability should look at shallow trees or
     additive models, outside this benchmark.
@@ -291,7 +296,8 @@ constraint leaves standing.
     \citep{tabfm2026} as the frontier (TabFM pinned at v1.0.1) ---
     compared against a tuned
     GBDT before adoption, because its measured worst case is last
-    place on one dataset.
+    place on one dataset; both foundation models carry
+    non-commercial licenses.
 \end{enumerate}
 
 When more than one constraint is active, the admissible set is the

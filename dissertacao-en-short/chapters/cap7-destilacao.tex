@@ -85,7 +85,9 @@ reading of the picture on 15 datasets (11 positive retentions,
 $p=0.059$), and the population was then completed to 20. A design
 with an interim reading inflates the type~I error; treated as a
 two-stage sequential design (nominal 5\% level at each stage), the
-procedure's global type~I error is 0.0283 and the final result's
+procedure's global type~I error is 0.0283 --- below the nominal 5\%
+because the exact sign test's attainable levels at the two stages
+are 0.0176 and 0.0207 --- and the final result's
 $p$-value goes from 0.006 to the stage-ordered 0.0189, the
 confirmatory value (the extension alone gave 5 positives out of 5,
 $p=0.03125$) --- the stagewise-ordered adjustment is adopted
@@ -156,11 +158,11 @@ RMSE advantage --- is refuted already on the five central datasets
 (0/5 reach the registered 50\% retention). The natural objection --- ``the teacher
 was not strong enough'' --- was tested directly by replicating the
 \emph{point} experiment with TabFM as teacher on the five central
-datasets: its
-reference advantage is almost $6\times$ TabPFN's on
-\texttt{california\_\allowbreak housing}$^\dagger$ (0.028 against
-0.005 RMSE), and the negative holds --- with the caveat that this
-anchor rests on a single, binarized-target dataset. A pool-size
+datasets: the negative holds on all five, and the size of TabFM's
+reference advantage --- almost $6\times$ TabPFN's (0.028 against
+0.005 RMSE) --- is measured only on
+\texttt{california\_\allowbreak housing}$^\dagger$, a single,
+binarized-target dataset. A pool-size
 sweep (caps 800/2{,}000/8{,}000) shows a genuine low-data gain only
 on \texttt{wine\_quality} ($\Delta=+0.026$ at $n{=}800$), gone from
 $n{=}2{,}000$ on, and on california$^\dagger$ only a marginal
@@ -300,7 +302,7 @@ central-interval coverage lands within $\pm5$~p.p.\ of nominal on
 only 10 of 20 datasets (2/5 central), so H2 is not confirmed as a
 conjunction: the CRPS clause holds (16/20), the coverage clause does
 not. Calibration is the dimension to watch, and
-Section~\ref{sec:destil-oof} shows where it comes from.
+Section~\ref{sec:destil-oof} shows what protects it.
 
 \section{The serving frontier}
 \label{sec:destil-fronteira}
@@ -405,7 +407,8 @@ oracle selection, overly favorable to the alternative), 12 of 20
 beats each cheap alternative taken in isolation, not the best of
 them chosen per dataset. The
 three upsets are diagnosable: on \texttt{wine\_quality} --- flagged
-in advance by the registered eligibility criterion --- the default
+in advance by the design's registered eligibility criterion (the
+teacher behind the baseline in RMSE there) --- the default
 QRF beats even the teacher; on california$^\dagger$ the QRF (CRPS
 0.084) occupies the student's latency band with a better score; on
 \texttt{physiochemical\_\allowbreak protein} the teacher's advantage
@@ -434,9 +437,8 @@ prediction (107--109~FPS) carry different minimum-performance
 guarantees at the 0.10 quantile (108 against 103~FPS), a distinction
 the mean cannot see. By construction, the expected cost at
 $\tau=0.90$ is the pinball loss at that level: E3 brings no evidence
-independent of the CRPS --- it decomposes it per level and expresses
-it in cost units. Distributional quality translates into decisions
-exactly where point predictions fail.
+independent of the CRPS --- it re-expresses the CRPS gain as a
+decision cost at $\tau=0.90$, in the unit of the target.
 
 \section{When to distill: the decision rule}
 \label{sec:destil-regra}
@@ -464,7 +466,8 @@ the student's latency, ensemble shrinking may settle the matter.}
 
 Two caveats bound the rule's status. The rule's \emph{advantage
 gate} --- the precondition that the teacher's relative advantage
-over the control exceed the cohort median --- was verified in its
+over the control exceed the median across the 20 datasets --- was
+verified in its
 \emph{oracle} version, with the advantage measured on the hold-out
 CRPS; the OOF-measured version, the one a practitioner would
 actually compute, was not evaluated. And the rule was derived
@@ -480,7 +483,8 @@ does not separate the teacher's prior from the effect of regressing
 on smoothed targets; the teacher
 is a single model (TabPFN-2.5) and the scope is regression only,
 with the spread of TabFM's ensemble predictions checked as a
-distribution on a single, binarized-target dataset;
+distribution on a single, binarized-target dataset (CRPS 0.524
+against the teacher's 0.069; 16.3\% coverage at a nominal 80\%);
 students inherit benchmark hyperparameters, and the re-tuning
 analysis shows the inherited setting \emph{overstates} the
 magnitude (0.19$\to$0.12). No multiplicity correction is applied
@@ -498,7 +502,8 @@ knows about the mean, a tuned GBDT learns by itself; part of what it
 knows about the shape of the predictive distribution --- 12--19\% at
 the median; mean re-tuned retention $-0.02$, pulled by the negatives
 --- can be carried into a student serving at
-${\sim}10^2$~\us/row, under verifiable preconditions; and the
+${\sim}10^2$~\us/row, under preconditions measurable in advance ---
+the advantage gate verified only in its oracle version; and the
 negative results (point and heavy tail refuted, H3 not confirmed as
 registered, partial redundancy with classical baselines) convert
 into a decision rule whose precondition is measured before the

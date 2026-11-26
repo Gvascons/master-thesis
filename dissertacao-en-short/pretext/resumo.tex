@@ -11,7 +11,7 @@ distintos. Esta dissertação produz evidência comparativa sob
 protocolo único e a converte em procedimento de escolha, em três
 frentes. Primeiro, um benchmark multicritério avalia 14
 modelos de três famílias (\emph{gradient boosting}, aprendizado profundo
-e \emph{foundation models}) em 18 conjuntos públicos do OpenML, com
+e \emph{foundation models}) em 18 conjuntos do OpenML, com
 \emph{hold-out} intocado pela seleção, inferência frequentista e
 bayesiana e custos de treino, ajuste e latência medidos. Segundo,
 avalia-se um arcabouço de decisão: o componente aprendido, sob
@@ -21,7 +21,7 @@ estuda-se a destilação das curvas de quantis do professor TabPFN em
 alunos de \emph{gradient boosting}, em 20 conjuntos de regressão, sob
 hipóteses registradas. Entre os 11 modelos do núcleo (anteriores à
 extensão de 2026), o topo da
-acurácia, medido na classificação binária (as demais tarefas têm
+acurácia, medido na classificação binária (demais tarefas:
 leitura descritiva), é um empate: sob uma ROPE de um ponto percentual de AUC, 3 dos 10
 modelos não líderes são praticamente equivalentes ao líder (ele
 próprio já um \emph{foundation model}, o TabPFN) pelo critério
@@ -47,17 +47,18 @@ conjuntos; o treinado nas curvas de quantis retém, na mediana, 12 a
 19 por cento da vantagem distribucional, conforme o ajuste dos
 braços, com retenção positiva em 16 de 20 (teste de
 sinal, p aproximadamente 0,019 após a correção sequencial), e supera \emph{baselines} distribucionais clássicos, em configuração
-\emph{default}, em 17 de 20 (12 de 20 contra a melhor alternativa
-escolhida por conjunto). No regime estudado (até 100 mil amostras, versões fixadas, GPU
+\emph{default}, em 17 de 20 (12 de 20 contra a melhor
+alternativa por conjunto). No regime estudado (até 100 mil amostras, versões fixadas, GPU
 única), a escolha deve
 partir das restrições da aplicação --- latência, limites
 arquiteturais, explicações auditáveis ---, não de um vencedor
 universal;
 e a destilação
 recupera, na mediana, uma parcela modesta da incerteza preditiva do
-\emph{foundation model}, sob pré-condições verificáveis antes do
-treino do aluno (a própria regra foi avaliada apenas nos conjuntos
-de que foi derivada).
+\emph{foundation model}, sob pré-condições mensuráveis antes do
+treino do aluno (o portão de vantagem verificado só na versão
+oráculo; a regra, avaliada apenas nos conjuntos de que foi
+derivada).
 
 \vspace{0.4cm}
 \noindent\textbf{Palavras-chave:} dados tabulares; foundation models;

@@ -57,9 +57,9 @@ Datasets with more than 100{,}000 samples (\texttt{covertype},
 \texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit})
 are subsampled to 100{,}000 \emph{before any partitioning}
 (stratified in classification, simple random sampling in
-regression). The cap is adopted in tabular benchmarks for
-computational feasibility \citep{mcelfresh2023} and delimits the
-regime studied to small-to-medium tabular data.
+regression). Subsampling caps for computational feasibility are common in
+tabular benchmarks \citep{grinsztajn2022}; ours is 100{,}000, and it
+delimits the regime studied to small-to-medium tabular data.
 
 \begin{table}[htb]
 \centering
@@ -102,10 +102,10 @@ tabular-benchmark variant of \citet{grinsztajn2022} with the
 regression. All models compete on the same task --- the RMSE on a
 $\{0,1\}$ target is the square root of the Brier score, and the
 internal ranks remain valid --- but the dataset is degenerate for
-distributional readings: every result involving it in
-Chapter~\ref{chap:destilacao} carries a sensitivity analysis with it
-excluded, except the check of TabFM as a teacher, measured only on
-it. ($\ddagger$)~\texttt{online\_news} is OnlineNewsPopularity, with
+distributional readings: every headline result involving it
+in Chapter~\ref{chap:destilacao} carries a sensitivity analysis with
+it excluded, except the check of TabFM as a teacher, measured only
+on it. ($\ddagger$)~\texttt{online\_news} is OnlineNewsPopularity, with
 the logarithm of the number of shares as a legitimate continuous
 target. Identifiers and dimensions were checked against OpenML. The
 distillation
@@ -124,8 +124,8 @@ models use our own implementations: MLP and FT-Transformer, and
 SAINT, STab and TabKAN, reimplemented from the original papers for
 lack of a mature package; KAN uses the \emph{efficient-kan} backbone
 with documented adaptations (layer normalization before each KAN
-layer and a grid range of $[-2, 2]$, because standardized inputs fall
-mostly outside the original $[-1, 1]$ grid of \citealp{kan2024}). A
+layer and a grid range of $[-2, 2]$), because standardized inputs fall
+mostly outside the original $[-1, 1]$ grid of \citet{kan2024}. A
 weak result from a reimplemented model therefore confounds method
 and implementation; sanity checks mitigate the risk --- the TabKAN
 reimplementation reaches ROC-AUC 0.914--0.915 on \texttt{adult},
@@ -179,7 +179,7 @@ the zero-shot regime is the claim under test --- and their inference
 parameters are fixed policies, not quantities tuned to our data: an
 inference ensemble of 8 members in total (TabPFN's default, mirrored
 in TabFM for comparability and cost, although TabFM's library
-default is 32), each member conditioned on a context capped at
+default is 32 \citep{tabfm2026}), each member conditioned on a context capped at
 50{,}000 rows --- a cap enforced in TabPFN by an external
 subsampling of the pool (4 distinct subsamples) and in TabFM by the
 library itself. TabPFN is used at version 2.5; TabFM at release v1.0.1,
@@ -203,7 +203,7 @@ mark the data and the stage that no selection stage observes.
 \caption[Experimental protocol]{Experimental protocol: prior hold-out
 of 20\%; hyperparameter selection by internal cross-validation (3
 folds) on the pool (the remaining 80\% development split, which
-supplies folds, validation, and labeling), executed once, followed
+supplies folds and validation), executed once, followed
 by re-evaluation on 5 external folds with the hyperparameters
 fixed.}
 \label{fig:protocolo}
@@ -351,9 +351,11 @@ datasets \citep{demsar2006, benavoli2017}, applied in this order:
     \citep{benavoli2017}, because non-rejection does not license
     equivalence. The primary ROPE is $\pm0.01$ of AUC --- a declared
     convention, not a constant of the field --- with sensitivity at
-    $\{0.005, 0.01, 0.02\}$. The reference implementation returns
-    the expected posterior mass $E[\theta]$, not the sample fraction
-    of the \citet{benavoli2017} convention; both are implemented and
+    $\{0.005, 0.01, 0.02\}$. Our original implementation returns
+    the expected posterior mass $E[\theta]$; the \citet{benavoli2017}
+    convention --- the fraction of posterior samples in which each
+    region is the most probable --- is what the reference
+    implementation returns. Both are implemented and
     Chapter~\ref{chap:benchmark} reports both criteria.
   \item \textbf{Variance decomposition ($\eta^2$)} of the ranks into
     between-family, within-family and residual shares; the residual
@@ -513,9 +515,9 @@ The known weaknesses of the design are declared before any result.
     100{,}000-sample cap and a single 16~GB GPU delimit the regime
     to small and medium data; Chapter~\ref{chap:destilacao} extends
     the regression evaluation to OpenML-CTR23 partly to probe this.
-    TabICLv2, which predates the roster's closing, was not
-    considered --- a limitation of the roster, not an effect of
-    dating.
+    TabICLv2 and TabPFN-3 \citep{tabiclv2-2026,tabpfn3-2026}, which
+    predate the roster's closing, were not considered --- a
+    limitation of the roster, not an effect of dating.
   \item \textbf{Bayesian reading criteria fixed after the analysis
     began.} The ROPE radius and the two decision cutoffs were fixed
     after the analysis of the results had begun, not pre-registered;

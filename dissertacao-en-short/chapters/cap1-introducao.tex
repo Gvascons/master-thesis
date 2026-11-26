@@ -222,9 +222,11 @@ learned; no new learning mechanism is claimed.
     dataset), and out-of-fold labeling
     of the teacher protects the student's calibration, not its
     accuracy. The results condense into a decision rule whose
-    precondition is measured before the student is trained; its
-    advantage gate was verified only in its oracle version, and the
-    rule was derived on the same 20 datasets
+    precondition --- an \emph{advantage gate}: the teacher's measured
+    advantage over the control must exceed the median across the 20
+    datasets --- is computed before the student is trained; the gate
+    was verified only in its oracle version, and the rule was derived
+    on the same 20 datasets
     (Chapter~\ref{chap:destilacao}).
   \item \textbf{Reproducible infrastructure and conduct}: pinned
     versions, seeds and data, versioned artifacts to which every

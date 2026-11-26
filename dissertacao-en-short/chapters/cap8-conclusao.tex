@@ -26,7 +26,10 @@ supported by consistency and paired effect size, not by the
 underpowered post-hoc nor by the Bayesian instrument, which does not
 separate TabFM from XGBoost and CatBoost. It costs about five orders
 of magnitude in serving latency on the reference dataset
-(43{,}262 against XGBoost's 0.33~\us/row).
+(43{,}262 against XGBoost's 0.33~\us/row). At the instance level,
+the pre-registered complementarity analysis finds median label
+agreement of 0.950/0.936 with XGBoost, and none of its three
+mechanistic hypotheses is confirmed.
 
 \textbf{RQ2 --- which decision artifact holds up?} A
 constraint-based policy, not a learned router. Under
@@ -125,7 +128,7 @@ regulated practice --- a qualitative per-family rating, declared, not
 measured; no distillation (the student learns labels from an opaque
 teacher) \\
 \addlinespace[2pt]
-Architectural limit ($>$10 classes; context overflow) &
+Architectural limit ($>$10 classes) &
 GBDT or recent DL depending on the task &
 \texttt{helena} (100 classes) excludes both FMs; descriptive best
 non-FM in multiclass: STab/TabM 3.67 vs.\ XGBoost 6.0, $N{=}3$ \\
@@ -179,9 +182,9 @@ sweep.
 datasets in the distillation), up to 100{,}000 samples, a single
 16~GB GPU and pinned versions (TabFM v1.0.1, whose technical report
 was not peer reviewed; TabPFN v2.5) delimit the regime; with 10/3/5
-datasets per task, power is low by construction. TabICLv2, which
-predates the roster's closing, was not considered --- a limitation of
-the roster --- and TabPFN-3 and 3.5, later releases, were not
+datasets per task, power is low by construction. TabICLv2 and TabPFN-3, which
+predate the roster's closing, were not considered --- a limitation of
+the roster --- and TabPFN-3.5, a later release, was not
 evaluated.
 
 \textbf{Construct.} E2's 10--20\% band is a property of its rank
@@ -195,8 +198,8 @@ the three proxies, but hardware sensitivity is unmeasured.
 regressor checkpoint is purely synthetic), regression only, with
 the spread of TabFM's ensemble predictions checked as a distribution
 on a single binarized-target dataset. Two of
-the four omitted CTR23 datasets overlap the study's core (17/24 with
-all four, $p=0.032$; 16/22 without the two, $p=0.026$). The decision rule has no out-of-sample test.
+the four omitted CTR23 datasets overlap the study's central datasets
+(17/24 with all four, $p=0.032$; 16/22 without the two, $p=0.026$). The decision rule has no out-of-sample test.
 Both teachers carry non-commercial licenses.
 
 \textbf{Multiplicity.} No correction is applied across experiments;

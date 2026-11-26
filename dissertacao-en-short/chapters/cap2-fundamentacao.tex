@@ -87,8 +87,9 @@ student. The benchmark evaluates the three dominant implementations:
 XGBoost \citep{chen2016} (regularized objective), LightGBM
 \citep{ke2017} (leaf-wise growth with histograms) and CatBoost
 \citep{prokhorenkova2018} (ordered target statistics and ordered
-boosting). Light tuning of a GBDT matters, on average, more than the
-choice between neural networks and GBDTs \citep{mcelfresh2023}; in this dissertation the
+boosting). For a surprisingly high number of datasets, light tuning
+of a GBDT matters more than the choice between neural networks and
+GBDTs \citep{mcelfresh2023}; in this dissertation the
 GBDTs play the role of the null hypothesis that every new proposal
 must be measured against.
 
@@ -183,7 +184,7 @@ of output heads, not any difference in average accuracy, is what
 makes TabPFN the teacher of Chapter~\ref{chap:destilacao}. Both
 models carry limits inherited from pre-training: TabFM admits at
 most 10 classes and was pre-trained with contexts of up to
-16{,}384 rows (larger tables depend on length generalization or
+16{,}384 rows \citep{kong2026} (larger tables depend on length generalization or
 subsampling), and the 100-class \texttt{helena} dataset exceeds the
 class limit of both models, which becomes two structural exclusions
 in the benchmark.
@@ -576,10 +577,11 @@ multi-criteria evaluation with cost measured under the same protocol;
 and the simultaneous inclusion of the 2026 foundation models (TabFM,
 measured weeks after release) and of the Kolmogorov--Arnold family.
 The study compares individual models, not AutoML ensembling systems
-such as AutoGluon \citep{erickson2020}. TabPFN-3/3.5, released later,
-are outside the roster by dating; TabICLv2, released earlier, was
-not considered when the roster was closed --- its absence is a
-limitation of the roster, not an effect of dating.
+such as AutoGluon \citep{erickson2020}. TabPFN-3.5, released later,
+is outside the roster by dating; TabPFN-3 and TabICLv2
+\citep{tabpfn3-2026,tabiclv2-2026}, which predate the roster's
+closing, were not considered in that expansion --- a limitation of
+the roster, not an effect of dating.
 
 \subsection{Tabular foundation models and their evaluation}
 \label{sec:rel-tfm}
@@ -622,7 +624,7 @@ KAN's original evidence \citep{kan2024} concentrates on symbolic
 regression and scientific problems. TabKAN \citep{tabkan2025}
 claims its best configuration (ChebyKAN) beats XGBoost and tabular
 transformers on ten datasets --- average AUC of 0.857 against
-XGBoost's 0.814 on the eight binary ones --- but six of the ten have
+XGBoost's 0.814 on the eight binary ones --- but seven of the ten have
 fewer than 8{,}000 samples, there is no regression, and the XGBoost
 baseline appears undertuned (AUC 0.726 on \texttt{credit\_g}, where
 our tuning obtains 0.767 on the hold-out); TabKANet
@@ -650,10 +652,12 @@ matching (MMD) without retraining. Between September and October
 2026 came the replacement of up to 96\% of the transformer's blocks
 by a closed-form affine translator \citep{shallow2026}, activation
 alignment for reduced contexts \citep{actalign2026}, and the
-\emph{Fast} variant of TabPFN-3.5 \citep{tabpfn35tr2026} --- all, as
-far as we checked, evaluated only on classification or point
-prediction (the TabPFN-3.5 report evaluates distributionally only
-the full model). MotherNet and MotherTree \citep{mothernet2023,mothertree2026}
+\emph{Fast} variant of TabPFN-3.5 \citep{tabpfn35tr2026} ---
+evaluated, as far as we checked, only on classification or point
+prediction, except that TabPFN-3.5-Fast is also scored
+distributionally by its authors (CRPS), as a faster teacher --- not
+a distilled student, and not on a crossed serving frontier against
+other strategies. MotherNet and MotherTree \citep{mothernet2023,mothertree2026}
 emit fast predictors with neither teacher nor distillation; FP8
 attention quantization \citep{kubler2026} is a lever we do not
 measure; and conformal calibration of the teacher itself
@@ -674,14 +678,15 @@ models is Pocket FM \citep{pocketfm2026}: XGBoost, CatBoost,
 LightGBM and MLP students trained on soft labels from multiple
 teachers (TabICLv2, TabPFNv2.6, LimiX, Orion-MSP) over 153 datasets,
 retaining 96.5\% of the teacher's AUC (a specific configuration, not
-an average) with speedups of 38--860$\times$. It shows that
-stratified OOF labeling is necessary and analyzes when distillation
+an average) with speedups of 38--860$\times$. It adopts and argues
+for stratified OOF labeling and analyzes when distillation
 works (gains concentrated at low dimensionality); its clinical sister
 paper \citep{pocketfmhealth2026} adds calibration and fairness on 19
 health datasets. Both are \textbf{classification only}, as are GEAR
-\citep{gear2026}, the distillation of TabPFN into a compact
-feed-forward network for credit decisioning \citep{dey2026} and
-TabDistill \citep{tabdistill2025}; distillation into GAMs targets
+\citep{gear2026} and TabDistill \citep{tabdistill2025}; the
+distillation of TabPFN into a compact feed-forward network for a
+loan-decision simulation carries a classification head and a
+point-regression head \citep{dey2026}; distillation into GAMs targets
 interpretability, not speed \citep{tfmgam2026}; and Prior Labs sells a
 closed distillation engine \citep{priorlabs2025} with \textbf{no
 public methodology or code}. A public repository distills TabFM into
@@ -703,15 +708,16 @@ Outside the tabular world, distilling distributions is an
 established line --- the Bayesian posterior predictive
 \citep{korattikara2015}, ensemble distributions in classification
 \citep{malinin2020end2} and regression \citep{malinin2020rpn},
-uncertainty in vision \citep{shen2021} and in tabular regression
-from a deep ensemble, evaluated by CRPS and coverage
-\citep{park2025uncertainty} --- but always with teachers of
+uncertainty in vision \citep{shen2021} --- and, within it,
+uncertainty distillation from a deep ensemble in tabular regression,
+evaluated by CRPS and coverage \citep{park2025uncertainty}; but
+always with teachers of
 accessible weights or members, parametric or sample-based targets
 and neural students; pre-TFM distillation into boosted trees covers
 regression only at the point level \citep{fakoor2020}. The pieces
 exist separately: the pinball loss \citep{koenker1978}, CRPS and its
 grid estimator \citep{gneiting2007,gneiting2011}, native
-multi-quantile objectives in XGBoost \citep{chen2016} and arbitrary
+multi-quantile objectives in XGBoost (since version 2.0) and arbitrary
 quantiles exposed by TabPFN v2.5. The gap is their composition:
 \textbf{distributional distillation of a tabular foundation model
 into a tree-ensemble student, measured against a pinball-trained
@@ -758,6 +764,21 @@ scoped accordingly: \citet{poeta2024} anticipated an independent KAN
 test in a narrow scope, and \citet{jeong2026} reached point
 regression.
 
+
+The three research questions map onto these rows. RQ1 attacks the
+first three: a neutral, multi-criteria comparison that includes the
+2026 foundation models and the Kolmogorov--Arnold family under one
+protocol (Chapter~\ref{chap:benchmark}). RQ2 attacks the
+algorithm-selection row: a learned router tested under LODO with
+small $N$, and fixed and constraint-driven policies evaluated by
+regret (Chapter~\ref{chap:framework}). RQ3 attacks the two remaining
+rows: the cost inversion that the benchmark quantifies is the
+problem that distributional distillation, and the crossed serving
+frontier, address (Chapter~\ref{chap:destilacao}). The gaps are
+distinct but chained --- the benchmark produces the evidence the
+framework organizes, and the cost it measures is what the
+distillation attacks.
+
 \begin{table}[htbp]
 \centering
 \caption[Map of gaps per literature axis]{Map of gaps per literature
@@ -783,8 +804,9 @@ Neutral TabPFN $\times$ TabFM comparison under an identical protocol &
 Ch.~\ref{chap:benchmark} \\
 \addlinespace
 KAN family on tabular &
-Narrow independent evaluations \citep{poeta2024,kancritical2024},
-without GBDT/TFM or cost axes &
+Independent evaluations against MLPs only, with training-cost or
+FLOP accounting but no GBDT/TFM baselines and no serving-latency
+axis \citep{poeta2024,kancritical2024} &
 Test against the full GBDT/DL/TFM slate under a uniform
 multi-criteria protocol &
 Ch.~\ref{chap:benchmark} \\
@@ -798,7 +820,7 @@ Ch.~\ref{chap:destilacao} \\
 \addlinespace
 TFM distillation &
 Classification \citep{pocketfm2026,pocketfmhealth2026,gear2026};
-contemporary point regression \citep{jeong2026}; closed commercial
+point regression \citep{jeong2026,dey2026}; closed commercial
 engine \citep{priorlabs2025} &
 \emph{Distributional} regression: quantile curves, CRPS, coverage;
 role of OOF in calibration; TabFM as a \emph{distributional} teacher
@@ -815,16 +837,3 @@ Ch.~\ref{chap:framework} \\
 \end{tabular}
 \end{table}
 
-The three research questions map onto these rows. RQ1 attacks the
-first three: a neutral, multi-criteria comparison that includes the
-2026 foundation models and the Kolmogorov--Arnold family under one
-protocol (Chapter~\ref{chap:benchmark}). RQ2 attacks the
-algorithm-selection row: a learned router tested under LODO with
-small $N$, and fixed and constraint-driven policies evaluated by
-regret (Chapter~\ref{chap:framework}). RQ3 attacks the two remaining
-rows: the cost inversion that the benchmark quantifies is the
-problem that distributional distillation, and the crossed serving
-frontier, address (Chapter~\ref{chap:destilacao}). The gaps are
-distinct but chained --- the benchmark produces the evidence the
-framework organizes, and the cost it measures is what the
-distillation attacks.

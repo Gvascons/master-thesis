@@ -211,7 +211,8 @@ for TabFM --- four to five orders of magnitude; across datasets the
 TabFM/XGBoost ratio runs from $3{,}079\times$ (\texttt{credit\_g}) to
 $247{,}402\times$ (\texttt{cardiovascular\_\allowbreak disease}), so no
 single factor should be quoted without its dataset. Single-row online
-serving narrows the differences, but not the orders of magnitude. The
+serving is expected to narrow the differences; it was not measured
+here. The
 per-model costs are consolidated in Table~\ref{tab:app-custos}.
 
 \begin{figure}[htb]
@@ -411,8 +412,9 @@ results came without GBDT baselines and with ten-epoch training. As
 far as our dated check reaches, this is the family's first test
 against the full GBDT/DL/foundation-model grid in a multi-criteria
 tabular benchmark --- the previous independent evaluations
-\citep{poeta2024,kancritical2024} compare KANs only against MLPs and
-do not measure cost axes. Both KANs sit in the fast latency tier
+\citep{poeta2024,kancritical2024} compare KANs only against MLPs,
+with training-cost or FLOP accounting but without GBDT or
+foundation-model baselines and without the serving-latency axis. Both KANs sit in the fast latency tier
 (2.3--3.1~\us/row): the problem is the performance, not the cost.
 The negative result is reported with the same status as the positive
 ones: a neutral benchmark exists precisely so that results like this
@@ -497,10 +499,12 @@ not generalize to the population. H-C4 (the advantage shrinks with
 pool size, as pre-training on tables of up to 16{,}384 rows would
 suggest, though inference accepts contexts of up to 50{,}000) is not
 confirmed, with a descriptive sign \emph{contrary} in the aggregate:
-the Spearman correlation between pool size and advantage is $+0.14$
-(TabPFN) and $+0.26$ (TabFM), non-significant (restricted to the
-binary datasets, TabPFN's AUC advantage goes in the hypothesis's
-direction, $\rho=-0.61$, $p=0.060$, also non-significant). The
+the Spearman correlation between pool size and the FM's
+primary-metric advantage over XGBoost (17 cells) is $+0.14$ (TabPFN)
+and $+0.26$ (TabFM), non-significant (restricted to the 10 binary
+datasets, where the advantage is pure AUC, TabPFN's goes in the
+hypothesis's direction, $\rho=-0.61$, $p=0.060$, also
+non-significant). The
 largest balance is on \texttt{jannis}, the grid's 5th largest
 dataset, but the next places belong to a medium and a small one
 (\texttt{magictelescope}, \texttt{phoneme}): the data support that
