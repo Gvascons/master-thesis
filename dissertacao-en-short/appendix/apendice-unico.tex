@@ -36,12 +36,10 @@ $14 \times 18 = 252$.
 
 \begin{landscape}
 
-\setlength{\floatsep}{10pt plus 2pt}
-
 \begin{table}[htbp]
 \centering
-\scriptsize
-\setlength{\tabcolsep}{3pt}
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
 \caption[Binary classification: complete results]{Binary classification: test ROC-AUC (higher is better). Primary metric per model on each dataset; \textbf{bold} = best in row; ``--'' = structurally absent cell.}
 \label{tab:app-binaria}
 \begin{tabular}{lcccccccccccccc}
@@ -61,10 +59,12 @@ $14 \times 18 = 252$.
 \bottomrule
 \end{tabular}
 \end{table}
+\end{landscape}
 
+\begin{landscape}
 \begin{table}[htbp]
 \centering
-\scriptsize
+\footnotesize
 \setlength{\tabcolsep}{3pt}
 \caption[Multiclass classification: complete results]{Multiclass classification: test log-loss (lower is better). Primary metric per model on each dataset; \textbf{bold} = best in row; ``--'' = structurally absent cell.}
 \label{tab:app-multiclasse}
@@ -81,7 +81,7 @@ $14 \times 18 = 252$.
 
 \begin{table}[htbp]
 \centering
-\scriptsize
+\footnotesize
 \setlength{\tabcolsep}{3pt}
 \caption[Regression: complete results]{Regression: test RMSE (lower is better). Primary metric per model on each dataset; \textbf{bold} = best in row; ``--'' = structurally absent cell.}
 \label{tab:app-regressao}
