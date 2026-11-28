@@ -216,8 +216,8 @@ trained. If any answer is yes, the indicated family is the one the constraint st
     model then runs on a subsampled context, as in this benchmark.
   \item \textbf{Auditable explanations required.} When the domain's
     regulation demands auditable, attribution-explainable models, the
-    recommendation is the GBDTs, whose attribution-based explanations are commonly accepted in regulated practice. This rating is a qualitative judgment, declared, not measured. A boosted ensemble is not intrinsically interpretable, and domains demanding strictly intrinsic interpretability should look at shallow trees or additive models, outside this benchmark.
-  \item \textbf{No active constraint.} Foundation model first, with TabPFN \citep{hollmann2025} as the
+    recommendation is the GBDTs, whose attribution-based explanations are commonly accepted in regulated practice. This rating is a qualitative judgment, declared, not measured. A boosted ensemble is not intrinsically interpretable, and domains demanding strictly intrinsic interpretability should look at shallow trees or additive models, outside this benchmark. A distilled student inherits no such acceptance, because its targets come from an opaque teacher.
+  \item \textbf{No active constraint.} Foundation model first, as an executable recommendation and not the oracle row of Table~\ref{tab:regret-lodo}, with TabPFN \citep{hollmann2025} as the
     mature option and TabFM \citep{tabfm2026} as the frontier (TabFM
     pinned at v1.0.1). It is compared against a tuned GBDT before adoption, because its measured worst
     case is last place on one dataset. Both foundation models carry non-commercial licenses.
