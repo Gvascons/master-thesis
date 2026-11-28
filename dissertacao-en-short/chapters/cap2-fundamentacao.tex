@@ -34,7 +34,7 @@ both errors and badly calibrated confidence \citep{gneiting2007}. For
 regression, the \emph{RMSE},
 $\sqrt{\tfrac{1}{n}\sum_i (y_i - \hat y_i)^2}$, measures point
 error in the unit of the target and penalizes large errors
-quadratically, with MAE and $R^2$ as secondary. Accuracy, by contrast, is misleading under class imbalance
+quadratically, with MAE and $R^2$ as secondary. Classification accuracy, by contrast, is misleading under class imbalance
 because it ignores how errors split between classes. On
 \texttt{amazon\_employee}, where only 5.8\% of requests are denied,
 XGBoost reaches 94.3\% hold-out accuracy while detecting only 3.2\%
@@ -485,8 +485,7 @@ On \emph{how} to compare, the frequentist protocol of
 sensitivity of conclusions to the ROPE radius is almost never
 analyzed. The two narratives, ``trees win'' and ``modern deep learning has caught up'' \citep{realmlp2024,tabm2025}, are read in this work as claims conditional on sample size and task structure, a reading supported by the learning curves of Chapter~\ref{chap:benchmark}. The arrival of foundation models moves the
 controversy to pre-trained vs.\ trained from scratch.
-The two reference benchmarks predate the second generation of tabular
-foundation models. This is a matter of timing and not a defect.
+The two benchmarks that set the controversy \citep{grinsztajn2022,mcelfresh2023} predate the second generation of tabular foundation models. This is a matter of timing and not a defect.
 
 The gap on this axis is not breadth (the present benchmark covers fewer datasets than TabArena) but lies in three fronts: protocol depth per cell (selection separated from measurement, uniform tuning, frequentist \emph{and} Bayesian inference with a ROPE sensitivity analysis), multi-criteria evaluation with cost measured under the same protocol, and the simultaneous inclusion of the 2026 foundation models (TabFM, measured
 weeks after release) and of the Kolmogorov--Arnold family. The study
@@ -541,9 +540,7 @@ ten epochs. The open gap is a test of the family against the full set
 of GBDT, deep learning and foundation models under a uniform
 multi-criteria protocol, which Chapter~\ref{chap:benchmark} provides.
 As a caveat, TabKAN is reimplemented in this work
-(Chapter~\ref{chap:metodologia}). In addition, \citet{poeta2024} is
-earlier in the isolated comparison, and the claim made here is scoped around
-it.
+(Chapter~\ref{chap:metodologia}). In addition, \citet{poeta2024} precedes this benchmark in the isolated KAN-vs-MLP comparison, and the claim made here is scoped around it.
 
 \subsection{Acceleration and serving of tabular foundation models}
 \label{sec:rel-serving}
@@ -663,9 +660,7 @@ one protocol (Chapter~\ref{chap:benchmark}). RQ2 addresses the
 algorithm-selection row: a learned router tested under LODO with
 small $N$, and fixed and constraint-driven policies evaluated by
 regret (Chapter~\ref{chap:framework}). RQ3 addresses the two
-remaining rows. The cost inversion that the benchmark quantifies is
-the problem that distributional distillation, and the crossed serving
-frontier, address (Chapter~\ref{chap:destilacao}). The gaps are
+remaining rows. The cost inversion that the benchmark quantifies is the problem addressed by distributional distillation and by the crossed serving frontier (Chapter~\ref{chap:destilacao}). The gaps are
 distinct but linked: the benchmark produces the evidence the framework organizes, and the cost it measures is what the distillation addresses.
 
 \begin{table}[htbp]

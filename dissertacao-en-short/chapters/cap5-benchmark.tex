@@ -85,7 +85,7 @@ test with a region of practical equivalence (ROPE) of $\pm$0.01 AUC
 Section~\ref{sec:fund-estatistica} reported. Under the lenient criterion (expected posterior mass of
 equivalence $E[\theta_{\mathrm{ROPE}}] > 0.5$), 8 of the 10 non-leading
 core models are practically equivalent to TabPFN, one of them, the
-MLP, exactly at the threshold (0.508). Under the strict criterion (the
+MLP, barely above the threshold (0.508). Under the strict criterion (the
 fraction of posterior samples in which equivalence is the most
 probable region, with a 0.95 cutoff), only 3 of the 10
 qualify: XGBoost (0.999), LightGBM (0.992) and CatBoost (0.957), the three GBDTs. In the opposite direction, no model reaches 0.95
@@ -342,8 +342,7 @@ leads the average rank in all three tasks: 2.7 in binary,
 1.00 in multiclass (over the two datasets where it operates;
 \texttt{helena} is a structural exclusion) and 1.2 in regression
 (Table~\ref{tab:cap5-ranks} and Figure~\ref{fig:cap5-ranks}). It is
-the best model on 13 of
-the 18 datasets, operating on 17. TabPFN is the grid's consistent
+the best model on 13 of the 18 datasets (it runs on 17 of them). TabPFN is the grid's consistent
 runner-up (4.2, 2.50, 3.0), and the two foundation models occupy the
 top two places in every task (in multiclass, over the two datasets
 where they operate). In multiclass, where the margin is most visible,
@@ -358,8 +357,7 @@ Appendix~\ref{app:suplementares}.
 
 \begin{table}[htb]
 \centering
-\caption[Average rank per task: the 2026 extension]{Average rank per
-task, 2026 generation \emph{versus} references ($k{=}14$ models;
+\caption[Average rank per task: the 2026 extension]{Average rank per task: the three models of the 2026 extension (TabFM, KAN, TabKAN) \emph{versus} two references from the core, TabPFN and the best non-FM model ($k{=}14$ models;
 lower is better; \textbf{bold} = best in column; the foundation
 models' multiclass ranks exclude \texttt{helena}).}
 \label{tab:cap5-ranks}
@@ -393,8 +391,7 @@ post-hoc nor the Bayesian test separates it}. With $k{=}14$ and
 $N{=}10$ the Nemenyi critical difference is 6.27, nearly half the
 axis, and the instrument has no power to separate TabFM from the leading group (Figure~\ref{fig:cap5-cd14}). The lead rests on
 consistency (13 wins in 18) and on the paired effect
-size ($d=0.68$ against XGBoost), not on the frequentist post-hoc
-nor on the Bayesian instrument. Against XGBoost, the Benavoli
+size ($d=0.68$ against XGBoost), not on the frequentist post-hoc nor on the Bayesian instrument. The pairwise Wilcoxon tests with Holm correction reject none of the pairs. Against XGBoost, the Benavoli
 convention puts 0.67 of the posterior probability on TabFM's
 superiority and 0.33 on equivalence (expected posterior mass of
 equivalence $E[\theta]=0.40$), and against CatBoost the modal region is
@@ -445,8 +442,7 @@ make the multi-criteria framework obsolete, and the shift made it more
 necessary and pointed to its single obstacle.
 
 The same extension provides an independent test of the
-Kolmogorov--Arnold family, with a negative result. KAN (ranks
-11.0/12.0/9.8 in binary/multiclass/regression) and TabKAN
+Kolmogorov--Arnold family, with a negative result. KAN (ranks 11.0/12.0/9.8 in binary/multiclass/regression on the full grid, Table~\ref{tab:cap5-ranks}) and TabKAN
 (11.4/13.3/11.8) occupy the bottom third in all three tasks, with
 TabKAN behind even TabNet in multiclass and regression. The
 original papers' claims \citep{kan2024,tabkan2025} do not reproduce in
@@ -484,8 +480,7 @@ shrinking with pool size. To generate the predictions, the
 final models were refitted under the benchmark's exact protocol (same
 hyperparameters, split and seed), behind a sanity gate requiring
 $|\Delta| \le 10^{-3}$ between the recomputed and the recorded primary
-metric. All 52 gate cells passed (the 51 of the three
-models on the 17 datasets plus XGBoost on \texttt{helena}),
+metric. All 52 gate cells passed (the $3{\times}17$ cells of the three models on the 17 shared datasets plus XGBoost on \texttt{helena}),
 42 with $\Delta = 0$ exactly, and the
 rest fall between $10^{-7}$ and $6 \times 10^{-6}$, with a single case
 at $4.8 \times 10^{-4}$. The per-pair instrument is McNemar's exact
@@ -511,8 +506,7 @@ of XGBoost's margin on the 10 binary datasets.}
 The first result is the scale of the agreement (H-C1,
 confirmed): median label agreement of 0.950 between XGBoost
 and TabPFN and 0.936 between XGBoost and TabFM, above the
-pre-registered criterion of 0.85. The accuracy dispute is therefore
-restricted to a small set of 0.6 to 15.5\% discordant instances per
+pre-registered criterion of 0.85. The dispute is therefore restricted to a small set of 0.6 to 15.5\% discordant instances per
 dataset. Within this set, the outcome is asymmetric and strongly
 heterogeneous (Figure~\ref{fig:cap5-complementaridade}a). McNemar
 rejects the tie at 1\% in 14 of the 24 pairs, and the median
@@ -559,18 +553,17 @@ datasets, where the advantage is pure AUC, TabPFN's correlation goes
 in the hypothesis's direction ($\rho=-0.61$, $p=0.060$), also non-significant. The
 largest balance is on \texttt{jannis}, the grid's 5th largest
 dataset, but the next places belong to a medium and a small dataset
-(\texttt{magictelescope}, \texttt{phoneme}). The data support that
-the advantage does not shrink with size, not that it grows with it.
+(\texttt{magictelescope}, \texttt{phoneme}). The data do not show the advantage shrinking with size, and do not show it growing either.
 The concern that the foundation model only performs well in the
 low-data regime finds no support here.
 
 The same predictions translate the balances into operational terms,
 namely precision and recall at the standard 0.5 threshold, with the
 minority class as the class of interest. On \texttt{amazon\_\allowbreak
-employee} the accuracies are nearly indistinguishable (0.943 to
+employee} the classification accuracies are nearly indistinguishable (0.943 to
 0.949). However, minority-class recall goes from 0.032 (XGBoost) to
 0.214 (TabPFN) and 0.298 (TabFM), at the price of some minority-class
-precision (XGBoost's 0.706 against 0.621). XGBoost
+precision (XGBoost's 0.706 against TabFM's 0.621). XGBoost
 detects 3 in every 100 requests that should be denied, and TabFM
 30 (Figure~\ref{fig:cap5-operacionais}a; panel~b gives the
 minority recall on the 10 binary datasets). Across the 10
@@ -579,14 +572,14 @@ ones, though not on all. On \texttt{give\_\allowbreak me\_\allowbreak
 some\_\allowbreak credit}, with 6.7\% minority, the three recalls
 differ by less than 0.02. On \texttt{telco} (published
 preprocessing) the choice of metric inverts the verdict. TabFM loses
-the discordant instances on McNemar and loses in accuracy
+the discordant instances on McNemar and loses in classification accuracy
 (0.771 against 0.801), but has the highest minority recall (0.663
 against 0.570) and the highest balanced accuracy (0.737 against
 0.727). In balanced accuracy TabFM is the best of the three on 9 of
 the 10 binary datasets. None of these numbers ranks models, because
 the threshold was not optimized and the cost of each error belongs to
 the application. They show that, where the false negative is the
-expensive error, accuracy can hide the difference that matters. In
+expensive error, classification accuracy can hide the difference that matters. In
 regression the instance-level reading is descriptive. The foundation
 model's absolute error is smaller than XGBoost's on more than half the
 instances in 9 of the 10 pairs, but the errors are co-ranked (Spearman
@@ -607,7 +600,7 @@ one.
 \centering
 \includegraphics[width=\linewidth]{images/metricas_operacionais_diss_en.pdf}
 \caption[Operational reading of the discordant instances]{Operational
-reading: (a)~accuracy and minority recall on \texttt{amazon\_\allowbreak
+reading: (a)~classification accuracy and minority recall on \texttt{amazon\_\allowbreak
 employee}; (b)~minority recall on the 10 binary datasets.}
 \label{fig:cap5-operacionais}
 \end{figure}

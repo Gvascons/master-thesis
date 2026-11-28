@@ -40,10 +40,9 @@ produced under a single protocol and a procedure to turn it into a
 choice.
 
 This dissertation produces both, and the results contradict the maxim
-on two counts. Among the models that preceded the 2026 generation,
+on two counts. Among the models that entered the study before its 2026 extension,
 the top of the accuracy ranking in binary classification is a
-statistical tie whose leader is already a foundation model. The 2026
-generation shifts the top in an unexpected direction: what moved
+statistical tie whose leader is already a foundation model. In this text, accuracy means predictive performance on each task's primary metric, and the metric of that name is called classification accuracy. The 2026 generation of foundation models, here TabFM, shifts the top in an unexpected direction: what moved
 ahead was pre-training, not tuned deep learning. This lead is consistent
 across datasets but
 not confirmed as a statistical separation. The price changes the
@@ -61,7 +60,7 @@ fast. For tabular foundation models this route was established for
 classification \citep{pocketfm2026}. However, what it transfers in
 \emph{regression}, when the target is the full predictive
 distribution with quantiles and calibrated intervals, had no academic
-answer as far as this work's dated checks reached.
+answer as far as this work's dated checks of the literature reached (Section~\ref{chap:related}).
 
 \section{Research problem}
 \label{sec:intro-problema}
@@ -163,15 +162,11 @@ and no new learning mechanism is claimed.
     axes. In the 11-model core (the eleven models that entered the study
     before the 2026 extension), the top of binary classification is a
     statistical tie. Under a ROPE
-    of $\pm$0.01 AUC, 8 of the 10 non-leaders are practically
-    equivalent to the leader under the lenient criterion, and 3 of 10
-    under the strict 0.95 cutoff, a reading that holds for ROPE
+    of $\pm$0.01 AUC, 8 of the 10 non-leaders are practically equivalent to the leader under the lenient criterion (equivalence more probable than the two alternatives combined, a much weaker claim), and 3 of 10 under the strict 0.95 cutoff, a reading that holds for ROPE
     $\geq 0.01$. The leader is already a foundation model, TabPFN
     (mean rank 3.2). With the 2026 generation, TabFM has the best
     mean rank in all three tasks (in multiclass, over the two
-    datasets where it operates) and is the best model on
-    13 of
-    18 datasets, operating on 17. This is a consistent lead that the
+    datasets where it operates) and is the best model on 13 of the 18 datasets (it runs on 17 of them). This is a consistent lead that the
     underpowered tests do not confirm as a separation, at about five
     orders of magnitude more latency on the reference
     dataset (43{,}262 against 0.33~\us/row). The benchmark includes, as
@@ -192,31 +187,20 @@ and no new learning mechanism is claimed.
     leave-one-dataset-out (LODO) and fails. Meta-feature routing
     scores 0.11 against 0.44 for the trivial majority rule in the
     11-model study, and 0.72 against 0.78 with 14. The fixed policies
-    are compared descriptively by regret, and ``foundation model first''
-    (an intra-family oracle) has zero median regret in the 2026
+    are compared descriptively by regret, and ``foundation model first'', credited with the better foundation model on each dataset (an intra-family oracle), has zero median regret in the 2026
     generation, a median the executable always-TabFM policy also
     attains. Experiment E2 locates the inversion of that
-    recommendation at 10--20\% of the weight on latency, by median
-    regret under rank normalization, and at 20--35\% under the
-    alternative normalizations. The flowchart is the synthesis of
+    recommendation at 10--20\% of the weight on latency, by median regret under rank normalization (0.1 grid), and at 20--35\% under the alternative normalizations (finer grid). The flowchart is the synthesis of
     these studies, not an evaluated policy
     (Chapter~\ref{chap:framework}).
   \item \textbf{Distributional distillation of a tabular foundation
     model}. With TabPFN-2.5 as teacher, in regression, \emph{point}
     distillation does not transfer, and H1, that the point
     student retains at least half the teacher's advantage, is
-    refuted. However, distilling the quantile curves retains
-    12--19\% of the teacher's CRPS advantage at the median. The
-    median CRPS gain is 2.8\%, shrinking to 1.4\% with both arms
-    re-tuned. Retention is positive on 16 of 20 datasets
-    ($p\approx0.019$ under the sequential correction). H2 is not
-    confirmed as a conjunction, with coverage within $\pm5$~p.p.\ on
-    10 of 20. The distilled student serves at ${\sim}10^2$~\us/row and also beats
+    refuted. However, distilling the quantile curves retains, at the median, 12--19\% of the teacher's CRPS advantage over a control trained on the true labels. The median CRPS gain is 2.8\%, shrinking to 1.4\% with student and control re-tuned. Retention is positive on 16 of 20 datasets
+    ($p\approx0.019$ under the sequential correction). H2 adds a coverage clause to the CRPS one and is not confirmed as a conjunction, since coverage stays within $\pm5$~p.p.\ of nominal on only 10 of 20. The distilled student serves at ${\sim}10^2$~\us/row and also beats
     the best of QRF and NGBoost, both in
-    default configuration, on 17 of 20 datasets (E1). Still in E1,
-    against the
-    best teacher-free alternative chosen per dataset, the count is 12
-    of 20 ($p=0.25$). Out-of-fold labeling of the teacher protects
+    default configuration, on 17 of 20 datasets (E1). Still in E1, against the best of four teacher-free alternatives chosen per dataset by an oracle, the count is 12 of 20 ($p=0.25$). Out-of-fold labeling of the teacher protects
     the student's calibration, not its accuracy. The results condense
     into a decision rule whose precondition is an \emph{advantage
     gate}: the teacher's measured advantage over the control must

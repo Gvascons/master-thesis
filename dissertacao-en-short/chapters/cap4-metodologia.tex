@@ -246,8 +246,7 @@ early stopping uses the fold under evaluation itself. This design is
 would repeat inside each external fold. The consequence is declared
 precisely: the external-fold metrics are optimistic as
 generalization estimates, since selection observed those same data.
-They play only internal roles, in stability across folds, and no
-reported result comes from them (all come from the prior hold-out).
+They play only internal roles, in stability across folds, and no reported performance number comes from them (all come from the prior hold-out).
 All classification partitions are stratified (hold-out, external and
 internal folds, and the 90/10 train/validation split of the final
 fit), and regression uses shuffled K-Fold.
@@ -317,11 +316,7 @@ probabilistic quality: \textbf{ROC-AUC} in binary classification
 up to 16:1), \textbf{log-loss} in multiclass (a proper scoring rule
 that scales to $K$ classes), and \textbf{RMSE} in regression, on the
 scale in which the suite ships the target. Secondary metrics are
-reported but do not rank models: KS, log-loss, F1 and accuracy in
-binary; macro- and weighted F1, OvR-AUC and accuracy in multiclass;
-MAE and $R^2$ in regression. Accuracy is misleading under imbalance
-(a trivial classifier ``gets'' 94\% on a 16:1 dataset) and is never
-used in conclusions. In addition, KS connects the benchmark to
+reported but do not rank models: KS, log-loss, F1 and classification accuracy in binary; macro- and weighted F1, OvR-AUC and classification accuracy in multiclass; MAE and $R^2$ in regression. Classification accuracy is misleading under imbalance (a trivial classifier ``gets'' 94\% on a 16:1 dataset) and is never used in conclusions. Unqualified, ``accuracy'' means performance on the primary metric. In addition, KS connects the benchmark to
 credit and risk practice. Threshold metrics depend on a cutoff that
 belongs to the application, so they rank nothing here. They are
 examined, at the standard 0.5 threshold, only for XGBoost, TabPFN

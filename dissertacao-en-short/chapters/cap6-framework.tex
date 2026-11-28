@@ -189,7 +189,7 @@ largely hidden behind it.}
 
 Two dependencies qualify the band. The first, the latency proxy, was tested with the latency rankings measured on \texttt{credit\_g} (a thousand samples) and \texttt{cardiovascular\_\allowbreak disease} (70{,}000) in place of \texttt{adult}. The crossover is identical, with always-FM regret-optimal only at $w \geq 0.9$, and only the zone in which always-GBDT has a zero median
 shifts by $\pm 0.1$ ($w \leq 0.7$ with the small dataset's proxy,
-$w \leq 0.5$ with the large one's). The shift tracks the intermediate latency ranks of the deep models, not the FMs' context dependence, because the FMs occupy the last latency ranks under any proxy. It also runs in the opposite direction to the
+$w \leq 0.5$ with the large one's). The shift tracks the intermediate latency ranks of the deep models, not the FMs' context dependence, because TabFM is the slowest model and TabPFN one of the three slowest under any proxy. It also runs in the opposite direction to the
 one anticipated in the record, which expected the FMs' context
 dependence to drive it. The second is the normalization, and a post-hoc analysis puts accuracy and latency in per-dataset min--max, with latency in $\log_{10}$ or on a linear scale. The ``FM first'' recommendation then stops being optimal with 20--25\% and 30--35\% of the weight on latency by the median, and 25--30\% and 35--40\% by the mean, against 15--20\% and 20--25\% by ranks on the same fine grid. The reading the framework uses holds in all three: a
 minority latency weight suffices to flip the recommendation, and the rank normalization adopted in the design is the one that flips earliest.
@@ -208,7 +208,7 @@ trained. If any answer is yes, the indicated family is the one the constraint st
     out in microseconds per row, the FM family is excluded in its
     native form, which costs four to five orders of magnitude more to
     serve, and the recommendation flips with 10--20\% of the weight
-    on latency (by the median, under rank normalization;
+    on latency (by the median, under rank normalization, 0.1 grid;
     Section~\ref{sec:regret-ponderado}). The distilled student of
     Chapter~\ref{chap:destilacao} serves at ${\sim}10^2$~\us/row
     and fits only budgets of that order.
@@ -245,7 +245,7 @@ latency. Chapter~\ref{chap:destilacao} measures one route toward that budget: di
 
 With $N{=}18$ datasets, fine statistical validation of the framework
 itself is out of reach. LODO is the honest tool at that scale, which is why the negative result is phrased as not learnable, not impossible. The original regret is computed on the primary metric, and E2 weighs only two criteria (accuracy and latency) of a utility that
-may include training cost, robustness and interpretability. Its flip band depends on the score normalization (10--20\% by ranks, 20--25\% logarithmic, 30--35\% linear, by the median). Latency
+may include training cost, robustness and interpretability. Its flip band depends on the score normalization (15--20\% by ranks, 20--25\% logarithmic, 30--35\% linear, by the median on the fine grid). Latency
 ranks come from a reference dataset measured on a single machine, with the sensitivity to two other datasets measured above. In the
 multi-criteria matrix (Figure~\ref{fig:decision-matrix}), the
 robustness criterion (worst rank across folds) discriminates poorly
@@ -261,5 +261,5 @@ the FM family's ceiling is regret-optimal on the primary metric
 median, with mean 0.080 and worst case 1.000. Third, when the
 decision weighs accuracy against latency, the registered analysis E2
 shows the recommendation flipping with 10--20\% of the weight on
-latency by the median, under rank normalization. What the data
+latency by the median, under rank normalization (0.1 grid). What the data
 support is a flowchart of four constraints verifiable a priori, with latency first. This is a synthesis of the three studies, not an evaluated policy.}

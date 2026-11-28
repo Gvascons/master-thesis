@@ -25,8 +25,7 @@ two datasets where it operates) and is the best model on 13 of 18
 datasets. This lead is supported by consistency and paired effect
 size, not by the underpowered post-hoc test nor by the Bayesian
 instrument, which does not separate TabFM from XGBoost
-and CatBoost. TabFM costs about five orders of magnitude in serving
-latency on the reference dataset (43{,}262 against XGBoost's
+and CatBoost. TabFM costs about five orders of magnitude more in serving latency on the reference dataset (43{,}262 against XGBoost's
 0.33~\us/row). At the instance level, the pre-registered
 complementarity analysis finds median label agreement of 0.950/0.936
 with XGBoost, and none of its three mechanistic hypotheses is
@@ -43,9 +42,7 @@ and the executable always-TabFM policy keeps mean 0.080 and
 median 0.000. By the mean, this policy is above the LODO tree's 0.051,
 although that tree fails as a predictor. When the decision weighs
 latency, the answer changes early, and in the registered analysis E2
-the recommendation flips with 10--20\% of the weight on latency, by
-median regret under rank normalization (20--35\% under the
-alternative min--max normalizations, the rank one flipping earliest).
+the recommendation flips with 10--20\% of the weight on latency, by median regret under rank normalization on the 0.1 grid (on a finer grid, 20--35\% under the alternative min--max normalizations, the rank one flipping earliest).
 Therefore, the flowchart's first question is the
 latency budget.
 
@@ -58,7 +55,7 @@ teacher's CRPS advantage at the median. Its median CRPS gain is
 20 datasets ($p\approx0.019$ under the sequential correction). H2 is not confirmed as a conjunction (coverage within
 $\pm5$~p.p.\ on 10 of 20), H3 is not confirmed as registered. The student serves at 99--169~\us/row in the measured frontier cases. The
 verifiable conditions condense into a decision rule: run the log
-transformation as a diagnostic, test a strong native such as the QRF,
+transformation as a diagnostic, test a strong native distributional model such as the QRF,
 and distill only the advantage that remains, as measured by an OOF
 labeling. It was derived on the same 20 datasets, with its gate
 verified only in the oracle version.
@@ -136,9 +133,8 @@ non-FM in multiclass: STab/TabM 3.67 vs.\ XGBoost 6.0, $N{=}3$ \\
 Rare class with expensive false negatives &
 FM at a fixed threshold, \emph{or} re-optimize the GBDT's threshold;
 compare recall at equalized precision &
-Measured on one dataset (\texttt{amazon\_employee}): accuracies
-0.943--0.949 indistinguishable; minority recall 0.032 $\to$ 0.298 at
-threshold 0.5, precision 0.706 $\to$ 0.621; the dataset's best AUC
+Measured on one dataset (\texttt{amazon\_employee}): classification accuracies 0.943--0.949 indistinguishable; minority recall 0.032 $\to$ 0.298 at
+threshold 0.5, precision 0.706 (XGBoost) $\to$ 0.621 (TabFM); the dataset's best AUC
 is a GBDT's (Sections~\ref{sec:cap5-ato1}, \ref{sec:cap5-ato5}) \\
 \addlinespace[2pt]
 Regression with tail decisions and a ${\sim}10^2$~\us/row budget &
@@ -149,7 +145,7 @@ in the tails; nothing on the point axis
 (Sections~\ref{sec:destil-dist}, \ref{sec:destil-e3}) \\
 \addlinespace[2pt]
 Small teacher advantage (gate verified in its oracle version), a
-single-member teacher at the student's tier, or a strong native &
+single-member teacher at the student's tier, or a strong native distributional model &
 Do \emph{not} distill: QRF first, ensemble shrinking (the log runs
 before, as a diagnostic) &
 E1: the default QRF beats the distilled student on 3 of 20 (on
@@ -185,9 +181,7 @@ was not peer reviewed, and TabPFN v2.5) delimit the regime. With 10/3/5 datasets
 low by construction. TabICLv2 and TabPFN-3 predate the roster's
 closing and were not considered (a limitation of the roster). TabPFN-3.5, a later release, was not evaluated.
 
-\textbf{Construct.} E2's 10--20\% band is a property of its rank
-normalization, and min--max alternatives move it to 20--35\%, in the
-same direction. Latency enters through one regime, measured on a
+\textbf{Construct.} E2's 10--20\% band is a property of its rank normalization and of its 0.1 grid, and min--max alternatives move it to 20--35\% on a finer grid, in the same direction. Latency enters through one regime, measured on a
 reference dataset (\texttt{adult}). Rankings are stable across
 datasets (Spearman 0.78--0.95) and E2's crossover is identical under
 the three proxies. However, hardware sensitivity is unmeasured.
