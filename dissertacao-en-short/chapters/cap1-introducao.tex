@@ -8,101 +8,104 @@
 
 ``On tabular data, gradient boosting always wins.'' Few maxims of
 machine-learning practice have been repeated as often over the last
-decade, and this one even acquired a quantitative form: a systematic
+decade, and this one even acquired a quantitative form. A systematic
 study identified the inductive biases that explain why tree ensembles
-beat neural networks on typical tables \citep{grinsztajn2022}, and
-larger-scale evaluations nuanced the verdict without overturning it
-\citep{mcelfresh2023}. For the practitioner, the maxim became a
-decision shortcut: faced with a table, use XGBoost and move on.
+beat neural networks on typical tables \citep{grinsztajn2022}.
+Larger-scale evaluations qualified this verdict without
+overturning it \citep{mcelfresh2023}. For the practitioner, the maxim
+became a decision shortcut: faced with a table, use XGBoost and move
+on.
 
 Consider, however, the decision the maxim is meant to settle. A
 data-science team must choose the model that will decide credit
-approvals in production (a problem in the family of the
+approvals in production, a problem in the family of the
 \texttt{credit\_g} and
 \texttt{give\_\allowbreak me\_\allowbreak some\_\allowbreak credit}
-datasets of this study), or the one that will estimate prices and
-durations together with prediction intervals, as in the real-estate
-datasets \texttt{miami\_housing} and \texttt{kings\_county} of the
-distillation study. In 2026 that team faces a menu
-the maxim never anticipated: besides the consolidated
-gradient-boosting implementations, there are deep architectures
-claiming to have caught up, Kolmogorov--Arnold networks with strong
-claims of superiority and, at the center of attention, tabular
-foundation models --- pre-trained networks that dispense with
-task-specific training, because the training set enters as context
-at prediction time \citep{hollmann2025,tabfm2026}. Each proponent
-publishes numbers in its own favor, measured under differing
-protocols and tuning budgets and, increasingly, without peer review.
-What the team lacks is evidence produced under a single protocol and
-a procedure to turn it into a choice.
+datasets of this study. Alternatively, the team must choose the model
+that will estimate
+prices and durations together with prediction
+intervals, as in the real-estate datasets \texttt{miami\_housing} and
+\texttt{kings\_county} of the distillation study. In 2026 that team
+faces options the maxim never anticipated. Besides the
+consolidated gradient-boosting implementations, there are deep
+architectures claiming to have caught up and Kolmogorov--Arnold
+networks with strong claims of superiority. At the center of
+attention are tabular foundation models, pre-trained networks that
+dispense with task-specific training, because the
+training set enters as context at prediction time
+\citep{hollmann2025,tabfm2026}. Each proponent publishes numbers in
+its own favor, measured under differing protocols and tuning budgets
+and, increasingly, without peer review. The team lacks evidence
+produced under a single protocol and a procedure to turn it into a
+choice.
 
-This dissertation produces both, and the picture that emerges
-contradicts the maxim on two counts. Among the models that preceded
-the 2026 generation, the top of the accuracy ranking in binary
-classification is a statistical tie whose leader is already a
-foundation model; the 2026 generation then shifts the top in an
-unexpected direction --- what moved ahead was not tuned deep learning
-but pre-training --- through a lead that is consistent across
-datasets but not confirmed as a statistical separation. The price
-changes the nature of the decision: the accuracy leader is about five
+This dissertation produces both, and the results contradict the maxim
+on two counts. Among the models that preceded the 2026 generation,
+the top of the accuracy ranking in binary classification is a
+statistical tie whose leader is already a foundation model. The 2026
+generation shifts the top in an unexpected direction: what moved
+ahead was pre-training, not tuned deep learning. This lead is consistent
+across datasets but
+not confirmed as a statistical separation. The price changes the
+nature of the decision, because the accuracy leader is about five
 orders of magnitude slower to serve than XGBoost on the reference
-dataset. The practical
-question becomes a different one: does the leader's latency fit the
-use case and, if it does not, what then?
+dataset. The practical question becomes whether the leader's latency
+fits the use case and, if it does not, what can be done.
 
 That question gives the dissertation its third line of work. The
-obstacle is architectural (the training set travels with the model
-on every prediction), and architectural costs can, in principle, be
-transferred away: knowledge distillation \citep{hinton2015} trains,
-on an expensive teacher's outputs, a student that serves fast. For
-tabular foundation models this route was established for
-classification \citep{pocketfm2026}; what it transfers in
+obstacle is architectural, since the training set travels with the
+model on every prediction, and architectural costs can, in principle,
+be transferred away. Knowledge distillation \citep{hinton2015}
+trains, on the outputs of an expensive teacher, a student that serves
+fast. For tabular foundation models this route was established for
+classification \citep{pocketfm2026}. However, what it transfers in
 \emph{regression}, when the target is the full predictive
 distribution with quantiles and calibrated intervals, had no academic
-answer as far as our dated checks reached.
+answer as far as this work's dated checks reached.
 
 \section{Research problem}
 \label{sec:intro-problema}
 
 The problem can be stated in three layers, each building on the
-previous one. The first is a \emph{lack of comparable evidence}: the
-families of tabular models available in 2026 --- gradient boosting;
+previous one, and the first is a \emph{lack of comparable evidence}. The
+families of tabular models available in 2026 are gradient boosting,
 deep learning in its three lineages (dense networks, attention
-architectures, Kolmogorov--Arnold networks); and in-context-learning
-foundation models --- had not been measured under a single protocol
-combining hyperparameter selection separated from measurement,
-statistical inference able to \emph{establish} equivalences rather
-than only reject them, and cost axes (training time, tuning cost,
-serving latency) measured under the same conditions as accuracy. The
-reference benchmarks predate the 2026 generation
+architectures and Kolmogorov--Arnold networks) and
+in-context-learning foundation models. They had not been measured under
+a single protocol combining hyperparameter selection separated from
+measurement, statistical inference able to
+\emph{establish} equivalences rather than only reject them, and cost
+axes (training time, tuning cost and serving latency) measured under the
+same conditions as accuracy. The reference
+benchmarks predate the 2026 generation
 \citep{grinsztajn2022,mcelfresh2023}, and that generation's numbers
 came mostly from its own proponents.
 
-The second layer is \emph{decision}: benchmarks describe, but teams
+The second layer is \emph{decision}. Benchmarks describe, but teams
 must choose. The algorithm-selection literature suggests learning a
-router from meta-features of the problem \citep{rice1976}; before
-recommending one, it must be tested out of sample in the realistic
-regime of a few dozen datasets, a test the literature rarely reports.
-Until it meets data that played no part in its construction, a
-decision artifact remains a hypothesis.
+router from meta-features of the problem \citep{rice1976}. Before one is
+recommended, it must be tested out of sample in the realistic
+regime of a few dozen datasets, a test the literature rarely reports. A
+decision artifact remains a hypothesis until it meets
+data that played no part in its construction.
 
 The third layer is the single operational obstacle to which evidence
-and decision point together: the latency of the new accuracy leader.
-The problem becomes one of determining what knowledge distillation
-can and cannot transfer from a tabular foundation model in
-regression, at what serving cost, and under which conditions
-verifiable \emph{a priori} --- with distributional regression as the
-central focus, the axis along which the teacher carries information
-that the raw labels do not hand to the student.
+and decision point together, the latency of the new accuracy
+leader. The problem becomes to determine what knowledge
+distillation can and cannot transfer from a tabular foundation model
+in regression, at what serving cost, and under which conditions
+verifiable \emph{a priori}. The central focus is distributional
+regression, the axis along which the teacher carries information the raw
+labels do not give the student.
 
 \section{Research questions}
 \label{sec:intro-qps}
 
-The general objective is to establish, under a single protocol with
-selection separated from measurement, comparative evidence on the
-three families of tabular models in the era of foundation models, and
-to convert it into evaluated decision instruments --- including how
-far distillation can remove the leading family's main operational
+The general objective is to establish comparative evidence on the
+three families of tabular models in the era of foundation models,
+under a single protocol with selection separated from measurement,
+and to convert it into evaluated decision instruments. This includes
+how far distillation can remove the leading family's main operational
 obstacle. Three research questions organize the work:
 
 \begin{description}
@@ -112,26 +115,26 @@ obstacle. Three research questions organize the work:
     arrival of the 2026 generation of foundation models?}
   \item[RQ2.] \emph{Which decision artifact can a benchmark with a
     realistic $N$ of datasets actually support, a learned router or a
-    constraint-based policy --- and how does that answer change when
+    constraint-based policy, and how does that answer change when
     the decision weighs accuracy against cost?}
   \item[RQ3.] \emph{What does knowledge distillation transfer from a
     tabular foundation model in regression, at what serving cost, and
     under which conditions verifiable a priori?}
 \end{description}
 
-The ``tie'' of RQ1 is the state of the literature immediately
-preceding this study: on a good share of tabular datasets the
-difference between gradient boosting and tuned deep learning is small
-and the winner alternates with the dataset \citep{mcelfresh2023}. The
+The ``tie'' of RQ1 is the state of the literature immediately before
+this study. On a good share of tabular datasets, the difference
+between gradient boosting and tuned deep learning is small and the
+winner alternates with the dataset \citep{mcelfresh2023}. The
 ``realistic'' $N$ of RQ2 is the regime of a few dozen datasets in
-which any operational benchmark lives. The answers form a chain
-(Figure~\ref{fig:intro-qps}): the tie and its shift (RQ1) make the
-multi-criteria decision unavoidable (RQ2), and the decision policy
-runs into a single obstacle, latency, whose reduction is the object
-of RQ3. The falsifiable hypotheses are stated where they are tested;
-E1--E3 denote the three registered complementary experiments
-(E1, classical distributional baselines; E2, weighted multi-criteria
-regret; E3, decision utility).
+which any operational benchmark operates. The answers form a chain
+(Figure~\ref{fig:intro-qps}). The tie and its shift (RQ1) make the
+multi-criteria decision unavoidable (RQ2). The decision policy runs into
+a single obstacle, latency, whose reduction is the object
+of RQ3. The falsifiable hypotheses are stated where they are tested, and
+E1--E3 denote the three registered complementary experiments: E1,
+classical distributional baselines; E2, weighted multi-criteria
+regret; E3, decision utility.
 
 \begin{figure}[htb]
 \centering
@@ -140,8 +143,8 @@ regret; E3, decision utility).
 % tectonic tikz-src/tikz-cap1-1-en-short.tex && mv the PDF to images/).
 \includegraphics{images/tikz-cap1-1-en-short.pdf}
 \caption[Research questions and chapters]{Research questions and the
-chapters that answer them (the shift of the top is a consistent lead,
-not a statistically confirmed separation).}
+chapters that answer them. The shift of the top is a consistent lead,
+not a statistically confirmed separation.}
 \label{fig:intro-qps}
 \end{figure}
 
@@ -149,78 +152,79 @@ not a statistically confirmed separation).}
 \label{sec:intro-contribuicoes}
 
 The contributions lie in measurement under a uniform protocol and in
-openly reported evaluation, out of sample wherever something is
-learned; no new learning mechanism is claimed.
+openly reported evaluation, out of sample wherever something is learned,
+and no new learning mechanism is claimed.
 
 \begin{enumerate}
   \item \textbf{A multi-criteria benchmark of the foundation-model
-    era}: 14 models $\times$ 18 datasets (250 of the 252 cells; two
-    structural exclusions), with a hold-out untouched by selection,
-    frequentist and Bayesian inference and three cost axes. In the
-    11-model core --- the eleven models that entered the study before
-    the 2026 extension --- the top of binary classification is a
-    statistical tie: under a ROPE of $\pm$0.01 AUC, 8 of the 10
-    non-leaders are practically equivalent to the leader under the
-    lenient criterion, 3 of 10 under the strict 0.95 cutoff (the
-    reading holds for ROPE $\geq 0.01$) --- and the leader is
-    already a foundation model, TabPFN
+    era}, which covers 14 models $\times$ 18 datasets (250 of the 252
+    cells; two structural exclusions), with a hold-out untouched
+    by selection, frequentist and Bayesian inference and three cost
+    axes. In the 11-model core (the eleven models that entered the study
+    before the 2026 extension), the top of binary classification is a
+    statistical tie. Under a ROPE
+    of $\pm$0.01 AUC, 8 of the 10 non-leaders are practically
+    equivalent to the leader under the lenient criterion, and 3 of 10
+    under the strict 0.95 cutoff, a reading that holds for ROPE
+    $\geq 0.01$. The leader is already a foundation model, TabPFN
     (mean rank 3.2). With the 2026 generation, TabFM has the best
     mean rank in all three tasks (in multiclass, over the two
-    datasets where it operates) and is the best model on 13 of 18
-    datasets (operating on 17): a consistent lead that the
+    datasets where it operates) and is the best model on
+    13 of
+    18 datasets, operating on 17. This is a consistent lead that the
     underpowered tests do not confirm as a separation, at about five
-    orders of magnitude more latency on the reference dataset
-    (43{,}262 against 0.33~\us/row). It includes, as far as our dated
-    checks reach, the first neutral TabPFN~$\times$~TabFM comparison
-    under an identical protocol (Chapter~\ref{chap:benchmark}).
-  \item \textbf{An independent evaluation of Kolmogorov--Arnold
-    networks}: in the first test of the family against the full
-    GBDT/deep-learning/foundation-model grid in a multi-criteria
-    benchmark (as far as our dated checks reach), under a uniform
-    protocol with tuning under paired conditions, KAN and TabKAN finish in the
-    bottom third on all three tasks, though cheap to serve; the
-    original claims do not reproduce in our reimplementations
-    (TabKAN reimplemented, KAN adapted) under this protocol
+    orders of magnitude more latency on the reference
+    dataset (43{,}262 against 0.33~\us/row). The benchmark includes, as
+    far as this work's dated checks reach, the first neutral
+    TabPFN~$\times$~TabFM comparison under an identical protocol
     (Chapter~\ref{chap:benchmark}).
+  \item \textbf{An independent evaluation of Kolmogorov--Arnold
+    networks}, which is, as far as this work's dated checks reach, the first
+    test of the family against the full
+    GBDT/deep-learning/foundation-model grid in a multi-criteria
+    benchmark. Under a uniform protocol with tuning under paired
+    conditions, KAN and TabKAN finish in the bottom third on all
+    three tasks, though cheap to serve. The original claims
+    do not reproduce in this work's reimplementations (TabKAN reimplemented,
+    KAN adapted) under this protocol (Chapter~\ref{chap:benchmark}).
   \item \textbf{A decision framework that is evaluated, not merely
-    described}: the learned component is evaluated under
-    leave-one-dataset-out (LODO) and fails --- meta-feature routing
-    scores 0.11 against 0.44 for the trivial majority rule (11-model
-    study; 0.72 against 0.78 with 14); the fixed
-    policies are compared descriptively by regret, with ``foundation
-    model first'' (an intra-family oracle) at zero median regret in
-    the 2026 generation, a median the executable always-TabFM policy
-    also attains; experiment E2 locates the inversion of that
+    described}. The learned component is evaluated under
+    leave-one-dataset-out (LODO) and fails. Meta-feature routing
+    scores 0.11 against 0.44 for the trivial majority rule in the
+    11-model study, and 0.72 against 0.78 with 14. The fixed policies
+    are compared descriptively by regret, and ``foundation model first''
+    (an intra-family oracle) has zero median regret in the 2026
+    generation, a median the executable always-TabFM policy also
+    attains. Experiment E2 locates the inversion of that
     recommendation at 10--20\% of the weight on latency, by median
-    regret under rank normalization (20--35\% under the alternative
-    normalizations); the
-    flowchart is the synthesis of these studies, not an evaluated
-    policy (Chapter~\ref{chap:framework}).
+    regret under rank normalization, and at 20--35\% under the
+    alternative normalizations. The flowchart is the synthesis of
+    these studies, not an evaluated policy
+    (Chapter~\ref{chap:framework}).
   \item \textbf{Distributional distillation of a tabular foundation
-    model}: with TabPFN-2.5 as teacher, in regression, \emph{point}
-    distillation does not transfer (H1, the point student retaining
-    at least half the teacher's advantage: refuted), while distilling the
-    quantile curves retains 12--19\% of the teacher's CRPS advantage
-    at the median (median CRPS gain 2.8\%, shrinking to 1.4\% with
-    both arms re-tuned), positive on 16 of 20 datasets
-    ($p\approx0.019$ under the sequential correction; H2 is not
+    model}. With TabPFN-2.5 as teacher, in regression, \emph{point}
+    distillation does not transfer, and H1, that the point
+    student retains at least half the teacher's advantage, is
+    refuted. However, distilling the quantile curves retains
+    12--19\% of the teacher's CRPS advantage at the median. The
+    median CRPS gain is 2.8\%, shrinking to 1.4\% with both arms
+    re-tuned. Retention is positive on 16 of 20 datasets
+    ($p\approx0.019$ under the sequential correction). H2 is not
     confirmed as a conjunction, with coverage within $\pm5$~p.p.\ on
-    10 of 20), in a student serving at ${\sim}10^2$~\us/row. The
-    distilled student also beats the best of QRF and NGBoost (both in
-    default configuration) on 17 of 20 datasets (E1; 12 of 20,
-    $p=0.25$, against the best teacher-free alternative chosen per
-    dataset), and out-of-fold labeling
-    of the teacher protects the student's calibration, not its
-    accuracy. The results condense into a decision rule whose
-    precondition --- an \emph{advantage gate}: the teacher's measured
-    advantage over the control must exceed the median across the 20
-    datasets --- is computed before the student is trained; the gate
-    was verified only in its oracle version, and the rule was derived
-    on the same 20 datasets
-    (Chapter~\ref{chap:destilacao}).
-  \item \textbf{Reproducible infrastructure and conduct}: pinned
-    versions, seeds and data, versioned artifacts to which every
-    number traces, registered hypotheses and public error
+    10 of 20. The distilled student serves at ${\sim}10^2$~\us/row and also beats
+    the best of QRF and NGBoost, both in
+    default configuration, on 17 of 20 datasets (E1). Still in E1,
+    against the
+    best teacher-free alternative chosen per dataset, the count is 12
+    of 20 ($p=0.25$). Out-of-fold labeling of the teacher protects
+    the student's calibration, not its accuracy. The results condense
+    into a decision rule whose precondition is an \emph{advantage
+    gate}: the teacher's measured advantage over the control must
+    exceed the median across the 20 datasets. The gate is computed
+    before the student is trained. It was verified only in its oracle version, and the rule was derived on the same
+    20 datasets (Chapter~\ref{chap:destilacao}).
+  \item \textbf{Reproducible infrastructure and conduct}: pinned versions, seeds and data, versioned artifacts to
+    which every number traces, registered hypotheses and public error
     correction (Chapter~\ref{chap:metodologia}).
 \end{enumerate}
 
@@ -228,8 +232,8 @@ learned; no new learning mechanism is claimed.
 \label{sec:intro-producao}
 
 The research produced two technical reports of the graduate program,
-both in English, graded coursework not externally peer reviewed:
-\emph{Does ``GBDT Always Win''? A Multi-Criteria Benchmark of 14
+both in English, which are graded coursework without external peer
+review: \emph{Does ``GBDT Always Win''? A Multi-Criteria Benchmark of 14
 Tabular Models --- From a Statistical Tie to the 2026 Shift --- and
 an Evaluated Decision Framework} \citep{companion2026}, condensing
 Chapters~\ref{chap:benchmark} and~\ref{chap:framework}; and
@@ -247,20 +251,21 @@ Chapter~\ref{chap:fundamentacao} gives the technical vocabulary
 (model families, in-context learning, distillation, distributional
 regression, statistical comparison, algorithm selection and regret)
 and positions the work in the literature, closing with the gaps it
-attacks. Chapter~\ref{chap:metodologia} specifies the protocol shared
-by the empirical part, with the design's limitations declared before
-any result. Chapter~\ref{chap:benchmark} answers RQ1: the tie of the
-11-model core, the cost axes, the conditional reversals, the shift of
-the top by the 2026 generation and the instance-level
-complementarity. Chapter~\ref{chap:framework} answers RQ2 with three
-evaluation studies and the resulting flowchart.
-Chapter~\ref{chap:destilacao} answers RQ3 under a registered
-two-stage design. Chapter~\ref{chap:conclusao} confronts each
-question with the evidence and consolidates contributions,
-limitations and future work. Appendix~\ref{app:suplementares}
-gathers the per-dataset tables and a map to the extended technical
-report --- the long version of this dissertation (181 pages), the
-destination of every ``extended report'' remission in this text ---
-which, with the code, artifacts and registration documents in the
-project repository,\footnote{\url{https://github.com/Gvascons/master-thesis}.}
-holds the full process record, ablations and secondary analyses.
+addresses. Chapter~\ref{chap:metodologia} specifies the protocol
+shared by the empirical part and declares the design's limitations
+before any result. Chapter~\ref{chap:benchmark} answers RQ1, covering
+the tie of the 11-model core, the cost axes, the
+conditional reversals, the shift of the top by the 2026 generation
+and the instance-level complementarity.
+Chapter~\ref{chap:framework} answers RQ2 with three evaluation
+studies and the resulting flowchart, and Chapter~\ref{chap:destilacao}
+answers RQ3 under a registered two-stage design.
+Chapter~\ref{chap:conclusao} confronts each question with the
+evidence and consolidates contributions, limitations and future
+work. Appendix~\ref{app:suplementares} gathers the per-dataset tables
+and a map to the extended technical report, which is the long version of
+this dissertation (181 pages) and the destination of every
+``extended report'' reference in this text. Together with the
+code, artifacts and registration documents in the project
+repository,\footnote{\url{https://github.com/Gvascons/master-thesis}.}
+it holds the full process record, ablations and secondary analyses.

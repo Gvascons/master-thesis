@@ -9,9 +9,9 @@
 
 This appendix gives the primary metric of every model on every
 dataset, the consolidated costs per model and a summary of the
-hyperparameter search spaces. Everything else --- secondary metrics,
+hyperparameter search spaces. Everything else (secondary metrics,
 effect sizes, chosen hyperparameters, distillation ablations and the
-process record --- is in the extended technical report and in the
+process record) is in the extended technical report and in the
 project repository; Table~\ref{tab:app-mapa} says where.
 
 \section{Primary metric per model and dataset}
@@ -19,7 +19,7 @@ project repository; Table~\ref{tab:app-mapa} says where.
 
 Tables~\ref{tab:app-binaria}, \ref{tab:app-multiclasse}
 and~\ref{tab:app-regressao} give the primary metric of each of the 14
-models on each of the 18 datasets, on the test hold-out --- one table
+models on each of the 18 datasets, on the test hold-out. There is one table
 per task, because the primary metric differs across tasks: ROC-AUC
 for binary classification (higher is better), log-loss for multiclass
 and RMSE for regression (lower is better). The RMSE is on the scale in
@@ -27,7 +27,7 @@ which the source suite ships each target
 (\texttt{california\_\allowbreak housing} has a binarized target, so
 its RMSE is the square root of the Brier score;
 \texttt{online\_news} has a log-shares target), so no RMSE is
-aggregated across datasets. The two cells marked ``---''
+aggregated across datasets. The two cells marked ``--''
 (\texttt{helena} $\times$ TabPFN/TabFM) are the study's structural
 exclusions: 100 classes, above both foundation models' architectural
 limit; the complete state is 250 measured cells out of
@@ -42,7 +42,7 @@ $14 \times 18 = 252$.
 \centering
 \scriptsize
 \setlength{\tabcolsep}{3pt}
-\caption[Binary classification --- complete results]{Binary classification --- test ROC-AUC (higher is better). Primary metric per model on each dataset; \textbf{bold} = best in row; ``---'' = structurally absent cell.}
+\caption[Binary classification: complete results]{Binary classification: test ROC-AUC (higher is better). Primary metric per model on each dataset; \textbf{bold} = best in row; ``--'' = structurally absent cell.}
 \label{tab:app-binaria}
 \begin{tabular}{lcccccccccccccc}
 \toprule
@@ -66,14 +66,14 @@ $14 \times 18 = 252$.
 \centering
 \scriptsize
 \setlength{\tabcolsep}{3pt}
-\caption[Multiclass classification --- complete results]{Multiclass classification --- test log-loss (lower is better). Primary metric per model on each dataset; \textbf{bold} = best in row; ``---'' = structurally absent cell.}
+\caption[Multiclass classification: complete results]{Multiclass classification: test log-loss (lower is better). Primary metric per model on each dataset; \textbf{bold} = best in row; ``--'' = structurally absent cell.}
 \label{tab:app-multiclasse}
 \begin{tabular}{lcccccccccccccc}
 \toprule
 \emph{Dataset} & XGBoost & LightGBM & CatBoost & MLP & RealMLP & FT-Transformer & SAINT & STab & TabNet & TabM & KAN & TabKAN & TabPFN & TabFM \\
 \midrule
 \texttt{covertype} & 0.1934 & 0.2009 & 0.2035 & 0.2118 & 0.1894 & 0.2076 & 0.2289 & 0.1786 & 0.2423 & 0.2067 & 0.2496 & 0.2577 & 0.1644 & \textbf{0.0966} \\
-\texttt{helena} & 2.6010 & 2.6265 & 2.5800 & 2.5260 & 2.5144 & 2.5420 & 2.6090 & 2.5342 & 2.6758 & \textbf{2.5097} & 2.6376 & 2.7187 & --- & --- \\
+\texttt{helena} & 2.6010 & 2.6265 & 2.5800 & 2.5260 & 2.5144 & 2.5420 & 2.6090 & 2.5342 & 2.6758 & \textbf{2.5097} & 2.6376 & 2.7187 & -- & -- \\
 \texttt{jannis} & 0.6801 & 0.6836 & 0.6836 & 0.6874 & 0.6817 & 0.6774 & 0.6887 & 0.6698 & 0.7027 & 0.6572 & 0.7080 & 0.7257 & 0.6583 & \textbf{0.5709} \\
 \bottomrule
 \end{tabular}
@@ -83,7 +83,7 @@ $14 \times 18 = 252$.
 \centering
 \scriptsize
 \setlength{\tabcolsep}{3pt}
-\caption[Regression --- complete results]{Regression --- test RMSE (lower is better). Primary metric per model on each dataset; \textbf{bold} = best in row; ``---'' = structurally absent cell.}
+\caption[Regression: complete results]{Regression: test RMSE (lower is better). Primary metric per model on each dataset; \textbf{bold} = best in row; ``--'' = structurally absent cell.}
 \label{tab:app-regressao}
 \begin{tabular}{lcccccccccccccc}
 \toprule
@@ -111,7 +111,7 @@ and inference latency on the reference dataset.
 \begin{table}[htbp]
 \centering
 \small
-\caption[Consolidated costs per model]{Median costs per model: training (s; 18 datasets, 17 for the foundation models), tuning (s, excl.\ \texttt{adult} --- Section~\ref{sec:met-protocolo}), and latency (\textmu s/row, \texttt{adult}).}
+\caption[Consolidated costs per model]{Median costs per model: training (s; 18 datasets, 17 for the foundation models), tuning (s, excl.\ \texttt{adult}; see Section~\ref{sec:met-protocolo}), and latency (\textmu s/row, \texttt{adult}).}
 \label{tab:app-custos}
 \begin{tabular}{lrrr}
 \toprule
@@ -129,8 +129,8 @@ TabNet & 64.97 & 5,928 & 17.09 \\
 TabM & 33.76 & 2,242 & 3.48 \\
 KAN & 11.94 & 767 & 3.07 \\
 TabKAN & 9.15 & 690 & 2.32 \\
-TabPFN & 1.35 & --- & 7,416.10 \\
-TabFM & 0.18 & --- & 43,262.04 \\
+TabPFN & 1.35 & -- & 7,416.10 \\
+TabFM & 0.18 & -- & 43,262.04 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -145,8 +145,8 @@ sampler and MedianPruner on the internal 3-fold cross-validation, with
 \textbf{100 trials} for the GBDTs and \textbf{25 trials} for the
 deep-learning models. The two foundation models, TabPFN and TabFM, are
 applied zero-shot and have no search space. Conventions:
-$[a,\ b]$ is a closed interval sampled uniformly --- integer when the
-limits are written without a decimal point, float otherwise; ``(log)''
+$[a,\ b]$ is a closed interval sampled uniformly, integer when the
+limits are written without a decimal point and float otherwise; ``(log)''
 marks a float sampled on the log scale; braces list a categorical
 choice. Parameter names are the literal strings of the configuration
 file.
@@ -286,8 +286,8 @@ search; in TabKAN, the ChebyKAN variant is fixed.
 \section{Chosen hyperparameters}
 \label{app:hp-escolhidos}
 
-The winning configuration of each tuned model on each dataset ---
-exactly what the final refit and the external folds consumed --- is
+The winning configuration of each tuned model on each dataset,
+which is exactly what the final refit and the external folds consumed, is
 tabulated per model and dataset in the extended technical report and
 recorded in the project repository. The search does not converge to a
 single configuration per model: depths and learning rates vary by

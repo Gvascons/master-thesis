@@ -19,8 +19,9 @@
     whole predictive distribution, in the unit of the target, lower
     is better. Estimated here as twice the mean pinball loss over 19
     quantile levels.
-  \item[Distillation] Training a small \emph{student} model on the
-    outputs of a larger \emph{teacher} instead of on the observed
+  \item[Distillation] Training a small \emph{student} model to
+    imitate the outputs of a larger \emph{teacher}. In this work the
+    student is trained on those outputs instead of on the observed
     labels. Point distillation uses the teacher's means;
     distributional distillation uses its quantile curves.
   \item[Foundation model (tabular)] A pre-trained model that predicts
@@ -33,8 +34,8 @@
     training set as input instead of being fitted to it.
   \item[Leave-one-dataset-out] Validation of a recommender that is
     fitted on all datasets but one and tested on the one left out.
-  \item[Meta-feature] A descriptive property of a dataset --- size,
-    dimensionality, imbalance --- used as input to a model
+  \item[Meta-feature] A descriptive property of a dataset (size,
+    dimensionality, imbalance) used as input to a model
     recommender.
   \item[Oracle (intra-family)] A policy credited with the best model
     of the recommended family on each dataset, chosen knowing the
@@ -42,8 +43,10 @@
   \item[Out-of-fold labeling] Labeling of the training pool by a
     teacher conditioned only on the other folds, never on the fold
     being labeled.
-  \item[Pareto frontier] The models that no other model beats on
-    both criteria at once (here, accuracy and cost).
+  \item[Pareto frontier] The set of models not dominated by any
+    other, where a model dominates another if it is at least as good
+    on every criterion and strictly better on at least one (here,
+    performance and cost).
   \item[Pinball loss] The asymmetric loss whose expected-value
     minimizer is the $\tau$ quantile; the training loss of quantile
     regression.
@@ -53,7 +56,7 @@
     level receives a lower value than a lower level; repaired by
     re-sorting each row's quantiles.
   \item[Regret] The normalized distance between the best model on a
-    dataset and the best model a policy recommends: 0 when the
+    dataset and the best model of the family a policy recommends: 0 when the
     recommended family contains the best model, 1 when the best it
     offers is the worst.
   \item[Retention] The fraction of the teacher's CRPS advantage over
@@ -61,7 +64,7 @@
   \item[ROPE] Region of practical equivalence: the band within which
     a performance difference is treated as irrelevant; $\pm 0.01$ AUC
     in the main analysis.
-  \item[Serving latency] The time to predict one row, in
+  \item[Serving latency] The amortized time to predict one row, in
     microseconds per row, measured in batch on the reference dataset
     and hardware.
 \end{description}
